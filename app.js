@@ -188,7 +188,7 @@ __name2(verifyWebhookSignature, "verifyWebhookSignature");
 __name22(verifyWebhookSignature, "verifyWebhookSignature");
 __name222(verifyWebhookSignature, "verifyWebhookSignature");
 function buildEmailTemplate(title, bodyContent) {
-  const logoUrl = "https://srpcom.cloud/logo%20tuban%20store.png";
+  const logoUrl = (typeof env !== "undefined" && env && env.DOMAIN_NAME) ? ("https://" + env.DOMAIN_NAME + "/logo.png") : "https://warungpulsa.web.id/logo.png";
   return `
     <!DOCTYPE html>
     <html lang="id">
@@ -884,7 +884,7 @@ async function renderAdminDashboard(env, currentUser, appSettings) {
         
         <!-- Action Control Bar -->
         <div class="flex flex-wrap gap-4 mb-8 border-b border-gray-800 pb-8">
-            <button onclick="openSettingsModal()" class="bg-red-600 hover:bg-red-500 text-white font-bold py-3.5 px-6 rounded-xl shadow-lg transition flex items-center gap-3">
+            <button onclick="openSettingsModal()" class="bg-sky-600 hover:bg-sky-500 text-white font-bold py-3.5 px-6 rounded-xl shadow-lg transition flex items-center gap-3">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
                 Konfigurasi Sistem
             </button>
@@ -900,11 +900,11 @@ async function renderAdminDashboard(env, currentUser, appSettings) {
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"></path></svg>
                 Global UUID
             </button>
-            <button onclick="openGlobalDeleteModal()" class="bg-red-600 hover:bg-red-500 text-white font-bold py-3.5 px-6 rounded-xl shadow-lg transition flex items-center gap-3">
+            <button onclick="openGlobalDeleteModal()" class="bg-sky-600 hover:bg-sky-500 text-white font-bold py-3.5 px-6 rounded-xl shadow-lg transition flex items-center gap-3">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
                 Global Delete
             </button>
-            <button onclick="openMonitorModal()" class="bg-red-600 hover:bg-red-500 text-white font-bold py-3.5 px-6 rounded-xl shadow-lg transition flex items-center gap-3">
+            <button onclick="openMonitorModal()" class="bg-sky-600 hover:bg-sky-500 text-white font-bold py-3.5 px-6 rounded-xl shadow-lg transition flex items-center gap-3">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
                 Monitoring Server
             </button>
@@ -919,7 +919,7 @@ async function renderAdminDashboard(env, currentUser, appSettings) {
             <button onclick="openTicketManagerModal()" class="bg-teal-600 hover:bg-teal-500 text-white font-bold py-3.5 px-6 rounded-xl shadow-lg transition flex items-center gap-3 relative">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192l-3.536 3.536M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-5 0a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
                 Manajemen Tiket
-                <span id="ticketBadge" class="absolute -top-2 -right-2 bg-red-500 text-white text-xs px-2 py-0.5 rounded-full hidden animate-pulse">0</span>
+                <span id="ticketBadge" class="absolute -top-2 -right-2 bg-sky-500 text-white text-xs px-2 py-0.5 rounded-full hidden animate-pulse">0</span>
             </button>
             <button onclick="openGlobalTransactionsModal()" class="bg-orange-600 hover:bg-orange-500 text-white font-bold py-3.5 px-6 rounded-xl shadow-lg transition flex items-center gap-3">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"></path></svg>
@@ -932,15 +932,15 @@ async function renderAdminDashboard(env, currentUser, appSettings) {
         </div>
 
         <!-- Manajemen & Pencarian VPN Global -->
-        <div id="vpnManagement" class="bg-gray-800 rounded-3xl border border-red-600/30 shadow-2xl mt-8 overflow-hidden">
+        <div id="vpnManagement" class="bg-gray-800 rounded-3xl border border-sky-600/30 shadow-2xl mt-8 overflow-hidden">
             <button onclick="toggleSection('sectionVpn', 'iconVpn')" class="w-full flex justify-between items-center p-6 md:p-8 bg-gray-800 hover:bg-gray-700 transition">
                 <h2 class="text-base font-bold text-white flex items-center gap-2">\u{1F50D} Manajemen & Pencarian VPN</h2>
                 <svg id="iconVpn" class="w-6 h-6 text-gray-400 transform transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
             </button>
             <div id="sectionVpn" class="hidden p-6 md:p-8 pt-0">
                 <div class="flex flex-col md:flex-row gap-4 mb-6 mt-4">
-                    <input type="text" id="searchVpnKeyword" placeholder="Cari berdasarkan Email User atau Username VPN..." class="bg-gray-900 border border-gray-600 rounded-xl p-4 text-white flex-grow focus:ring-2 focus:ring-red-500 outline-none font-mono text-sm">
-                    <button onclick="searchVPN()" id="btnSearchVpn" class="bg-red-600 hover:bg-red-500 text-white font-bold px-8 py-4 rounded-xl transition shadow-lg shrink-0">Cari VPN</button>
+                    <input type="text" id="searchVpnKeyword" placeholder="Cari berdasarkan Email User atau Username VPN..." class="bg-gray-900 border border-gray-600 rounded-xl p-4 text-white flex-grow focus:ring-2 focus:ring-sky-500 outline-none font-mono text-sm">
+                    <button onclick="searchVPN()" id="btnSearchVpn" class="bg-sky-600 hover:bg-sky-500 text-white font-bold px-8 py-4 rounded-xl transition shadow-lg shrink-0">Cari VPN</button>
                 </div>
                 
                 <div class="overflow-x-auto rounded-xl border border-gray-700 bg-gray-900">
@@ -970,7 +970,7 @@ async function renderAdminDashboard(env, currentUser, appSettings) {
             </button>
             <div id="sectionUser" class="hidden p-6 md:p-8 pt-0">
                 <div class="flex flex-col md:flex-row justify-end items-start md:items-center mb-6 mt-4 gap-4">
-                    <input type="text" id="searchUser" placeholder="Cari email atau nama..." class="bg-gray-900 border border-gray-600 rounded-xl p-3 text-white w-full md:w-72 focus:ring-2 focus:ring-red-500 outline-none" onkeyup="filterUsers()">
+                    <input type="text" id="searchUser" placeholder="Cari email atau nama..." class="bg-gray-900 border border-gray-600 rounded-xl p-3 text-white w-full md:w-72 focus:ring-2 focus:ring-sky-500 outline-none" onkeyup="filterUsers()">
                 </div>
                 <div class="overflow-x-auto rounded-xl border border-gray-700">
                     <table class="w-full text-left text-sm text-gray-300 whitespace-nowrap">
@@ -984,7 +984,7 @@ async function renderAdminDashboard(env, currentUser, appSettings) {
                             </tr>
                         </thead>
                         <tbody id="userTableBody" class="divide-y divide-gray-800">
-                            <tr><td colspan="5" class="p-8 text-center text-red-400 animate-pulse">Memuat data pengguna...</td></tr>
+                            <tr><td colspan="5" class="p-8 text-center text-cyan-400 animate-pulse">Memuat data pengguna...</td></tr>
                         </tbody>
                     </table>
                 </div>
@@ -992,14 +992,14 @@ async function renderAdminDashboard(env, currentUser, appSettings) {
                     <span id="userPageInfo" class="text-sm text-gray-400 font-mono">Halaman 1 dari 1</span>
                     <div class="flex gap-2">
                         <button onclick="changeUserPage(-1)" id="btnPrevUser" class="bg-gray-700 hover:bg-gray-600 text-white font-bold px-4 py-2 rounded-xl transition shadow disabled:opacity-50 disabled:cursor-not-allowed">Sebelumnya</button>
-                        <button onclick="changeUserPage(1)" id="btnNextUser" class="bg-red-600 hover:bg-red-500 text-white font-bold px-4 py-2 rounded-xl transition shadow disabled:opacity-50 disabled:cursor-not-allowed">Selanjutnya</button>
+                        <button onclick="changeUserPage(1)" id="btnNextUser" class="bg-sky-600 hover:bg-sky-500 text-white font-bold px-4 py-2 rounded-xl transition shadow disabled:opacity-50 disabled:cursor-not-allowed">Selanjutnya</button>
                     </div>
                 </div>
             </div>
         </div>
 
         <!-- Backup & Restore -->
-        <div class="bg-gray-800 rounded-3xl border border-red-500/30 shadow-2xl mt-10 mb-8 overflow-hidden">
+        <div class="bg-gray-800 rounded-3xl border border-sky-500/30 shadow-2xl mt-10 mb-8 overflow-hidden">
             <button onclick="toggleSection('sectionBackup', 'iconBackup')" class="w-full flex justify-between items-center p-6 md:p-8 bg-gray-800 hover:bg-gray-700 transition">
                 <h2 class="text-base font-bold text-white">\u{1F4BE} Backup & Restore Database</h2>
                 <svg id="iconBackup" class="w-6 h-6 text-gray-400 transform transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
@@ -1008,11 +1008,11 @@ async function renderAdminDashboard(env, currentUser, appSettings) {
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mt-4">
                     <div class="bg-gray-900 p-6 rounded-2xl border border-gray-700 flex flex-col justify-between">
                         <div>
-                            <h3 class="font-bold text-red-400 mb-2 text-lg">Export Data (Backup)</h3>
+                            <h3 class="font-bold text-cyan-400 mb-2 text-lg">Export Data (Backup)</h3>
                             <p class="text-sm text-gray-400 mb-6 leading-relaxed">Unduh seluruh data ke format JSON, atau kirim file backup beserta laporan statistik lengkap ke Telegram.</p>
                         </div>
                         <div class="space-y-3 mt-auto">
-                            <button onclick="downloadBackup()" class="w-full bg-red-600 hover:bg-red-500 text-white font-bold py-3 rounded-xl transition shadow-lg text-sm md:text-base">\u2B07\uFE0F Download Backup.json</button>
+                            <button onclick="downloadBackup()" class="w-full bg-sky-600 hover:bg-sky-500 text-white font-bold py-3 rounded-xl transition shadow-lg text-sm md:text-base">\u2B07\uFE0F Download Backup.json</button>
                             <button onclick="backupToTelegram()" id="btnBackupTg" class="w-full bg-sky-600 hover:bg-sky-500 text-white font-bold py-3 rounded-xl transition shadow-lg text-sm md:text-base flex items-center justify-center gap-2">
                                 <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M11.944 0A12 12 0 000 12a12 12 0 0012 12 12 12 0 0012-12A12 12 0 0012 0a12 12 0 00-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 01.171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.892-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>
                                 Backup Sekarang ke Telegram
@@ -1020,11 +1020,11 @@ async function renderAdminDashboard(env, currentUser, appSettings) {
                         </div>
                     </div>
                     <div class="bg-gray-900 p-6 rounded-2xl border border-gray-700">
-                        <h3 class="font-bold text-red-400 mb-2 text-lg">Import Data (Restore)</h3>
-                        <p class="text-sm text-gray-400 mb-6 leading-relaxed">Kembalikan data dari JSON. <strong class="text-red-500">BAHAYA:</strong> Menghapus & menimpa data yang ada saat ini!</p>
+                        <h3 class="font-bold text-cyan-400 mb-2 text-lg">Import Data (Restore)</h3>
+                        <p class="text-sm text-gray-400 mb-6 leading-relaxed">Kembalikan data dari JSON. <strong class="text-sky-400">BAHAYA:</strong> Menghapus & menimpa data yang ada saat ini!</p>
                         <div class="flex flex-col sm:flex-row gap-3">
                             <input type="file" id="restoreFile" accept=".json" class="block w-full text-sm text-gray-400 file:mr-4 file:py-2.5 file:px-4 file:rounded-lg file:border-0 file:text-xs file:font-bold file:bg-gray-800 file:text-white hover:file:bg-gray-700 transition cursor-pointer bg-gray-950 rounded-xl p-1.5 border border-gray-800">
-                            <button onclick="restoreBackup()" id="btnRestore" class="bg-red-600 hover:bg-red-500 text-white font-bold px-6 py-2.5 rounded-xl transition text-sm shadow-lg shrink-0">Upload</button>
+                            <button onclick="restoreBackup()" id="btnRestore" class="bg-sky-600 hover:bg-sky-500 text-white font-bold px-6 py-2.5 rounded-xl transition text-sm shadow-lg shrink-0">Upload</button>
                         </div>
                     </div>
                     <div class="bg-gray-900 p-6 rounded-2xl border border-gray-700 flex flex-col justify-between md:col-span-2">
@@ -1198,7 +1198,7 @@ async function renderAdminDashboard(env, currentUser, appSettings) {
 
     <!-- Modal Konfigurasi -->
     <div id="settingsModal" class="fixed inset-0 bg-black/80 hidden z-50 flex items-center justify-center p-4 backdrop-blur-sm">
-        <div class="bg-gray-900 p-6 md:p-8 rounded-3xl w-full max-w-3xl max-h-[90vh] flex flex-col border border-red-600/30 shadow-2xl">
+        <div class="bg-gray-900 p-6 md:p-8 rounded-3xl w-full max-w-3xl max-h-[90vh] flex flex-col border border-sky-600/30 shadow-2xl">
             <div class="flex justify-between items-center mb-6 border-b border-gray-800 pb-4">
                 <h3 class="text-2xl font-bold text-white tracking-tight flex items-center gap-2">\u2699\uFE0F Konfigurasi Sistem</h3>
                 <button onclick="closeSettingsModal()" class="text-gray-400 hover:text-white text-3xl leading-none">&times;</button>
@@ -1211,49 +1211,49 @@ async function renderAdminDashboard(env, currentUser, appSettings) {
                         <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-3">
                             <div>
                                 <label class="block text-xs font-bold text-gray-400 mb-2 uppercase tracking-wide">Gateway TriPay (Otomatis)</label>
-                                <select id="setTripayActive" class="w-full bg-gray-900 border border-gray-700 rounded-lg p-3 text-white text-sm focus:ring-2 focus:ring-red-500 outline-none font-bold">
+                                <select id="setTripayActive" class="w-full bg-gray-900 border border-gray-700 rounded-lg p-3 text-white text-sm focus:ring-2 focus:ring-sky-500 outline-none font-bold">
                                     <option value="true" ${isTripayOn ? "selected" : ""}>\u{1F7E2} ON - Aktif</option>
                                     <option value="false" ${!isTripayOn ? "selected" : ""}>\u{1F534} OFF - Mati</option>
                                 </select>
                             </div>
                             <div>
                                 <label class="block text-xs font-bold text-gray-400 mb-2 uppercase tracking-wide">Gateway Violet (Otomatis)</label>
-                                <select id="setVioletActive" class="w-full bg-gray-900 border border-gray-700 rounded-lg p-3 text-white text-sm focus:ring-2 focus:ring-red-500 outline-none font-bold">
+                                <select id="setVioletActive" class="w-full bg-gray-900 border border-gray-700 rounded-lg p-3 text-white text-sm focus:ring-2 focus:ring-sky-500 outline-none font-bold">
                                     <option value="true" ${isVioletOn ? "selected" : ""}>\u{1F7E2} ON - Aktif</option>
                                     <option value="false" ${!isVioletOn ? "selected" : ""}>\u{1F534} OFF - Mati</option>
                                 </select>
                             </div>
                             <div>
                                 <label class="block text-xs font-bold text-gray-400 mb-2 uppercase tracking-wide">QRIS Manual (Admin Cek)</label>
-                                <select id="setQrisManualActive" class="w-full bg-gray-900 border border-gray-700 rounded-lg p-3 text-white text-sm focus:ring-2 focus:ring-red-500 outline-none font-bold">
+                                <select id="setQrisManualActive" class="w-full bg-gray-900 border border-gray-700 rounded-lg p-3 text-white text-sm focus:ring-2 focus:ring-sky-500 outline-none font-bold">
                                     <option value="false" ${!isQrisManualOn ? "selected" : ""}>\u{1F534} OFF - Mati</option>
                                     <option value="true" ${isQrisManualOn ? "selected" : ""}>\u{1F7E2} ON - Aktif</option>
                                 </select>
                             </div>
                             <div>
                                 <label class="block text-xs font-bold text-gray-400 mb-2 uppercase tracking-wide">ShopeePay (AutoGoPay)</label>
-                                <select id="setShopeePayActive" class="w-full bg-gray-900 border border-gray-700 rounded-lg p-3 text-white text-sm focus:ring-2 focus:ring-red-500 outline-none font-bold">
+                                <select id="setShopeePayActive" class="w-full bg-gray-900 border border-gray-700 rounded-lg p-3 text-white text-sm focus:ring-2 focus:ring-sky-500 outline-none font-bold">
                                     <option value="true" ${isShopeePayOn ? "selected" : ""}>\u{1F7E2} ON - Aktif</option>
                                     <option value="false" ${!isShopeePayOn ? "selected" : ""}>\u{1F534} OFF - Mati</option>
                                 </select>
                             </div>
                             <div>
                                 <label class="block text-xs font-bold text-gray-400 mb-2 uppercase tracking-wide">GoPay (AutoGoPay)</label>
-                                <select id="setGoPayActive" class="w-full bg-gray-900 border border-gray-700 rounded-lg p-3 text-white text-sm focus:ring-2 focus:ring-red-500 outline-none font-bold">
+                                <select id="setGoPayActive" class="w-full bg-gray-900 border border-gray-700 rounded-lg p-3 text-white text-sm focus:ring-2 focus:ring-sky-500 outline-none font-bold">
                                     <option value="true" ${isGoPayOn ? "selected" : ""}>\u{1F7E2} ON - Aktif</option>
                                     <option value="false" ${!isGoPayOn ? "selected" : ""}>\u{1F534} OFF - Mati</option>
                                 </select>
                             </div>
                             <div>
                                 <label class="block text-xs font-bold text-gray-400 mb-2 uppercase tracking-wide">Asisten AI Chat</label>
-                                <select id="setAiActive" class="w-full bg-gray-900 border border-gray-700 rounded-lg p-3 text-white text-sm focus:ring-2 focus:ring-red-500 outline-none font-bold">
+                                <select id="setAiActive" class="w-full bg-gray-900 border border-gray-700 rounded-lg p-3 text-white text-sm focus:ring-2 focus:ring-sky-500 outline-none font-bold">
                                     <option value="true" ${appSettings.ai_chat_active !== false ? "selected" : ""}>\u{1F7E2} ON - Aktif</option>
                                     <option value="false" ${appSettings.ai_chat_active === false ? "selected" : ""}>\u{1F534} OFF - Mati</option>
                                 </select>
                             </div>
                             <div>
                                 <label class="block text-xs font-bold text-gray-400 mb-2 uppercase tracking-wide">Provider AI</label>
-                                <select id="setAiProvider" class="w-full bg-gray-900 border border-gray-700 rounded-lg p-3 text-white text-sm focus:ring-2 focus:ring-red-500 outline-none font-bold">
+                                <select id="setAiProvider" class="w-full bg-gray-900 border border-gray-700 rounded-lg p-3 text-white text-sm focus:ring-2 focus:ring-sky-500 outline-none font-bold">
                                     <option value="cloudflare" ${appSettings.ai_provider === "cloudflare" || !appSettings.ai_provider && appSettings.ai_provider !== "deepseek" && appSettings.ai_provider !== "gemini" ? "selected" : ""}>\u2601\uFE0F Cloudflare (Llama-3)</option>
                                     <option value="deepseek" ${appSettings.ai_provider === "deepseek" ? "selected" : ""}>\u{1F40B} Deepseek-v4-flash</option>
                                     <option value="gemini" ${appSettings.ai_provider === "gemini" ? "selected" : ""}>\u264A Gemini (Gemini-Flash)</option>
@@ -1263,16 +1263,16 @@ async function renderAdminDashboard(env, currentUser, appSettings) {
                         <div class="mt-3 pt-3 border-t border-gray-800 space-y-3">
                             <div>
                                 <label class="block text-xs font-bold text-gray-400 mb-1 uppercase tracking-wide">AutoGoPay API Key (Opsional / Override)</label>
-                                <input type="text" id="setAgpApiKey" value="${appSettings.autogopay_api_key || ""}" placeholder="agp_1bae647d0c0c25307757c1a60afa7b06..." class="w-full bg-gray-900 border border-gray-700 rounded-lg p-2.5 text-white text-xs font-mono focus:ring-2 focus:ring-red-500 outline-none">
+                                <input type="text" id="setAgpApiKey" value="${appSettings.autogopay_api_key || ""}" placeholder="agp_1bae647d0c0c25307757c1a60afa7b06..." class="w-full bg-gray-900 border border-gray-700 rounded-lg p-2.5 text-white text-xs font-mono focus:ring-2 focus:ring-sky-500 outline-none">
                             </div>
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
                                 <div>
                                     <label class="block text-xs font-bold text-gray-400 mb-1 uppercase tracking-wide">ShopeePay QRIS Static</label>
-                                    <input type="text" id="setShopeeQrisStatic" value="${appSettings.shopeepay_qris_static || ""}" placeholder="00020101021126610016ID.CO.SHOPEE..." class="w-full bg-gray-900 border border-gray-700 rounded-lg p-2.5 text-white text-xs font-mono focus:ring-2 focus:ring-red-500 outline-none">
+                                    <input type="text" id="setShopeeQrisStatic" value="${appSettings.shopeepay_qris_static || ""}" placeholder="00020101021126610016ID.CO.SHOPEE..." class="w-full bg-gray-900 border border-gray-700 rounded-lg p-2.5 text-white text-xs font-mono focus:ring-2 focus:ring-sky-500 outline-none">
                                 </div>
                                 <div>
                                     <label class="block text-xs font-bold text-gray-400 mb-1 uppercase tracking-wide">GoPay QRIS Static</label>
-                                    <input type="text" id="setGopayQrisStatic" value="${appSettings.gopay_qris_static || ""}" placeholder="00020101021126610014COM.GO-JEK..." class="w-full bg-gray-900 border border-gray-700 rounded-lg p-2.5 text-white text-xs font-mono focus:ring-2 focus:ring-red-500 outline-none">
+                                    <input type="text" id="setGopayQrisStatic" value="${appSettings.gopay_qris_static || ""}" placeholder="00020101021126610014COM.GO-JEK..." class="w-full bg-gray-900 border border-gray-700 rounded-lg p-2.5 text-white text-xs font-mono focus:ring-2 focus:ring-sky-500 outline-none">
                                 </div>
                             </div>
                         </div>
@@ -1281,7 +1281,7 @@ async function renderAdminDashboard(env, currentUser, appSettings) {
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
                         <div>
                             <label class="block text-xs font-bold text-gray-400 mb-2 uppercase tracking-wide">Harga VPN (Rp/Hari)</label>
-                            <input type="number" id="setPrice" value="${appSettings.price_per_day}" required class="w-full bg-gray-950 border border-gray-700 rounded-xl p-3.5 text-white font-bold text-lg focus:ring-2 focus:ring-red-500 outline-none">
+                            <input type="number" id="setPrice" value="${appSettings.price_per_day}" required class="w-full bg-gray-950 border border-gray-700 rounded-xl p-3.5 text-white font-bold text-lg focus:ring-2 focus:ring-sky-500 outline-none">
                         </div>
                         <div>
                             <label class="block text-xs font-bold text-gray-400 mb-2 uppercase tracking-wide">Harga Lisensi Script (Rp)</label>
@@ -1296,11 +1296,11 @@ async function renderAdminDashboard(env, currentUser, appSettings) {
                     <div class="grid grid-cols-2 gap-4">
                         <div>
                             <label class="block text-xs font-bold text-gray-400 mb-2 uppercase tracking-wide">Telegram Bot Token</label>
-                            <input type="text" id="setTgToken" value="${appSettings.telegram_bot_token || ""}" placeholder="123456:ABC-DEF..." class="w-full bg-gray-950 border border-gray-700 rounded-xl p-3.5 text-white text-sm focus:ring-2 focus:ring-red-500 outline-none">
+                            <input type="text" id="setTgToken" value="${appSettings.telegram_bot_token || ""}" placeholder="123456:ABC-DEF..." class="w-full bg-gray-950 border border-gray-700 rounded-xl p-3.5 text-white text-sm focus:ring-2 focus:ring-sky-500 outline-none">
                         </div>
                         <div>
                             <label class="block text-xs font-bold text-gray-400 mb-2 uppercase tracking-wide">Telegram Channel ID</label>
-                            <input type="text" id="setTgChatId" value="${appSettings.telegram_channel_id || ""}" placeholder="@srpcomlogcf" class="w-full bg-gray-950 border border-gray-700 rounded-xl p-3.5 text-white text-sm focus:ring-2 focus:ring-red-500 outline-none">
+                            <input type="text" id="setTgChatId" value="${appSettings.telegram_channel_id || ""}" placeholder="@srpcomlogcf" class="w-full bg-gray-950 border border-gray-700 rounded-xl p-3.5 text-white text-sm focus:ring-2 focus:ring-sky-500 outline-none">
                         </div>
                     </div>
                     <div class="grid grid-cols-2 gap-4">
@@ -1314,7 +1314,7 @@ async function renderAdminDashboard(env, currentUser, appSettings) {
                         </div>
                         <div class="col-span-2 md:col-span-1">
                             <label class="block text-xs font-bold text-gray-400 mb-2 uppercase tracking-wide">Mode Maintenance</label>
-                            <select id="setMaintenance" class="w-full bg-gray-950 border border-gray-700 rounded-xl p-3.5 text-white text-sm focus:ring-2 focus:ring-red-500 outline-none font-bold">
+                            <select id="setMaintenance" class="w-full bg-gray-950 border border-gray-700 rounded-xl p-3.5 text-white text-sm focus:ring-2 focus:ring-sky-500 outline-none font-bold">
                                 <option value="false" ${!appSettings.maintenance_mode ? "selected" : ""}>\u{1F7E2} OFF - Normal</option>
                                 <option value="true" ${appSettings.maintenance_mode ? "selected" : ""}>\u{1F534} ON - Maintenance</option>
                             </select>
@@ -1325,12 +1325,12 @@ async function renderAdminDashboard(env, currentUser, appSettings) {
                         <div id="serverListContainer" class="space-y-4 max-h-[40vh] overflow-y-auto custom-scrollbar pr-2 mb-3">
                             <!-- Server items rendered dynamically via JS -->
                         </div>
-                        <button type="button" onclick="addServerUI()" class="bg-red-600 hover:bg-red-500 text-white font-bold py-2.5 px-4 rounded-xl text-xs transition flex items-center gap-1.5 active:scale-[0.98]">
+                        <button type="button" onclick="addServerUI()" class="bg-sky-600 hover:bg-sky-500 text-white font-bold py-2.5 px-4 rounded-xl text-xs transition flex items-center gap-1.5 active:scale-[0.98]">
                             \u2795 Tambah Server Baru
                         </button>
                         <textarea id="setServers" class="hidden">${JSON.stringify(appSettings.servers || [])}</textarea>
                     </div>
-                    <button type="submit" id="btnSaveSettings" class="w-full bg-red-600 hover:bg-red-500 text-white font-bold py-4 rounded-xl shadow-lg transition text-lg mt-4">Simpan Konfigurasi</button>
+                    <button type="submit" id="btnSaveSettings" class="w-full bg-sky-600 hover:bg-sky-500 text-white font-bold py-4 rounded-xl shadow-lg transition text-lg mt-4">Simpan Konfigurasi</button>
                 </form>
             </div>
         </div>
@@ -1435,7 +1435,7 @@ async function renderAdminDashboard(env, currentUser, appSettings) {
     
     <!-- Modal Global Delete -->
     <div id="globalDeleteModal" class="fixed inset-0 bg-black/80 hidden z-50 flex items-center justify-center p-4 backdrop-blur-sm">
-        <div class="bg-gray-900 p-6 md:p-8 rounded-3xl w-full max-w-2xl border border-red-500/30 shadow-2xl">
+        <div class="bg-gray-900 p-6 md:p-8 rounded-3xl w-full max-w-2xl border border-sky-500/30 shadow-2xl">
             <div class="flex justify-between items-center mb-6 border-b border-gray-800 pb-4">
                 <h3 class="text-2xl font-bold text-white tracking-tight flex items-center gap-2">\u{1F5D1}\uFE0F Global Delete Akun VPN</h3>
                 <button onclick="closeGlobalDeleteModal()" class="text-gray-400 hover:text-white text-3xl leading-none">&times;</button>
@@ -1444,32 +1444,32 @@ async function renderAdminDashboard(env, currentUser, appSettings) {
                 <p class="text-sm text-gray-400 leading-relaxed mb-4">Fitur ini akan menghapus akun (username) secara paksa dari VPS (melalui seluruh protokol utama) dan menghapusnya dari database lokal jika ditemukan.</p>
                 <div>
                     <label class="block text-sm font-bold text-gray-400 mb-2 uppercase tracking-wide">Pilih Server VPS</label>
-                    <select id="gdServer" required class="w-full bg-gray-950 border border-gray-700 rounded-xl p-4 text-white focus:ring-2 focus:ring-red-500 outline-none">
+                    <select id="gdServer" required class="w-full bg-gray-950 border border-gray-700 rounded-xl p-4 text-white focus:ring-2 focus:ring-sky-500 outline-none">
                         ${(appSettings.servers || []).map((s) => `<option value="${s.id}">${s.name}</option>`).join("")}
                     </select>
                 </div>
                 <div>
                     <label class="block text-sm font-bold text-gray-400 mb-2 uppercase tracking-wide">Username / Akun</label>
-                    <input type="text" id="gdUsername" required placeholder="Contoh: tuban123" class="w-full bg-gray-950 border border-gray-700 rounded-xl p-4 text-white focus:ring-2 focus:ring-red-500 outline-none font-mono text-sm">
+                    <input type="text" id="gdUsername" required placeholder="Contoh: tuban123" class="w-full bg-gray-950 border border-gray-700 rounded-xl p-4 text-white focus:ring-2 focus:ring-sky-500 outline-none font-mono text-sm">
                 </div>
-                <button type="submit" id="btnSubmitGd" class="w-full bg-red-600 hover:bg-red-500 text-white font-bold py-4 rounded-xl shadow-lg transition text-lg mt-4">Eksekusi Delete</button>
+                <button type="submit" id="btnSubmitGd" class="w-full bg-sky-600 hover:bg-sky-500 text-white font-bold py-4 rounded-xl shadow-lg transition text-lg mt-4">Eksekusi Delete</button>
             </form>
         </div>
     </div>
 
     <!-- Modal Monitoring Server -->
     <div id="monitorModal" class="fixed inset-0 bg-black/85 hidden z-50 flex items-center justify-center p-3 md:p-4 backdrop-blur-md">
-        <div class="bg-gray-950 p-4 md:p-5 rounded-2xl w-full max-w-4xl h-[85vh] md:h-[80vh] flex flex-col border border-red-600/15 shadow-2xl shadow-red-950/20">
+        <div class="bg-gray-950 p-4 md:p-5 rounded-2xl w-full max-w-4xl h-[85vh] md:h-[80vh] flex flex-col border border-sky-600/15 shadow-2xl shadow-red-950/20">
             <!-- Header Ringkas -->
             <div class="flex justify-between items-start border-b border-gray-900 pb-2.5 shrink-0">
                 <div>
                     <div class="flex items-center gap-2">
                         <h3 class="text-base md:text-lg font-black text-white tracking-tight flex items-center gap-1.5">
-                            <span class="text-red-400">\u{1F4CA}</span> Monitoring Server (Live)
+                            <span class="text-cyan-400">\u{1F4CA}</span> Monitoring Server (Live)
                         </h3>
-                        <span class="bg-red-950/40 text-red-400 border border-red-800/40 px-1.5 py-0.5 rounded text-[9px] font-bold uppercase tracking-wider">STATUS PING</span>
+                        <span class="bg-sky-950/40 text-cyan-400 border border-red-800/40 px-1.5 py-0.5 rounded text-[9px] font-bold uppercase tracking-wider">STATUS PING</span>
                     </div>
-                    <p class="text-[10px] text-red-300/80 mt-0.5 leading-tight">Pengecekan latency dan status konektivitas realtime untuk semua server VPS yang terhubung.</p>
+                    <p class="text-[10px] text-cyan-300/80 mt-0.5 leading-tight">Pengecekan latency dan status konektivitas realtime untuk semua server VPS yang terhubung.</p>
                 </div>
                 <button onclick="closeMonitorModal()" class="text-gray-400 hover:text-white text-xl leading-none transition-colors p-1">&times;</button>
             </div>
@@ -1480,7 +1480,7 @@ async function renderAdminDashboard(env, currentUser, appSettings) {
                     <h4 class="text-xs font-bold text-gray-300 uppercase tracking-wide flex items-center gap-1.5">
                         \u{1F310} Status Semua Server VPS
                     </h4>
-                    <button onclick="pingAllServers()" class="bg-red-700 hover:bg-red-600 active:scale-[0.98] text-white text-[10px] px-3 py-1.5 rounded-lg font-bold transition shadow-sm flex items-center gap-1">
+                    <button onclick="pingAllServers()" class="bg-sky-700 hover:bg-sky-600 active:scale-[0.98] text-white text-[10px] px-3 py-1.5 rounded-lg font-bold transition shadow-sm flex items-center gap-1">
                         \u{1F504} Cek Ulang
                     </button>
                 </div>
@@ -1605,7 +1605,7 @@ async function renderAdminDashboard(env, currentUser, appSettings) {
                                     <button onclick="renewLiveAccount()" id="btnRenewLive" class="bg-green-600 hover:bg-green-500 active:scale-[0.98] text-white font-bold px-3 py-2 rounded-lg text-xs transition duration-150 shadow-sm flex items-center justify-center gap-1 h-9">
                                         \u{1F504} Perpanjang
                                     </button>
-                                    <button onclick="deleteLiveAccount()" id="btnDeleteLive" class="bg-red-600 hover:bg-red-500 active:scale-[0.98] text-white font-bold px-3 py-2 rounded-lg text-xs transition duration-150 shadow-sm flex items-center justify-center gap-1 h-9">
+                                    <button onclick="deleteLiveAccount()" id="btnDeleteLive" class="bg-sky-600 hover:bg-sky-500 active:scale-[0.98] text-white font-bold px-3 py-2 rounded-lg text-xs transition duration-150 shadow-sm flex items-center justify-center gap-1 h-9">
                                         \u{1F5D1}\uFE0F Hapus Akun
                                     </button>
                                 </div>
@@ -1735,7 +1735,7 @@ async function renderAdminDashboard(env, currentUser, appSettings) {
                     <textarea id="replyTicketMessage" rows="2" placeholder="Ketik balasan Anda di sini..." class="w-full bg-gray-900 border border-gray-700 rounded-xl p-3 text-white focus:ring-2 focus:ring-teal-500 outline-none custom-scrollbar text-sm resize-none"></textarea>
                     <div class="flex flex-col gap-2 shrink-0">
                         <button onclick="sendTicketReplyAdmin()" id="btnSendReply" class="bg-teal-600 hover:bg-teal-500 text-white font-bold px-5 py-2.5 rounded-xl transition shadow flex-grow">Kirim Balasan</button>
-                        <button onclick="closeTicketAdmin()" id="btnCloseTicketAdmin" class="bg-gray-700 hover:bg-red-600 text-gray-300 hover:text-white text-xs font-bold px-5 py-2 rounded-xl transition border border-gray-600 hover:border-red-500">Tutup Tiket</button>
+                        <button onclick="closeTicketAdmin()" id="btnCloseTicketAdmin" class="bg-gray-700 hover:bg-sky-600 text-gray-300 hover:text-white text-xs font-bold px-5 py-2 rounded-xl transition border border-gray-600 hover:border-sky-500">Tutup Tiket</button>
                     </div>
                 </div>
                 <div id="ticketClosedArea" class="hidden text-center p-3">
@@ -1854,31 +1854,31 @@ async function renderAdminDashboard(env, currentUser, appSettings) {
             
             servers.forEach((server, index) => {
                 const itemHtml = \`
-                    <div class="server-item bg-gray-950 p-4 rounded-xl border border-gray-800 flex flex-col gap-3 relative hover:border-red-600/20 transition">
+                    <div class="server-item bg-gray-950 p-4 rounded-xl border border-gray-800 flex flex-col gap-3 relative hover:border-sky-600/20 transition">
                         <div class="flex justify-between items-center border-b border-gray-900 pb-2">
-                            <span class="text-xs font-black text-red-400">Server #\${index + 1}</span>
-                            <button type="button" onclick="removeServerUI(\${index})" class="text-red-400 hover:text-red-300 text-xs font-bold flex items-center gap-1 bg-red-950/20 hover:bg-red-950/40 px-2.5 py-1 rounded-md border border-red-500/10 transition">
+                            <span class="text-xs font-black text-cyan-400">Server #\${index + 1}</span>
+                            <button type="button" onclick="removeServerUI(\${index})" class="text-cyan-400 hover:text-cyan-300 text-xs font-bold flex items-center gap-1 bg-sky-950/20 hover:bg-sky-950/40 px-2.5 py-1 rounded-md border border-sky-500/10 transition">
                                 \u{1F5D1}\uFE0F Hapus
                             </button>
                         </div>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
                             <div>
                                 <label class="block text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-1">ID Server (Unik)</label>
-                                <input type="text" class="server-id bg-gray-900 border border-gray-800 rounded-lg p-2.5 text-white text-xs w-full focus:ring-1 focus:ring-red-500 outline-none font-mono" value="\${escapeHtmlClient(server.id || '')}" placeholder="Contoh: srv1" required>
+                                <input type="text" class="server-id bg-gray-900 border border-gray-800 rounded-lg p-2.5 text-white text-xs w-full focus:ring-1 focus:ring-sky-500 outline-none font-mono" value="\${escapeHtmlClient(server.id || '')}" placeholder="Contoh: srv1" required>
                             </div>
                             <div>
                                 <label class="block text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-1">Nama Server</label>
-                                <input type="text" class="server-name bg-gray-900 border border-gray-800 rounded-lg p-2.5 text-white text-xs w-full focus:ring-1 focus:ring-red-500 outline-none font-bold" value="\${escapeHtmlClient(server.name || '')}" placeholder="Contoh: ID1 at" required>
+                                <input type="text" class="server-name bg-gray-900 border border-gray-800 rounded-lg p-2.5 text-white text-xs w-full focus:ring-1 focus:ring-sky-500 outline-none font-bold" value="\${escapeHtmlClient(server.name || '')}" placeholder="Contoh: ID1 at" required>
                             </div>
                         </div>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
                             <div>
                                 <label class="block text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-1">Host / API URL</label>
-                                <input type="text" class="server-host bg-gray-900 border border-gray-800 rounded-lg p-2.5 text-white text-xs w-full focus:ring-1 focus:ring-red-500 outline-none font-mono" value="\${escapeHtmlClient(server.host || '')}" placeholder="Contoh: http://at.srpcom.cloud" required>
+                                <input type="text" class="server-host bg-gray-900 border border-gray-800 rounded-lg p-2.5 text-white text-xs w-full focus:ring-1 focus:ring-sky-500 outline-none font-mono" value="\${escapeHtmlClient(server.host || '')}" placeholder="Contoh: http://at.srpcom.cloud" required>
                             </div>
                             <div>
                                 <label class="block text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-1">API Key / Secret</label>
-                                <input type="text" class="server-key bg-gray-900 border border-gray-800 rounded-lg p-2.5 text-white text-xs w-full focus:ring-1 focus:ring-red-500 outline-none font-mono" value="\${escapeHtmlClient(server.key || '')}" placeholder="Masukkan API Key...">
+                                <input type="text" class="server-key bg-gray-900 border border-gray-800 rounded-lg p-2.5 text-white text-xs w-full focus:ring-1 focus:ring-sky-500 outline-none font-mono" value="\${escapeHtmlClient(server.key || '')}" placeholder="Masukkan API Key...">
                             </div>
                         </div>
                     </div>
@@ -1967,7 +1967,7 @@ async function renderAdminDashboard(env, currentUser, appSettings) {
                         }
                     } else {
                         if (badge) {
-                            badge.className = 'vps-status-badge px-2.5 py-1 rounded-full text-[9px] font-black uppercase bg-red-500/20 text-red-400 border border-red-500/30';
+                            badge.className = 'vps-status-badge px-2.5 py-1 rounded-full text-[9px] font-black uppercase bg-sky-500/20 text-cyan-400 border border-sky-500/30';
                             badge.innerText = 'OFFLINE (DOWN)';
                         }
                         if (infoCell) {
@@ -1976,7 +1976,7 @@ async function renderAdminDashboard(env, currentUser, appSettings) {
                     }
                 } catch (e) {
                     if (badge) {
-                        badge.className = 'vps-status-badge px-2.5 py-1 rounded-full text-[9px] font-black uppercase bg-red-500/20 text-red-400 border border-red-500/30';
+                        badge.className = 'vps-status-badge px-2.5 py-1 rounded-full text-[9px] font-black uppercase bg-sky-500/20 text-cyan-400 border border-sky-500/30';
                         badge.innerText = 'OFFLINE (DOWN)';
                     }
                     if (infoCell) {
@@ -2117,8 +2117,8 @@ async function renderAdminDashboard(env, currentUser, appSettings) {
             } catch (e) {
                 console.error("Dashboard Stats Error:", e);
                 loaderIds.forEach(id => document.getElementById(id).innerText = 'Error');
-                serverTbody.innerHTML = '<tr><td colspan="3" class="p-6 text-center text-red-500">Error memuat data.</td></tr>';
-                xlTbody.innerHTML = '<tr><td colspan="3" class="p-6 text-center text-red-500">Error memuat data.</td></tr>';
+                serverTbody.innerHTML = '<tr><td colspan="3" class="p-6 text-center text-sky-400">Error memuat data.</td></tr>';
+                xlTbody.innerHTML = '<tr><td colspan="3" class="p-6 text-center text-sky-400">Error memuat data.</td></tr>';
             }
         }
 
@@ -2256,7 +2256,7 @@ async function renderAdminDashboard(env, currentUser, appSettings) {
                     } else {
                         tbody.innerHTML = data.data.map(trx => {
                             const isMasuk = trx.type === 'IN';
-                            const nominalClass = isMasuk ? 'text-green-400' : 'text-red-400';
+                            const nominalClass = isMasuk ? 'text-green-400' : 'text-cyan-400';
                             const sign = isMasuk ? '+' : '-';
                             
                             let sisaSaldoText = '-';
@@ -2270,7 +2270,7 @@ async function renderAdminDashboard(env, currentUser, appSettings) {
                             return \`
                             <tr class="hover:bg-gray-800/50 transition border-b border-gray-800 last:border-0">
                                 <td class="p-4 font-mono text-xs text-gray-500">\${dateHtml}</td>
-                                <td class="p-4 font-mono text-xs text-red-400">\${escapeHtmlClient(trx.email)}</td>
+                                <td class="p-4 font-mono text-xs text-cyan-400">\${escapeHtmlClient(trx.email)}</td>
                                 <td class="p-4 text-white font-medium max-w-xs truncate whitespace-normal leading-snug text-[11px]" style="font-family: 'Arial Narrow', Arial, sans-serif;">\${escapeHtmlClient(trx.description)}</td>
                                 <td class="p-4 font-mono font-bold text-right \${nominalClass}">\${sign} Rp \${trx.amount.toLocaleString('id-ID')}</td>
                                 <td class="p-4 font-mono font-bold text-right text-gray-300">\${sisaSaldoText}</td>
@@ -2282,10 +2282,10 @@ async function renderAdminDashboard(env, currentUser, appSettings) {
                     btnPrev.disabled = data.page <= 1;
                     btnNext.disabled = data.page >= data.totalPages;
                 } else {
-                    tbody.innerHTML = '<tr><td colspan="5" class="p-8 text-center text-red-500">Gagal mengambil data.</td></tr>';
+                    tbody.innerHTML = '<tr><td colspan="5" class="p-8 text-center text-sky-400">Gagal mengambil data.</td></tr>';
                 }
             } catch (e) {
-                tbody.innerHTML = '<tr><td colspan="5" class="p-8 text-center text-red-500">Koneksi Error.</td></tr>';
+                tbody.innerHTML = '<tr><td colspan="5" class="p-8 text-center text-sky-400">Koneksi Error.</td></tr>';
             }
         }
 
@@ -2334,13 +2334,13 @@ async function renderAdminDashboard(env, currentUser, appSettings) {
                     } else {
                         tbody.innerHTML = data.data.map(t => {
                             let statusBadge = '';
-                            if (t.status === 'OPEN') statusBadge = '<span class="bg-red-500/20 text-red-400 border border-red-500/30 text-[10px] px-2.5 py-1 rounded uppercase font-bold">OPEN</span>';
+                            if (t.status === 'OPEN') statusBadge = '<span class="bg-sky-500/20 text-cyan-400 border border-sky-500/30 text-[10px] px-2.5 py-1 rounded uppercase font-bold">OPEN</span>';
                             else if (t.status === 'PENDING') statusBadge = '<span class="bg-yellow-500/20 text-yellow-400 border border-yellow-500/30 text-[10px] px-2.5 py-1 rounded uppercase font-bold">PENDING</span>';
                             else statusBadge = '<span class="bg-gray-500/20 text-gray-400 border border-gray-500/30 text-[10px] px-2.5 py-1 rounded uppercase font-bold">CLOSED</span>';
 
                             return \`
                             <tr class="hover:bg-gray-800/50 transition">
-                                <td class="p-4 font-mono text-xs text-red-400">\${t.id}</td>
+                                <td class="p-4 font-mono text-xs text-cyan-400">\${t.id}</td>
                                 <td class="p-4 text-sm text-gray-300">\${t.email}</td>
                                 <td class="p-4">
                                     <span class="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">\${t.category}</span>
@@ -2368,10 +2368,10 @@ async function renderAdminDashboard(env, currentUser, appSettings) {
                         badge.classList.add('hidden');
                     }
                 } else {
-                    tbody.innerHTML = '<tr><td colspan="5" class="p-8 text-center text-red-500">Gagal memuat data tiket.</td></tr>';
+                    tbody.innerHTML = '<tr><td colspan="5" class="p-8 text-center text-sky-400">Gagal memuat data tiket.</td></tr>';
                 }
             } catch(e) {
-                tbody.innerHTML = '<tr><td colspan="5" class="p-8 text-center text-red-500">Koneksi Error.</td></tr>';
+                tbody.innerHTML = '<tr><td colspan="5" class="p-8 text-center text-sky-400">Koneksi Error.</td></tr>';
             }
         }
 
@@ -2400,7 +2400,7 @@ async function renderAdminDashboard(env, currentUser, appSettings) {
                     document.getElementById('ticketViewSubtitle').innerText = t.category + ' | ' + t.email;
                     
                     const statusEl = document.getElementById('ticketViewStatus');
-                    if (t.status === 'OPEN') { statusEl.className = 'px-3 py-1 text-xs font-bold rounded-lg uppercase tracking-wider bg-red-500/20 text-red-400 border border-red-500/30'; statusEl.innerText = 'OPEN'; }
+                    if (t.status === 'OPEN') { statusEl.className = 'px-3 py-1 text-xs font-bold rounded-lg uppercase tracking-wider bg-sky-500/20 text-cyan-400 border border-sky-500/30'; statusEl.innerText = 'OPEN'; }
                     else if (t.status === 'PENDING') { statusEl.className = 'px-3 py-1 text-xs font-bold rounded-lg uppercase tracking-wider bg-yellow-500/20 text-yellow-400 border border-yellow-500/30'; statusEl.innerText = 'PENDING'; }
                     else { statusEl.className = 'px-3 py-1 text-xs font-bold rounded-lg uppercase tracking-wider bg-gray-500/20 text-gray-400 border border-gray-500/30'; statusEl.innerText = 'CLOSED'; }
 
@@ -2429,10 +2429,10 @@ async function renderAdminDashboard(env, currentUser, appSettings) {
                         setTimeout(() => { chatContainer.scrollTop = chatContainer.scrollHeight; }, 100);
                     }
                 } else {
-                    chatContainer.innerHTML = '<p class="text-center text-red-500 mt-10">Gagal memuat detail tiket.</p>';
+                    chatContainer.innerHTML = '<p class="text-center text-sky-400 mt-10">Gagal memuat detail tiket.</p>';
                 }
             } catch(e) {
-                chatContainer.innerHTML = '<p class="text-center text-red-500 mt-10">Koneksi Error.</p>';
+                chatContainer.innerHTML = '<p class="text-center text-sky-400 mt-10">Koneksi Error.</p>';
             }
         }
 
@@ -2499,10 +2499,10 @@ async function renderAdminDashboard(env, currentUser, appSettings) {
                     currentAdminLicensePage = 1;
                     renderAdminLicenses();
                 } else {
-                    tbody.innerHTML = '<tr><td colspan="5" class="p-8 text-center text-red-500">Gagal memuat data.</td></tr>';
+                    tbody.innerHTML = '<tr><td colspan="5" class="p-8 text-center text-sky-400">Gagal memuat data.</td></tr>';
                 }
             } catch(e) {
-                tbody.innerHTML = '<tr><td colspan="5" class="p-8 text-center text-red-500">Koneksi Error.</td></tr>';
+                tbody.innerHTML = '<tr><td colspan="5" class="p-8 text-center text-sky-400">Koneksi Error.</td></tr>';
             }
         }
 
@@ -2528,12 +2528,12 @@ async function renderAdminDashboard(env, currentUser, appSettings) {
                 const isExpired = lic.expires_at < Date.now();
                 const expDate = new Date(lic.expires_at).toLocaleString('id-ID', { timeZone: 'Asia/Jakarta' }) + ' WIB';
                 const statusBadge = isExpired 
-                    ? '<span class="bg-red-500/20 text-red-400 border border-red-500/30 text-[10px] px-2 py-0.5 rounded uppercase font-bold">Expired</span>'
+                    ? '<span class="bg-sky-500/20 text-cyan-400 border border-sky-500/30 text-[10px] px-2 py-0.5 rounded uppercase font-bold">Expired</span>'
                     : '<span class="bg-green-500/20 text-green-400 border border-green-500/30 text-[10px] px-2 py-0.5 rounded uppercase font-bold">Aktif</span>';
                 return \`
                 <tr class="hover:bg-gray-800/50 transition border-b border-gray-850 last:border-0">
                     <td class="p-1.5 text-[11px] font-mono text-gray-400">\${lic.email}</td>
-                    <td class="p-1.5 text-xs font-bold text-red-400 font-mono">\${escapeHtmlClient(lic.ip_address)}</td>
+                    <td class="p-1.5 text-xs font-bold text-cyan-400 font-mono">\${escapeHtmlClient(lic.ip_address)}</td>
                     <td class="p-1.5 text-xs text-gray-300 truncate max-w-[200px]">
                         \${escapeHtmlClient(lic.vps_name)}
                         \${lic.subdomain ? \`<br><span class="text-[9px] text-yellow-400 font-mono font-bold">\${escapeHtmlClient(lic.subdomain)}</span>\` : ''}
@@ -2543,7 +2543,7 @@ async function renderAdminDashboard(env, currentUser, appSettings) {
                         <br><span class="text-[9px] text-gray-500 font-mono mt-0.5 block">\${expDate}</span>
                     </td>
                     <td class="p-1.5 text-center">
-                        <button onclick="globalDeleteLicense('\${lic.id}', '\${lic.ip_address}')" class="bg-red-600 hover:bg-red-500 text-white text-[9px] px-2.5 py-1 rounded-lg uppercase font-bold transition shadow">Hapus Global</button>
+                        <button onclick="globalDeleteLicense('\${lic.id}', '\${lic.ip_address}')" class="bg-sky-600 hover:bg-sky-500 text-white text-[9px] px-2.5 py-1 rounded-lg uppercase font-bold transition shadow">Hapus Global</button>
                     </td>
                 </tr>
                 \`;
@@ -2629,10 +2629,10 @@ async function renderAdminDashboard(env, currentUser, appSettings) {
                     allAdminPkgs = data.data;
                     renderAdminPkgs(allAdminPkgs);
                 } else {
-                    tbody.innerHTML = '<tr><td colspan="4" class="p-8 text-center text-red-500">Gagal: ' + (data.message || 'Error mengambil data KMSP') + '</td></tr>';
+                    tbody.innerHTML = '<tr><td colspan="4" class="p-8 text-center text-sky-400">Gagal: ' + (data.message || 'Error mengambil data KMSP') + '</td></tr>';
                 }
             } catch(e) {
-                tbody.innerHTML = '<tr><td colspan="4" class="p-8 text-center text-red-500">Koneksi API Error.</td></tr>';
+                tbody.innerHTML = '<tr><td colspan="4" class="p-8 text-center text-sky-400">Koneksi API Error.</td></tr>';
             }
         }
 
@@ -2646,9 +2646,9 @@ async function renderAdminDashboard(env, currentUser, appSettings) {
                 const isMelek = p.visible;
                 const eyeIcon = isMelek 
                     ? \`<svg class="w-5 h-5 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>\` 
-                    : \`<svg class="w-5 h-5 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21"></path></svg>\`;
+                    : \`<svg class="w-5 h-5 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21"></path></svg>\`;
                 
-                const btnClass = isMelek ? 'bg-green-500/20 hover:bg-green-500/40 border-green-500/30' : 'bg-red-500/20 hover:bg-red-500/40 border-red-500/30';
+                const btnClass = isMelek ? 'bg-green-500/20 hover:bg-green-500/40 border-green-500/30' : 'bg-sky-500/20 hover:bg-sky-500/40 border-sky-500/30';
                 
                 return \`
                 <tr class="hover:bg-gray-800/50 transition">
@@ -2709,7 +2709,7 @@ async function renderAdminDashboard(env, currentUser, appSettings) {
             const btnNext = document.getElementById('btnNextUser');
             const headerTotal = document.getElementById('userTotalHeader');
 
-            tbody.innerHTML = '<tr><td colspan="5" class="p-8 text-center text-red-400 animate-pulse">Memuat data pengguna...</td></tr>';
+            tbody.innerHTML = '<tr><td colspan="5" class="p-8 text-center text-cyan-400 animate-pulse">Memuat data pengguna...</td></tr>';
             
             try {
                 const res = await fetch('/api/admin/users-list', {
@@ -2730,14 +2730,14 @@ async function renderAdminDashboard(env, currentUser, appSettings) {
                                 <td class="p-4 text-green-400 font-mono font-bold cursor-pointer hover:underline hover:text-green-300 transition-colors" onclick="viewUserMutasi('\${u.email}')" title="Klik untuk lihat 10 riwayat mutasi terakhir">Rp \${u.balance.toLocaleString('id-ID')}</td>
                                 <td class="p-4">
                                     \${u.is_blocked === 1 
-                                        ? '<span class="bg-red-500/20 text-red-400 border border-red-500/30 text-[10px] px-2.5 py-1 rounded-md uppercase font-bold tracking-wider">Banned</span>' 
+                                        ? '<span class="bg-sky-500/20 text-cyan-400 border border-sky-500/30 text-[10px] px-2.5 py-1 rounded-md uppercase font-bold tracking-wider">Banned</span>' 
                                         : '<span class="bg-green-500/20 text-green-400 border border-green-500/30 text-[10px] px-2.5 py-1 rounded-md uppercase font-bold tracking-wider">Aktif</span>'}
                                 </td>
                                 <td class="p-4 flex gap-2">
-                                    <button onclick="actionUser('\${u.email}', 'add_balance')" class="bg-red-600 hover:bg-red-500 text-white text-xs font-bold px-3 py-1.5 rounded-lg transition shadow">\xB1 Saldo</button>
+                                    <button onclick="actionUser('\${u.email}', 'add_balance')" class="bg-sky-600 hover:bg-sky-500 text-white text-xs font-bold px-3 py-1.5 rounded-lg transition shadow">\xB1 Saldo</button>
                                     <button onclick="actionUser('\${u.email}', 'toggle_block')" class="bg-\${u.is_blocked === 1 ? 'green' : 'red'}-600 hover:bg-\${u.is_blocked === 1 ? 'green' : 'red'}-500 text-white text-xs font-bold px-3 py-1.5 rounded-lg transition shadow">\${u.is_blocked === 1 ? 'Unblock' : 'Block'}</button>
                                     <button onclick="viewInbox('\${u.email}')" class="bg-gray-700 hover:bg-gray-600 text-white text-xs font-bold px-3 py-1.5 rounded-lg transition border border-gray-600 shadow">Inbox</button>
-                                    <button onclick="searchVPN('\${u.email}')" class="bg-red-600 hover:bg-red-500 text-white text-xs font-bold px-3 py-1.5 rounded-lg transition shadow">Lihat VPN</button>
+                                    <button onclick="searchVPN('\${u.email}')" class="bg-sky-600 hover:bg-sky-500 text-white text-xs font-bold px-3 py-1.5 rounded-lg transition shadow">Lihat VPN</button>
                                 </td>
                             </tr>
                         \`).join('');
@@ -2747,10 +2747,10 @@ async function renderAdminDashboard(env, currentUser, appSettings) {
                     btnPrev.disabled = data.page <= 1;
                     btnNext.disabled = data.page >= data.totalPages;
                 } else {
-                    tbody.innerHTML = \`<tr><td colspan="5" class="p-8 text-center text-red-500">Gagal mengambil data.</td></tr>\`;
+                    tbody.innerHTML = \`<tr><td colspan="5" class="p-8 text-center text-sky-400">Gagal mengambil data.</td></tr>\`;
                 }
             } catch (e) {
-                tbody.innerHTML = \`<tr><td colspan="5" class="p-8 text-center text-red-500">Koneksi Error.</td></tr>\`;
+                tbody.innerHTML = \`<tr><td colspan="5" class="p-8 text-center text-sky-400">Koneksi Error.</td></tr>\`;
             }
         }
 
@@ -2950,7 +2950,7 @@ async function renderAdminDashboard(env, currentUser, appSettings) {
             }
             
             if (tasks.length === 0) {
-                resultBox.innerHTML = '<span class="text-red-400 font-semibold">Error: Tidak ada server atau protokol yang terpilih.</span>';
+                resultBox.innerHTML = '<span class="text-cyan-400 font-semibold">Error: Tidak ada server atau protokol yang terpilih.</span>';
                 btn.innerHTML = oldText; btn.disabled = false;
                 return;
             }
@@ -3078,7 +3078,7 @@ async function renderAdminDashboard(env, currentUser, appSettings) {
                     if (expLower.includes('aktif') || expLower.includes('days') || expLower.includes('hari') || expLower.includes('lifetime')) {
                         expiryBadgeClass = 'text-green-400 bg-green-500/10 border border-green-500/20 px-1.5 py-0.5 rounded text-[10px] font-bold';
                     } else if (expLower.includes('expired') || expLower.includes('mati') || expLower.includes('telah habis')) {
-                        expiryBadgeClass = 'text-red-400 bg-red-500/10 border border-red-500/20 px-1.5 py-0.5 rounded text-[10px] font-bold';
+                        expiryBadgeClass = 'text-cyan-400 bg-sky-500/10 border border-sky-500/20 px-1.5 py-0.5 rounded text-[10px] font-bold';
                     }
                     
                     tr.innerHTML = \`
@@ -3092,7 +3092,7 @@ async function renderAdminDashboard(env, currentUser, appSettings) {
                             <div class="inline-flex gap-1.5">
                                 <button onclick="checkAccountDetailGlobal('\${escapeHtmlClient(acc.username)}', '\${acc.protocol}', '\${acc.serverId}')" class="bg-cyan-600/20 hover:bg-cyan-600/40 text-cyan-400 p-1 rounded transition text-[10px] flex items-center justify-center w-6 h-6 border border-cyan-500/10" title="Cek Detail">\u{1F50D}</button>
                                 <button onclick="renewAccountDirect('\${escapeHtmlClient(acc.username)}', '\${acc.protocol}', '\${acc.serverId}')" class="bg-green-600/20 hover:bg-green-600/40 text-green-400 p-1 rounded transition text-[10px] flex items-center justify-center w-6 h-6 border border-green-500/10" title="Perpanjang">\u{1F504}</button>
-                                <button onclick="deleteAccountDirect('\${escapeHtmlClient(acc.username)}', '\${acc.protocol}', '\${acc.serverId}')" class="bg-red-600/20 hover:bg-red-600/40 text-red-400 p-1 rounded transition text-[10px] flex items-center justify-center w-6 h-6 border border-red-500/10" title="Hapus">\u{1F5D1}\uFE0F</button>
+                                <button onclick="deleteAccountDirect('\${escapeHtmlClient(acc.username)}', '\${acc.protocol}', '\${acc.serverId}')" class="bg-sky-600/20 hover:bg-sky-600/40 text-cyan-400 p-1 rounded transition text-[10px] flex items-center justify-center w-6 h-6 border border-sky-500/10" title="Hapus">\u{1F5D1}\uFE0F</button>
                             </div>
                         </td>
                     \`;
@@ -3136,11 +3136,11 @@ async function renderAdminDashboard(env, currentUser, appSettings) {
                     }
                     document.getElementById('leLinkUserPanel').classList.remove('hidden');
                 } else {
-                    resultBox.innerHTML = '<span class="text-red-400">Error: ' + escapeHtmlClient(data.message) + '</span>';
+                    resultBox.innerHTML = '<span class="text-cyan-400">Error: ' + escapeHtmlClient(data.message) + '</span>';
                     document.getElementById('leLinkUserPanel').classList.add('hidden');
                 }
             } catch(e) {
-                resultBox.innerHTML = '<span class="text-red-400">Koneksi Error.</span>';
+                resultBox.innerHTML = '<span class="text-cyan-400">Koneksi Error.</span>';
                 document.getElementById('leLinkUserPanel').classList.add('hidden');
             }
             btn.innerText = 'Cek Detail'; btn.disabled = false;
@@ -3446,7 +3446,7 @@ async function renderAdminDashboard(env, currentUser, appSettings) {
             function addLog(message, type = 'info') {
                 const div = document.createElement('div');
                 if (type === 'success') div.className = 'text-green-400';
-                else if (type === 'error') div.className = 'text-red-400';
+                else if (type === 'error') div.className = 'text-cyan-400';
                 else if (type === 'warn') div.className = 'text-yellow-500';
                 else div.className = 'text-gray-400';
                 
@@ -3460,7 +3460,7 @@ async function renderAdminDashboard(env, currentUser, appSettings) {
             
             if (servers.length === 0) {
                 addLog('Error: Tidak ada server yang terkonfigurasi.', 'error');
-                resultsBody.innerHTML = '<tr><td colspan="4" class="p-4 text-center text-red-400">Tidak ada server terkonfigurasi.</td></tr>';
+                resultsBody.innerHTML = '<tr><td colspan="4" class="p-4 text-center text-cyan-400">Tidak ada server terkonfigurasi.</td></tr>';
                 btn.innerHTML = oldBtnText;
                 btn.disabled = false;
                 return;
@@ -3607,11 +3607,11 @@ async function renderAdminDashboard(env, currentUser, appSettings) {
                         <div class="text-left space-y-4 mt-2">
                             <div>
                                 <label class="block text-xs font-bold text-gray-400 mb-1 uppercase">Nominal (Gunakan minus untuk kurangi)</label>
-                                <input id="swal-input1" type="number" class="w-full bg-gray-900 border border-gray-700 rounded-xl p-3 text-white focus:ring-2 focus:ring-red-500 outline-none font-mono" placeholder="0">
+                                <input id="swal-input1" type="number" class="w-full bg-gray-900 border border-gray-700 rounded-xl p-3 text-white focus:ring-2 focus:ring-sky-500 outline-none font-mono" placeholder="0">
                             </div>
                             <div>
                                 <label class="block text-xs font-bold text-gray-400 mb-1 uppercase">Keterangan (Opsional)</label>
-                                <input id="swal-input2" type="text" class="w-full bg-gray-900 border border-gray-700 rounded-xl p-3 text-white focus:ring-2 focus:ring-red-500 outline-none text-sm" placeholder="Contoh: Bonus event, koreksi mutasi...">
+                                <input id="swal-input2" type="text" class="w-full bg-gray-900 border border-gray-700 rounded-xl p-3 text-white focus:ring-2 focus:ring-sky-500 outline-none text-sm" placeholder="Contoh: Bonus event, koreksi mutasi...">
                             </div>
                         </div>
                     \`,
@@ -3657,7 +3657,7 @@ async function renderAdminDashboard(env, currentUser, appSettings) {
                         document.getElementById('inboxModalContent').innerHTML = data.inbox.map(msg => \`
                             <div class="bg-gray-800 p-5 rounded-2xl border border-gray-700">
                                 <div class="flex justify-between items-start mb-3 border-b border-gray-700 pb-3">
-                                    <h4 class="text-red-400 font-bold text-base">\${msg.title}</h4>
+                                    <h4 class="text-cyan-400 font-bold text-base">\${msg.title}</h4>
                                     <span class="text-xs font-mono text-gray-500 bg-gray-900 px-2 py-1 rounded">\${msg.date}</span>
                                 </div>
                                 <div class="text-gray-300 text-sm leading-relaxed">\${msg.message}</div>
@@ -3665,7 +3665,7 @@ async function renderAdminDashboard(env, currentUser, appSettings) {
                         \`).join('');
                     }
                 }
-            } catch(e) { document.getElementById('inboxModalContent').innerHTML = '<p class="text-red-400 text-center py-10">Gagal memuat inbox.</p>'; }
+            } catch(e) { document.getElementById('inboxModalContent').innerHTML = '<p class="text-cyan-400 text-center py-10">Gagal memuat inbox.</p>'; }
         }
 
         async function viewUserMutasi(email) {
@@ -3688,7 +3688,7 @@ async function renderAdminDashboard(env, currentUser, appSettings) {
                     } else {
                         tbody.innerHTML = data.data.map(trx => {
                             const isMasuk = trx.type === 'IN';
-                            const nominalClass = isMasuk ? 'text-green-400' : 'text-red-400';
+                            const nominalClass = isMasuk ? 'text-green-400' : 'text-cyan-400';
                             const sign = isMasuk ? '+' : '-';
                             
                             let sisaSaldoText = '-';
@@ -3709,10 +3709,10 @@ async function renderAdminDashboard(env, currentUser, appSettings) {
                         }).join('');
                     }
                 } else {
-                    tbody.innerHTML = '<tr><td colspan="4" class="p-8 text-center text-red-500">Gagal memuat histori.</td></tr>';
+                    tbody.innerHTML = '<tr><td colspan="4" class="p-8 text-center text-sky-400">Gagal memuat histori.</td></tr>';
                 }
             } catch (e) {
-                tbody.innerHTML = '<tr><td colspan="4" class="p-8 text-center text-red-500">Error koneksi internet.</td></tr>';
+                tbody.innerHTML = '<tr><td colspan="4" class="p-8 text-center text-sky-400">Error koneksi internet.</td></tr>';
             }
         }
 
@@ -3736,7 +3736,7 @@ async function renderAdminDashboard(env, currentUser, appSettings) {
             if (!keyword) return swalDark.fire('Perhatian', 'Ketikkan email atau username VPN untuk mencari.', 'warning');
 
             btn.innerText = 'Mencari...'; btn.disabled = true;
-            tbody.innerHTML = '<tr><td colspan="5" class="p-8 text-center text-red-400 animate-pulse">Sedang mencari data...</td></tr>';
+            tbody.innerHTML = '<tr><td colspan="5" class="p-8 text-center text-cyan-400 animate-pulse">Sedang mencari data...</td></tr>';
 
             try {
                 const res = await fetch('/api/admin/vpn-search', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ keyword }) });
@@ -3754,26 +3754,26 @@ async function renderAdminDashboard(env, currentUser, appSettings) {
                             return \`
                                 <tr class="border-b border-gray-800 hover:bg-gray-800/50 transition">
                                     <td class="p-4 text-xs font-mono text-gray-400">\${v.email}</td>
-                                    <td class="p-4 font-bold text-red-400 font-mono">\${v.username}</td>
+                                    <td class="p-4 font-bold text-cyan-400 font-mono">\${v.username}</td>
                                     <td class="p-4 text-xs"><span class="block text-gray-300 font-bold">\${v.protocol}</span><span class="text-gray-500">\${v.server}</span></td>
                                     <td class="p-4 text-xs font-mono text-yellow-400">\${v.exp}</td>
                                     <td class="p-4 flex gap-2 flex-wrap">
                                         <button onclick="actionVPN('\${v.id}', 'detail')" class="bg-gray-700 hover:bg-gray-600 text-white text-[10px] px-2.5 py-1.5 rounded uppercase font-bold transition shadow">Detail</button>
-                                        <button onclick="actionVPN('\${v.id}', 'renew')" class="bg-red-700 hover:bg-red-600 text-white text-[10px] px-2.5 py-1.5 rounded uppercase font-bold transition shadow">Perpanjang</button>
+                                        <button onclick="actionVPN('\${v.id}', 'renew')" class="bg-sky-700 hover:bg-sky-600 text-white text-[10px] px-2.5 py-1.5 rounded uppercase font-bold transition shadow">Perpanjang</button>
                                         \${btnChangeUuid}
                                         <button onclick="actionVPN('\${v.id}', 'lock')" class="bg-yellow-700 hover:bg-yellow-600 text-white text-[10px] px-2.5 py-1.5 rounded uppercase font-bold transition shadow">Lock</button>
                                         <button onclick="actionVPN('\${v.id}', 'unlock')" class="bg-green-700 hover:bg-green-600 text-white text-[10px] px-2.5 py-1.5 rounded uppercase font-bold transition shadow">Unlock</button>
-                                        <button onclick="actionVPN('\${v.id}', 'delete')" class="bg-red-700 hover:bg-red-600 text-white text-[10px] px-2.5 py-1.5 rounded uppercase font-bold transition shadow">Hapus</button>
+                                        <button onclick="actionVPN('\${v.id}', 'delete')" class="bg-sky-700 hover:bg-sky-600 text-white text-[10px] px-2.5 py-1.5 rounded uppercase font-bold transition shadow">Hapus</button>
                                     </td>
                                 </tr>
                             \`;
                         }).join('');
                     }
                 } else {
-                    tbody.innerHTML = '<tr><td colspan="5" class="p-8 text-center text-red-500">Gagal mengambil data.</td></tr>';
+                    tbody.innerHTML = '<tr><td colspan="5" class="p-8 text-center text-sky-400">Gagal mengambil data.</td></tr>';
                 }
             } catch(e) {
-                tbody.innerHTML = '<tr><td colspan="5" class="p-8 text-center text-red-500">Koneksi Error.</td></tr>';
+                tbody.innerHTML = '<tr><td colspan="5" class="p-8 text-center text-sky-400">Koneksi Error.</td></tr>';
             }
             btn.innerText = 'Cari VPN'; btn.disabled = false;
         }
@@ -4433,7 +4433,7 @@ async function handleAdminRoutes(url, request, env, currentUser, appSettings, se
         const absValue = Math.abs(value).toLocaleString("id-ID");
         const actionText = isAddition ? "Penambahan" : "Pengurangan";
         const actionVerb = isAddition ? "ditambahkan" : "dikurangi";
-        const colorClass = isAddition ? "text-green-400" : "text-red-400";
+        const colorClass = isAddition ? "text-green-400" : "text-cyan-400";
         const userTitle = `[SALDO] ${actionText} Saldo`;
         const userMsg = `Saldo Anda telah ${actionVerb} sebesar <b class="${colorClass}">Rp ${absValue}</b> oleh sistem Admin.${keterangan ? "<br><br>Keterangan: <i>" + escapeHTML(keterangan) + "</i>" : ""}`;
         await env.DB.prepare("INSERT INTO inbox (email, title, message, date, read) VALUES (?, ?, ?, ?, 0)").bind(email, userTitle, userMsg, now).run();
@@ -5170,7 +5170,7 @@ function renderMutasiPage(currentUser) {
                         </tr>
                     </thead>
                     <tbody id="mutasiTableBody" class="divide-y divide-gray-800">
-                        <tr><td colspan="4" class="p-8 text-center text-red-400 animate-pulse">Memuat data transaksi...</td></tr>
+                        <tr><td colspan="4" class="p-8 text-center text-cyan-400 animate-pulse">Memuat data transaksi...</td></tr>
                     </tbody>
                 </table>
             </div>
@@ -5211,7 +5211,7 @@ function renderMutasiPage(currentUser) {
                     } else {
                         tbody.innerHTML = data.data.map(trx => {
                             const isMasuk = trx.type === 'IN';
-                            const nominalClass = isMasuk ? 'text-green-400' : 'text-red-400';
+                            const nominalClass = isMasuk ? 'text-green-400' : 'text-cyan-400';
                             const sign = isMasuk ? '+' : '-';
                             
                             let sisaSaldoText = '-';
@@ -5238,10 +5238,10 @@ function renderMutasiPage(currentUser) {
                         nextBtn.disabled = pg.page >= pg.totalPages;
                     }
                 } else {
-                    tbody.innerHTML = '<tr><td colspan="4" class="p-8 text-center text-red-500">Gagal mengambil data.</td></tr>';
+                    tbody.innerHTML = '<tr><td colspan="4" class="p-8 text-center text-sky-400">Gagal mengambil data.</td></tr>';
                 }
             } catch(e) {
-                tbody.innerHTML = '<tr><td colspan="4" class="p-8 text-center text-red-500">Kesalahan koneksi internet.</td></tr>';
+                tbody.innerHTML = '<tr><td colspan="4" class="p-8 text-center text-sky-400">Kesalahan koneksi internet.</td></tr>';
             }
         }
         
@@ -5623,7 +5623,7 @@ TUGASMU: Beritahu data detail di atas kepada user dengan gaya yang sangat rapi, 
                   const absValue = Math.abs(amount).toLocaleString("id-ID");
                   const actionText = isAddition ? "Penambahan" : "Pengurangan";
                   const actionVerb = isAddition ? "ditambahkan" : "dikurangi";
-                  const colorClass = isAddition ? "text-green-400" : "text-red-400";
+                  const colorClass = isAddition ? "text-green-400" : "text-cyan-400";
                   const userTitle = `[SALDO] ${actionText} Saldo`;
                   const userMsg = `Saldo Anda telah ${actionVerb} sebesar <b class="${colorClass}">Rp ${absValue}</b> oleh sistem Admin.`;
                   await env.DB.prepare("INSERT INTO inbox (email, title, message, date, read) VALUES (?, ?, ?, ?, 0)").bind(actualEmail, userTitle, userMsg, now).run();
@@ -6040,16 +6040,16 @@ function renderAIChatUI(currentUser, appSettings = {}) {
         <div class="bg-gray-800 text-gray-300 p-3 rounded-2xl rounded-tl-none text-xs border border-gray-700 max-w-[85%] shadow-sm flex flex-col gap-2">
             <span>Assalamu'alaikum ${userName}! Saya Asisten Pintar <b>Warung Pulsa</b>. Ada yang bisa saya bantu terkait layanan toko atau sekadar ngobrol santai?</span>
             <div class="flex flex-wrap gap-2 mt-1">
-                <button onclick="window.sendQuickReply('buat vpn')" class="bg-red-600 hover:bg-red-500 text-white text-[10px] py-1 px-3 rounded-full transition shadow-sm border border-red-600/50">\u{1F680} buat vpn</button>
-                <button onclick="window.sendQuickReply('cara topup')" class="bg-red-600 hover:bg-red-500 text-white text-[10px] py-1 px-3 rounded-full transition shadow-sm border border-red-600/50">\u{1F4B3} cara topup</button>
-                <button onclick="window.sendQuickReply('cek pulsa xl')" class="bg-red-600 hover:bg-red-500 text-white text-[10px] py-1 px-3 rounded-full transition shadow-sm border border-red-600/50">\u{1F4CA} cek pulsa</button>
+                <button onclick="window.sendQuickReply('buat vpn')" class="bg-sky-600 hover:bg-sky-500 text-white text-[10px] py-1 px-3 rounded-full transition shadow-sm border border-sky-600/50">\u{1F680} buat vpn</button>
+                <button onclick="window.sendQuickReply('cara topup')" class="bg-sky-600 hover:bg-sky-500 text-white text-[10px] py-1 px-3 rounded-full transition shadow-sm border border-sky-600/50">\u{1F4B3} cara topup</button>
+                <button onclick="window.sendQuickReply('cek pulsa xl')" class="bg-sky-600 hover:bg-sky-500 text-white text-[10px] py-1 px-3 rounded-full transition shadow-sm border border-sky-600/50">\u{1F4CA} cek pulsa</button>
             </div>
         </div>
     `;
   return `
     <div id="aiChatWrapper" class="fixed bottom-6 right-6 z-[9999] font-sans">
         <div id="aiChatWindow" class="hidden flex flex-col bg-gray-900 border border-gray-700 w-[320px] sm:w-[380px] h-[450px] rounded-3xl shadow-2xl overflow-hidden mb-4 transform transition-all duration-300 scale-95 opacity-0 origin-bottom-right">
-            <div class="bg-red-600 p-4 flex justify-between items-center shadow-lg">
+            <div class="bg-sky-600 p-4 flex justify-between items-center shadow-lg">
                 <div class="flex items-center gap-3">
                     <div class="bg-white/20 p-2 rounded-xl">\u{1F916}</div>
                     <div><h4 class="text-white font-bold text-sm leading-none">Asisten Digital</h4><span class="text-red-100 text-[10px] uppercase font-bold tracking-widest">Online</span></div>
@@ -6063,14 +6063,14 @@ function renderAIChatUI(currentUser, appSettings = {}) {
                 ${initialGreetingHTML}
             </div>
             <div class="p-3 bg-gray-950 border-t border-gray-800">
-                <div class="flex gap-2 bg-gray-900 border border-gray-700 rounded-2xl p-1 px-3 focus-within:border-red-600 transition">
+                <div class="flex gap-2 bg-gray-900 border border-gray-700 rounded-2xl p-1 px-3 focus-within:border-sky-600 transition">
                     <input type="text" id="aiInput" placeholder="Tanya sesuatu..." class="bg-transparent border-0 outline-none text-sm text-white flex-1 py-2" onkeypress="if(event.key === 'Enter') window.sendAiChat()">
-                    <button onclick="window.sendAiChat()" id="btnSendAi" class="text-red-500 hover:text-red-400 p-1"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path></svg></button>
+                    <button onclick="window.sendAiChat()" id="btnSendAi" class="text-sky-400 hover:text-cyan-400 p-1"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path></svg></button>
                 </div>
             </div>
         </div>
-        <button onclick="window.toggleAiChat()" class="bg-red-600 hover:bg-red-500 text-white p-4 rounded-full shadow-2xl transition-transform active:scale-90 group relative flex items-center justify-center">
-            <span class="absolute -top-2 -left-2 bg-red-500 text-[10px] font-bold px-1.5 py-0.5 rounded-full animate-bounce">AI</span>
+        <button onclick="window.toggleAiChat()" class="bg-sky-600 hover:bg-sky-500 text-white p-4 rounded-full shadow-2xl transition-transform active:scale-90 group relative flex items-center justify-center">
+            <span class="absolute -top-2 -left-2 bg-sky-500 text-[10px] font-bold px-1.5 py-0.5 rounded-full animate-bounce">AI</span>
             <svg id="aiIconOpen" class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"></path></svg>
             <svg id="aiIconClose" class="w-7 h-7 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M6 18L18 6M6 6l12 12"></path></svg>
         </button>
@@ -6121,7 +6121,7 @@ function renderAIChatUI(currentUser, appSettings = {}) {
                 '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;'
             }[tag] || tag));
 
-            container.innerHTML += '<div class="bg-red-600 text-white p-3 rounded-2xl rounded-tr-none text-xs ml-auto max-w-[85%] shadow-sm">' + escapeHTML(msg) + '</div>';
+            container.innerHTML += '<div class="bg-sky-600 text-white p-3 rounded-2xl rounded-tr-none text-xs ml-auto max-w-[85%] shadow-sm">' + escapeHTML(msg) + '</div>';
             
             const loadingId = 'ai-loading-' + Date.now();
             container.innerHTML += '<div id="' + loadingId + '" class="bg-gray-800 text-gray-400 p-3 rounded-2xl rounded-tl-none text-xs italic border border-gray-700 w-fit shadow-sm">Mengetik...</div>';
@@ -6140,9 +6140,9 @@ function renderAIChatUI(currentUser, appSettings = {}) {
                 
                 if (data.success) {
                     let formatted = data.reply
-                        .replace(/(https?:\\/\\/[^\\s<]+)/g, '<a href="$1" target="_blank" class="text-red-400 hover:text-red-300 underline transition">$1</a>')
+                        .replace(/(https?:\\/\\/[^\\s<]+)/g, '<a href="$1" target="_blank" class="text-cyan-400 hover:text-cyan-300 underline transition">$1</a>')
                         .replace(/\\*\\*(.*?)\\*\\*/g, '<strong class="text-white font-bold">$1</strong>')
-                        .replace(/^-\\s+(.*)$/gm, '<div class="flex items-start gap-2 mt-1 mb-1"><span class="text-red-400 mt-[1px]">\u2726</span><span class="flex-1">$1</span></div>')
+                        .replace(/^-\\s+(.*)$/gm, '<div class="flex items-start gap-2 mt-1 mb-1"><span class="text-cyan-400 mt-[1px]">\u2726</span><span class="flex-1">$1</span></div>')
                         .replace(/\\n/g, '<br>');
                     
                     formatted = formatted.replace(/<\\/div><br>/g, '</div>').replace(/<br><div/g, '<div');
@@ -6152,12 +6152,12 @@ function renderAIChatUI(currentUser, appSettings = {}) {
                     window.aiHistory.push({ role: 'user', content: msg }, { role: 'assistant', content: data.reply });
                     if (window.aiHistory.length > 20) window.aiHistory = window.aiHistory.slice(-20);
                 } else { 
-                    container.innerHTML += '<div class="bg-red-900/20 text-red-400 p-3 rounded-2xl text-[10px] text-center border border-red-500/20">' + data.message + '</div>'; 
+                    container.innerHTML += '<div class="bg-sky-900/20 text-cyan-400 p-3 rounded-2xl text-[10px] text-center border border-sky-500/20">' + data.message + '</div>'; 
                 }
             } catch(e) { 
                 const loader = document.getElementById(loadingId);
                 if (loader) loader.remove();
-                container.innerHTML += '<div class="bg-red-900/20 text-red-400 p-3 rounded-2xl text-[10px] text-center border border-red-500/20">Koneksi terputus. Coba lagi.</div>'; 
+                container.innerHTML += '<div class="bg-sky-900/20 text-cyan-400 p-3 rounded-2xl text-[10px] text-center border border-sky-500/20">Koneksi terputus. Coba lagi.</div>'; 
             }
             container.scrollTop = container.scrollHeight; 
             input.disabled = false; 
@@ -6286,19 +6286,19 @@ async function renderLicensePage(env, currentUser, appSettings, url) {
     licenseListHtml = licenses.map((lic) => {
       const isExpired = lic.expires_at < Date.now();
       const expDate = new Date(lic.expires_at).toLocaleString("id-ID", { timeZone: "Asia/Jakarta" }) + " WIB";
-      const statusBadge = isExpired ? '<span class="bg-red-500/20 text-red-400 border border-red-500/30 text-[10px] px-2 py-1 rounded uppercase font-bold">Expired</span>' : '<span class="bg-green-500/20 text-green-400 border border-green-500/30 text-[10px] px-2 py-1 rounded uppercase font-bold">Aktif</span>';
+      const statusBadge = isExpired ? '<span class="bg-sky-500/20 text-cyan-400 border border-sky-500/30 text-[10px] px-2 py-1 rounded uppercase font-bold">Expired</span>' : '<span class="bg-green-500/20 text-green-400 border border-green-500/30 text-[10px] px-2 py-1 rounded uppercase font-bold">Aktif</span>';
       return `
             <tr class="hover:bg-gray-800/50 transition border-b border-gray-800 last:border-0">
-                <td class="p-4 font-mono text-sm text-red-400 font-bold">${escapeHTML(lic.ip_address)}</td>
+                <td class="p-4 font-mono text-sm text-cyan-400 font-bold">${escapeHTML(lic.ip_address)}</td>
                 <td class="p-4 text-sm text-gray-300 font-medium">
                     ${escapeHTML(lic.vps_name)}
                     ${lic.subdomain ? `<br><span class="text-[10px] text-yellow-400 font-mono font-bold">${escapeHTML(lic.subdomain)}</span>` : ""}
                 </td>
-                <td class="p-4 text-xs font-mono ${isExpired ? "text-red-400" : "text-yellow-400"}">${expDate}</td>
+                <td class="p-4 text-xs font-mono ${isExpired ? "text-cyan-400" : "text-yellow-400"}">${expDate}</td>
                 <td class="p-4 text-center">${statusBadge}</td>
                 <td class="p-4 flex gap-2 justify-center">
-                    <button onclick="extendLicense('${lic.id}', '${lic.ip_address}')" class="bg-red-600 hover:bg-red-500 text-white text-[11px] px-3 py-1.5 rounded-lg uppercase font-bold transition shadow">Perpanjang</button>
-                    <button onclick="deleteLicense('${lic.id}', '${lic.ip_address}')" class="bg-red-600 hover:bg-red-500 text-white text-[11px] px-3 py-1.5 rounded-lg uppercase font-bold transition shadow">Hapus IP</button>
+                    <button onclick="extendLicense('${lic.id}', '${lic.ip_address}')" class="bg-sky-600 hover:bg-sky-500 text-white text-[11px] px-3 py-1.5 rounded-lg uppercase font-bold transition shadow">Perpanjang</button>
+                    <button onclick="deleteLicense('${lic.id}', '${lic.ip_address}')" class="bg-sky-600 hover:bg-sky-500 text-white text-[11px] px-3 py-1.5 rounded-lg uppercase font-bold transition shadow">Hapus IP</button>
                 </td>
             </tr>
             `;
@@ -6313,26 +6313,26 @@ async function renderLicensePage(env, currentUser, appSettings, url) {
             </div>
             <div class="bg-gray-800 px-4 py-2.5 rounded-xl border border-gray-700 flex items-center gap-3 shadow-inner">
                 <span class="text-xs text-gray-400 font-bold uppercase">Harga Script</span>
-                <span class="bg-red-500/20 text-red-400 px-2.5 py-0.5 rounded font-mono font-bold border border-red-600/30">Rp ${pricePerDay.toLocaleString("id-ID")} / Hari</span>
+                <span class="bg-sky-500/20 text-cyan-400 px-2.5 py-0.5 rounded font-mono font-bold border border-sky-600/30">Rp ${pricePerDay.toLocaleString("id-ID")} / Hari</span>
             </div>
         </div>
 
         <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
             <!-- Form Registrasi IP -->
-            <div class="lg:col-span-1 bg-gray-900 p-6 md:p-8 rounded-3xl border border-red-600/30 shadow-2xl h-fit">
+            <div class="lg:col-span-1 bg-gray-900 p-6 md:p-8 rounded-3xl border border-sky-600/30 shadow-2xl h-fit">
                 <h2 class="text-xl font-bold text-white mb-6 border-b border-gray-800 pb-3">\u2795 Daftarkan IP Baru</h2>
                 <form id="formBuyLicense" class="space-y-5">
                     <div>
                         <label class="block text-xs font-bold text-gray-400 mb-2 uppercase">Nama VPS / Domain</label>
-                        <input type="text" id="licName" required placeholder="Contoh: xiaoyan123" class="w-full bg-gray-950 border border-gray-700 rounded-xl p-3 text-white focus:ring-2 focus:ring-red-500 outline-none text-sm">
+                        <input type="text" id="licName" required placeholder="Contoh: xiaoyan123" class="w-full bg-gray-950 border border-gray-700 rounded-xl p-3 text-white focus:ring-2 focus:ring-sky-500 outline-none text-sm">
                     </div>
                     <div>
                         <label class="block text-xs font-bold text-gray-400 mb-2 uppercase">Alamat IPv4 VPS</label>
-                        <input type="text" id="licIp" required placeholder="Contoh: 103.123.45.67" pattern="^([0-9]{1,3}\\.){3}[0-9]{1,3}$" class="w-full bg-gray-950 border border-gray-700 rounded-xl p-3 text-red-400 font-mono focus:ring-2 focus:ring-red-500 outline-none text-sm">
+                        <input type="text" id="licIp" required placeholder="Contoh: 103.123.45.67" pattern="^([0-9]{1,3}\\.){3}[0-9]{1,3}$" class="w-full bg-gray-950 border border-gray-700 rounded-xl p-3 text-cyan-400 font-mono focus:ring-2 focus:ring-sky-500 outline-none text-sm">
                     </div>
                     <div>
                         <label class="block text-xs font-bold text-gray-400 mb-2 uppercase">Masa Aktif (Durasi)</label>
-                        <select id="licDuration" onchange="updateLicPrice()" class="w-full bg-gray-950 border border-gray-700 rounded-xl p-3 text-white focus:ring-2 focus:ring-red-500 outline-none text-sm font-bold">
+                        <select id="licDuration" onchange="updateLicPrice()" class="w-full bg-gray-950 border border-gray-700 rounded-xl p-3 text-white focus:ring-2 focus:ring-sky-500 outline-none text-sm font-bold">
                             <option value="30">30 Hari (1 Bulan)</option>
                             <option value="90">90 Hari (3 Bulan)</option>
                             <option value="180">180 Hari (6 Bulan)</option>
@@ -6343,7 +6343,7 @@ async function renderLicensePage(env, currentUser, appSettings, url) {
                         <span class="text-sm text-gray-400 font-medium">Total:</span>
                         <span class="text-2xl font-black text-green-400 tracking-tight" id="licPriceDisplay">Rp ${(pricePerDay * 30).toLocaleString("id-ID")}</span>
                     </div>
-                    <button type="submit" id="btnBuyLic" class="w-full bg-red-600 hover:bg-red-500 text-white font-bold py-3.5 rounded-xl shadow-lg transition text-base mt-2">Bayar & Daftarkan</button>
+                    <button type="submit" id="btnBuyLic" class="w-full bg-sky-600 hover:bg-sky-500 text-white font-bold py-3.5 rounded-xl shadow-lg transition text-base mt-2">Bayar & Daftarkan</button>
                 </form>
             </div>
 
@@ -6442,7 +6442,7 @@ async function renderLicensePage(env, currentUser, appSettings, url) {
         async function extendLicense(id, ip) {
             const { value: days, isDismissed } = await swalDark.fire({
                 title: 'Perpanjang Masa Aktif',
-                html: '<p class="text-sm mb-4">IP: <b class="text-red-400 font-mono">' + ip + '</b></p><p class="text-xs text-gray-400 mb-2">Harga: Rp ' + LIC_PRICE_PER_DAY.toLocaleString('id-ID') + '/Hari</p>',
+                html: '<p class="text-sm mb-4">IP: <b class="text-cyan-400 font-mono">' + ip + '</b></p><p class="text-xs text-gray-400 mb-2">Harga: Rp ' + LIC_PRICE_PER_DAY.toLocaleString('id-ID') + '/Hari</p>',
                 input: 'select',
                 inputOptions: { '30': '30 Hari', '90': '90 Hari', '180': '180 Hari', '365': '365 Hari' },
                 inputPlaceholder: '-- Pilih Tambahan Waktu --',
@@ -6960,7 +6960,7 @@ function renderConverterPage() {
             'btnAvaWc':    { on: ['bg-yellow-400', 'text-black', 'active'], off: ['bg-white', 'text-yellow-500', 'border-yellow-400'] },
             'btnFb':       { on: ['bg-blue-800', 'text-white', 'active'], off: ['bg-white', 'text-blue-800', 'border-blue-600'] },
             'btnSpotify':  { on: ['bg-green-500', 'text-white', 'active'], off: ['bg-white', 'text-green-600', 'border-green-500'] },
-            'btnNetflix':  { on: ['bg-red-700', 'text-white', 'active'], off: ['bg-white', 'text-red-700', 'border-red-500'] },
+            'btnNetflix':  { on: ['bg-sky-700', 'text-white', 'active'], off: ['bg-white', 'text-red-700', 'border-sky-500'] },
             'btnRuangguru': { on: ['bg-teal-500', 'text-white', 'active'], off: ['bg-white', 'text-teal-600', 'border-teal-500'] },
             'btnTiktokWC': { on: ['bg-pink-600', 'text-white', 'active'], off: ['bg-white', 'text-pink-600', 'border-pink-500'] },
             'btnShopee':   { on: ['bg-orange-500', 'text-white', 'active'], off: ['bg-white', 'text-orange-600', 'border-orange-500'] },
@@ -7789,7 +7789,7 @@ function renderCekKuotaPage() {
 <body class="bg-[#0B0F19] text-white flex min-h-screen items-center justify-center p-4 relative overflow-y-auto">
 
     <!-- Abstract glowing background blobs -->
-    <div class="absolute top-[-10%] left-[-10%] w-96 h-96 bg-red-900/20 rounded-full blur-3xl pointer-events-none"></div>
+    <div class="absolute top-[-10%] left-[-10%] w-96 h-96 bg-sky-900/20 rounded-full blur-3xl pointer-events-none"></div>
     <div class="absolute bottom-[-10%] right-[-10%] w-96 h-96 bg-rose-900/15 rounded-full blur-3xl pointer-events-none"></div>
 
     <!-- Loading Spinner Overlay -->
@@ -7802,7 +7802,7 @@ function renderCekKuotaPage() {
             <img src="${LOGO_URL}" alt="Logo SRPCOM" class="mx-auto h-16 w-16 rounded-full border border-gray-700 shadow-md" onerror="this.onerror=null; this.src='${LOGO_URL}';">
             <h1 class="mt-4 text-3xl font-extrabold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-red-500 to-rose-400">WARUNG PULSA OTP XL</h1>
             <p class="text-xs text-gray-400 mt-2">
-                Silakan bergabung ke <a href="https://t.me/srpcomgroup" target="_blank" class="text-red-400 hover:text-red-300 underline font-medium transition duration-200">t.me/srpcomgroup</a>
+                Silakan bergabung ke <a href="https://t.me/srpcomgroup" target="_blank" class="text-cyan-400 hover:text-cyan-300 underline font-medium transition duration-200">t.me/srpcomgroup</a>
             </p>
         </div>
 
@@ -7811,22 +7811,22 @@ function renderCekKuotaPage() {
             
             <!-- MSISDN (Phone Number) Input -->
             <div>
-                <label for="msisdn" id="msisdn-label" class="block text-xs font-semibold tracking-wide text-red-400 uppercase mb-2 animate-pulse">Masukkan nomor XL disini</label>
-                <input type="number" id="msisdn" name="msisdn" class="glass-input pulsating-border mt-1 p-4 bg-gray-950/50 border border-red-500/30 text-white rounded-xl w-full focus:outline-none focus:border-red-500 transition duration-300 font-mono text-lg" placeholder="Contoh: 0878..." required>
+                <label for="msisdn" id="msisdn-label" class="block text-xs font-semibold tracking-wide text-cyan-400 uppercase mb-2 animate-pulse">Masukkan nomor XL disini</label>
+                <input type="number" id="msisdn" name="msisdn" class="glass-input pulsating-border mt-1 p-4 bg-gray-950/50 border border-sky-500/30 text-white rounded-xl w-full focus:outline-none focus:border-sky-500 transition duration-300 font-mono text-lg" placeholder="Contoh: 0878..." required>
             </div>
 
             <!-- Action Buttons -->
             <div id="action-buttons-section" style="display: none;">
                 <div class="grid grid-cols-2 gap-4 pt-2">
-                     <button type="button" class="bg-gradient-to-r from-red-600 to-rose-600 hover:from-red-500 hover:to-rose-500 text-white font-bold p-3.5 rounded-xl transition duration-300 shadow-lg shadow-red-600/20 active:scale-95" id="reqOTP">MINTA OTP</button>
-                     <button type="button" class="bg-gray-800 hover:bg-gray-700 text-red-400 border border-red-500/20 font-bold p-3.5 rounded-xl transition duration-300 active:scale-95" id="checkQuotaPublicBtn">CEK KUOTA</button>
+                     <button type="button" class="bg-gradient-to-r from-blue-600 to-cyan-500 hover:from-red-500 hover:to-rose-500 text-white font-bold p-3.5 rounded-xl transition duration-300 shadow-lg shadow-sky-600/20 active:scale-95" id="reqOTP">MINTA OTP</button>
+                     <button type="button" class="bg-gray-800 hover:bg-gray-700 text-cyan-400 border border-sky-500/20 font-bold p-3.5 rounded-xl transition duration-300 active:scale-95" id="checkQuotaPublicBtn">CEK KUOTA</button>
                 </div>
             </div>
 
             <!-- OTP Input -->
             <div id="otp-input-section" style="display: none;">
                 <label for="otp" class="block text-xs font-semibold text-gray-400 uppercase tracking-wide mb-2">Kode OTP</label>
-                <input type="text" id="otp" name="otp" class="glass-input mt-1 p-4 bg-gray-950/50 border border-gray-800 text-white rounded-xl w-full focus:outline-none focus:ring-2 focus:ring-red-500 transition duration-300 text-center font-mono text-xl tracking-widest" placeholder="6 Digit Kode" required>
+                <input type="text" id="otp" name="otp" class="glass-input mt-1 p-4 bg-gray-950/50 border border-gray-800 text-white rounded-xl w-full focus:outline-none focus:ring-2 focus:ring-sky-500 transition duration-300 text-center font-mono text-xl tracking-widest" placeholder="6 Digit Kode" required>
             </div>
 
             <!-- Verify OTP Button -->
@@ -7842,13 +7842,13 @@ function renderCekKuotaPage() {
         <div id="log-section" class="space-y-4 pt-2" style="display: none;">
             <div>
                 <p class="text-xs font-semibold text-gray-400 uppercase tracking-wider">Log Respons:</p>
-                <textarea class="mt-2 w-full p-4 bg-black/40 border border-red-950/40 text-red-300 rounded-xl text-sm font-mono focus:outline-none focus:border-red-500 transition duration-300" id="logResponse" rows="4" readonly></textarea>
+                <textarea class="mt-2 w-full p-4 bg-black/40 border border-red-950/40 text-cyan-300 rounded-xl text-sm font-mono focus:outline-none focus:border-sky-500 transition duration-300" id="logResponse" rows="4" readonly></textarea>
             </div>
             
             <!-- Final Action Buttons (New) -->
             <div id="final-action-buttons" class="grid grid-cols-2 gap-4 pt-2" style="display: none;">
                 <a href="https://t.me/srpcomchannel/419" target="_blank" class="text-center bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-500 hover:to-emerald-500 text-white font-bold p-3.5 rounded-xl transition duration-300 shadow-lg active:scale-95">QRIS ADMIN</a>
-                <a href="https://t.me/srpcomadmin" target="_blank" class="text-center bg-gray-800 hover:bg-gray-700 text-red-400 border border-red-500/20 font-bold p-3.5 rounded-xl transition duration-300 active:scale-95">HUB ADMIN</a>
+                <a href="https://t.me/srpcomadmin" target="_blank" class="text-center bg-gray-800 hover:bg-gray-700 text-cyan-400 border border-sky-500/20 font-bold p-3.5 rounded-xl transition duration-300 active:scale-95">HUB ADMIN</a>
             </div>
         </div>
     </div>
@@ -8277,7 +8277,7 @@ __name2(checkGoPayStatus, "checkGoPayStatus");
 __name22(checkGoPayStatus, "checkGoPayStatus");
 __name222(checkGoPayStatus, "checkGoPayStatus");
 var GOOGLE_CLIENT_ID = (typeof process !== "undefined" && process.env && process.env.GOOGLE_CLIENT_ID) || "727817597785-oub85kbvvsl640v7q4cak661vn5jt7kh.apps.googleusercontent.com";
-var LOGO_URL = (typeof process !== "undefined" && process.env && process.env.LOGO_URL) || "https://srpcom.cloud/logo%20tuban%20store.png";
+var LOGO_URL = (typeof process !== "undefined" && process.env && process.env.LOGO_URL) || "/logo.png";
 var worker_default = {
   async scheduled(event, env, ctx) {
     const appSettings = await getAppSettings(env);
@@ -8388,6 +8388,24 @@ Total : Rp.${totalSaldo.toLocaleString("id-ID")}
     const url = new URL(request.url);
     const path = url.pathname;
     const method = request.method;
+        if (path === "/logo.png" || path === "/favicon.ico") {
+      try {
+        const fsModule = require('fs');
+        const pathModule = require('path');
+        const logoFile = pathModule.join(__dirname, 'logo.png');
+        if (fsModule.existsSync(logoFile)) {
+          const logoBuffer = fsModule.readFileSync(logoFile);
+          return new Response(logoBuffer, {
+            headers: {
+              "Content-Type": "image/png",
+              "Cache-Control": "public, max-age=86400"
+            }
+          });
+        }
+      } catch (errLogo) {
+        console.error('Gagal memuat logo.png:', errLogo.message);
+      }
+    }
     if (path === "/favicon.ico" || path === "/robots.txt" || path === "/sitemap.xml") {
       return new Response("Not Found", { status: 404 });
     }
@@ -8435,17 +8453,17 @@ Total : Rp.${totalSaldo.toLocaleString("id-ID")}
                     <style>@keyframes blob { 0% { transform: translate(0px, 0px) scale(1); } 33% { transform: translate(30px, -50px) scale(1.1); } 66% { transform: translate(-20px, 20px) scale(0.9); } 100% { transform: translate(0px, 0px) scale(1); } } .animate-blob { animation: blob 7s infinite; } .animation-delay-2000 { animation-delay: 2s; }</style>
                 </head>
                 <body class="bg-[#0b1120] flex items-center justify-center min-h-screen px-4 overflow-hidden relative text-gray-200 font-sans">
-                    <div class="absolute top-0 left-1/4 w-96 h-96 bg-red-600/20 rounded-full mix-blend-screen filter blur-[100px] animate-blob z-0"></div>
-                    <div class="absolute top-1/4 right-1/4 w-96 h-96 bg-red-600/20 rounded-full mix-blend-screen filter blur-[100px] animate-blob animation-delay-2000 z-0"></div>
+                    <div class="absolute top-0 left-1/4 w-96 h-96 bg-sky-600/20 rounded-full mix-blend-screen filter blur-[100px] animate-blob z-0"></div>
+                    <div class="absolute top-1/4 right-1/4 w-96 h-96 bg-sky-600/20 rounded-full mix-blend-screen filter blur-[100px] animate-blob animation-delay-2000 z-0"></div>
                     <div class="relative z-10 w-full max-w-2xl bg-gray-900/60 backdrop-blur-2xl border border-gray-800 p-10 md:p-14 rounded-[2rem] shadow-2xl text-center">
-                        <div class="inline-flex items-center justify-center p-5 bg-red-500/10 rounded-3xl mb-8 border border-red-600/20 shadow-[0_0_40px_rgba(59,130,246,0.15)]">
-                            <svg class="w-16 h-16 text-red-500 animate-[spin_5s_linear_infinite]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                        <div class="inline-flex items-center justify-center p-5 bg-sky-500/10 rounded-3xl mb-8 border border-sky-600/20 shadow-[0_0_40px_rgba(59,130,246,0.15)]">
+                            <svg class="w-16 h-16 text-sky-400 animate-[spin_5s_linear_infinite]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
                         </div>
                         <h1 class="text-3xl md:text-4xl font-black text-white mb-4 tracking-tight">Sistem Sedang Diperbarui</h1>
                         <p class="text-gray-400 text-lg leading-relaxed mb-10">Untuk memberikan kualitas layanan dan fitur yang lebih maksimal, <b class="text-white">Warung Pulsa</b> saat ini sedang dalam proses pemeliharaan infrastruktur (Maintenance). Kami akan segera kembali beroperasi.</p>
                         <div class="border-t border-gray-800 pt-8 mt-4 flex flex-col items-center justify-center">
                             <span class="text-xs font-bold text-gray-500 uppercase tracking-widest mb-4">Akses Administrator Panel</span>
-                            ${currentUser ? `<div class="bg-red-500/10 border border-red-500/20 px-6 py-5 rounded-2xl text-center w-full max-w-sm"><p class="text-red-400 font-bold mb-1 text-lg">Akses Ditolak!</p><p class="text-gray-400 text-sm mb-5">Anda masuk sebagai:<br><strong class="text-gray-200 mt-1 block">${currentUser.email}</strong><br>Email tersebut bukan Administrator.</p><button onclick="logout()" class="bg-red-600 hover:bg-red-500 text-white text-sm font-bold py-3 px-6 rounded-xl transition w-full shadow-lg">Keluar Akun</button></div>` : `<div id="g_id_onload" data-client_id="${GOOGLE_CLIENT_ID}" data-callback="handleCredentialResponse" data-auto_prompt="false"></div><div class="g_id_signin shadow-xl rounded" data-type="standard" data-size="large" data-theme="filled_black" data-text="sign_in_with" data-shape="rectangular" data-logo_alignment="center"></div>`}
+                            ${currentUser ? `<div class="bg-sky-500/10 border border-sky-500/20 px-6 py-5 rounded-2xl text-center w-full max-w-sm"><p class="text-cyan-400 font-bold mb-1 text-lg">Akses Ditolak!</p><p class="text-gray-400 text-sm mb-5">Anda masuk sebagai:<br><strong class="text-gray-200 mt-1 block">${currentUser.email}</strong><br>Email tersebut bukan Administrator.</p><button onclick="logout()" class="bg-sky-600 hover:bg-sky-500 text-white text-sm font-bold py-3 px-6 rounded-xl transition w-full shadow-lg">Keluar Akun</button></div>` : `<div id="g_id_onload" data-client_id="${GOOGLE_CLIENT_ID}" data-callback="handleCredentialResponse" data-auto_prompt="false"></div><div class="g_id_signin shadow-xl rounded" data-type="standard" data-size="large" data-theme="filled_black" data-text="sign_in_with" data-shape="rectangular" data-logo_alignment="center"></div>`}
                         </div>
                     </div>
                     <script>
@@ -8542,16 +8560,16 @@ Total : Rp.${totalSaldo.toLocaleString("id-ID")}
                                 this.x, this.y, 0,
                                 this.x, this.y, this.size * 2.8
                             );
-                            glow.addColorStop(0, 'rgba(239, 68, 68, 0.45)');
-                            glow.addColorStop(0.3, 'rgba(220, 38, 38, 0.15)');
-                            glow.addColorStop(1, 'rgba(220, 38, 38, 0)');
+                            glow.addColorStop(0, 'rgba(14, 165, 233, 0.45)');
+                            glow.addColorStop(0.3, 'rgba(6, 182, 212, 0.2)');
+                            glow.addColorStop(1, 'rgba(2, 132, 199, 0)');
                             ctx.fillStyle = glow;
                             ctx.fill();
                             
                             // 2. Draw solid inner core
                             ctx.beginPath();
                             ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-                            ctx.fillStyle = "rgba(220, 38, 38, 0.95)";
+                            ctx.fillStyle = "rgba(2, 132, 199, 0.95)";
                             ctx.fill();
                         }
                     }
@@ -8612,7 +8630,7 @@ Total : Rp.${totalSaldo.toLocaleString("id-ID")}
                                 
                                 if (dist < connectionDistance) {
                                     const alpha = (1 - dist / connectionDistance) * 0.28;
-                                    ctx.strokeStyle = "rgba(220, 38, 38, " + alpha + ")";
+                                    ctx.strokeStyle = "rgba(14, 165, 233, " + alpha + ")";
                                     ctx.lineWidth = 1;
                                     ctx.beginPath();
                                     ctx.moveTo(particles[i].x, particles[i].y);
@@ -8640,10 +8658,10 @@ Total : Rp.${totalSaldo.toLocaleString("id-ID")}
                             // Draw the Ripple Shockwave
                             ctx.beginPath();
                             ctx.arc(wave.x, wave.y, wave.radius, 0, Math.PI * 2);
-                            ctx.strokeStyle = "rgba(239, 68, 68, " + (wave.opacity * 0.45) + ")";
+                            ctx.strokeStyle = "rgba(6, 182, 212, " + (wave.opacity * 0.45) + ")";
                             ctx.lineWidth = 2.5;
                             ctx.shadowBlur = 12;
-                            ctx.shadowColor = "rgba(220, 38, 38, 0.4)";
+                            ctx.shadowColor = "rgba(14, 165, 233, 0.4)";
                             ctx.stroke();
                             ctx.shadowBlur = 0; // reset
                             
@@ -8695,7 +8713,7 @@ Total : Rp.${totalSaldo.toLocaleString("id-ID")}
                 <meta property="twitter:image" content="${LOGO_URL}">`;
       if (currentUser) {
         const unreadCount = currentUser.inbox_unread_count || 0;
-        const badgeHtml = unreadCount > 0 ? `<span class="bg-red-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full ml-auto animate-pulse shadow-md shadow-red-500/40">${unreadCount}</span>` : "";
+        const badgeHtml = unreadCount > 0 ? `<span class="bg-sky-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full ml-auto animate-pulse shadow-md shadow-sky-500/40">${unreadCount}</span>` : "";
         return `<!DOCTYPE html>
                 <html lang="id">
                 <head>
@@ -8736,7 +8754,7 @@ Total : Rp.${totalSaldo.toLocaleString("id-ID")}
                     </style>
                     <script>
                         // Globalisasi Konfigurasi SwalDark
-                        const swalDark = Swal.mixin({ background: '#1f2937', color: '#f3f4f6', confirmButtonColor: '#dc2626', cancelButtonColor: '#ef4444', customClass: { popup: 'border border-gray-700 rounded-2xl shadow-2xl' } });
+                        const swalDark = Swal.mixin({ background: '#1f2937', color: '#f3f4f6', confirmButtonColor: '#0284c7', cancelButtonColor: '#475569', customClass: { popup: 'border border-gray-700 rounded-2xl shadow-2xl' } });
                         
                         // GLOBALISASI ESCAPE HTML AGAR BISA DIPAKAI DI SEMUA MENU (TIKET, ADMIN, DLL)
                         function escapeHtmlClient(str) {
@@ -8753,9 +8771,9 @@ Total : Rp.${totalSaldo.toLocaleString("id-ID")}
                     <div id="loadingOverlay" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-[9999] flex flex-col items-center justify-center hidden">
                         <div class="relative flex items-center justify-center mb-6">
                             <!-- Outer spinning ring -->
-                            <div class="w-24 h-24 rounded-full border-4 border-red-500/20 border-t-red-600 animate-spin"></div>
+                            <div class="w-24 h-24 rounded-full border-4 border-sky-500/20 border-t-sky-500 animate-spin"></div>
                             <!-- Logo in the center -->
-                            <img src="${LOGO_URL}" alt="Logo" class="w-14 h-14 rounded-full absolute object-cover shadow-lg shadow-red-500/20">
+                            <img src="${LOGO_URL}" alt="Logo" class="w-14 h-14 rounded-full absolute object-cover shadow-lg shadow-sky-500/20">
                         </div>
                         <h3 class="text-xl font-black text-white tracking-wider uppercase mb-2 animate-pulse">proses create akun...wait...</h3>
                         <p class="text-sm text-gray-400 font-medium">Mohon tunggu, jangan tutup atau memuat ulang halaman ini...</p>
@@ -8766,7 +8784,7 @@ Total : Rp.${totalSaldo.toLocaleString("id-ID")}
                         <div class="p-6 border-b border-gray-800 flex justify-between items-center relative z-10">
                             <div class="flex items-center gap-3">
                                 <img src="${LOGO_URL}" alt="Logo" class="w-8 h-8 rounded-full border border-gray-700 shadow-md">
-                                <span class="text-xl font-black tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-red-500 to-red-600">Warung Pulsa</span>
+                                <span class="text-xl font-black tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-sky-500 to-blue-600">Warung Pulsa</span>
                             </div>
                             <button onclick="toggleSidebar()" class="md:hidden text-gray-400 hover:text-white p-1">
                                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
@@ -8799,13 +8817,13 @@ Total : Rp.${totalSaldo.toLocaleString("id-ID")}
                                 ${currentUser.picture ? `
                                     <img src="${currentUser.picture}" alt="${escapeHTML(currentUser.name)}" class="w-10 h-10 rounded-full object-cover shadow-lg shrink-0 border border-gray-750 transition" referrerpolicy="no-referrer">
                                 ` : `
-                                    <div class="w-10 h-10 rounded-full bg-red-600 flex items-center justify-center font-bold text-white uppercase shadow-lg shrink-0 group-hover:bg-red-500 transition">${currentUser.name.charAt(0)}</div>
+                                    <div class="w-10 h-10 rounded-full bg-sky-600 flex items-center justify-center font-bold text-white uppercase shadow-lg shrink-0 group-hover:bg-sky-500 transition">${currentUser.name.charAt(0)}</div>
                                 `}
                                 <div class="overflow-hidden flex-grow">
-                                    <p class="text-sm font-bold text-white truncate group-hover:text-red-400 transition">${escapeHTML(currentUser.name)}</p>
+                                    <p class="text-sm font-bold text-white truncate group-hover:text-cyan-400 transition">${escapeHTML(currentUser.name)}</p>
                                     <p class="text-[10px] text-gray-500 truncate">${currentUser.email}</p>
                                 </div>
-                                <svg class="w-4 h-4 text-gray-500 group-hover:text-red-400 transition" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                                <svg class="w-4 h-4 text-gray-500 group-hover:text-cyan-400 transition" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
                             </a>
                         </div>
                     </aside>
@@ -8816,7 +8834,7 @@ Total : Rp.${totalSaldo.toLocaleString("id-ID")}
                                 <img src="${LOGO_URL}" alt="Logo" class="w-7 h-7 rounded-full border border-gray-700">
                                 <span class="text-lg font-bold text-white truncate">${title}</span>
                             </div>
-                            ${unreadCount > 0 ? `<a href="/inbox" class="bg-red-500 text-white text-[10px] font-bold px-2.5 py-1 rounded-full shadow-lg shadow-red-500/50 animate-pulse">${unreadCount} Baru</a>` : ""}
+                            ${unreadCount > 0 ? `<a href="/inbox" class="bg-sky-500 text-white text-[10px] font-bold px-2.5 py-1 rounded-full shadow-lg shadow-sky-500/50 animate-pulse">${unreadCount} Baru</a>` : ""}
                         </header>
                         <main class="flex-1 overflow-y-auto custom-scrollbar relative z-10">
                             ${content}
@@ -8866,8 +8884,8 @@ Total : Rp.${totalSaldo.toLocaleString("id-ID")}
                     <nav class="bg-gray-900/90 backdrop-blur-md border-b border-gray-800 sticky top-0 z-50">
                         <div class="max-w-6xl mx-auto px-4 py-4 flex justify-between items-center">
                             <a href="/" class="flex items-center gap-3 group">
-                                <img src="${LOGO_URL}" alt="Logo" class="w-8 h-8 md:w-10 md:h-10 rounded-full border border-gray-700 shadow-md group-hover:border-red-600 transition duration-300">
-                                <span class="text-xl md:text-2xl font-bold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-red-500 to-red-600">Warung Pulsa</span>
+                                <img src="${LOGO_URL}" alt="Logo" class="w-8 h-8 md:w-10 md:h-10 rounded-full border border-gray-700 shadow-md group-hover:border-sky-500 transition duration-300">
+                                <span class="text-xl md:text-2xl font-bold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 via-sky-500 to-blue-600">Warung Pulsa</span>
                             </a>
                             <div class="hidden md:flex gap-8 items-center text-sm font-medium">
                                 <a href="/" class="text-gray-300 hover:text-white transition">Beranda</a>
@@ -8896,17 +8914,17 @@ Total : Rp.${totalSaldo.toLocaleString("id-ID")}
                             <div>
                                 <div class="flex items-center gap-3 mb-4">
                                     <img src="${LOGO_URL}" alt="Logo" class="w-8 h-8 rounded-full border border-gray-800">
-                                    <h3 class="text-xl font-bold text-red-500">Warung Pulsa</h3>
+                                    <h3 class="text-xl font-bold text-sky-400">Warung Pulsa</h3>
                                 </div>
                                 <p class="text-gray-400 leading-relaxed text-sm">Solusi utama untuk privasi dan kebebasan internet Anda. Kami menyediakan layanan Proxy & VPN Premium berbasis Server Khusus dengan koneksi kecepatan tinggi, stabil, dan aman.</p>
                             </div>
                             <div>
                                 <h4 class="font-bold text-white mb-4 uppercase tracking-wider text-sm">Tautan Cepat</h4>
                                 <ul class="space-y-2 text-sm text-gray-400">
-                                    <li><a href="/" class="hover:text-red-400 transition">Beranda / Dashboard</a></li>
-                                    <li><a href="/produk" class="hover:text-red-400 transition">Produk & Harga</a></li>
-                                    <li><a href="/paket-data" class="hover:text-red-400 transition">Isi Ulang Paket Data</a></li>
-                                    <li><a href="/syarat-ketentuan" class="hover:text-red-400 transition">Syarat & Ketentuan</a></li>
+                                    <li><a href="/" class="hover:text-cyan-400 transition">Beranda / Dashboard</a></li>
+                                    <li><a href="/produk" class="hover:text-cyan-400 transition">Produk & Harga</a></li>
+                                    <li><a href="/paket-data" class="hover:text-cyan-400 transition">Isi Ulang Paket Data</a></li>
+                                    <li><a href="/syarat-ketentuan" class="hover:text-cyan-400 transition">Syarat & Ketentuan</a></li>
                                 </ul>
                             </div>
                             <div>
@@ -8915,7 +8933,7 @@ Total : Rp.${totalSaldo.toLocaleString("id-ID")}
                                 <ul class="space-y-3 text-sm text-gray-300">
                                     <li><a href="https://wa.me/6282175037525" target="_blank" class="flex items-center gap-3 hover:text-green-400 transition group"><div class="bg-gray-800 p-2 rounded-full group-hover:bg-green-500/20"><svg class="w-4 h-4 text-green-500" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg></div><span>WhatsApp: 0821 7503 7525</span></a>
                                     </li>
-                                    <li><a href="https://t.me/srpcomadmin" target="_blank" class="flex items-center gap-3 hover:text-red-400 transition group"><div class="bg-gray-800 p-2 rounded-full group-hover:bg-red-500/20"><svg class="w-4 h-4 text-red-400" fill="currentColor" viewBox="0 0 24 24"><path d="M11.944 0A12 12 0 000 12a12 12 0 0012 12 12 12 0 0012-12A12 12 0 0012 0a12 12 0 00-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 01.171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.892-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg></div><span>Telegram: @srpcomadmin</span></a></li>
+                                    <li><a href="https://t.me/srpcomadmin" target="_blank" class="flex items-center gap-3 hover:text-cyan-400 transition group"><div class="bg-gray-800 p-2 rounded-full group-hover:bg-sky-500/20"><svg class="w-4 h-4 text-cyan-400" fill="currentColor" viewBox="0 0 24 24"><path d="M11.944 0A12 12 0 000 12a12 12 0 0012 12 12 12 0 0012-12A12 12 0 0012 0a12 12 0 00-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 01.171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.892-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg></div><span>Telegram: @srpcomadmin</span></a></li>
                                     <li><a href="mailto:admin@warungpulsa.com" class="flex items-center gap-3 hover:text-pink-400 transition group"><div class="bg-gray-800 p-2 rounded-full group-hover:bg-pink-500/20"><svg class="w-4 h-4 text-pink-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg></div><span>Email: admin@warungpulsa.com</span></a></li>
                                 </ul>
                             </div>
@@ -8961,11 +8979,11 @@ Total : Rp.${totalSaldo.toLocaleString("id-ID")}
                 <div class="space-y-4">
                     ${tickets.map((t) => {
           let statusBadge = "";
-          if (t.status === "OPEN") statusBadge = '<span class="bg-red-500/20 text-red-400 border border-red-500/30 text-[10px] px-2.5 py-1 rounded uppercase font-bold tracking-wider">Menunggu Admin</span>';
+          if (t.status === "OPEN") statusBadge = '<span class="bg-sky-500/20 text-cyan-400 border border-sky-500/30 text-[10px] px-2.5 py-1 rounded uppercase font-bold tracking-wider">Menunggu Admin</span>';
           else if (t.status === "PENDING") statusBadge = '<span class="bg-yellow-500/20 text-yellow-400 border border-yellow-500/30 text-[10px] px-2.5 py-1 rounded uppercase font-bold tracking-wider">Menunggu Balasan Anda</span>';
           else statusBadge = '<span class="bg-gray-500/20 text-gray-400 border border-gray-500/30 text-[10px] px-2.5 py-1 rounded uppercase font-bold tracking-wider">Selesai (Closed)</span>';
           return `
-                        <div onclick="openTicketView('${t.id}')" class="bg-gray-800 p-5 md:p-6 rounded-2xl border border-gray-700 shadow-xl hover:border-red-600/50 hover:bg-gray-800/80 transition cursor-pointer">
+                        <div onclick="openTicketView('${t.id}')" class="bg-gray-800 p-5 md:p-6 rounded-2xl border border-gray-700 shadow-xl hover:border-sky-600/50 hover:bg-gray-800/80 transition cursor-pointer">
                             <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 mb-3">
                                 <h3 class="text-lg font-bold text-white leading-snug truncate">${escapeHTML(t.subject)}</h3>
                                 <div class="shrink-0 flex items-center gap-3">
@@ -9000,7 +9018,7 @@ Total : Rp.${totalSaldo.toLocaleString("id-ID")}
                         <h1 class="text-3xl font-black text-white tracking-tight flex items-center gap-3">Pusat Bantuan (Tiket)</h1>
                         <p class="text-gray-400 text-sm mt-2">Laporkan kendala teknis atau masalah layanan Anda di sini.</p>
                     </div>
-                    <button onclick="openCreateTicketModal()" class="bg-red-600 hover:bg-red-500 text-white font-bold py-3 px-6 rounded-xl shadow-lg transition flex items-center gap-2">
+                    <button onclick="openCreateTicketModal()" class="bg-sky-600 hover:bg-sky-500 text-white font-bold py-3 px-6 rounded-xl shadow-lg transition flex items-center gap-2">
                         \u2795 Buat Tiket Baru
                     </button>
                 </div>
@@ -9009,7 +9027,7 @@ Total : Rp.${totalSaldo.toLocaleString("id-ID")}
 
                 <!-- Modal Buat Tiket -->
                 <div id="createTicketModal" class="fixed inset-0 bg-black/80 hidden z-50 flex items-center justify-center p-4 backdrop-blur-sm">
-                    <div class="bg-gray-900 p-6 md:p-8 rounded-3xl w-full max-w-lg border border-red-600/30 shadow-2xl">
+                    <div class="bg-gray-900 p-6 md:p-8 rounded-3xl w-full max-w-lg border border-sky-600/30 shadow-2xl">
                         <div class="flex justify-between items-center mb-6 border-b border-gray-800 pb-4">
                             <h3 class="text-2xl font-bold text-white tracking-tight">Kirim Tiket Baru</h3>
                             <button onclick="closeCreateTicketModal()" class="text-gray-400 hover:text-white text-3xl leading-none">&times;</button>
@@ -9017,7 +9035,7 @@ Total : Rp.${totalSaldo.toLocaleString("id-ID")}
                         <form id="createTicketForm" class="space-y-5">
                             <div>
                                 <label class="block text-sm font-bold text-gray-400 mb-2 uppercase tracking-wide">Kategori Kendala</label>
-                                <select id="ticketCategory" required class="w-full bg-gray-950 border border-gray-700 rounded-xl p-4 text-white focus:ring-2 focus:ring-red-500 outline-none">
+                                <select id="ticketCategory" required class="w-full bg-gray-950 border border-gray-700 rounded-xl p-4 text-white focus:ring-2 focus:ring-sky-500 outline-none">
                                     <option value="Kendala Server VPN">Kendala Server VPN (Mati/Lemot)</option>
                                     <option value="Kendala Top Up Saldo">Kendala Top Up Saldo (QRIS)</option>
                                     <option value="Kendala Paket Data XL">Kendala Paket Data XL / Axis</option>
@@ -9026,13 +9044,13 @@ Total : Rp.${totalSaldo.toLocaleString("id-ID")}
                             </div>
                             <div>
                                 <label class="block text-sm font-bold text-gray-400 mb-2 uppercase tracking-wide">Judul Masalah</label>
-                                <input type="text" id="ticketSubject" required placeholder="Singkat, padat, dan jelas..." class="w-full bg-gray-950 border border-gray-700 rounded-xl p-4 text-white focus:ring-2 focus:ring-red-500 outline-none">
+                                <input type="text" id="ticketSubject" required placeholder="Singkat, padat, dan jelas..." class="w-full bg-gray-950 border border-gray-700 rounded-xl p-4 text-white focus:ring-2 focus:ring-sky-500 outline-none">
                             </div>
                             <div>
                                 <label class="block text-sm font-bold text-gray-400 mb-2 uppercase tracking-wide">Detail Kendala</label>
-                                <textarea id="ticketMessage" required rows="4" placeholder="Jelaskan secara rinci (sertakan nomor XL, ID transaksi, atau Username VPN jika ada)..." class="w-full bg-gray-950 border border-gray-700 rounded-xl p-4 text-white focus:ring-2 focus:ring-red-500 outline-none custom-scrollbar resize-none"></textarea>
+                                <textarea id="ticketMessage" required rows="4" placeholder="Jelaskan secara rinci (sertakan nomor XL, ID transaksi, atau Username VPN jika ada)..." class="w-full bg-gray-950 border border-gray-700 rounded-xl p-4 text-white focus:ring-2 focus:ring-sky-500 outline-none custom-scrollbar resize-none"></textarea>
                             </div>
-                            <button type="submit" id="btnSubmitTicket" class="w-full bg-red-600 hover:bg-red-500 text-white font-bold py-4 rounded-xl shadow-lg transition text-lg mt-4">Kirim Tiket Sekarang</button>
+                            <button type="submit" id="btnSubmitTicket" class="w-full bg-sky-600 hover:bg-sky-500 text-white font-bold py-4 rounded-xl shadow-lg transition text-lg mt-4">Kirim Tiket Sekarang</button>
                         </form>
                     </div>
                 </div>
@@ -9055,10 +9073,10 @@ Total : Rp.${totalSaldo.toLocaleString("id-ID")}
                         <div class="p-4 border-t border-gray-800 bg-gray-950 rounded-b-3xl">
                             <div id="ticketReplyArea" class="flex gap-3">
                                 <input type="hidden" id="replyTicketId" value="">
-                                <textarea id="replyTicketMessage" rows="2" placeholder="Ketik balasan Anda di sini..." class="w-full bg-gray-900 border border-gray-700 rounded-xl p-3 text-white focus:ring-2 focus:ring-red-500 outline-none custom-scrollbar text-sm resize-none"></textarea>
+                                <textarea id="replyTicketMessage" rows="2" placeholder="Ketik balasan Anda di sini..." class="w-full bg-gray-900 border border-gray-700 rounded-xl p-3 text-white focus:ring-2 focus:ring-sky-500 outline-none custom-scrollbar text-sm resize-none"></textarea>
                                 <div class="flex flex-col gap-2 shrink-0">
-                                    <button onclick="sendTicketReply()" id="btnSendReply" class="bg-red-600 hover:bg-red-500 text-white font-bold px-5 py-2.5 rounded-xl transition shadow flex-grow">Kirim</button>
-                                    <button onclick="closeTicket()" id="btnCloseTicket" class="bg-gray-700 hover:bg-red-600 text-gray-300 hover:text-white text-xs font-bold px-5 py-2 rounded-xl transition border border-gray-600 hover:border-red-500">Tandai Selesai</button>
+                                    <button onclick="sendTicketReply()" id="btnSendReply" class="bg-sky-600 hover:bg-sky-500 text-white font-bold px-5 py-2.5 rounded-xl transition shadow flex-grow">Kirim</button>
+                                    <button onclick="closeTicket()" id="btnCloseTicket" class="bg-gray-700 hover:bg-sky-600 text-gray-300 hover:text-white text-xs font-bold px-5 py-2 rounded-xl transition border border-gray-600 hover:border-sky-500">Tandai Selesai</button>
                                 </div>
                             </div>
                             <div id="ticketClosedArea" class="hidden text-center p-3">
@@ -9110,7 +9128,7 @@ Total : Rp.${totalSaldo.toLocaleString("id-ID")}
                 async function openTicketView(id) {
                     document.getElementById('ticketViewModal').classList.remove('hidden');
                     const chatContainer = document.getElementById('ticketChatContainer');
-                    chatContainer.innerHTML = '<p class="text-center text-red-400 mt-10 animate-pulse">Memuat riwayat chat...</p>';
+                    chatContainer.innerHTML = '<p class="text-center text-cyan-400 mt-10 animate-pulse">Memuat riwayat chat...</p>';
                     document.getElementById('replyTicketId').value = id;
                     document.getElementById('replyTicketMessage').value = '';
 
@@ -9137,7 +9155,7 @@ Total : Rp.${totalSaldo.toLocaleString("id-ID")}
                                 chatContainer.innerHTML = data.replies.map(r => {
                                     const isUser = r.sender_type === 'user';
                                     const bubbleClass = isUser 
-                                        ? 'bg-red-600 text-white rounded-l-2xl rounded-tr-2xl ml-auto shadow-md' 
+                                        ? 'bg-sky-600 text-white rounded-l-2xl rounded-tr-2xl ml-auto shadow-md' 
                                         : 'bg-gray-800 text-gray-200 rounded-r-2xl rounded-tl-2xl mr-auto border border-gray-700';
                                     
                                     const senderLabel = isUser ? '' : '<span class="text-[10px] font-bold text-teal-400 mb-1 block uppercase">Admin Support</span>';
@@ -9149,9 +9167,9 @@ Total : Rp.${totalSaldo.toLocaleString("id-ID")}
                                 setTimeout(() => { chatContainer.scrollTop = chatContainer.scrollHeight; }, 100);
                             }
                         } else {
-                            chatContainer.innerHTML = '<p class="text-center text-red-500 mt-10">Gagal memuat tiket.</p>';
+                            chatContainer.innerHTML = '<p class="text-center text-sky-400 mt-10">Gagal memuat tiket.</p>';
                         }
-                    } catch(e) { chatContainer.innerHTML = '<p class="text-center text-red-500 mt-10">Error koneksi.</p>'; }
+                    } catch(e) { chatContainer.innerHTML = '<p class="text-center text-sky-400 mt-10">Error koneksi.</p>'; }
                 }
 
                 async function sendTicketReply() {
@@ -9219,15 +9237,15 @@ Total : Rp.${totalSaldo.toLocaleString("id-ID")}
                         <tbody class="divide-y divide-gray-800">
                             ${vpns.map((v) => `
                                 <tr class="hover:bg-gray-800/50 transition">
-                                    <td class="p-4 font-bold text-red-400 font-mono text-base">${v.username}</td>
+                                    <td class="p-4 font-bold text-cyan-400 font-mono text-base">${v.username}</td>
                                     <td class="p-4 text-xs">
                                         <span class="block text-gray-200 font-bold mb-0.5">${v.protocol}</span>
                                         <span class="text-gray-500">${v.server}</span>
                                     </td>
-                                    <td class="p-4 text-xs font-mono font-bold ${v.exp.includes("1 Jam") ? "text-red-400" : "text-yellow-400"}">${v.exp}</td>
+                                    <td class="p-4 text-xs font-mono font-bold ${v.exp.includes("1 Jam") ? "text-cyan-400" : "text-yellow-400"}">${v.exp}</td>
                                     <td class="p-4 flex gap-2 justify-center">
                                         <button onclick="detailVpn('${v.id}')" class="bg-gray-700 hover:bg-gray-600 text-white text-[11px] px-3 py-2 rounded-lg uppercase font-bold transition shadow-md flex items-center gap-1.5"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg> Detail</button>
-                                        ${v.exp.includes("1 Jam") ? `<span class="bg-red-500/10 text-red-500 border border-red-500/20 text-[11px] px-3 py-2 rounded-lg uppercase font-bold text-center inline-block cursor-not-allowed">Trial Tidak Bisa Diperpanjang</span>` : `<button onclick="renewVpn('${v.id}', '${v.username}')" class="bg-red-600 hover:bg-red-500 text-white text-[11px] px-3 py-2 rounded-lg uppercase font-bold transition shadow-md flex items-center gap-1.5"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg> Perpanjang</button>`}
+                                        ${v.exp.includes("1 Jam") ? `<span class="bg-sky-500/10 text-sky-400 border border-sky-500/20 text-[11px] px-3 py-2 rounded-lg uppercase font-bold text-center inline-block cursor-not-allowed">Trial Tidak Bisa Diperpanjang</span>` : `<button onclick="renewVpn('${v.id}', '${v.username}')" class="bg-sky-600 hover:bg-sky-500 text-white text-[11px] px-3 py-2 rounded-lg uppercase font-bold transition shadow-md flex items-center gap-1.5"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg> Perpanjang</button>`}
                                     </td>
                                 </tr>
                             `).join("")}
@@ -9255,7 +9273,7 @@ Total : Rp.${totalSaldo.toLocaleString("id-ID")}
                     </div>
                     <p class="text-gray-400 text-lg font-medium mb-1">Anda belum memiliki VPN aktif.</p>
                     <p class="text-gray-500 text-sm mb-6">Server VPN yang Anda buat akan muncul di sini.</p>
-                    <a href="/" class="bg-red-600 hover:bg-red-500 text-white px-8 py-3 rounded-xl transition font-bold shadow-lg shadow-red-600/30">Buat VPN Sekarang</a>
+                    <a href="/" class="bg-sky-600 hover:bg-sky-500 text-white px-8 py-3 rounded-xl transition font-bold shadow-lg shadow-sky-600/30">Buat VPN Sekarang</a>
                 </div>`;
       }
       const content = `
@@ -9263,14 +9281,14 @@ Total : Rp.${totalSaldo.toLocaleString("id-ID")}
                 <div class="flex flex-col md:flex-row md:items-end justify-between mb-8 border-b border-gray-800 pb-5 gap-4">
                     <div>
                         <h1 class="text-3xl font-black text-white tracking-tight flex items-center gap-3">
-                            <svg class="w-8 h-8 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14M5 12a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v4a2 2 0 01-2 2M5 12a2 2 0 00-2 2v4a2 2 0 002 2h14a2 2 0 002-2v-4a2 2 0 00-2-2m-2-4h.01M17 16h.01"></path></svg>
+                            <svg class="w-8 h-8 text-sky-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14M5 12a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v4a2 2 0 01-2 2M5 12a2 2 0 00-2 2v4a2 2 0 002 2h14a2 2 0 002-2v-4a2 2 0 00-2-2m-2-4h.01M17 16h.01"></path></svg>
                             VPN Aktif Saya
                         </h1>
                         <p class="text-gray-400 text-sm mt-2">Kelola, lihat detail, dan perpanjang masa aktif server VPN Anda di sini.</p>
                     </div>
                     <div class="bg-gray-800 px-4 py-2.5 rounded-xl border border-gray-700 flex items-center gap-3 shadow-inner">
                         <span class="text-xs text-gray-400 font-bold uppercase">Total Akun</span>
-                        <span class="bg-red-500/20 text-red-400 px-2.5 py-0.5 rounded font-mono font-bold border border-red-600/30">${totalVpns}</span>
+                        <span class="bg-sky-500/20 text-cyan-400 px-2.5 py-0.5 rounded font-mono font-bold border border-sky-600/30">${totalVpns}</span>
                     </div>
                 </div>
                 ${vpnHtml}
@@ -9306,7 +9324,7 @@ Total : Rp.${totalSaldo.toLocaleString("id-ID")}
                         html: \`
                             <div class="text-left bg-gray-800 p-4 rounded-xl border border-gray-700 mb-4">
                                 <p class="text-xs text-gray-400 font-bold uppercase mb-1">Username Akun</p>
-                                <p class="text-red-400 font-mono font-bold text-lg">\${username}</p>
+                                <p class="text-cyan-400 font-mono font-bold text-lg">\${username}</p>
                             </div>
                             <p class="text-sm text-gray-300 mb-4">Silakan pilih durasi perpanjangan. Saldo Web Anda akan otomatis terpotong sebesar <b>Rp \${PRICE_PER_DAY}/Hari</b>.</p>
                         \`,
@@ -9371,8 +9389,8 @@ Total : Rp.${totalSaldo.toLocaleString("id-ID")}
                         <div class="absolute bottom-0 left-0 right-0 h-40 bg-gradient-to-t from-gray-900 to-transparent"></div>
                     </div>
                     <div class="relative max-w-6xl mx-auto px-4 text-center z-10">
-                        <span class="inline-block py-1 px-3 rounded-full bg-red-950/50 text-red-400 text-sm font-semibold mb-6 border border-red-800/50 shadow-md backdrop-blur-sm">Mulai Rp ${appSettings.price_per_day}/Hari</span>
-                        <h1 class="text-5xl md:text-7xl font-black text-white tracking-tight mb-6 drop-shadow-lg">Akses Internet <span class="text-transparent bg-clip-text bg-gradient-to-r from-red-500 to-red-600">Tanpa Batas</span></h1>
+                        <span class="inline-block py-1 px-3 rounded-full bg-sky-950/50 text-cyan-400 text-sm font-semibold mb-6 border border-red-800/50 shadow-md backdrop-blur-sm">Mulai Rp ${appSettings.price_per_day}/Hari</span>
+                        <h1 class="text-5xl md:text-7xl font-black text-white tracking-tight mb-6 drop-shadow-lg">Akses Internet <span class="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-sky-500 to-blue-600">Tanpa Batas</span></h1>
                         <p class="mt-4 max-w-2xl text-lg md:text-xl text-gray-400 mx-auto mb-10 leading-relaxed drop-shadow">Amankan koneksi Anda, buka blokir geografis, dan nikmati kecepatan tinggi dengan multi-protokol server dari Warung Pulsa.</p>
                         <div class="glass-panel inline-block p-6 md:p-8 rounded-3xl max-w-sm mx-auto w-full shadow-2xl border border-gray-700/50 relative z-20">
                             <h3 class="text-xl font-bold text-white mb-2">Masuk ke Dashboard</h3>
@@ -9387,16 +9405,16 @@ Total : Rp.${totalSaldo.toLocaleString("id-ID")}
                     <div class="max-w-6xl mx-auto px-4">
                         <div class="text-center mb-16">
                             <h2 class="text-3xl md:text-4xl font-bold text-white">Mengapa Memilih Warung Pulsa?</h2>
-                            <div class="w-20 h-1.5 bg-red-500 mx-auto mt-6 rounded-full shadow-lg shadow-red-600/50"></div>
+                            <div class="w-20 h-1.5 bg-sky-500 mx-auto mt-6 rounded-full shadow-lg shadow-sky-600/50"></div>
                         </div>
                         <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                            <div class="bg-gray-900 p-8 rounded-3xl border border-gray-700 shadow-xl hover:-translate-y-2 hover:border-red-600 transition-all duration-300">
-                                <div class="w-14 h-14 bg-red-950/50 rounded-2xl flex items-center justify-center mb-6 text-red-400 shadow-inner border border-red-600/20"><svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg></div>
+                            <div class="bg-gray-900 p-8 rounded-3xl border border-gray-700 shadow-xl hover:-translate-y-2 hover:border-sky-600 transition-all duration-300">
+                                <div class="w-14 h-14 bg-sky-950/50 rounded-2xl flex items-center justify-center mb-6 text-cyan-400 shadow-inner border border-sky-600/20"><svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg></div>
                                 <h3 class="text-xl font-bold text-white mb-3">Kecepatan Tinggi</h3>
                                 <p class="text-gray-400 text-sm leading-relaxed">Server berkinerja tinggi yang dihosting di cloud terkemuka, menjamin ping rendah dan bandwidth besar untuk streaming & gaming.</p>
                             </div>
-                            <div class="bg-gray-900 p-8 rounded-3xl border border-gray-700 shadow-xl hover:-translate-y-2 hover:border-red-600 transition-all duration-300">
-                                <div class="w-14 h-14 bg-red-950/50 rounded-2xl flex items-center justify-center mb-6 text-red-400 shadow-inner border border-red-600/20"><svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg></div>
+                            <div class="bg-gray-900 p-8 rounded-3xl border border-gray-700 shadow-xl hover:-translate-y-2 hover:border-sky-600 transition-all duration-300">
+                                <div class="w-14 h-14 bg-sky-950/50 rounded-2xl flex items-center justify-center mb-6 text-cyan-400 shadow-inner border border-sky-600/20"><svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg></div>
                                 <h3 class="text-xl font-bold text-white mb-3">Pilihan Protokol Luas</h3>
                                 <p class="text-gray-400 text-sm leading-relaxed">Tersedia jaringan SSH Premium, L2TP, VMess, VLESS, hingga Trojan WebSocket yang dapat disesuaikan dengan kebutuhan Anda.</p>
                             </div>
@@ -9414,9 +9432,9 @@ Total : Rp.${totalSaldo.toLocaleString("id-ID")}
                         <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-start">
                             <div>
                                 <h2 class="text-3xl md:text-4xl font-bold text-white mb-4">Tentang Warung Pulsa</h2>
-                                <div class="w-16 h-1.5 bg-red-500 rounded-full mb-8"></div>
+                                <div class="w-16 h-1.5 bg-sky-500 rounded-full mb-8"></div>
                                 <p class="text-gray-400 leading-relaxed mb-6 text-justify text-lg"><strong>Warung Pulsa</strong> adalah platform penyedia layanan Virtual Private Network (VPN) dan Proxy premium terpercaya. Kami membangun infrastruktur ini di atas server berkinerja tinggi untuk memastikan Anda mendapatkan kecepatan tanpa kompromi.</p>
-                                <div class="bg-gradient-to-r from-gray-800 to-gray-900 p-6 rounded-2xl border border-red-600/30 shadow-lg mb-6">
+                                <div class="bg-gradient-to-r from-gray-800 to-gray-900 p-6 rounded-2xl border border-sky-600/30 shadow-lg mb-6">
                                     <p class="text-red-100 font-medium leading-relaxed text-justify">Produk utama yang kami jual adalah layanan <strong>VPN Premium</strong>. Anda dapat menikmati seluruh fitur dan keunggulan jaringan proxy kami dengan sistem tarif transparan sebesar <strong>Rp ${appSettings.price_per_day} per hari</strong>.</p>
                                 </div>
                                 <p class="text-gray-400 leading-relaxed text-justify mb-6 text-lg">Seluruh ekosistem website ini\u2014mulai dari pendaftaran, pengisian saldo, hingga proses <em>deployment</em> server VPN\u2014berjalan <strong>100% secara otomatis 24 jam nonstop</strong>.</p>
@@ -9425,7 +9443,7 @@ Total : Rp.${totalSaldo.toLocaleString("id-ID")}
                                 <h2 class="text-2xl md:text-3xl font-bold text-white mb-8 border-b border-gray-700 pb-4">Alur Transaksi Otomatis</h2>
                                 <div class="space-y-8">
                                     <div class="flex gap-5 items-start">
-                                        <div class="w-12 h-12 rounded-2xl bg-red-950/50 text-red-400 flex items-center justify-center font-black text-xl border border-red-600/30 shrink-0 shadow-lg">1</div>
+                                        <div class="w-12 h-12 rounded-2xl bg-sky-950/50 text-cyan-400 flex items-center justify-center font-black text-xl border border-sky-600/30 shrink-0 shadow-lg">1</div>
                                         <div><h3 class="text-white font-bold mb-2 text-lg">Login dengan Akun Google</h3><p class="text-sm text-gray-400 leading-relaxed">Tidak perlu repot mengisi form. Akses dashboard langsung dengan 1 klik menggunakan akun Google Anda.</p></div>
                                     </div>
                                     <div class="flex gap-5 items-start">
@@ -9478,13 +9496,13 @@ Total : Rp.${totalSaldo.toLocaleString("id-ID")}
         if (isQrisManualOn) activeMethods.push({ value: "manual", label: "QRIS Manual (Konfirmasi Admin)" });
         if (activeMethods.length > 1) {
           let optionsHtml = activeMethods.map((m) => `<option value="${m.value}">${m.label}</option>`).join("");
-          paymentMethodHtml = `<select id="topupMethod" class="w-full mb-3 bg-gray-900 border border-gray-700 rounded-xl p-3 text-sm outline-none text-white focus:ring-2 focus:ring-red-500 transition">${optionsHtml}</select>`;
+          paymentMethodHtml = `<select id="topupMethod" class="w-full mb-3 bg-gray-900 border border-gray-700 rounded-xl p-3 text-sm outline-none text-white focus:ring-2 focus:ring-sky-500 transition">${optionsHtml}</select>`;
         } else if (activeMethods.length === 1) {
           paymentMethodHtml = `<input type="hidden" id="topupMethod" value="${activeMethods[0].value}">`;
         } else {
-          paymentMethodHtml = `<p class="text-red-400 text-xs mb-3 font-bold bg-red-900/20 p-2 rounded-lg border border-red-500/20">Metode Top Up saat ini sedang dinonaktifkan Admin.</p>`;
+          paymentMethodHtml = `<p class="text-cyan-400 text-xs mb-3 font-bold bg-sky-900/20 p-2 rounded-lg border border-sky-500/20">Metode Top Up saat ini sedang dinonaktifkan Admin.</p>`;
         }
-        const disableTopupButton = activeMethods.length === 0 ? 'disabled class="bg-gray-700 text-gray-400 font-bold py-3 px-6 rounded-xl cursor-not-allowed shrink-0"' : 'class="bg-red-600 hover:bg-red-500 text-white font-bold py-3 px-6 rounded-xl transition shadow-lg shrink-0"';
+        const disableTopupButton = activeMethods.length === 0 ? 'disabled class="bg-gray-700 text-gray-400 font-bold py-3 px-6 rounded-xl cursor-not-allowed shrink-0"' : 'class="bg-sky-600 hover:bg-sky-500 text-white font-bold py-3 px-6 rounded-xl transition shadow-lg shrink-0"';
         let pendingBannerHtml = "";
         if (currentUser.unpaid_invoices && currentUser.unpaid_invoices.length > 0) {
           pendingBannerHtml = `
@@ -9513,7 +9531,7 @@ Total : Rp.${totalSaldo.toLocaleString("id-ID")}
                             <p class="text-4xl md:text-5xl font-black text-green-400 mb-4 tracking-tighter drop-shadow-lg">${formatRupiah(currentUser.balance)}</p>
                             
                             <!-- Tombol Toggle Form Top Up -->
-                            <button id="btnToggleTopup" onclick="document.getElementById('topupFormContainer').classList.toggle('hidden'); this.querySelector('.toggle-icon').classList.toggle('rotate-45');" class="bg-red-600 hover:bg-red-500 text-white font-bold py-2.5 px-5 rounded-xl transition shadow-lg flex items-center gap-2 text-sm relative z-20">
+                            <button id="btnToggleTopup" onclick="document.getElementById('topupFormContainer').classList.toggle('hidden'); this.querySelector('.toggle-icon').classList.toggle('rotate-45');" class="bg-sky-600 hover:bg-sky-500 text-white font-bold py-2.5 px-5 rounded-xl transition shadow-lg flex items-center gap-2 text-sm relative z-20">
                                 <svg class="w-4 h-4 transition-transform duration-300 toggle-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
                                 <span>Top Up Saldo</span>
                             </button>
@@ -9522,7 +9540,7 @@ Total : Rp.${totalSaldo.toLocaleString("id-ID")}
                                 <h3 class="text-sm font-bold text-white mb-3">Isi Ulang Saldo</h3>
                                 ${paymentMethodHtml}
                                 <div class="flex flex-col sm:flex-row gap-3">
-                                    <select id="topupAmount" class="flex-grow bg-gray-900 border border-gray-700 rounded-xl p-3 text-sm outline-none text-white focus:ring-2 focus:ring-red-500 transition">
+                                    <select id="topupAmount" class="flex-grow bg-gray-900 border border-gray-700 rounded-xl p-3 text-sm outline-none text-white focus:ring-2 focus:ring-sky-500 transition">
                                         <option value="1000">Rp 1.000</option>
                                         <option value="5000">Rp 5.000</option>
                                         <option value="10000">Rp 10.000</option>
@@ -9536,7 +9554,7 @@ Total : Rp.${totalSaldo.toLocaleString("id-ID")}
                             </div>
                         </div>
 
-                        <div class="bg-gradient-to-br from-red-950 to-red-900 p-6 md:p-8 rounded-3xl shadow-2xl border border-red-600 relative z-20">
+                        <div class="bg-gradient-to-br from-red-950 to-red-900 p-6 md:p-8 rounded-3xl shadow-2xl border border-sky-600 relative z-20">
                             <h2 class="text-xl md:text-2xl font-bold text-white mb-6">\u2795 Buat Akun VPN Baru</h2>
                             <div class="space-y-5 mb-8">
                                 <div>
@@ -9574,7 +9592,7 @@ Total : Rp.${totalSaldo.toLocaleString("id-ID")}
                                 </div>
                             </div>
                             
-                            <div class="flex justify-between items-center mb-6 bg-black/30 p-5 rounded-2xl border border-red-600/30">
+                            <div class="flex justify-between items-center mb-6 bg-black/30 p-5 rounded-2xl border border-sky-600/30">
                                 <span class="text-sm text-red-100 font-medium">Total Harga:</span>
                                 <span class="text-3xl font-black text-yellow-400 tracking-tight" id="totalPriceDisplay">Rp ${(appSettings.price_per_day * 30).toLocaleString("id-ID")}</span>
                             </div>
@@ -9646,7 +9664,7 @@ Total : Rp.${totalSaldo.toLocaleString("id-ID")}
                                   '  </div>' +
                                   '  <div class="bg-gray-950 p-3.5 rounded-xl border border-gray-800 text-xs font-mono space-y-1.5">' +
                                   '    <div class="flex justify-between items-center"><span class="text-gray-500">No. Ref:</span><span class="text-white font-bold">' + data.ref + '</span></div>' +
-                                  '    <div class="flex justify-between items-center"><span class="text-gray-500">Batas Waktu:</span><span id="qrisTimer" class="text-red-400 font-bold">15:00</span></div>' +
+                                  '    <div class="flex justify-between items-center"><span class="text-gray-500">Batas Waktu:</span><span id="qrisTimer" class="text-cyan-400 font-bold">15:00</span></div>' +
                                   '    <div class="flex justify-between items-center pt-1 border-t border-gray-850"><span class="text-gray-500">Status Live:</span>' +
                                   '      <span id="qrisStatusBadge" class="inline-flex items-center gap-1.5 text-xs text-yellow-400 font-bold">' +
                                   '        <span class="relative flex h-2 w-2"><span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-yellow-400 opacity-75"></span><span class="relative inline-flex rounded-full h-2 w-2 bg-yellow-500"></span></span>' +
@@ -9706,7 +9724,7 @@ Total : Rp.${totalSaldo.toLocaleString("id-ID")}
                                     }
                                     if (timeLeft <= 0) {
                                         clearInterval(paymentCheckInterval);
-                                        if (badgeEl) { badgeEl.innerHTML = '<span class="text-red-500 font-bold">Kedaluwarsa</span>'; }
+                                        if (badgeEl) { badgeEl.innerHTML = '<span class="text-sky-400 font-bold">Kedaluwarsa</span>'; }
                                     } else if (timeLeft % 3 === 0) {
                                         await checkPaymentFn(false);
                                     }
@@ -9836,7 +9854,7 @@ Total : Rp.${totalSaldo.toLocaleString("id-ID")}
                 <div class="text-center mb-12 md:mb-16">
                     <h1 class="text-4xl md:text-5xl font-black text-white mb-4 tracking-tight">Produk & Harga</h1>
                     <p class="text-lg md:text-xl text-gray-400 max-w-2xl mx-auto">Kami menyediakan tarif flat dan transparan. Satu harga untuk akses semua protokol dan jaringan proxy terbaik kami.</p>
-                    <div class="w-24 h-1.5 bg-red-500 mx-auto mt-6 rounded-full shadow-lg shadow-red-600/50"></div>
+                    <div class="w-24 h-1.5 bg-sky-500 mx-auto mt-6 rounded-full shadow-lg shadow-sky-600/50"></div>
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-10 lg:gap-16 items-center">
@@ -9846,7 +9864,7 @@ Total : Rp.${totalSaldo.toLocaleString("id-ID")}
                             <h2 class="text-2xl font-bold text-white mb-2">VPN & Proxy All-in-One</h2>
                             <p class="text-gray-400 text-sm mb-6">Hitungan murni berdasarkan pemakaian hari</p>
                             <div class="flex justify-center items-baseline gap-1">
-                                <span class="text-3xl font-bold text-red-400">Rp</span>
+                                <span class="text-3xl font-bold text-cyan-400">Rp</span>
                                 <span class="text-6xl font-black text-white">${appSettings.price_per_day}</span>
                             </div>
                             <p class="text-gray-500 text-sm mt-2">/ Hari</p>
@@ -9858,16 +9876,16 @@ Total : Rp.${totalSaldo.toLocaleString("id-ID")}
                                 <li class="flex items-center gap-3"><svg class="w-5 h-5 text-green-400 shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg> <span class="text-gray-300 text-sm md:text-base">Limit 2 Device / IP Bersamaan</span></li>
                                 <li class="flex items-center gap-3"><svg class="w-5 h-5 text-green-400 shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg> <span class="text-gray-300 text-sm md:text-base">Aktivasi Otomatis via API</span></li>
                             </ul>
-                            <a href="/" class="block w-full bg-red-600 hover:bg-red-500 text-white text-center font-bold py-4 px-4 rounded-xl transition shadow-lg shadow-red-600/30 relative z-20">BUAT SEKARANG (Dashboard)</a>
+                            <a href="/" class="block w-full bg-sky-600 hover:bg-sky-500 text-white text-center font-bold py-4 px-4 rounded-xl transition shadow-lg shadow-sky-600/30 relative z-20">BUAT SEKARANG (Dashboard)</a>
                         </div>
                     </div>
                     <div>
                         <h3 class="text-2xl md:text-3xl font-bold text-white mb-6">Pilihan Durasi Bebas</h3>
                         <p class="text-gray-400 leading-relaxed mb-8 text-base">Sistem kami memungkinkan Anda mengatur durasi pemakaian (10, 20, 30, 60, hingga 90 hari) sesuai kebutuhan dompet Anda. Saldo akan otomatis terpotong proporsional.</p>
                         <div class="space-y-5">
-                            <div class="bg-gray-800 p-5 rounded-2xl border border-gray-700 flex justify-between items-center relative z-20"><span class="text-gray-300 font-bold text-lg">10 Hari</span><span class="text-red-400 font-mono text-lg">Rp ${(appSettings.price_per_day * 10).toLocaleString("id-ID")}</span></div>
-                            <div class="bg-gray-800 p-5 rounded-2xl border border-red-600/50 shadow-[0_0_20px_rgba(59,130,246,0.15)] flex justify-between items-center transform scale-105 my-6 relative z-20"><span class="text-white font-black text-lg md:text-xl">30 Hari (Recomend)</span><span class="text-yellow-400 font-black text-xl font-mono">Rp ${(appSettings.price_per_day * 30).toLocaleString("id-ID")}</span></div>
-                            <div class="bg-gray-800 p-5 rounded-2xl border border-gray-700 flex justify-between items-center relative z-20"><span class="text-gray-300 font-bold text-lg">90 Hari</span><span class="text-red-400 font-mono text-lg">Rp ${(appSettings.price_per_day * 90).toLocaleString("id-ID")}</span></div>
+                            <div class="bg-gray-800 p-5 rounded-2xl border border-gray-700 flex justify-between items-center relative z-20"><span class="text-gray-300 font-bold text-lg">10 Hari</span><span class="text-cyan-400 font-mono text-lg">Rp ${(appSettings.price_per_day * 10).toLocaleString("id-ID")}</span></div>
+                            <div class="bg-gray-800 p-5 rounded-2xl border border-sky-600/50 shadow-[0_0_20px_rgba(59,130,246,0.15)] flex justify-between items-center transform scale-105 my-6 relative z-20"><span class="text-white font-black text-lg md:text-xl">30 Hari (Recomend)</span><span class="text-yellow-400 font-black text-xl font-mono">Rp ${(appSettings.price_per_day * 30).toLocaleString("id-ID")}</span></div>
+                            <div class="bg-gray-800 p-5 rounded-2xl border border-gray-700 flex justify-between items-center relative z-20"><span class="text-gray-300 font-bold text-lg">90 Hari</span><span class="text-cyan-400 font-mono text-lg">Rp ${(appSettings.price_per_day * 90).toLocaleString("id-ID")}</span></div>
                         </div>
                     </div>
                 </div>
@@ -9893,23 +9911,23 @@ Total : Rp.${totalSaldo.toLocaleString("id-ID")}
                         <div class="relative z-20">
                             <label class="block text-sm font-bold text-gray-400 mb-2 uppercase flex justify-between items-center">
                                 <span>Nomor HP Tujuan</span>
-                                <button onclick="openPhonebook()" class="text-xs text-red-400 font-bold bg-red-950/20 hover:bg-red-950/40 px-3 py-1.5 rounded transition flex items-center gap-1.5 shadow-sm border border-red-600/30">
+                                <button onclick="openPhonebook()" class="text-xs text-cyan-400 font-bold bg-sky-950/20 hover:bg-sky-950/40 px-3 py-1.5 rounded transition flex items-center gap-1.5 shadow-sm border border-sky-600/30">
                                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg> \u{1F4D6} Nomorku
                                 </button>
                             </label>
-                            <input type="number" id="xlPhone" value="${savedPhone}" oninput="resetOtpState()" placeholder="Contoh: 0818xxxxxx" class="w-full bg-gray-900 border border-gray-700 rounded-xl p-4 text-white text-lg focus:ring-2 focus:ring-red-500 outline-none transition font-mono tracking-wider shadow-inner">
+                            <input type="number" id="xlPhone" value="${savedPhone}" oninput="resetOtpState()" placeholder="Contoh: 0818xxxxxx" class="w-full bg-gray-900 border border-gray-700 rounded-xl p-4 text-white text-lg focus:ring-2 focus:ring-sky-500 outline-none transition font-mono tracking-wider shadow-inner">
                         </div>
                         
                         <div id="packageSelectionSection" class="relative z-20">
                             <label class="block text-sm font-bold text-gray-400 mb-2 uppercase">Pilih Paket Data</label>
                             <div class="relative mb-2">
                                 <div class="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none"><svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg></div>
-                                <input type="text" id="searchPackage" placeholder="Ketik pencarian: xtra combo, unlimited..." class="w-full bg-gray-950 border border-gray-700 rounded-xl py-3 pl-12 pr-4 text-white text-sm focus:ring-2 focus:ring-red-500 outline-none transition shadow-inner">
+                                <input type="text" id="searchPackage" placeholder="Ketik pencarian: xtra combo, unlimited..." class="w-full bg-gray-950 border border-gray-700 rounded-xl py-3 pl-12 pr-4 text-white text-sm focus:ring-2 focus:ring-sky-500 outline-none transition shadow-inner">
                             </div>
                             
                             <div id="packageListContainer" class="w-full bg-gray-900 border border-gray-700 rounded-xl max-h-64 overflow-y-auto custom-scrollbar p-2 space-y-1">
                                 <div class="p-4 flex justify-center items-center gap-3">
-                                    <svg class="w-5 h-5 text-red-500 animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
+                                    <svg class="w-5 h-5 text-sky-400 animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
                                     <span class="text-gray-400 text-sm font-medium">Sinkronisasi produk dengan Server...</span>
                                 </div>
                             </div>
@@ -9957,7 +9975,7 @@ Total : Rp.${totalSaldo.toLocaleString("id-ID")}
 
                         <div class="mb-4 relative z-20">
                             <label class="block text-sm font-bold text-gray-400 mb-2 uppercase">Metode Pembayaran</label>
-                            <select id="xlPaymentMethod" class="w-full bg-gray-950 border border-gray-700 rounded-xl p-3.5 text-white focus:ring-2 focus:ring-red-500 outline-none transition">
+                            <select id="xlPaymentMethod" class="w-full bg-gray-950 border border-gray-700 rounded-xl p-3.5 text-white focus:ring-2 focus:ring-sky-500 outline-none transition">
                                 <option value="BALANCE">Saldo Web (Potong Penuh)</option>
                             </select>
                             <p id="xlPaymentNotice" class="text-xs text-yellow-500 mt-2">*Catatan: Silakan pilih paket terlebih dahulu untuk melihat info pembayaran.</p>
@@ -9968,14 +9986,14 @@ Total : Rp.${totalSaldo.toLocaleString("id-ID")}
                 </div>
 
                 <div id="phonebookModal" class="fixed inset-0 bg-black/80 hidden z-50 flex items-center justify-center p-4 backdrop-blur-sm">
-                    <div class="bg-gray-900 p-6 rounded-3xl w-full max-w-md border border-red-600/30 shadow-2xl flex flex-col max-h-[80vh]">
+                    <div class="bg-gray-900 p-6 rounded-3xl w-full max-w-md border border-sky-600/30 shadow-2xl flex flex-col max-h-[80vh]">
                         <div class="flex justify-between items-center mb-5 border-b border-gray-800 pb-3">
                             <h3 class="text-xl font-bold text-white flex items-center gap-2">\u{1F4D6} Buku Telepon</h3>
                             <button onclick="closePhonebook()" class="text-gray-400 hover:text-white text-3xl leading-none">&times;</button>
                         </div>
                         <div class="mb-4 flex gap-2">
-                            <input type="number" id="newPhoneNumber" placeholder="Ketik No. Baru..." class="w-full bg-gray-950 border border-gray-700 rounded-xl p-3 text-white focus:ring-2 focus:ring-red-500 outline-none text-sm font-mono tracking-wider">
-                            <button onclick="addNumberToPhonebook()" class="bg-red-600 hover:bg-red-500 text-white font-bold px-5 py-3 rounded-xl transition shadow-lg text-sm shrink-0">Simpan</button>
+                            <input type="number" id="newPhoneNumber" placeholder="Ketik No. Baru..." class="w-full bg-gray-950 border border-gray-700 rounded-xl p-3 text-white focus:ring-2 focus:ring-sky-500 outline-none text-sm font-mono tracking-wider">
+                            <button onclick="addNumberToPhonebook()" class="bg-sky-600 hover:bg-sky-500 text-white font-bold px-5 py-3 rounded-xl transition shadow-lg text-sm shrink-0">Simpan</button>
                         </div>
                         <div class="flex justify-between items-center mb-2">
                             <p class="text-xs font-bold text-gray-400 uppercase tracking-wider">Daftar Tersimpan</p>
@@ -10010,7 +10028,7 @@ Total : Rp.${totalSaldo.toLocaleString("id-ID")}
                     document.getElementById('phonebookCount').innerText = list.length + '/10';
                     if (list.length === 0) { container.innerHTML = '<p class="text-center text-gray-500 text-sm py-6">Belum ada nomor tersimpan.</p>'; return; }
                     container.innerHTML = list.map((phone, index) => 
-                        '<div class="flex justify-between items-center bg-gray-800 p-3 rounded-xl border border-gray-700 hover:border-red-600/50 transition"><span class="text-white font-mono font-medium tracking-wider">' + phone + '</span><div class="flex gap-2"><button onclick="selectPhone(\\'' + phone + '\\')" class="bg-green-600 hover:bg-green-500 text-white px-4 py-1.5 rounded-lg text-xs font-bold transition shadow-md">Pilih</button><button onclick="deletePhone(' + index + ')" class="bg-red-600/20 hover:bg-red-600/40 text-red-400 border border-red-500/30 px-3 py-1.5 rounded-lg text-xs font-bold transition">Hapus</button></div></div>'
+                        '<div class="flex justify-between items-center bg-gray-800 p-3 rounded-xl border border-gray-700 hover:border-sky-600/50 transition"><span class="text-white font-mono font-medium tracking-wider">' + phone + '</span><div class="flex gap-2"><button onclick="selectPhone(\\'' + phone + '\\')" class="bg-green-600 hover:bg-green-500 text-white px-4 py-1.5 rounded-lg text-xs font-bold transition shadow-md">Pilih</button><button onclick="deletePhone(' + index + ')" class="bg-sky-600/20 hover:bg-sky-600/40 text-cyan-400 border border-sky-500/30 px-3 py-1.5 rounded-lg text-xs font-bold transition">Hapus</button></div></div>'
                     ).join('');
                 }
 
@@ -10040,9 +10058,9 @@ Total : Rp.${totalSaldo.toLocaleString("id-ID")}
                             allPackages = data.data || [];
                             renderPackages(allPackages);
                         } else {
-                            document.getElementById('packageListContainer').innerHTML = '<div class="p-4 text-center text-red-400 text-sm font-bold">' + (data.message || 'Gagal memuat API') + '</div>';
+                            document.getElementById('packageListContainer').innerHTML = '<div class="p-4 text-center text-cyan-400 text-sm font-bold">' + (data.message || 'Gagal memuat API') + '</div>';
                         }
-                    } catch(e) { document.getElementById('packageListContainer').innerHTML = '<div class="p-4 text-center text-red-400 text-sm">Error koneksi: ' + e.message + '</div>'; }
+                    } catch(e) { document.getElementById('packageListContainer').innerHTML = '<div class="p-4 text-center text-cyan-400 text-sm">Error koneksi: ' + e.message + '</div>'; }
                 }
 
                 function renderPackages(packagesToRender) {
@@ -10077,8 +10095,8 @@ Total : Rp.${totalSaldo.toLocaleString("id-ID")}
                     document.getElementById('xlNeedOtp').value = needOtpStr;
                     document.getElementById('xlPackageName').value = pkgName;
                     
-                    document.querySelectorAll('.package-item').forEach(el => { el.classList.remove('bg-red-950/30', 'border-red-600/40'); el.classList.add('hover:bg-gray-800'); });
-                    element.classList.remove('hover:bg-gray-800'); element.classList.add('bg-red-950/30', 'border-red-600/40');
+                    document.querySelectorAll('.package-item').forEach(el => { el.classList.remove('bg-sky-950/30', 'border-sky-600/40'); el.classList.add('hover:bg-gray-800'); });
+                    element.classList.remove('hover:bg-gray-800'); element.classList.add('bg-sky-950/30', 'border-sky-600/40');
 
                     const paymentSelect = document.getElementById('xlPaymentMethod');
                     const paymentNotice = document.getElementById('xlPaymentNotice');
@@ -10112,7 +10130,7 @@ Total : Rp.${totalSaldo.toLocaleString("id-ID")}
                     const descText = pkgDescMap[id] || 'Belum ada deskripsi penjelasan untuk paket ini.';
                     let descHtml = '<p class="text-sm text-[#F38020] whitespace-pre-wrap leading-relaxed">' + escapeHtmlClient(descText) + '</p>';
                     if (IS_ADMIN) {
-                        descHtml += '<button onclick="editPkgDesc(\\'' + id + '\\')" class="mt-3 text-xs bg-red-600/20 hover:bg-red-600/40 text-red-400 border border-red-600/30 px-3 py-1.5 rounded transition font-bold flex items-center gap-1.5"><svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg> Edit Deskripsi Paket</button>';
+                        descHtml += '<button onclick="editPkgDesc(\\'' + id + '\\')" class="mt-3 text-xs bg-sky-600/20 hover:bg-sky-600/40 text-cyan-400 border border-sky-600/30 px-3 py-1.5 rounded transition font-bold flex items-center gap-1.5"><svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg> Edit Deskripsi Paket</button>';
                     }
                     descContainer.innerHTML = descHtml;
 
@@ -10120,14 +10138,14 @@ Total : Rp.${totalSaldo.toLocaleString("id-ID")}
                         otpSection.classList.remove('hidden');
                         if (currentAccessToken !== '') {
                             document.getElementById('otpVerifyMode').classList.add('hidden'); document.getElementById('otpManualMode').classList.add('hidden'); document.getElementById('otpSuccessMode').classList.remove('hidden');
-                            btnBuy.disabled = false; btnBuy.className = 'w-full bg-red-600 hover:bg-red-500 text-white font-black py-4 rounded-xl shadow-lg transition text-lg mt-4 relative z-20'; btnBuy.innerText = 'BELI SEKARANG';
+                            btnBuy.disabled = false; btnBuy.className = 'w-full bg-sky-600 hover:bg-sky-500 text-white font-black py-4 rounded-xl shadow-lg transition text-lg mt-4 relative z-20'; btnBuy.innerText = 'BELI SEKARANG';
                         } else {
                             document.getElementById('otpVerifyMode').classList.remove('hidden'); document.getElementById('otpManualMode').classList.add('hidden'); document.getElementById('otpSuccessMode').classList.add('hidden');
                             btnBuy.disabled = true; btnBuy.className = 'w-full bg-gray-700 text-gray-400 font-black py-4 rounded-xl shadow-lg transition text-lg mt-4 cursor-not-allowed relative z-20'; btnBuy.innerText = 'VERIFIKASI OTP TERLEBIH DAHULU';
                         }
                     } else {
                         otpSection.classList.add('hidden');
-                        btnBuy.disabled = false; btnBuy.className = 'w-full bg-red-600 hover:bg-red-500 text-white font-black py-4 rounded-xl shadow-lg transition text-lg mt-4 relative z-20'; btnBuy.innerText = 'BELI SEKARANG (INSTAN)';
+                        btnBuy.disabled = false; btnBuy.className = 'w-full bg-sky-600 hover:bg-sky-500 text-white font-black py-4 rounded-xl shadow-lg transition text-lg mt-4 relative z-20'; btnBuy.innerText = 'BELI SEKARANG (INSTAN)';
                     }
                 }
                 
@@ -10228,7 +10246,7 @@ Total : Rp.${totalSaldo.toLocaleString("id-ID")}
                         if (data.success) {
                             let quotaHtml = '';
                             if (data.quota && data.quota.quotas && Array.isArray(data.quota.quotas) && data.quota.quotas.length > 0) {
-                                quotaHtml = '<div class="mt-4 border-t border-gray-700 pt-3"><h4 class="text-sm font-bold text-red-400 mb-3">Detail Paket & Kuota:</h4>';
+                                quotaHtml = '<div class="mt-4 border-t border-gray-700 pt-3"><h4 class="text-sm font-bold text-cyan-400 mb-3">Detail Paket & Kuota:</h4>';
                                 data.quota.quotas.forEach(q => { 
                                     let benefitsHtml = '';
                                     if (q.benefits && Array.isArray(q.benefits)) {
@@ -10244,7 +10262,7 @@ Total : Rp.${totalSaldo.toLocaleString("id-ID")}
                             let lokasiText = (data.location && data.location.location) ? data.location.location : 'Tidak Terdeteksi';
 
                             swalDark.fire({
-                                html: '<h3 class="text-xl font-bold text-white mb-4 mt-2">Informasi Detail XL Anda</h3><div class="text-left bg-gray-900 p-5 rounded-xl border border-gray-700 max-h-[75vh] overflow-y-auto custom-scrollbar"><div class="space-y-3 text-sm"><p><span class="text-gray-400">Nomor:</span> <span class="font-mono text-white float-right">' + (data.info.msisdn || '-') + '</span></p><p><span class="text-gray-400">Status:</span> <span class="font-bold text-green-400 float-right">' + (data.info.subscription_status || 'Aktif') + '</span></p><p><span class="text-gray-400">Lokasi:</span> <span class="font-bold text-red-400 float-right">' + lokasiText + '</span></p><p class="pt-3 border-t border-gray-800"><span class="text-gray-400">Pulsa:</span> <span class="font-mono font-black text-yellow-400 float-right">' + (data.info.pulsa_real || data.info.pulsa || 'Rp 0') + '</span></p><p><span class="text-gray-400">Masa Aktif:</span> <span class="text-gray-200 float-right">' + (data.info.active_until || '-') + '</span></p></div>' + quotaHtml + '</div>',
+                                html: '<h3 class="text-xl font-bold text-white mb-4 mt-2">Informasi Detail XL Anda</h3><div class="text-left bg-gray-900 p-5 rounded-xl border border-gray-700 max-h-[75vh] overflow-y-auto custom-scrollbar"><div class="space-y-3 text-sm"><p><span class="text-gray-400">Nomor:</span> <span class="font-mono text-white float-right">' + (data.info.msisdn || '-') + '</span></p><p><span class="text-gray-400">Status:</span> <span class="font-bold text-green-400 float-right">' + (data.info.subscription_status || 'Aktif') + '</span></p><p><span class="text-gray-400">Lokasi:</span> <span class="font-bold text-cyan-400 float-right">' + lokasiText + '</span></p><p class="pt-3 border-t border-gray-800"><span class="text-gray-400">Pulsa:</span> <span class="font-mono font-black text-yellow-400 float-right">' + (data.info.pulsa_real || data.info.pulsa || 'Rp 0') + '</span></p><p><span class="text-gray-400">Masa Aktif:</span> <span class="text-gray-200 float-right">' + (data.info.active_until || '-') + '</span></p></div>' + quotaHtml + '</div>',
                                 width: '44em',
                                 showCloseButton: true,
                                 confirmButtonText: 'Tutup'
@@ -10351,7 +10369,7 @@ Total : Rp.${totalSaldo.toLocaleString("id-ID")}
               msgBody += `<div style="text-align: center; margin-top: 20px;"><button onclick="checkInboxPayment('${refMatch[1]}', true)" class="bg-green-600 hover:bg-green-500 text-white font-bold py-3 px-6 rounded-xl text-sm transition shadow-lg inline-flex items-center gap-2 cursor-pointer border border-green-400/30 hover:scale-105"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg> 🔍 Cek Status Pembayaran</button><div class="mt-2 text-xs text-yellow-400/80 font-mono flex items-center justify-center gap-1.5"><span class="relative flex h-2 w-2"><span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-yellow-400 opacity-75"></span><span class="relative inline-flex rounded-full h-2 w-2 bg-yellow-500"></span></span> Deteksi live aktif di latar belakang...</div></div>`;
             }
           }
-          return `<div class="bg-gray-800 p-6 md:p-8 rounded-3xl border border-gray-700 shadow-xl mb-6 hover:border-red-600/50 transition relative z-10"><div class="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-4 border-b border-gray-700 pb-4 gap-2"><h3 class="text-xl font-bold text-red-400 leading-snug">${msg.title}</h3><span class="text-xs font-mono text-gray-500 bg-gray-900 px-3 py-1.5 rounded-lg shrink-0">${msg.date}</span></div><div class="text-gray-300 text-sm md:text-base leading-relaxed break-words">${msgBody}</div></div>`;
+          return `<div class="bg-gray-800 p-6 md:p-8 rounded-3xl border border-gray-700 shadow-xl mb-6 hover:border-sky-600/50 transition relative z-10"><div class="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-4 border-b border-gray-700 pb-4 gap-2"><h3 class="text-xl font-bold text-cyan-400 leading-snug">${msg.title}</h3><span class="text-xs font-mono text-gray-500 bg-gray-900 px-3 py-1.5 rounded-lg shrink-0">${msg.date}</span></div><div class="text-gray-300 text-sm md:text-base leading-relaxed break-words">${msgBody}</div></div>`;
         }).join("");
         if (totalPages > 1) {
           inboxHtml += `
@@ -10453,21 +10471,21 @@ Total : Rp.${totalSaldo.toLocaleString("id-ID")}
                 <div class="bg-gray-800 p-6 md:p-10 rounded-3xl border border-gray-700 shadow-2xl">
                     <div class="flex flex-col items-center mb-8 border-b border-gray-700 pb-6">
                         ${currentUser.picture ? `
-                            <img src="${currentUser.picture}" alt="${escapeHTML(currentUser.name)}" class="w-20 h-20 rounded-full object-cover shadow-2xl border-2 border-red-500/50 mb-3" referrerpolicy="no-referrer">
+                            <img src="${currentUser.picture}" alt="${escapeHTML(currentUser.name)}" class="w-20 h-20 rounded-full object-cover shadow-2xl border-2 border-sky-500/50 mb-3" referrerpolicy="no-referrer">
                         ` : `
-                            <div class="w-20 h-20 rounded-full bg-red-600 flex items-center justify-center font-bold text-white text-2xl uppercase shadow-2xl mb-3">${currentUser.name.charAt(0)}</div>
+                            <div class="w-20 h-20 rounded-full bg-sky-600 flex items-center justify-center font-bold text-white text-2xl uppercase shadow-2xl mb-3">${currentUser.name.charAt(0)}</div>
                         `}
                         <h2 class="text-lg font-bold text-white">${escapeHTML(currentUser.name)}</h2>
                         <p class="text-xs text-gray-500 font-mono mt-1">${currentUser.email}</p>
                     </div>
                     <form id="profileForm" class="space-y-6">
                         <div><label class="block text-sm font-bold tracking-wide text-gray-400 mb-2 uppercase">Email Akun (Terkunci)</label><input type="email" value="${currentUser.email}" disabled class="w-full bg-gray-900 border border-gray-800 rounded-xl p-4 text-gray-500 cursor-not-allowed font-medium"></div>
-                        <div><label class="block text-sm font-bold tracking-wide text-gray-400 mb-2 uppercase">Nama Lengkap</label><input type="text" id="profileName" value="${escapeHTML(currentUser.name)}" required class="w-full bg-gray-900 border border-gray-700 rounded-xl p-4 text-white focus:ring-2 focus:ring-red-500 outline-none transition font-medium"></div>
-                        <div><label class="block text-sm font-bold tracking-wide text-gray-400 mb-2 uppercase">Nomor WhatsApp / XL Tersimpan</label><input type="text" id="profilePhone" value="${currentUser.phone || ""}" placeholder="Contoh: 081234567890" class="w-full bg-gray-900 border border-gray-700 rounded-xl p-4 text-white focus:ring-2 focus:ring-red-500 outline-none transition font-medium"></div>
-                        <div class="pt-4"><button type="submit" id="btnUpdateProfile" class="w-full bg-red-600 hover:bg-red-500 text-white font-black py-4 px-4 rounded-xl transition shadow-lg text-lg tracking-wide">Simpan Perubahan</button></div>
+                        <div><label class="block text-sm font-bold tracking-wide text-gray-400 mb-2 uppercase">Nama Lengkap</label><input type="text" id="profileName" value="${escapeHTML(currentUser.name)}" required class="w-full bg-gray-900 border border-gray-700 rounded-xl p-4 text-white focus:ring-2 focus:ring-sky-500 outline-none transition font-medium"></div>
+                        <div><label class="block text-sm font-bold tracking-wide text-gray-400 mb-2 uppercase">Nomor WhatsApp / XL Tersimpan</label><input type="text" id="profilePhone" value="${currentUser.phone || ""}" placeholder="Contoh: 081234567890" class="w-full bg-gray-900 border border-gray-700 rounded-xl p-4 text-white focus:ring-2 focus:ring-sky-500 outline-none transition font-medium"></div>
+                        <div class="pt-4"><button type="submit" id="btnUpdateProfile" class="w-full bg-sky-600 hover:bg-sky-500 text-white font-black py-4 px-4 rounded-xl transition shadow-lg text-lg tracking-wide">Simpan Perubahan</button></div>
                     </form>
                     <div class="mt-8 pt-6 border-t border-gray-700">
-                        <button onclick="logout()" type="button" class="w-full bg-red-500/10 hover:bg-red-500 text-red-500 hover:text-white border border-red-500/30 hover:border-red-500 font-bold py-4 rounded-xl transition shadow-lg text-lg tracking-wide flex items-center justify-center gap-2">
+                        <button onclick="logout()" type="button" class="w-full bg-sky-500/10 hover:bg-sky-500 text-sky-400 hover:text-white border border-sky-500/30 hover:border-sky-500 font-bold py-4 rounded-xl transition shadow-lg text-lg tracking-wide flex items-center justify-center gap-2">
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg> Keluar Akun
                         </button>
                     </div>
@@ -10483,11 +10501,11 @@ Total : Rp.${totalSaldo.toLocaleString("id-ID")}
       return new Response(renderLayout("Profil Saya", content), { headers: { "Content-Type": "text/html;charset=UTF-8" } });
     }
     if (path === "/syarat-ketentuan" && method === "GET") {
-      const content = `<div class="max-w-4xl mx-auto px-4 md:px-8 py-8 md:py-16 relative z-10"><h1 class="text-3xl md:text-5xl font-black text-white mb-10 border-b border-gray-800 pb-6 tracking-tight">Syarat & Ketentuan</h1><div class="space-y-10 text-gray-300 leading-relaxed bg-gray-800 p-8 md:p-12 rounded-3xl border border-gray-700 shadow-2xl text-lg"><section><h2 class="text-2xl font-bold text-red-400 mb-4 flex items-center gap-2"><div class="w-2 h-8 bg-red-500 rounded-full"></div> Penggunaan Layanan (AUP)</h2><p class="mb-3 text-gray-400">Anda <strong>DILARANG KERAS</strong> menggunakan layanan VPN untuk: Peretasan, Penipuan finansial, atau Serangan DDoS.</p></section><section><h2 class="text-2xl font-bold text-red-400 mb-4 flex items-center gap-2"><div class="w-2 h-8 bg-red-500 rounded-full"></div> Saldo & Refund</h2><p class="text-gray-400">Transaksi final. Tidak ada refund setelah VPN/Paket berstatus Aktif.</p></section></div></div>`;
+      const content = `<div class="max-w-4xl mx-auto px-4 md:px-8 py-8 md:py-16 relative z-10"><h1 class="text-3xl md:text-5xl font-black text-white mb-10 border-b border-gray-800 pb-6 tracking-tight">Syarat & Ketentuan</h1><div class="space-y-10 text-gray-300 leading-relaxed bg-gray-800 p-8 md:p-12 rounded-3xl border border-gray-700 shadow-2xl text-lg"><section><h2 class="text-2xl font-bold text-cyan-400 mb-4 flex items-center gap-2"><div class="w-2 h-8 bg-sky-500 rounded-full"></div> Penggunaan Layanan (AUP)</h2><p class="mb-3 text-gray-400">Anda <strong>DILARANG KERAS</strong> menggunakan layanan VPN untuk: Peretasan, Penipuan finansial, atau Serangan DDoS.</p></section><section><h2 class="text-2xl font-bold text-cyan-400 mb-4 flex items-center gap-2"><div class="w-2 h-8 bg-sky-500 rounded-full"></div> Saldo & Refund</h2><p class="text-gray-400">Transaksi final. Tidak ada refund setelah VPN/Paket berstatus Aktif.</p></section></div></div>`;
       return new Response(renderLayout("Syarat & Ketentuan", content), { headers: { "Content-Type": "text/html;charset=UTF-8" } });
     }
     if (path === "/kontak" && method === "GET") {
-      const content = `<div class="max-w-6xl mx-auto px-4 md:px-8 py-8 md:py-16 relative z-10"><h1 class="text-3xl md:text-5xl font-black text-white mb-6 text-center tracking-tight">Pusat Bantuan CS</h1><p class="text-gray-400 text-center mb-12 text-lg">Kami siap membantu menyelesaikan kendala jaringan, aplikasi, dan status top-up.</p><div class="grid grid-cols-1 md:grid-cols-3 gap-8"><a href="https://wa.me/6282175037525" target="_blank" class="bg-gray-800 p-10 rounded-[2rem] border border-gray-700 hover:border-green-500 hover:shadow-[0_0_40px_rgba(34,197,94,0.15)] transition-all text-center"><h2 class="text-2xl md:text-3xl font-black text-white mb-2">WhatsApp</h2><p class="text-green-400 font-mono text-xl md:text-lg lg:text-xl">0821 7503 7525</p></a><a href="https://t.me/srpcomadmin" target="_blank" class="bg-gray-800 p-10 rounded-[2rem] border border-gray-700 hover:border-red-600 hover:shadow-[0_0_40px_rgba(59,130,246,0.15)] transition-all text-center"><h2 class="text-2xl md:text-3xl font-black text-white mb-2">Telegram</h2><p class="text-red-400 font-mono text-xl md:text-lg lg:text-xl">@srpcomadmin</p></a><a href="mailto:admin@warungpulsa.com" class="bg-gray-800 p-10 rounded-[2rem] border border-gray-700 hover:border-pink-500 hover:shadow-[0_0_40px_rgba(236,72,153,0.15)] transition-all text-center flex flex-col justify-center"><h2 class="text-2xl md:text-3xl font-black text-white mb-2">Email</h2><p class="text-pink-400 font-mono text-lg md:text-base lg:text-lg truncate">admin@warungpulsa.com</p></a></div></div>`;
+      const content = `<div class="max-w-6xl mx-auto px-4 md:px-8 py-8 md:py-16 relative z-10"><h1 class="text-3xl md:text-5xl font-black text-white mb-6 text-center tracking-tight">Pusat Bantuan CS</h1><p class="text-gray-400 text-center mb-12 text-lg">Kami siap membantu menyelesaikan kendala jaringan, aplikasi, dan status top-up.</p><div class="grid grid-cols-1 md:grid-cols-3 gap-8"><a href="https://wa.me/6282175037525" target="_blank" class="bg-gray-800 p-10 rounded-[2rem] border border-gray-700 hover:border-green-500 hover:shadow-[0_0_40px_rgba(34,197,94,0.15)] transition-all text-center"><h2 class="text-2xl md:text-3xl font-black text-white mb-2">WhatsApp</h2><p class="text-green-400 font-mono text-xl md:text-lg lg:text-xl">0821 7503 7525</p></a><a href="https://t.me/srpcomadmin" target="_blank" class="bg-gray-800 p-10 rounded-[2rem] border border-gray-700 hover:border-sky-600 hover:shadow-[0_0_40px_rgba(59,130,246,0.15)] transition-all text-center"><h2 class="text-2xl md:text-3xl font-black text-white mb-2">Telegram</h2><p class="text-cyan-400 font-mono text-xl md:text-lg lg:text-xl">@srpcomadmin</p></a><a href="mailto:admin@warungpulsa.com" class="bg-gray-800 p-10 rounded-[2rem] border border-gray-700 hover:border-pink-500 hover:shadow-[0_0_40px_rgba(236,72,153,0.15)] transition-all text-center flex flex-col justify-center"><h2 class="text-2xl md:text-3xl font-black text-white mb-2">Email</h2><p class="text-pink-400 font-mono text-lg md:text-base lg:text-lg truncate">admin@warungpulsa.com</p></a></div></div>`;
       return new Response(renderLayout("Kontak CS", content), { headers: { "Content-Type": "text/html;charset=UTF-8" } });
     }
     if (path === "/mutasi" && method === "GET") {
