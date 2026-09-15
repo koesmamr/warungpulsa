@@ -8270,7 +8270,7 @@ __name(checkGoPayStatus, "checkGoPayStatus");
 __name2(checkGoPayStatus, "checkGoPayStatus");
 __name22(checkGoPayStatus, "checkGoPayStatus");
 __name222(checkGoPayStatus, "checkGoPayStatus");
-var GOOGLE_CLIENT_ID = (typeof process !== "undefined" && process.env && process.env.GOOGLE_CLIENT_ID) || "404619775216-omjf6cn7j82kdnmev20rr9vp11hr7fka.apps.googleusercontent.com";
+var GOOGLE_CLIENT_ID = (typeof process !== "undefined" && process.env && process.env.GOOGLE_CLIENT_ID) || "727817597785-oub85kbvvsl640v7q4cak661vn5jt7kh.apps.googleusercontent.com";
 var LOGO_URL = (typeof process !== "undefined" && process.env && process.env.LOGO_URL) || "https://srpcom.cloud/logo%20tuban%20store.png";
 var worker_default = {
   async scheduled(event, env, ctx) {
@@ -8385,6 +8385,7 @@ Total : Rp.${totalSaldo.toLocaleString("id-ID")}
     if (path === "/favicon.ico" || path === "/robots.txt" || path === "/sitemap.xml") {
       return new Response("Not Found", { status: 404 });
     }
+    if (env && env.GOOGLE_CLIENT_ID) GOOGLE_CLIENT_ID = env.GOOGLE_CLIENT_ID;
     let appSettings = await getAppSettings(env);
     const cookieHeader = request.headers.get("Cookie") || "";
     const sessionMatch = cookieHeader.match(/session_id=([^;]+)/);
