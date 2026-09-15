@@ -1074,9 +1074,9 @@ async function renderAdminDashboard(env, currentUser, appSettings) {
                             <span id="statTotalBalance" class="text-lg md:text-xl font-black text-green-400 font-mono">-</span>
                         </div>
                     </div>
-                    <!-- Card 3: Topup Otomatis (ShopeePay) -->
+                    <!-- Card 3: Topup Otomatis -->
                     <div class="bg-gray-950 p-4 rounded-2xl border border-gray-850 flex flex-col justify-between hover:border-indigo-500/20 transition-all duration-300">
-                        <span class="text-[10px] font-bold text-gray-500 uppercase tracking-wider" id="labelTripayIncome">Top-up ShopeePay (Bulan Ini)</span>
+                        <span class="text-[10px] font-bold text-gray-500 uppercase tracking-wider" id="labelTripayIncome">Top-up QRIS Otomatis (Bulan Ini)</span>
                         <div class="mt-2 flex items-baseline gap-1">
                             <span id="statTripayIncome" class="text-lg md:text-xl font-black text-indigo-400 font-mono">-</span>
                         </div>
@@ -1217,7 +1217,7 @@ async function renderAdminDashboard(env, currentUser, appSettings) {
                                 </select>
                             </div>
                             <div>
-                                <label class="block text-xs font-bold text-gray-400 mb-2 uppercase tracking-wide">ShopeePay (AutoGoPay)</label>
+                                <label class="block text-xs font-bold text-gray-400 mb-2 uppercase tracking-wide">QRIS Otomatis (autocek by system)</label>
                                 <select id="setShopeePayActive" class="w-full bg-gray-900 border border-gray-700 rounded-lg p-3 text-white text-sm focus:ring-2 focus:ring-sky-500 outline-none font-bold">
                                     <option value="true" ${isShopeePayOn ? "selected" : ""}>\u{1F7E2} ON - Aktif</option>
                                     <option value="false" ${!isShopeePayOn ? "selected" : ""}>\u{1F534} OFF - Mati</option>
@@ -2040,7 +2040,7 @@ async function renderAdminDashboard(env, currentUser, appSettings) {
             const filterSelect = document.getElementById('statsMonthFilter');
             const selectedLabel = filterSelect.options[filterSelect.selectedIndex]?.text || 'Hari Ini';
             
-            document.getElementById('labelTripayIncome').innerText = 'Top-up ShopeePay (' + selectedLabel + ')';
+            document.getElementById('labelTripayIncome').innerText = 'Top-up QRIS Otomatis (' + selectedLabel + ')';
             document.getElementById('labelVioletIncome').innerText = 'Top-up GoPay (' + selectedLabel + ')';
             document.getElementById('labelManualIncome').innerText = 'Top-up Manual (' + selectedLabel + ')';
             document.getElementById('labelVpnCreated').innerText = 'Pembuatan VPN (' + selectedLabel + ')';
@@ -9635,7 +9635,7 @@ Total : Rp.${totalSaldo.toLocaleString("id-ID")}
         const isGoPayOn = appSettings.payment_gopay !== false;
         let paymentMethodHtml = "";
         const activeMethods = [];
-        if (isShopeePayOn) activeMethods.push({ value: "shopeepay", label: "ShopeePay QRIS (AutoGoPay)" });
+        if (isShopeePayOn) activeMethods.push({ value: "shopeepay", label: "QRIS Otomatis (autocek by system)" });
         if (isGoPayOn) activeMethods.push({ value: "gopay", label: "GoPay QRIS (AutoGoPay)" });
         if (isQrisManualOn) activeMethods.push({ value: "manual", label: "QRIS Manual (Konfirmasi Admin)" });
         if (activeMethods.length > 1) {
@@ -9789,13 +9789,13 @@ Total : Rp.${totalSaldo.toLocaleString("id-ID")}
                     let paymentCheckInterval = null;
                     function showAutoGoPayModal(data) {
                         if (paymentCheckInterval) clearInterval(paymentCheckInterval);
-                        const titleMethod = data.method === 'shopeepay' ? 'ShopeePay' : 'GoPay';
+                        const titleMethod = data.method === 'shopeepay' ? 'QRIS Otomatis' : 'GoPay';
                         let timeLeft = 15 * 60;
                         let isChecking = false;
                         const qrImgSrc = data.qr_url ? data.qr_url : ('https://api.qrserver.com/v1/create-qr-code/?size=280x280&data=' + encodeURIComponent(data.qr_raw || ''));
 
                         swalDark.fire({
-                            title: '💳 Pembayaran ' + titleMethod + ' QRIS',
+                            title: data.method === 'shopeepay' ? '💳 QRIS Otomatis (autocek by system)' : ('💳 Pembayaran ' + titleMethod + ' QRIS'),
                             html: '<div class="text-left text-sm text-gray-300 space-y-3">' +
                                   '  <div class="bg-gray-900 p-3.5 rounded-2xl border border-gray-700 text-center">' +
                                   '    <p class="text-xs text-gray-400 uppercase font-bold tracking-wider mb-1">Total Wajib Bayar</p>' +
@@ -9803,8 +9803,8 @@ Total : Rp.${totalSaldo.toLocaleString("id-ID")}
                                   '    <span class="inline-block mt-1 text-xs bg-yellow-500/20 text-yellow-300 border border-yellow-500/30 px-2.5 py-0.5 rounded-md font-mono">Termasuk kode unik Rp ' + data.unique_code + '</span>' +
                                   '  </div>' +
                                   '  <div class="text-center my-2 relative">' +
-                                  '    <img src="' + qrImgSrc + '" alt="QRIS ' + titleMethod + '" class="mx-auto rounded-2xl w-60 h-60 object-contain shadow-2xl border border-gray-700 bg-white p-2">' +
-                                  '    <p class="text-[11px] text-gray-400 mt-2">Scan QRIS dengan <b>' + titleMethod + ' / BCA / DANA / OVO / Semua Bank & E-Wallet</b>.</p>' +
+                                  '    <img src="' + qrImgSrc + '" alt="QRIS" class="mx-auto rounded-2xl w-60 h-60 object-contain shadow-2xl border border-gray-700 bg-white p-2">' +
+                                  '    <p class="text-[11px] text-gray-400 mt-2">Scan QRIS dengan <b>BCA / DANA / OVO / ShopeePay / GoPay / Semua Bank & E-Wallet</b>.</p>' +
                                   '  </div>' +
                                   '  <div class="bg-gray-950 p-3.5 rounded-xl border border-gray-800 text-xs font-mono space-y-1.5">' +
                                   '    <div class="flex justify-between items-center"><span class="text-gray-500">No. Ref:</span><span class="text-white font-bold">' + data.ref + '</span></div>' +
@@ -10834,12 +10834,12 @@ Waktu: ${getWIBTime()}`, appSettings);
           if (tx.success) {
             await env.DB.prepare("INSERT INTO invoices (ref, email, amount, status, date) VALUES (?, ?, ?, 'UNPAID', ?)").bind(refKode, currentUser.email, nominalUnik, getWIBTime()).run();
             const qrDisplay = tx.qr_url || ("https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=" + encodeURIComponent(tx.qr_string || ''));
-            const pendingMsg = `Halo! Anda telah membuat permintaan Top Up Saldo via ShopeePay sebesar <b class="text-green-400">Rp ${nominalUnik.toLocaleString("id-ID")}</b> (Termasuk kode unik Rp ${uniqueCode}).<br><br>Silakan scan QRIS ShopeePay di bawah ini sebelum batas waktu habis (Maksimal 15 Menit):<br><br><div style="text-align: center; margin: 15px 0;"><img src="${qrDisplay}" alt="QRIS ShopeePay" style="max-width:220px;border-radius:12px;margin:auto;display:block;border:1px solid #374151;"></div><br><span style="font-size:10px;color:#6b7280;">No. Ref: ${refKode}</span><div style="text-align: center; margin-top: 20px;"><button onclick="checkInboxPayment('${refKode}', true)" class="bg-green-600 hover:bg-green-500 text-white font-bold py-3 px-6 rounded-xl text-sm transition shadow-lg inline-flex items-center gap-2 cursor-pointer border border-green-400/30 hover:scale-105"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg> 🔍 Cek Status Pembayaran</button><div class="mt-2 text-xs text-yellow-400/80 font-mono flex items-center justify-center gap-1.5"><span class="relative flex h-2 w-2"><span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-yellow-400 opacity-75"></span><span class="relative inline-flex rounded-full h-2 w-2 bg-yellow-500"></span></span> Deteksi live aktif di latar belakang...</div></div>`;
+            const pendingMsg = `Halo! Anda telah membuat permintaan Top Up Saldo via QRIS Otomatis sebesar <b class="text-green-400">Rp ${nominalUnik.toLocaleString("id-ID")}</b> (Termasuk kode unik Rp ${uniqueCode}).<br><br>Silakan scan QRIS di bawah ini sebelum batas waktu habis (Maksimal 15 Menit):<br><br><div style="text-align: center; margin: 15px 0;"><img src="${qrDisplay}" alt="QRIS Otomatis" style="max-width:220px;border-radius:12px;margin:auto;display:block;border:1px solid #374151;"></div><br><span style="font-size:10px;color:#6b7280;">No. Ref: ${refKode}</span><div style="text-align: center; margin-top: 20px;"><button onclick="checkInboxPayment('${refKode}', true)" class="bg-green-600 hover:bg-green-500 text-white font-bold py-3 px-6 rounded-xl text-sm transition shadow-lg inline-flex items-center gap-2 cursor-pointer border border-green-400/30 hover:scale-105"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg> 🔍 Cek Status Pembayaran</button><div class="mt-2 text-xs text-yellow-400/80 font-mono flex items-center justify-center gap-1.5"><span class="relative flex h-2 w-2"><span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-yellow-400 opacity-75"></span><span class="relative inline-flex rounded-full h-2 w-2 bg-yellow-500"></span></span> Deteksi live aktif di latar belakang...</div></div>`;
             await env.DB.prepare("INSERT INTO inbox (email, title, message, date, read) VALUES (?, ?, ?, ?, 0)").bind(currentUser.email, `[PENDING] Top Up Saldo`, pendingMsg, getWIBTime()).run();
             ctx.waitUntil(sendTelegramLog("🧾 LOG CREATE TOP UP", `User <b>${currentUser.email}</b> membuat tagihan Top Up Saldo.
 
 Nominal: Rp ${nominalUnik.toLocaleString("id-ID")} (Termasuk Kode Unik Rp ${uniqueCode})
-Metode: ShopeePay (AutoGoPay)
+Metode: QRIS Otomatis (autocek by system)
 Ref: ${refKode}
 Status: UNPAID PENDING`, appSettings));
             return jsonResponse({
