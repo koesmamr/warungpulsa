@@ -8458,9 +8458,11 @@ Total : Rp.${totalSaldo.toLocaleString("id-ID")}
                 <body class="bg-[#0b1120] flex items-center justify-center min-h-screen px-4 overflow-hidden relative text-gray-200 font-sans">
                     <div class="absolute top-0 left-1/4 w-96 h-96 bg-sky-600/20 rounded-full mix-blend-screen filter blur-[100px] animate-blob z-0"></div>
                     <div class="absolute top-1/4 right-1/4 w-96 h-96 bg-sky-600/20 rounded-full mix-blend-screen filter blur-[100px] animate-blob animation-delay-2000 z-0"></div>
-                    <div class="relative z-10 w-full max-w-2xl bg-gray-900/60 backdrop-blur-2xl border border-gray-800 p-10 md:p-14 rounded-[2rem] shadow-2xl text-center">
-                        <div class="inline-flex items-center justify-center p-5 bg-sky-500/10 rounded-3xl mb-8 border border-sky-600/20 shadow-[0_0_40px_rgba(59,130,246,0.15)]">
-                            <svg class="w-16 h-16 text-sky-400 animate-[spin_5s_linear_infinite]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                        <div class="relative mx-auto mb-6 w-24 h-24 flex items-center justify-center">
+                            <div class="absolute inset-0 bg-gradient-to-tr from-cyan-500 via-sky-500 to-blue-600 rounded-2xl blur-xl opacity-60 animate-pulse"></div>
+                            <div class="relative w-20 h-20 rounded-2xl p-1 bg-gray-950 border-2 border-sky-400/60 shadow-xl overflow-hidden">
+                                <img src="${LOGO_URL}" alt="Logo Warung Pulsa" class="w-full h-full object-cover rounded-xl">
+                            </div>
                         </div>
                         <h1 class="text-3xl md:text-4xl font-black text-white mb-4 tracking-tight">Sistem Sedang Diperbarui</h1>
                         <p class="text-gray-400 text-lg leading-relaxed mb-10">Untuk memberikan kualitas layanan dan fitur yang lebih maksimal, <b class="text-white">Warung Pulsa</b> saat ini sedang dalam proses pemeliharaan infrastruktur (Maintenance). Kami akan segera kembali beroperasi.</p>
@@ -8890,13 +8892,17 @@ Total : Rp.${totalSaldo.toLocaleString("id-ID")}
                                 <img src="${LOGO_URL}" alt="Logo" class="w-8 h-8 md:w-10 md:h-10 rounded-full border border-gray-700 shadow-md group-hover:border-sky-500 transition duration-300">
                                 <span class="text-xl md:text-2xl font-bold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 via-sky-500 to-blue-600">Warung Pulsa</span>
                             </a>
-                            <div class="hidden md:flex gap-8 items-center text-sm font-medium">
+                            <div class="hidden md:flex gap-7 items-center text-sm font-medium">
                                 <a href="/" class="text-gray-300 hover:text-white transition">Beranda</a>
                                 <a href="/produk" class="text-gray-300 hover:text-white transition">Produk & Harga</a>
                                 <a href="/paket-data" class="text-gray-300 hover:text-white transition">Paket Data XL</a>
                                 <a href="/cekpulsa-otp" class="text-gray-300 hover:text-white transition">Cekpulsa / OTP</a>
                                 <a href="/converter" class="text-gray-300 hover:text-white transition">Converter</a>
                                 <a href="/syarat-ketentuan" class="text-gray-300 hover:text-white transition">Syarat & Ketentuan</a>
+                                <a href="/login" class="bg-gradient-to-r from-sky-600 to-cyan-600 hover:from-sky-500 hover:to-cyan-500 text-white font-bold py-2 px-5 rounded-xl text-xs transition shadow-lg shadow-sky-600/30 flex items-center gap-2 border border-sky-400/30 active:scale-95">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"></path></svg>
+                                    Masuk
+                                </a>
                             </div>
                             <button onclick="document.getElementById('mobileNav').classList.toggle('hidden')" class="md:hidden pulse-hamburger p-1"><svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg></button>
                         </div>
@@ -8908,6 +8914,10 @@ Total : Rp.${totalSaldo.toLocaleString("id-ID")}
                                 <a href="/cekpulsa-otp" class="text-gray-300 hover:text-white font-medium text-lg border-b border-gray-800 pb-3 flex items-center gap-3">Cekpulsa / OTP</a>
                                 <a href="/converter" class="text-gray-300 hover:text-white font-medium text-lg border-b border-gray-800 pb-3 flex items-center gap-3">Converter</a>
                                 <a href="/syarat-ketentuan" class="text-gray-300 hover:text-white font-medium text-lg border-b border-gray-800 pb-3 flex items-center gap-3">Syarat & Ketentuan</a>
+                                <a href="/login" class="bg-gradient-to-r from-sky-600 to-cyan-600 text-white font-bold py-3 px-4 rounded-xl text-center text-sm flex items-center justify-center gap-2 shadow-lg mt-2">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"></path></svg>
+                                    Masuk Akun
+                                </a>
                             </div>
                         </div>
                     </nav>
@@ -9383,23 +9393,158 @@ Total : Rp.${totalSaldo.toLocaleString("id-ID")}
             `;
       return new Response(renderLayout("VPN Saya", content), { headers: { "Content-Type": "text/html;charset=UTF-8" } });
     }
+    if ((path === "/login" || path === "/masuk") && method === "GET") {
+      if (currentUser) {
+        return Response.redirect("https://" + url.host + "/", 302);
+      }
+      const loginPageHtml = `<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Masuk - Warung Pulsa</title>
+    <link rel="icon" type="image/png" href="${LOGO_URL}">
+    <script src="https://cdn.tailwindcss.com"><\/script>
+    <script src="https://accounts.google.com/gsi/client" async defer><\/script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif; }
+        @keyframes floatLogo {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-8px) rotate(1deg); }
+        }
+        @keyframes glowPulse {
+            0%, 100% { opacity: 0.5; transform: scale(0.98); }
+            50% { opacity: 0.85; transform: scale(1.05); }
+        }
+        .float-logo { animation: floatLogo 6s ease-in-out infinite; }
+        .glow-pulse { animation: glowPulse 4s ease-in-out infinite; }
+    </style>
+</head>
+<body class="bg-[#0b1120] text-gray-100 min-h-screen flex items-center justify-center p-4 relative overflow-hidden">
+    <div class="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-sky-500/15 rounded-full blur-[140px] pointer-events-none glow-pulse"></div>
+    <div class="absolute bottom-10 right-10 w-96 h-96 bg-blue-600/10 rounded-full blur-[120px] pointer-events-none"></div>
+    <div class="absolute top-10 left-10 w-80 h-80 bg-cyan-500/10 rounded-full blur-[100px] pointer-events-none"></div>
+
+    <div class="relative z-10 w-full max-w-md my-auto">
+        <div class="mb-6 text-center">
+            <a href="/" class="inline-flex items-center gap-2 text-xs font-semibold text-gray-400 hover:text-cyan-300 transition py-2 px-5 rounded-full bg-gray-900/80 border border-gray-800 hover:border-sky-500/40 backdrop-blur-md shadow-lg shadow-black/40">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+                Kembali ke Beranda
+            </a>
+        </div>
+
+        <div class="bg-gradient-to-b from-gray-900/95 via-gray-900/85 to-gray-950/95 border border-sky-500/30 backdrop-blur-2xl rounded-[2.5rem] p-8 md:p-11 shadow-[0_25px_60px_-15px_rgba(0,0,0,0.8),0_0_50px_rgba(14,165,233,0.22)] text-center relative overflow-hidden">
+            <div class="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-transparent via-cyan-400 to-transparent"></div>
+
+            <div class="relative mx-auto mb-7 w-32 h-32 md:w-36 md:h-36 flex items-center justify-center float-logo">
+                <div class="absolute inset-0 bg-gradient-to-tr from-cyan-400 via-sky-500 to-blue-600 rounded-3xl blur-2xl opacity-70 glow-pulse"></div>
+                <div class="relative w-28 h-28 md:w-32 md:h-32 rounded-3xl p-2 bg-gray-950/95 border-2 border-sky-400/60 shadow-[0_10px_35px_rgba(14,165,233,0.4)] flex items-center justify-center overflow-hidden">
+                    <img src="${LOGO_URL}" alt="Logo Warung Pulsa" class="w-full h-full object-cover rounded-2xl">
+                </div>
+            </div>
+
+            <h1 class="text-2xl md:text-3xl font-black text-white tracking-tight">
+                Warung <span class="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-sky-400 to-blue-500">Pulsa</span>
+            </h1>
+            <p class="text-xs font-bold tracking-widest text-sky-400 uppercase mt-1 mb-3">Portal Member & Layanan Digital</p>
+            <p class="text-xs md:text-sm text-gray-400 leading-relaxed mb-8">Silakan masuk menggunakan akun Google Anda untuk mengakses dashboard, deposit saldo otomatis, dan membuat VPN instan.</p>
+
+            <div class="p-4 rounded-2xl bg-gray-950/70 border border-gray-800/90 mb-7 flex flex-col items-center justify-center shadow-inner">
+                <div id="g_id_onload" data-client_id="${GOOGLE_CLIENT_ID}" data-callback="handleCredentialResponse" data-auto_prompt="false"></div>
+                <div class="g_id_signin flex justify-center w-full shadow-xl" data-type="standard" data-size="large" data-theme="filled_black" data-text="sign_in_with" data-shape="rectangular" data-logo_alignment="left"></div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-2.5 pt-5 border-t border-gray-800/80 text-[11px] text-gray-400">
+                <div class="flex items-center justify-center gap-1.5 py-2 px-2.5 rounded-xl bg-gray-950/50 border border-gray-800/80">
+                    <svg class="w-4 h-4 text-cyan-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>
+                    <span class="font-medium">OAuth Resmi Google</span>
+                </div>
+                <div class="flex items-center justify-center gap-1.5 py-2 px-2.5 rounded-xl bg-gray-950/50 border border-gray-800/80">
+                    <svg class="w-4 h-4 text-green-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                    <span class="font-medium">Sistem 100% Otomatis</span>
+                </div>
+            </div>
+        </div>
+
+        <p class="text-center text-xs text-gray-500 mt-6">&copy; ${new Date().getFullYear()} Warung Pulsa. Hak cipta dilindungi.</p>
+    </div>
+
+    <script>
+        async function handleCredentialResponse(response) {
+            const btn = document.querySelector('.g_id_signin');
+            if (btn) btn.style.opacity = '0.5';
+            try {
+                const res = await fetch('/api/auth', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ credential: response.credential })
+                });
+                if (res.ok) {
+                    window.location.href = '/';
+                } else {
+                    alert('Gagal login dengan Google.');
+                    if (btn) btn.style.opacity = '1';
+                }
+            } catch(e) {
+                alert('Terjadi kesalahan saat memproses login.');
+                if (btn) btn.style.opacity = '1';
+            }
+        }
+    <\/script>
+</body>
+</html>`;
+      return new Response(loginPageHtml, { headers: { "Content-Type": "text/html;charset=UTF-8" } });
+    }
     if (path === "/" && method === "GET") {
       if (!currentUser) {
         const content = `
-                <div class="relative overflow-hidden bg-transparent pt-16 pb-32">
-                    <div class="absolute inset-0 z-0">
+                <div class="relative overflow-hidden bg-transparent pt-12 md:pt-16 pb-28 md:pb-36">
+                    <div class="absolute inset-0 z-0 pointer-events-none">
                         <div class="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-5"></div>
+                        <div class="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-sky-500/10 rounded-full blur-[140px]"></div>
                         <div class="absolute bottom-0 left-0 right-0 h-40 bg-gradient-to-t from-gray-900 to-transparent"></div>
                     </div>
                     <div class="relative max-w-6xl mx-auto px-4 text-center z-10">
-                        <span class="inline-block py-1 px-3 rounded-full bg-sky-950/50 text-cyan-400 text-sm font-semibold mb-6 border border-red-800/50 shadow-md backdrop-blur-sm">Mulai Rp ${appSettings.price_per_day}/Hari</span>
-                        <h1 class="text-5xl md:text-7xl font-black text-white tracking-tight mb-6 drop-shadow-lg">Akses Internet <span class="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-sky-500 to-blue-600">Tanpa Batas</span></h1>
-                        <p class="mt-4 max-w-2xl text-lg md:text-xl text-gray-400 mx-auto mb-10 leading-relaxed drop-shadow">Amankan koneksi Anda, buka blokir geografis, dan nikmati kecepatan tinggi dengan multi-protokol server dari Warung Pulsa.</p>
-                        <div class="glass-panel inline-block p-6 md:p-8 rounded-3xl max-w-sm mx-auto w-full shadow-2xl border border-gray-700/50 relative z-20">
-                            <h3 class="text-xl font-bold text-white mb-2">Masuk ke Dashboard</h3>
-                            <p class="text-sm text-gray-400 mb-6">Login menggunakan akun Google Anda untuk top up dan membangun server mandiri.</p>
-                            <div id="g_id_onload" data-client_id="${GOOGLE_CLIENT_ID}" data-callback="handleCredentialResponse" data-auto_prompt="false"></div>
-                            <div class="g_id_signin flex justify-center w-full shadow-lg rounded" data-type="standard" data-size="large" data-theme="filled_black" data-text="sign_in_with" data-shape="rectangular" data-logo_alignment="left"></div>
+                        <span class="inline-block py-1.5 px-4 rounded-full bg-sky-950/60 text-cyan-300 text-xs md:text-sm font-bold mb-6 border border-sky-500/30 shadow-lg shadow-sky-500/10 backdrop-blur-md">Mulai Rp ${appSettings.price_per_day}/Hari &bull; Layanan VPN & PPOB Otomatis</span>
+                        <h1 class="text-4xl md:text-6xl lg:text-7xl font-black text-white tracking-tight mb-5 drop-shadow-xl">Akses Internet <span class="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-sky-400 to-blue-500">Tanpa Batas</span></h1>
+                        <p class="mt-2 max-w-2xl text-base md:text-lg text-gray-400 mx-auto mb-10 leading-relaxed">Amankan koneksi Anda, buka blokir geografis, dan nikmati kecepatan tinggi dengan multi-protokol server dari Warung Pulsa.</p>
+
+                        <!-- Box Login Elegan dengan Logo Menonjol -->
+                        <div class="relative inline-block w-full max-w-md mx-auto z-20 text-center">
+                            <div class="bg-gradient-to-b from-gray-900/95 via-gray-900/85 to-gray-950/95 border border-sky-500/30 backdrop-blur-2xl p-8 md:p-10 rounded-[2.5rem] shadow-[0_25px_60px_-15px_rgba(0,0,0,0.8),0_0_50px_rgba(14,165,233,0.22)] relative overflow-hidden">
+                                <div class="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-transparent via-cyan-400 to-transparent"></div>
+
+                                <!-- Logo Warung Pulsa Lebih Besar & Elegan -->
+                                <div class="relative mx-auto mb-6 w-28 h-28 md:w-32 md:h-32 flex items-center justify-center">
+                                    <div class="absolute inset-0 bg-gradient-to-tr from-cyan-400 via-sky-500 to-blue-600 rounded-3xl blur-xl opacity-65 animate-pulse"></div>
+                                    <div class="relative w-24 h-24 md:w-28 md:h-28 rounded-3xl p-1.5 bg-gray-950 border-2 border-sky-400/60 shadow-2xl flex items-center justify-center overflow-hidden hover:scale-105 transition-transform duration-300">
+                                        <img src="${LOGO_URL}" alt="Logo Warung Pulsa" class="w-full h-full object-cover rounded-2xl">
+                                    </div>
+                                </div>
+
+                                <h3 class="text-2xl font-black text-white tracking-tight mb-1">
+                                    Masuk ke <span class="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-sky-400 to-blue-500">Warung Pulsa</span>
+                                </h3>
+                                <p class="text-xs font-bold text-sky-400 uppercase tracking-widest mb-3">Portal Member & Transaksi</p>
+                                <p class="text-xs md:text-sm text-gray-400 mb-6 leading-relaxed">Login satu klik menggunakan akun Google Anda untuk mengisi saldo, membuat akun VPN, dan mengelola layanan.</p>
+
+                                <div class="p-3.5 rounded-2xl bg-gray-950/70 border border-gray-800 flex flex-col items-center justify-center mb-6 shadow-inner">
+                                    <div id="g_id_onload" data-client_id="${GOOGLE_CLIENT_ID}" data-callback="handleCredentialResponse" data-auto_prompt="false"></div>
+                                    <div class="g_id_signin flex justify-center w-full shadow-lg" data-type="standard" data-size="large" data-theme="filled_black" data-text="sign_in_with" data-shape="rectangular" data-logo_alignment="left"></div>
+                                </div>
+
+                                <div class="grid grid-cols-2 gap-2 pt-4 border-t border-gray-800/80 text-[11px] text-gray-400">
+                                    <div class="flex items-center justify-center gap-1.5 py-1.5 px-2 rounded-xl bg-gray-950/40 border border-gray-800/80">
+                                        <svg class="w-3.5 h-3.5 text-cyan-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
+                                        <span class="font-medium">OAuth Resmi Google</span>
+                                    </div>
+                                    <div class="flex items-center justify-center gap-1.5 py-1.5 px-2 rounded-xl bg-gray-950/40 border border-gray-800/80">
+                                        <svg class="w-3.5 h-3.5 text-green-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                        <span class="font-medium">Aktif Otomatis 24/7</span>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
