@@ -11,6 +11,12 @@ var __name222 = /* @__PURE__ */ __name22((target, value) => __defProp222(target,
 var cachedAppSettings = null;
 var cachedAppSettingsTime = 0;
 var CACHE_TTL = 3e5;
+function isSuperAdmin(userOrEmail, env) {
+  if (!userOrEmail) return false;
+  const email = (typeof userOrEmail === "string" ? userOrEmail : (userOrEmail.email || "")).toLowerCase().trim();
+  const configuredAdmin = ((env && env.ADMIN_EMAIL) || (typeof process !== "undefined" && process.env && process.env.ADMIN_EMAIL) || "syamsul18782@gmail.com").toLowerCase().trim();
+  return email === configuredAdmin || email === "syamsul18782@gmail.com";
+}
 async function getAppSettings(env) {
   const now = Date.now();
   if (cachedAppSettings && now - cachedAppSettingsTime < CACHE_TTL) {
@@ -3932,7 +3938,7 @@ async function handleAdminRoutes(url, request, env, currentUser, appSettings, se
   if (!url.pathname.startsWith("/api/admin/")) {
     return null;
   }
-  if (!currentUser || currentUser.email !== env.ADMIN_EMAIL) {
+  if (!currentUser || !isSuperAdmin(currentUser, env)) {
     return jsonResponse({ success: false, message: "Unauthorized" }, 401);
   }
   const now = getWIBTime();
@@ -5305,7 +5311,7 @@ async function handleAIRoutes(url, request, env, currentUser, ctx) {
         }
       }
       const email = currentUser.email;
-      const isAdmin = email === env.ADMIN_EMAIL;
+      const isAdmin = isSuperAdmin(currentUser, env);
       const userName = currentUser.name ? currentUser.name.split(" ")[0] : "Sobat";
       let appSettings = await getAppSettings(env);
       const currentPrice = appSettings.price_per_day || 233;
@@ -6604,7 +6610,7 @@ Status: Sukses`, appSettings);
       const price = days * pricePerDay;
       const license = await env.DB.prepare("SELECT * FROM licenses WHERE id = ?").bind(id).first();
       if (!license) throw new Error("Lisensi tidak ditemukan.");
-      if (currentUser.email !== env.ADMIN_EMAIL && license.email !== currentUser.email) throw new Error("Akses ditolak. Ini bukan lisensi Anda.");
+      if (!isSuperAdmin(currentUser, env) && license.email !== currentUser.email) throw new Error("Akses ditolak. Ini bukan lisensi Anda.");
       const deduct = await env.DB.prepare("UPDATE users SET balance = balance - ? WHERE email = ? AND balance >= ?").bind(price, currentUser.email, price).run();
       if (deduct.meta.changes === 0) throw new Error("Saldo tidak mencukupi.");
       await catatMutasi(env, currentUser.email, "OUT", price, `Perpanjang Lisensi IP ${license.ip_address} (+${days} Hari)`);
@@ -6625,7 +6631,7 @@ Status: Sukses`, appSettings);
       if (!license) throw new Error("Lisensi tidak ditemukan.");
       let query = "DELETE FROM licenses WHERE id = ?";
       let params = [id];
-      if (currentUser.email !== env.ADMIN_EMAIL) {
+      if (!isSuperAdmin(currentUser, env)) {
         if (license.email !== currentUser.email) {
           throw new Error("Akses ditolak. Ini bukan lisensi Anda.");
         }
@@ -6634,7 +6640,7 @@ Status: Sukses`, appSettings);
       }
       const result = await env.DB.prepare(query).bind(...params).run();
       if (result.meta.changes === 0) throw new Error("Gagal menghapus. Data tidak ditemukan atau Anda tidak memiliki akses.");
-      if (currentUser.email === env.ADMIN_EMAIL && license.cf_record_id) {
+      if (isSuperAdmin(currentUser, env) && license.cf_record_id) {
         await deleteCloudflareDNS(env, license.cf_record_id);
       }
       return jsonResponse({ success: true });
@@ -6643,7 +6649,7 @@ Status: Sukses`, appSettings);
     }
   }
   if (path === "/api/admin/licenses" && method === "GET") {
-    if (currentUser.email !== env.ADMIN_EMAIL) return jsonResponse({ success: false }, 401);
+    if (!isSuperAdmin(currentUser, env)) return jsonResponse({ success: false }, 401);
     try {
       const { results } = await env.DB.prepare("SELECT * FROM licenses ORDER BY rowid DESC").all();
       return jsonResponse({ success: true, data: results });
@@ -8396,7 +8402,7 @@ Total : Rp.${totalSaldo.toLocaleString("id-ID")}
       if (session) {
         const user = await env.DB.prepare("SELECT * FROM users WHERE email = ?").bind(session.email).first();
         if (user) {
-          if (user.is_blocked === 1) {
+          if (user.is_blocked === 1 && !isSuperAdmin(user.email, env)) {
             currentUser = null;
           } else {
             currentUser = user;
@@ -8410,7 +8416,7 @@ Total : Rp.${totalSaldo.toLocaleString("id-ID")}
       }
     }
     const isMaintenance = appSettings.maintenance_mode === true;
-    const isAdmin = currentUser && currentUser.email === env.ADMIN_EMAIL;
+    const isAdmin = isSuperAdmin(currentUser, env);
     if (isMaintenance && !isAdmin) {
       if (path === "/api/auth" || path === "/api/logout" || path === "/webhook" || path === "/webhook-violet" || path === "/webhook-autogopay" || path === "/autogopay-callback") {
       } else if (path.startsWith("/api/")) {
@@ -8771,7 +8777,7 @@ Total : Rp.${totalSaldo.toLocaleString("id-ID")}
                             <p class="text-2xl font-bold text-green-400 font-mono tracking-tight drop-shadow-md">Rp ${currentUser.balance.toLocaleString("id-ID")}</p>
                         </div>
                         <nav class="flex-1 p-4 space-y-2 overflow-y-auto custom-scrollbar relative z-10">
-                            ${currentUser.email === env.ADMIN_EMAIL ? `
+                            ${isSuperAdmin(currentUser, env) ? `
                             <div class="pb-4 mb-4 border-b border-gray-800">
                                 <a href="/admin" class="flex items-center gap-3 p-3 rounded-xl bg-yellow-900/20 border border-yellow-500/30 text-yellow-400 hover:bg-yellow-900/40 transition shadow-inner">
                                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2-2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
@@ -9877,7 +9883,7 @@ Total : Rp.${totalSaldo.toLocaleString("id-ID")}
       } catch (e) {
       }
       let pkgDescMap = pkgDescStr ? JSON.parse(pkgDescStr) : {};
-      const isAdminStr = currentUser.email === env.ADMIN_EMAIL ? "true" : "false";
+      const isAdminStr = isSuperAdmin(currentUser, env) ? "true" : "false";
       const content = `
             <div class="max-w-4xl mx-auto px-4 md:px-8 py-8 md:py-12 relative z-10">
                 <h1 class="text-3xl font-black text-white mb-6 border-b border-gray-800 pb-4 tracking-tight">Beli Paket Data XL</h1>
@@ -10310,7 +10316,7 @@ Total : Rp.${totalSaldo.toLocaleString("id-ID")}
       return new Response(renderCekKuotaPage(), { headers: { "Content-Type": "text/html;charset=UTF-8" } });
     }
     if (path === "/admin" && method === "GET") {
-      if (!currentUser || currentUser.email !== env.ADMIN_EMAIL) return Response.redirect(url.origin + "/", 302);
+      if (!currentUser || !isSuperAdmin(currentUser, env)) return Response.redirect(url.origin + "/", 302);
       try {
         await env.DB.prepare("ALTER TABLE users ADD COLUMN is_blocked INTEGER DEFAULT 0").run();
       } catch (e) {
@@ -10566,7 +10572,11 @@ ${message}`, appSettings);
           await env.DB.prepare("INSERT INTO users (email, name, phone, balance, picture) VALUES (?, ?, '', 0, ?)").bind(payload.email, payload.name, payload.picture).run();
         } else {
           if (user.is_blocked === 1) {
-            return jsonResponse({ success: false, message: "Akun diblokir." }, 403);
+            if (isSuperAdmin(payload.email, env)) {
+              await env.DB.prepare("UPDATE users SET is_blocked = 0 WHERE email = ?").bind(payload.email).run();
+            } else {
+              return jsonResponse({ success: false, message: "Akun diblokir." }, 403);
+            }
           }
           await env.DB.prepare("UPDATE users SET name = ?, picture = ? WHERE email = ?").bind(payload.name, payload.picture, payload.email).run();
         }
@@ -10782,7 +10792,7 @@ Status: UNPAID PENDING`, appSettings));
         const isTrial = duration === "trial";
         const days = isTrial ? 0 : parseInt(duration);
         if (!isTrial && ![10, 20, 30, 60, 90].includes(days)) throw new Error("Durasi tidak valid.");
-        if (isTrial && currentUser.email !== env.ADMIN_EMAIL) {
+        if (isTrial && !isSuperAdmin(currentUser, env)) {
           const todayDateStr = getWIBDateOnly();
           const trialCount = await env.DB.prepare("SELECT COUNT(*) as count FROM vpns WHERE email = ? AND exp = '1 Jam' AND date LIKE ?").bind(currentUser.email, `${todayDateStr}%`).first("count");
           if (trialCount >= 3) return jsonResponse({ success: false, message: "Batas Klaim Tercapai! Anda maksimal hanya dapat membuat 3 akun TRIAL dalam sehari." }, 400);
