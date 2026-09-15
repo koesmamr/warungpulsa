@@ -31,14 +31,14 @@ async function getAppSettings(env) {
     telegram_group_thread_id: (env && env.TELEGRAM_GROUP_THREAD_ID) || "16083",
     auto_backup_frequency: 24,
     maintenance_mode: false,
-    payment_tripay: true,
+    payment_tripay: false,
     payment_violet: false,
     payment_qris_manual: false,
     payment_shopeepay: true,
     payment_gopay: true,
     autogopay_api_key: (env && env.AUTOGOPAY_API_KEY) || "agp_1bae647d0c0c25307757c1a60afa7b06256c90dbefb4650f3f7e43a03d5c2a7d",
-    shopeepay_qris_static: (env && env.SHOPEEPAY_QRIS_STATIC) || "00020101021126610016ID.CO.SHOPEE.WWW01189360091800231945460208231945460303UMI51440014ID.CO.QRIS.WWW0215ID10265329492310303UMI5204572253033605802ID5911tuban store6005TUBAN61056235562070703A0163042177",
-    gopay_qris_static: (env && env.GOPAY_QRIS_STATIC) || "00020101021126610014COM.GO-JEK.WWW01189360091437549297840210G7549297840303UMI51440014ID.CO.QRIS.WWW0215ID10243243071480303UMI5204504553033605802ID5913Srp Com Tuban6005TUBAN61056235562070703A0163041FE0",
+    shopeepay_qris_static: (env && env.SHOPEEPAY_QRIS_STATIC) || "00020101021126610016ID.CO.SHOPEE.WWW01189360091800205167330208205167330303UMI51440014ID.CO.QRIS.WWW0215ID10221779795590303UMI5204539953033605802ID5912konter pulsa6009GORONTALO61059612162070703A016304C60C",
+    gopay_qris_static: (env && env.GOPAY_QRIS_STATIC) || "00020101021126610014COM.GO-JEK.WWW01189360091432182828890210G2182828890303UMI51440014ID.CO.QRIS.WWW0215ID10265930588070303UMI5204481453033605802ID5922konter pulsa, SIPATANA6009GORONTALO61059612162140703A0111036216304E906",
     cendrawasih_api_key: (env && env.CENDRAWASIH_API_KEY) || "CEN-8B894F33-5EB9-44F3-B986-56D919742B71",
     servers: [{ id: "srv1", name: "Server SG Premium 1", host: "http://103.x.x.x", key: "API_KEY_ANDA_DISINI" }]
   };
@@ -52,6 +52,8 @@ async function getAppSettings(env) {
           cachedAppSettings[k] = defaultSettings[k];
         }
       }
+            cachedAppSettings.payment_tripay = false;
+      cachedAppSettings.payment_violet = false;
       cachedAppSettingsTime = now;
       return cachedAppSettings;
     }
@@ -603,8 +605,6 @@ async function renderAdminDashboard(env, currentUser, appSettings) {
   const kmspMarkup = appSettings.kmsp_markup !== void 0 ? appSettings.kmsp_markup : 3e3;
   const backupFreq = appSettings.auto_backup_frequency !== void 0 ? appSettings.auto_backup_frequency : 24;
   const licPrice = appSettings.script_price_per_day || 500;
-  const isTripayOn = appSettings.payment_tripay !== false;
-  const isVioletOn = appSettings.payment_violet === true;
   const isQrisManualOn = appSettings.payment_qris_manual === true;
   const isShopeePayOn = appSettings.payment_shopeepay !== false;
   const isGoPayOn = appSettings.payment_gopay !== false;
@@ -1074,16 +1074,16 @@ async function renderAdminDashboard(env, currentUser, appSettings) {
                             <span id="statTotalBalance" class="text-lg md:text-xl font-black text-green-400 font-mono">-</span>
                         </div>
                     </div>
-                    <!-- Card 3: Topup Otomatis (TriPay) -->
+                    <!-- Card 3: Topup Otomatis (ShopeePay) -->
                     <div class="bg-gray-950 p-4 rounded-2xl border border-gray-850 flex flex-col justify-between hover:border-indigo-500/20 transition-all duration-300">
-                        <span class="text-[10px] font-bold text-gray-500 uppercase tracking-wider" id="labelTripayIncome">Top-up TriPay (Bulan Ini)</span>
+                        <span class="text-[10px] font-bold text-gray-500 uppercase tracking-wider" id="labelTripayIncome">Top-up ShopeePay (Bulan Ini)</span>
                         <div class="mt-2 flex items-baseline gap-1">
                             <span id="statTripayIncome" class="text-lg md:text-xl font-black text-indigo-400 font-mono">-</span>
                         </div>
                     </div>
-                    <!-- Card 3b: Topup Otomatis (Violet) -->
+                    <!-- Card 3b: Topup Otomatis (GoPay) -->
                     <div class="bg-gray-950 p-4 rounded-2xl border border-gray-850 flex flex-col justify-between hover:border-indigo-500/20 transition-all duration-300">
-                        <span class="text-[10px] font-bold text-gray-500 uppercase tracking-wider" id="labelVioletIncome">Top-up Violet (Bulan Ini)</span>
+                        <span class="text-[10px] font-bold text-gray-500 uppercase tracking-wider" id="labelVioletIncome">Top-up GoPay (Bulan Ini)</span>
                         <div class="mt-2 flex items-baseline gap-1">
                             <span id="statVioletIncome" class="text-lg md:text-xl font-black text-indigo-400 font-mono">-</span>
                         </div>
@@ -1208,21 +1208,7 @@ async function renderAdminDashboard(env, currentUser, appSettings) {
                     
                     <div class="bg-gray-950 p-4 rounded-xl border border-gray-800 mb-4">
                         <h4 class="text-sm font-bold text-white mb-3">Metode Top Up Saldo & Fitur</h4>
-                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-3">
-                            <div>
-                                <label class="block text-xs font-bold text-gray-400 mb-2 uppercase tracking-wide">Gateway TriPay (Otomatis)</label>
-                                <select id="setTripayActive" class="w-full bg-gray-900 border border-gray-700 rounded-lg p-3 text-white text-sm focus:ring-2 focus:ring-sky-500 outline-none font-bold">
-                                    <option value="true" ${isTripayOn ? "selected" : ""}>\u{1F7E2} ON - Aktif</option>
-                                    <option value="false" ${!isTripayOn ? "selected" : ""}>\u{1F534} OFF - Mati</option>
-                                </select>
-                            </div>
-                            <div>
-                                <label class="block text-xs font-bold text-gray-400 mb-2 uppercase tracking-wide">Gateway Violet (Otomatis)</label>
-                                <select id="setVioletActive" class="w-full bg-gray-900 border border-gray-700 rounded-lg p-3 text-white text-sm focus:ring-2 focus:ring-sky-500 outline-none font-bold">
-                                    <option value="true" ${isVioletOn ? "selected" : ""}>\u{1F7E2} ON - Aktif</option>
-                                    <option value="false" ${!isVioletOn ? "selected" : ""}>\u{1F534} OFF - Mati</option>
-                                </select>
-                            </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-3">
                             <div>
                                 <label class="block text-xs font-bold text-gray-400 mb-2 uppercase tracking-wide">QRIS Manual (Admin Cek)</label>
                                 <select id="setQrisManualActive" class="w-full bg-gray-900 border border-gray-700 rounded-lg p-3 text-white text-sm focus:ring-2 focus:ring-sky-500 outline-none font-bold">
@@ -2054,8 +2040,8 @@ async function renderAdminDashboard(env, currentUser, appSettings) {
             const filterSelect = document.getElementById('statsMonthFilter');
             const selectedLabel = filterSelect.options[filterSelect.selectedIndex]?.text || 'Hari Ini';
             
-            document.getElementById('labelTripayIncome').innerText = 'Top-up TriPay (' + selectedLabel + ')';
-            document.getElementById('labelVioletIncome').innerText = 'Top-up Violet (' + selectedLabel + ')';
+            document.getElementById('labelTripayIncome').innerText = 'Top-up ShopeePay (' + selectedLabel + ')';
+            document.getElementById('labelVioletIncome').innerText = 'Top-up GoPay (' + selectedLabel + ')';
             document.getElementById('labelManualIncome').innerText = 'Top-up Manual (' + selectedLabel + ')';
             document.getElementById('labelVpnCreated').innerText = 'Pembuatan VPN (' + selectedLabel + ')';
             document.getElementById('labelVpnRenewed').innerText = 'Perpanjangan VPN (' + selectedLabel + ')';
@@ -2796,8 +2782,8 @@ async function renderAdminDashboard(env, currentUser, appSettings) {
             btn.disabled = true; btn.innerText = 'Menyimpan...';
             try {
                 const payload = {
-                    payment_tripay: document.getElementById('setTripayActive').value === 'true',
-                    payment_violet: document.getElementById('setVioletActive').value === 'true',
+                    payment_tripay: false,
+                    payment_violet: false,
                     payment_qris_manual: document.getElementById('setQrisManualActive').value === 'true',
                     payment_shopeepay: document.getElementById('setShopeePayActive') ? document.getElementById('setShopeePayActive').value === 'true' : true,
                     payment_gopay: document.getElementById('setGoPayActive') ? document.getElementById('setGoPayActive').value === 'true' : true,
@@ -3986,11 +3972,11 @@ async function handleAdminRoutes(url, request, env, currentUser, appSettings, se
       const totalUsers = userStats ? userStats.total_users : 0;
       const totalBalance = userStats ? userStats.total_balance || 0 : 0;
       const tripayIncomeRow = await env.DB.prepare(
-        `SELECT SUM(amount) as total FROM transactions WHERE type = 'IN' AND description LIKE 'Top Up Saldo via TriPay%' AND ${sqlCondTrx}`
+        `SELECT SUM(amount) as total FROM transactions WHERE type = 'IN' AND (description LIKE 'Top Up Saldo via ShopeePay%' OR description LIKE 'Top Up Saldo via TriPay%') AND ${sqlCondTrx}`
       ).bind(...sqlCondTrxParams).first();
       const tripayIncome = tripayIncomeRow ? tripayIncomeRow.total || 0 : 0;
       const violetIncomeRow = await env.DB.prepare(
-        `SELECT SUM(amount) as total FROM transactions WHERE type = 'IN' AND description LIKE 'Top Up Saldo via Violet%' AND ${sqlCondTrx}`
+        `SELECT SUM(amount) as total FROM transactions WHERE type = 'IN' AND (description LIKE 'Top Up Saldo via GoPay%' OR description LIKE 'Top Up Saldo via Violet%') AND ${sqlCondTrx}`
       ).bind(...sqlCondTrxParams).first();
       const violetIncome = violetIncomeRow ? violetIncomeRow.total || 0 : 0;
       const manualIncomeRow = await env.DB.prepare(
@@ -5353,7 +5339,7 @@ PENGETAHUAN PRODUK & TROUBLESHOOTING (WAJIB TAHU UNTUK MENJAWAB PERTANYAAN USER)
 - Aturan Pemakaian VPN: Dilarang keras digunakan untuk Torrenting, DDOS, Hacking, atau Carding. Batas maksimal pemakaian adalah 2 Device/IP secara bersamaan. Jika melanggar, akun akan dibanned otomatis oleh server!
 - Troubleshooting Klien: Jika VPN "konek tapi bengong" (tidak ada akses internet), arahkan user untuk melakukan Mode Pesawat (ON/OFF 5 detik) untuk merefresh jaringan atau ganti Bug/SNI. Jika susah konek, minta user mengecek sisa kuota/opok mereka.
 - Seputar Tembak Paket XL (KMSP): Jika SMS OTP MyXL tidak masuk, beritahu user bahwa sistem pusat kadang delay dan minta mereka mencoba lagi setelah 5 menit. Jelaskan juga bahwa pembayaran metode E-Wallet hanya memotong saldo web untuk "Biaya Admin" saja, sedangkan harga paket asli dibayar langsung via aplikasi e-wallet (DANA/Gopay) pengguna.
-- Info Top Up: QRIS Otomatis (TriPay) akan masuk dalam hitungan detik. QRIS Manual harus transfer sesuai nominal unik dan wajib menekan tombol Konfirmasi.
+- Info Top Up: QRIS Otomatis (ShopeePay / GoPay) akan masuk dalam hitungan detik. QRIS Manual harus transfer sesuai nominal unik dan wajib menekan tombol Konfirmasi.
 
 DAFTAR SERVER AKTIF (PENTING):
 ${serverListStr}
@@ -8388,7 +8374,7 @@ Total : Rp.${totalSaldo.toLocaleString("id-ID")}
     const url = new URL(request.url);
     const path = url.pathname;
     const method = request.method;
-        if (path === "/logo.png" || path === "/favicon.ico") {
+    if (path === "/logo.png" || path === "/favicon.ico") {
       try {
         const fsModule = require('fs');
         const pathModule = require('path');
@@ -8405,6 +8391,23 @@ Total : Rp.${totalSaldo.toLocaleString("id-ID")}
       } catch (errLogo) {
         console.error('Gagal memuat logo.png:', errLogo.message);
       }
+    }
+    if (path === "/qris-manual.jpg" || path === "/qris-shopee.jpg" || path === "/qris-gopay.jpg") {
+      try {
+        const fsModule = require('fs');
+        const pathModule = require('path');
+        const fileName = path.replace('/', '');
+        const qrisFile = pathModule.join(__dirname, fileName);
+        if (fsModule.existsSync(qrisFile)) {
+          const qrisBuffer = fsModule.readFileSync(qrisFile);
+          return new Response(qrisBuffer, {
+            headers: {
+              "Content-Type": "image/jpeg",
+              "Cache-Control": "public, max-age=86400"
+            }
+          });
+        }
+      } catch (e) {}
     }
     if (path === "/favicon.ico" || path === "/robots.txt" || path === "/sitemap.xml") {
       return new Response("Not Found", { status: 404 });
@@ -9421,7 +9424,7 @@ Total : Rp.${totalSaldo.toLocaleString("id-ID")}
                             <div class="bg-gray-900 p-8 rounded-3xl border border-gray-700 shadow-xl hover:-translate-y-2 hover:border-green-500 transition-all duration-300">
                                 <div class="w-14 h-14 bg-green-900/50 rounded-2xl flex items-center justify-center mb-6 text-green-400 shadow-inner border border-green-500/20"><svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192l-3.536 3.536M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-5 0a4 4 0 11-8 0 4 4 0 018 0z"></path></svg></div>
                                 <h3 class="text-xl font-bold text-white mb-3">Sistem Otomatis</h3>
-                                <p class="text-gray-400 text-sm leading-relaxed">Top up saldo via QRIS TriPay dan pembuatan server VPN dilakukan 100% otomatis dalam hitungan detik tanpa campur tangan admin.</p>
+                                <p class="text-gray-400 text-sm leading-relaxed">Top up saldo via QRIS Realtime dan pembuatan server VPN dilakukan 100% otomatis dalam hitungan detik tanpa campur tangan admin.</p>
                             </div>
                         </div>
                     </div>
@@ -9482,8 +9485,6 @@ Total : Rp.${totalSaldo.toLocaleString("id-ID")}
         currentUser.unpaid_invoices = validUnpaid;
         const formatRupiah = /* @__PURE__ */ __name222((angka) => new Intl.NumberFormat("id-ID", { style: "currency", currency: "IDR" }).format(angka), "formatRupiah");
         const serverOptions = appSettings.servers.map((s) => `<option value="${s.id}">${s.name}</option>`).join("");
-        const isTripayOn = appSettings.payment_tripay !== false;
-        const isVioletOn = appSettings.payment_violet === true;
         const isQrisManualOn = appSettings.payment_qris_manual === true;
         const isShopeePayOn = appSettings.payment_shopeepay !== false;
         const isGoPayOn = appSettings.payment_gopay !== false;
@@ -9491,8 +9492,6 @@ Total : Rp.${totalSaldo.toLocaleString("id-ID")}
         const activeMethods = [];
         if (isShopeePayOn) activeMethods.push({ value: "shopeepay", label: "ShopeePay QRIS (AutoGoPay)" });
         if (isGoPayOn) activeMethods.push({ value: "gopay", label: "GoPay QRIS (AutoGoPay)" });
-        if (isTripayOn) activeMethods.push({ value: "tripay", label: "QRIS TriPay (Otomatis)" });
-        if (isVioletOn) activeMethods.push({ value: "violet", label: "QRIS Violet (Otomatis)" });
         if (isQrisManualOn) activeMethods.push({ value: "manual", label: "QRIS Manual (Konfirmasi Admin)" });
         if (activeMethods.length > 1) {
           let optionsHtml = activeMethods.map((m) => `<option value="${m.value}">${m.label}</option>`).join("");
@@ -9768,7 +9767,7 @@ Total : Rp.${totalSaldo.toLocaleString("id-ID")}
                                 title: 'QRIS Pembayaran Manual',
                                 html: '<p class="mb-4 text-sm text-gray-300">Silakan transfer <b>TEPAT SEJUMLAH</b> <b class="text-green-400 text-xl">Rp ' + finalAmount.toLocaleString('id-ID') + '</b> ke QRIS di bawah ini.</p>' +
                                       '<p class="text-xs text-yellow-400 mb-4 bg-yellow-500/10 p-2.5 rounded-lg border border-yellow-500/20 shadow-sm">*Angka unik <b>' + uniqueCode + '</b> di belakang ditambahkan otomatis agar Admin dapat memverifikasi dana Anda lebih cepat.</p>' +
-                                      '<img src="https://raw.githubusercontent.com/syamsul18782/akungithub/refs/heads/main/srpcomqris.jpg" alt="QRIS Manual" class="mx-auto rounded-xl w-64 mb-4 shadow-lg border border-gray-700">' +
+                                      '<img src="/qris-manual.jpg" alt="QRIS Manual" class="mx-auto rounded-xl w-64 mb-4 shadow-lg border border-gray-700">' +
                                       '<p class="text-xs text-gray-400 mb-2">Setelah transfer selesai, wajib klik tombol di bawah ini untuk mengirimkan <b>Bukti Transfer</b> kepada Admin melalui WhatsApp.</p>',
                                 showCancelButton: true, confirmButtonText: 'Konfirmasi via WA', cancelButtonText: 'Batal', confirmButtonColor: '#22c55e'
                             }).then((res) => {
@@ -10682,7 +10681,7 @@ Waktu: ${getWIBTime()}`, appSettings);
         if (typeof amount !== "number" || isNaN(amount) || amount < 1e3 || amount > 1e7 || !Number.isInteger(amount)) {
           return jsonResponse({ success: false, message: "Nominal top up tidak valid. Minimal Rp 1.000 dan Maksimal Rp 10.000.000." }, 400);
         }
-        if (selectedMethod === "shopeepay" || (selectedMethod === "auto" && appSettings.payment_shopeepay && !appSettings.payment_tripay && !appSettings.payment_violet)) {
+        if (selectedMethod === "shopeepay" || selectedMethod === "auto") {
           const uniqueCode = Math.floor(Math.random() * 99) + 1;
           const nominalUnik = amount + uniqueCode;
           const refKode = "AGPSHOPEE-" + Date.now() + "-" + Math.floor(Math.random() * 1000);
@@ -10713,7 +10712,7 @@ Status: UNPAID PENDING`, appSettings));
             return jsonResponse({ success: false, message: tx.message }, 400);
           }
         }
-        if (selectedMethod === "gopay") {
+        if (selectedMethod === "gopay" || (selectedMethod === "auto" && appSettings.payment_gopay)) {
           const uniqueCode = Math.floor(Math.random() * 99) + 1;
           const nominalUnik = amount + uniqueCode;
           const refKode = "AGPGOPAY-" + Date.now() + "-" + Math.floor(Math.random() * 1000);
@@ -10745,60 +10744,7 @@ Status: UNPAID PENDING`, appSettings));
             return jsonResponse({ success: false, message: tx.message }, 400);
           }
         }
-        if (selectedMethod === "violet" || appSettings.payment_violet && !appSettings.payment_tripay) {
-          const tx = await createVioletTransaction(env, { email: currentUser.email, name: currentUser.name }, amount, url.origin);
-          if (tx.success) {
-            await env.DB.prepare("INSERT INTO invoices (ref, email, amount, status, date) VALUES (?, ?, ?, 'UNPAID', ?)").bind(tx.ref, currentUser.email, amount, getWIBTime()).run();
-            const pendingMsg = `Halo! Anda telah membuat permintaan Top Up Saldo sebesar <b class="text-green-400">Rp ${amount.toLocaleString("id-ID")}</b>.<br><br>Silakan selesaikan pembayaran Anda sebelum batas waktu habis (Maksimal 1 Jam) dengan mengklik tombol di bawah ini:<br><br><div style="text-align: center; margin-top: 15px; margin-bottom: 15px;"><a href="${tx.checkout_url}" target="_blank" style="display: inline-block; background-color: #dc2626; color: #ffffff; padding: 12px 24px; border-radius: 12px; text-decoration: none; font-weight: bold; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);">\u{1F4B3} Lanjutkan Pembayaran (Violet)</a></div><br><span style="font-size:10px;color:#6b7280;">No. Ref: ${tx.ref}</span>`;
-            await env.DB.prepare("INSERT INTO inbox (email, title, message, date, read) VALUES (?, ?, ?, ?, 0)").bind(currentUser.email, `[PENDING] Top Up Saldo`, pendingMsg, getWIBTime()).run();
-            ctx.waitUntil(sendTelegramLog("\u{1F9FE} LOG CREATE TOP UP", `User <b>${currentUser.email}</b> membuat tagihan Top Up Saldo.
- 
-Nominal: Rp ${amount.toLocaleString("id-ID")}
-Metode: QRIS Violet
-Ref: ${tx.ref}
-Status: UNPAID PENDING`, appSettings));
-            return jsonResponse({ success: true, checkout_url: tx.checkout_url });
-          } else {
-            return jsonResponse({ success: false, message: tx.message }, 400);
-          }
-        }
-        const merchantRef = "TOPUP-" + Math.floor(Math.random() * 1e9);
-        const signature = await generateTriPaySignature(env.TRIPAY_PRIVATE_KEY, env.TRIPAY_MERCHANT_CODE, merchantRef, amount);
-        const payload = {
-          method: "QRIS",
-          merchant_ref: merchantRef,
-          amount,
-          customer_name: currentUser.name,
-          customer_email: currentUser.email,
-          customer_phone: currentUser.phone || "081234567890",
-          order_items: [{ sku: "SALDO", name: `Top Up Saldo VPN Rp ${amount}`, price: amount, quantity: 1 }],
-          return_url: `https://${url.hostname}/`,
-          expired_time: Math.floor(Date.now() / 1e3) + 1 * 60 * 60,
-          signature
-        };
-        let proxyHost = env.VPS_IP;
-        if (/^[0-9.]+$/.test(proxyHost)) proxyHost = `${proxyHost}.nip.io`;
-        const vpsProxyUrl = `http://${proxyHost}:8080/tripay_proxy`;
-        const tripayReq = await fetch(vpsProxyUrl, {
-          method: "POST",
-          headers: { "Authorization": "Bearer " + env.TRIPAY_API_KEY, "Content-Type": "application/json", "X-VPS-Auth": env.VPS_API_KEY },
-          body: JSON.stringify(payload)
-        });
-        const tripayRes = await tripayReq.json();
-        if (tripayRes.success) {
-          await env.DB.prepare("INSERT INTO invoices (ref, email, amount, status, date) VALUES (?, ?, ?, 'UNPAID', ?)").bind(merchantRef, currentUser.email, amount, getWIBTime()).run();
-          const pendingMsg = `Halo! Anda telah membuat permintaan Top Up Saldo sebesar <b class="text-green-400">Rp ${amount.toLocaleString("id-ID")}</b>.<br><br>Silakan selesaikan pembayaran Anda sebelum batas waktu habis (Maksimal 1 Jam) dengan mengklik tombol di bawah ini:<br><br><div style="text-align: center; margin-top: 15px; margin-bottom: 15px;"><a href="${tripayRes.data.checkout_url}" target="_blank" style="display: inline-block; background-color: #dc2626; color: #ffffff; padding: 12px 24px; border-radius: 12px; text-decoration: none; font-weight: bold; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);">\u{1F4B3} Lanjutkan Pembayaran (TriPay)</a></div><br><span style="font-size:10px;color:#6b7280;">No. Ref: ${merchantRef}</span>`;
-          await env.DB.prepare("INSERT INTO inbox (email, title, message, date, read) VALUES (?, ?, ?, ?, 0)").bind(currentUser.email, `[PENDING] Top Up Saldo`, pendingMsg, getWIBTime()).run();
-          ctx.waitUntil(sendTelegramLog("\u{1F9FE} LOG CREATE TOP UP", `User <b>${currentUser.email}</b> membuat tagihan Top Up Saldo.
- 
-Nominal: Rp ${amount.toLocaleString("id-ID")}
-Metode: QRIS TriPay
-Ref: ${merchantRef}
-Status: UNPAID PENDING`, appSettings));
-          return jsonResponse({ success: true, checkout_url: tripayRes.data.checkout_url });
-        } else {
-          return jsonResponse({ success: false, message: tripayRes.message }, 400);
-        }
+        return jsonResponse({ success: false, message: "Metode pembayaran tidak valid atau sedang dinonaktifkan." }, 400);
       } catch (e) {
         return jsonResponse({ success: false, message: e.message }, 500);
       }
