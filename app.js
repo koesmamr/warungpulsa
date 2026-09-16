@@ -716,7 +716,6 @@ async function renderAdminDashboard(env, currentUser, appSettings) {
         #monitorModal > div { border: 1px solid rgba(99, 102, 241, 0.4) !important; }
         #globalTransactionsModal > div { border: 1px solid rgba(249, 115, 22, 0.4) !important; }
         #mutasiUserModal > div { border: 1px solid rgba(34, 197, 94, 0.4) !important; }
-        #pkgManagerModal > div { border: 1px solid rgba(168, 85, 247, 0.4) !important; }
         #ticketListModal > div, #chatTicketModal > div, #ticketManagerModal > div { border: 1px solid rgba(20, 184, 166, 0.4) !important; }
         
         /* 2. Premium Table Cell Paddings & Font Sizes */
@@ -937,10 +936,6 @@ async function renderAdminDashboard(env, currentUser, appSettings) {
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z"></path></svg>
                 Broadcast
             </button>
-            <button onclick="openLicenseManagerModal()" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-3.5 px-6 rounded-xl shadow-lg transition flex items-center gap-3">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"></path></svg>
-                Manajemen Lisensi
-            </button>
             <button onclick="openGlobalUuidModal()" class="bg-pink-600 hover:bg-pink-500 text-white font-bold py-3.5 px-6 rounded-xl shadow-lg transition flex items-center gap-3">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"></path></svg>
                 Global UUID
@@ -960,10 +955,6 @@ async function renderAdminDashboard(env, currentUser, appSettings) {
             <button onclick="openLiveExplorerModal()" class="bg-cyan-600 hover:bg-cyan-500 text-white font-bold py-3.5 px-6 rounded-xl shadow-lg transition flex items-center gap-3">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9"></path></svg>
                 Live Server Explorer
-            </button>
-            <button onclick="openPkgManagerModal()" class="bg-purple-600 hover:bg-purple-500 text-white font-bold py-3.5 px-6 rounded-xl shadow-lg transition flex items-center gap-3">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path></svg>
-                Filter Produk XL
             </button>
             <button onclick="openTicketManagerModal()" class="bg-teal-600 hover:bg-teal-500 text-white font-bold py-3.5 px-6 rounded-xl shadow-lg transition flex items-center gap-3 relative">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192l-3.536 3.536M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-5 0a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
@@ -1160,21 +1151,7 @@ async function renderAdminDashboard(env, currentUser, appSettings) {
                             <span class="text-[10px] text-gray-400">Akun</span>
                         </div>
                     </div>
-                    <!-- Card 6: Pembelian Paket XL -->
-                    <div class="bg-gray-950 p-4 rounded-2xl border border-gray-850 flex flex-col justify-between hover:border-indigo-500/20 transition-all duration-300">
-                        <span class="text-[10px] font-bold text-gray-500 uppercase tracking-wider" id="labelXlTransactions">XL KMSP (Bulan Ini)</span>
-                        <div class="mt-2 flex items-baseline gap-1">
-                            <span id="statXlTransactions" class="text-xl md:text-2xl font-black text-white font-mono">-</span>
-                            <span class="text-[10px] text-gray-400">Trx</span>
-                        </div>
-                    </div>
-                    <!-- Card 7: Pembelian Lisensi -->
-                    <div class="bg-gray-950 p-4 rounded-2xl border border-gray-850 flex flex-col justify-between hover:border-indigo-500/20 transition-all duration-300">
-                        <span class="text-[10px] font-bold text-gray-500 uppercase tracking-wider">Pendapatan Lisensi</span>
-                        <div class="mt-2 flex items-baseline gap-1">
-                            <span id="statLicenseIncome" class="text-lg md:text-xl font-black text-yellow-400 font-mono">-</span>
-                        </div>
-                    </div>
+
                     <!-- Card 8: Estimasi Profit Bersih -->
                     <div class="bg-gray-950 p-4 rounded-2xl border border-indigo-500/30 flex flex-col justify-between bg-indigo-950/10 hover:border-indigo-500/50 transition-all duration-300">
                         <span class="text-[10px] font-bold text-indigo-400 uppercase tracking-wider" id="labelNetProfit">Estimasi Net Profit (Bulan Ini)</span>
@@ -1194,7 +1171,7 @@ async function renderAdminDashboard(env, currentUser, appSettings) {
                     </div>
                 </div>
 
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
                     <!-- Tabel Performa Server VPN -->
                     <div class="bg-gray-950 rounded-[1.5rem] border border-gray-850 overflow-hidden flex flex-col">
                         <div class="p-4 border-b border-gray-850 bg-gray-900/30">
@@ -1212,29 +1189,6 @@ async function renderAdminDashboard(env, currentUser, appSettings) {
                                     </tr>
                                 </thead>
                                 <tbody id="statsServerTableBody" class="divide-y divide-gray-900/50">
-                                    <tr><td colspan="3" class="p-6 text-center text-gray-600">Belum ada data.</td></tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-
-                    <!-- Tabel Paket XL Terpopuler -->
-                    <div class="bg-gray-950 rounded-[1.5rem] border border-gray-850 overflow-hidden flex flex-col">
-                        <div class="p-4 border-b border-gray-850 bg-gray-900/30">
-                            <h4 class="text-xs font-bold text-white uppercase tracking-wider flex items-center gap-1.5">
-                                <span id="labelXlTable">\u{1F6D2} Produk XL Terpopuler (Bulan Ini)</span>
-                            </h4>
-                        </div>
-                        <div class="overflow-x-auto custom-scrollbar max-h-48">
-                            <table class="w-full text-left text-xs text-gray-300 whitespace-nowrap">
-                                <thead class="bg-gray-950 text-gray-500 border-b border-gray-850 sticky top-0">
-                                    <tr>
-                                        <th class="p-3 font-bold uppercase text-[10px]">Nama Paket</th>
-                                        <th class="p-3 font-bold uppercase text-[10px] text-center">Terjual</th>
-                                        <th class="p-3 font-bold uppercase text-[10px] text-right">Rupiah (Modal+Markup)</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="statsXlTableBody" class="divide-y divide-gray-900/50">
                                     <tr><td colspan="3" class="p-6 text-center text-gray-600">Belum ada data.</td></tr>
                                 </tbody>
                             </table>
@@ -1313,19 +1267,9 @@ async function renderAdminDashboard(env, currentUser, appSettings) {
                         </div>
                     </div>
 
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
-                        <div>
-                            <label class="block text-xs font-bold text-gray-400 mb-2 uppercase tracking-wide">Harga VPN (Rp/Hari)</label>
-                            <input type="number" id="setPrice" value="${appSettings.price_per_day}" required class="w-full bg-gray-950 border border-gray-700 rounded-xl p-3.5 text-white font-bold text-lg focus:ring-2 focus:ring-sky-500 outline-none">
-                        </div>
-                        <div>
-                            <label class="block text-xs font-bold text-gray-400 mb-2 uppercase tracking-wide">Harga Lisensi Script (Rp)</label>
-                            <input type="number" id="setLicPrice" value="${licPrice}" required class="w-full bg-gray-950 border border-gray-700 rounded-xl p-3.5 text-green-400 font-bold text-lg focus:ring-2 focus:ring-green-500 outline-none" title="Harga per hari untuk Lisensi Autoscript">
-                        </div>
-                        <div>
-                            <label class="block text-xs font-bold text-gray-400 mb-2 uppercase tracking-wide">Markup XL KMSP (Rp)</label>
-                            <input type="number" id="setMarkup" value="${kmspMarkup}" required class="w-full bg-gray-950 border border-gray-700 rounded-xl p-3.5 text-yellow-400 font-bold text-lg focus:ring-2 focus:ring-yellow-500 outline-none" title="Penambahan harga otomatis untuk Paket XL">
-                        </div>
+                    <div class="mb-4">
+                        <label class="block text-xs font-bold text-gray-400 mb-2 uppercase tracking-wide">Harga VPN (Rp/Hari)</label>
+                        <input type="number" id="setPrice" value="${appSettings.price_per_day}" required class="w-full bg-gray-950 border border-gray-700 rounded-xl p-3.5 text-white font-bold text-lg focus:ring-2 focus:ring-sky-500 outline-none">
                     </div>
                     
                     <div class="grid grid-cols-2 gap-4">
@@ -1371,45 +1315,6 @@ async function renderAdminDashboard(env, currentUser, appSettings) {
         </div>
     </div>
 
-    <!-- Modal List Lisensi -->
-    <div id="licenseManagerModal" class="fixed inset-0 bg-black/80 hidden z-50 flex items-center justify-center p-3 md:p-4 backdrop-blur-sm">
-        <div class="bg-gray-900 p-4 md:p-5 rounded-2xl w-full max-w-6xl max-h-[95vh] flex flex-col border border-emerald-500/30 shadow-2xl shadow-emerald-950/20">
-            <div class="flex justify-between items-center mb-3.5 border-b border-gray-800 pb-2.5">
-                <h3 class="text-lg md:text-xl font-bold text-white tracking-tight flex items-center gap-2">\u{1F4DC} Manajemen Lisensi Script</h3>
-                <button onclick="closeLicenseManagerModal()" class="text-gray-400 hover:text-white text-2xl leading-none">&times;</button>
-            </div>
-            <div class="flex flex-col md:flex-row gap-3 mb-3">
-               <input type="text" id="searchLicenseAdmin" placeholder="Cari IP, Email User, atau Nama VPS..." class="bg-gray-950 border border-gray-700 rounded-lg p-2 text-white flex-grow focus:ring-2 focus:ring-emerald-500 outline-none font-mono text-xs" onkeyup="filterAdminLicenses()">
-            </div>
-            <div class="overflow-y-auto custom-scrollbar pr-2.5 flex-grow border border-gray-800 rounded-xl bg-gray-950">
-                <table class="w-full text-left text-sm text-gray-300 whitespace-nowrap">
-                    <thead class="bg-gray-900 text-gray-400 border-b border-gray-800 sticky top-0 z-10">
-                        <tr>
-                            <th class="p-2 font-bold uppercase tracking-wider text-xs">Email User</th>
-                            <th class="p-2 font-bold uppercase tracking-wider text-xs">IP Address</th>
-                            <th class="p-2 font-bold uppercase tracking-wider text-xs">Nama VPS</th>
-                            <th class="p-2 font-bold uppercase tracking-wider text-xs text-center">Status</th>
-                            <th class="p-2 font-bold uppercase tracking-wider text-xs text-center">Aksi</th>
-                        </tr>
-                    </thead>
-                    <tbody id="licenseManagerBody" class="divide-y divide-gray-800">
-                        <tr><td colspan="5" class="p-8 text-center text-gray-500">Memuat data lisensi...</td></tr>
-                    </tbody>
-                </table>
-            </div>
-            
-            <!-- Pagination Controls for Admin Licenses -->
-            <div id="licenseAdminPagination" class="flex items-center justify-between gap-4 mt-3 bg-gray-950 p-2.5 border border-gray-800 rounded-xl relative z-10 hidden">
-                <button onclick="prevAdminLicensePage()" id="btnPrevAdminLicense" class="bg-gray-900 hover:bg-gray-850 border border-gray-750 text-white px-3 py-1.5 rounded-lg text-xs font-bold transition flex items-center gap-1">
-                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg> Sebelum
-                </button>
-                <span id="adminLicensePageInfo" class="text-xs text-gray-400 font-medium">Halaman 1 dari 1</span>
-                <button onclick="nextAdminLicensePage()" id="btnNextAdminLicense" class="bg-gray-900 hover:bg-gray-850 border border-gray-750 text-white px-3 py-1.5 rounded-lg text-xs font-bold transition flex items-center gap-1">
-                    Berikut <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
-                </button>
-            </div>
-        </div>
-    </div>
 
     <!-- Modal Broadcast -->
     <div id="broadcastModal" class="fixed inset-0 bg-black/80 hidden z-50 flex items-center justify-center p-4 backdrop-blur-sm">
@@ -1671,34 +1576,6 @@ async function renderAdminDashboard(env, currentUser, appSettings) {
         </div>
     </div>
 
-    <!-- Modal Filter Produk XL (KMSP) -->
-    <div id="pkgManagerModal" class="fixed inset-0 bg-black/80 hidden z-50 flex items-center justify-center p-3 md:p-4 backdrop-blur-sm">
-        <div class="bg-gray-900 p-4 md:p-5 rounded-2xl w-full max-w-5xl max-h-[95vh] flex flex-col border border-purple-500/30 shadow-2xl">
-            <div class="flex justify-between items-center mb-3 border-b border-gray-800 pb-2">
-                <h3 class="text-lg md:text-xl font-bold text-white tracking-tight flex items-center gap-2">\u{1F4E6} Filter Produk XL (KMSP)</h3>
-                <button onclick="closePkgManagerModal()" class="text-gray-400 hover:text-white text-2xl leading-none">&times;</button>
-            </div>
-            <p class="text-xs text-gray-400 leading-tight mb-2.5">Gunakan fitur ini untuk mengatur paket XL mana yang <b>tampil (Melek)</b> atau <b>disembunyikan (Merem)</b> pada halaman Pembelian Paket Data User.</p>
-            <div class="flex flex-col md:flex-row gap-3 mb-3">
-               <input type="text" id="searchPkgAdmin" placeholder="Cari berdasarkan nama atau ID paket..." class="bg-gray-950 border border-gray-700 rounded-lg p-2 text-white flex-grow focus:ring-2 focus:ring-purple-500 outline-none font-mono text-xs" onkeyup="filterPkgAdmin()">
-            </div>
-            <div class="overflow-y-auto custom-scrollbar pr-3 flex-grow border border-gray-800 rounded-xl bg-gray-950">
-                <table class="w-full text-left text-sm text-gray-300 whitespace-nowrap">
-                    <thead class="bg-gray-900 text-gray-400 border-b border-gray-800 sticky top-0 z-10">
-                        <tr>
-                            <th class="p-4 font-bold uppercase tracking-wider text-xs w-16 text-center">Tampil</th>
-                            <th class="p-4 font-bold uppercase tracking-wider text-xs">ID Paket</th>
-                            <th class="p-4 font-bold uppercase tracking-wider text-xs">Nama Paket</th>
-                            <th class="p-4 font-bold uppercase tracking-wider text-xs">Harga Asli</th>
-                        </tr>
-                    </thead>
-                    <tbody id="pkgManagerBody" class="divide-y divide-gray-800">
-                        <tr><td colspan="4" class="p-8 text-center text-gray-500">Memuat data produk...</td></tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </div>
 
     <!-- Modal List Tiket Bantuan -->
     <div id="ticketManagerModal" class="fixed inset-0 bg-black/80 hidden z-50 flex items-center justify-center p-3 md:p-4 backdrop-blur-sm">
@@ -2130,13 +2007,11 @@ async function renderAdminDashboard(env, currentUser, appSettings) {
         }
 
         window.loadStatsDashboard = async function(monthYear) {
-            const loaderIds = ['statTotalUsers', 'statTotalBalance', 'statTripayIncome', 'statVioletIncome', 'statManualIncome', 'statVpnCreated', 'statVpnRenewed', 'statXlTransactions', 'statLicenseIncome', 'statNetProfit'];
-            loaderIds.forEach(id => document.getElementById(id).innerText = '...');
+            const loaderIds = ['statTotalUsers', 'statTotalBalance', 'statTripayIncome', 'statVioletIncome', 'statManualIncome', 'statVpnCreated', 'statVpnRenewed', 'statNetProfit'];
+            loaderIds.forEach(id => { const el = document.getElementById(id); if (el) el.innerText = '...'; });
             
             const serverTbody = document.getElementById('statsServerTableBody');
-            const xlTbody = document.getElementById('statsXlTableBody');
             serverTbody.innerHTML = '<tr><td colspan="3" class="p-6 text-center text-indigo-400 animate-pulse">Memuat rincian server...</td></tr>';
-            xlTbody.innerHTML = '<tr><td colspan="3" class="p-6 text-center text-indigo-400 animate-pulse">Memuat rincian produk...</td></tr>';
 
             const filterSelect = document.getElementById('statsMonthFilter');
             const selectedLabel = filterSelect.options[filterSelect.selectedIndex]?.text || 'Hari Ini';
@@ -2146,10 +2021,8 @@ async function renderAdminDashboard(env, currentUser, appSettings) {
             document.getElementById('labelManualIncome').innerText = 'Top-up Manual (' + selectedLabel + ')';
             document.getElementById('labelVpnCreated').innerText = 'Pembuatan VPN (' + selectedLabel + ')';
             document.getElementById('labelVpnRenewed').innerText = 'Perpanjangan VPN (' + selectedLabel + ')';
-            document.getElementById('labelXlTransactions').innerText = 'XL KMSP (' + selectedLabel + ')';
             document.getElementById('labelNetProfit').innerText = 'Estimasi Net Profit (' + selectedLabel + ')';
             document.getElementById('labelServerTable').innerHTML = '\u{1F5A5}\uFE0F Rincian Server VPN (' + selectedLabel + ')';
-            document.getElementById('labelXlTable').innerHTML = '\u{1F6D2} Produk XL Terpopuler (' + selectedLabel + ')';
 
             try {
                 const res = await fetch('/api/admin/dashboard-stats', {
@@ -2171,8 +2044,6 @@ async function renderAdminDashboard(env, currentUser, appSettings) {
                 document.getElementById('statManualIncome').innerText = 'Rp ' + stats.manual_income.toLocaleString('id-ID');
                 document.getElementById('statVpnCreated').innerText = stats.vpn_created.toLocaleString('id-ID');
                 document.getElementById('statVpnRenewed').innerText = stats.vpn_renewed.toLocaleString('id-ID');
-                document.getElementById('statXlTransactions').innerText = stats.xl_transactions.toLocaleString('id-ID');
-                document.getElementById('statLicenseIncome').innerText = 'Rp ' + stats.license_income.toLocaleString('id-ID');
                 document.getElementById('statNetProfit').innerText = 'Rp ' + stats.net_profit.toLocaleString('id-ID');
 
                 if (stats.servers && stats.servers.length > 0) {
@@ -2187,25 +2058,12 @@ async function renderAdminDashboard(env, currentUser, appSettings) {
                     serverTbody.innerHTML = '<tr><td colspan="3" class="p-6 text-center text-gray-500 font-bold">Tidak ada aktivitas VPN.</td></tr>';
                 }
 
-                if (stats.xl_popular && stats.xl_popular.length > 0) {
-                    xlTbody.innerHTML = stats.xl_popular.map(xl => 
-                        '<tr class="hover:bg-gray-800/20 transition">' +
-                            '<td class="p-3 font-medium text-white whitespace-normal max-w-xs">' + escapeHtmlClient(xl.package_name) + '</td>' +
-                            '<td class="p-3 font-mono font-bold text-center text-indigo-400">' + xl.count.toLocaleString('id-ID') + '</td>' +
-                            '<td class="p-3 font-mono font-bold text-right text-green-400">Rp ' + xl.revenue.toLocaleString('id-ID') + '</td>' +
-                        '</tr>'
-                    ).join('');
-                } else {
-                    xlTbody.innerHTML = '<tr><td colspan="3" class="p-6 text-center text-gray-500 font-bold">Tidak ada pembelian paket XL.</td></tr>';
-                }
-
                 renderStatsDailyChart(stats.daily_chart);
 
             } catch (e) {
                 console.error("Dashboard Stats Error:", e);
-                loaderIds.forEach(id => document.getElementById(id).innerText = 'Error');
+                loaderIds.forEach(id => { const el = document.getElementById(id); if (el) el.innerText = 'Error'; });
                 serverTbody.innerHTML = '<tr><td colspan="3" class="p-6 text-center text-sky-400">Error memuat data.</td></tr>';
-                xlTbody.innerHTML = '<tr><td colspan="3" class="p-6 text-center text-sky-400">Error memuat data.</td></tr>';
             }
         }
 
@@ -2289,16 +2147,9 @@ async function renderAdminDashboard(env, currentUser, appSettings) {
                 }
             });
         }
-        function openPkgManagerModal() { document.getElementById('pkgManagerModal').classList.remove('hidden'); loadPkgManager(); }
-        function closePkgManagerModal() { document.getElementById('pkgManagerModal').classList.add('hidden'); }
-
         function openTicketManagerModal() { document.getElementById('ticketManagerModal').classList.remove('hidden'); loadAdminTickets(); }
         function closeTicketManagerModal() { document.getElementById('ticketManagerModal').classList.add('hidden'); }
         function closeTicketViewModal() { document.getElementById('ticketViewModal').classList.add('hidden'); loadAdminTickets(); }
-
-        // MANAJEMEN LISENSI
-        function openLicenseManagerModal() { document.getElementById('licenseManagerModal').classList.remove('hidden'); loadAdminLicenses(); }
-        function closeLicenseManagerModal() { document.getElementById('licenseManagerModal').classList.add('hidden'); }
 
         // Fungsi Toggle untuk Accordion Section
         function toggleSection(sectionId, iconId) {
@@ -2569,217 +2420,6 @@ async function renderAdminDashboard(env, currentUser, appSettings) {
         }
 
 
-        let allAdminLicenses = [];
-        let filteredAdminLicenses = [];
-        let currentAdminLicensePage = 1;
-        const adminLicenseLimit = 10;
-
-        async function loadAdminLicenses() {
-            const tbody = document.getElementById('licenseManagerBody');
-            tbody.innerHTML = '<tr><td colspan="5" class="p-8 text-center text-emerald-400 animate-pulse">Mengambil data lisensi...</td></tr>';
-            try {
-                const res = await fetch('/api/admin/licenses');
-                const data = await res.json();
-                if (data.success) {
-                    allAdminLicenses = data.data;
-                    filteredAdminLicenses = [...allAdminLicenses];
-                    currentAdminLicensePage = 1;
-                    renderAdminLicenses();
-                } else {
-                    tbody.innerHTML = '<tr><td colspan="5" class="p-8 text-center text-sky-400">Gagal memuat data.</td></tr>';
-                }
-            } catch(e) {
-                tbody.innerHTML = '<tr><td colspan="5" class="p-8 text-center text-sky-400">Koneksi Error.</td></tr>';
-            }
-        }
-
-        function renderAdminLicenses() {
-            const tbody = document.getElementById('licenseManagerBody');
-            const licenses = filteredAdminLicenses;
-            
-            if (licenses.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="5" class="p-8 text-center text-gray-500">Tidak ada lisensi terdaftar.</td></tr>';
-                document.getElementById('licenseAdminPagination').classList.add('hidden');
-                return;
-            }
-
-            const totalPages = Math.ceil(licenses.length / adminLicenseLimit);
-            if (currentAdminLicensePage > totalPages) currentAdminLicensePage = totalPages;
-            if (currentAdminLicensePage < 1) currentAdminLicensePage = 1;
-
-            const startIndex = (currentAdminLicensePage - 1) * adminLicenseLimit;
-            const endIndex = startIndex + adminLicenseLimit;
-            const pageLicenses = licenses.slice(startIndex, endIndex);
-
-            tbody.innerHTML = pageLicenses.map(lic => {
-                const isExpired = lic.expires_at < Date.now();
-                const expDate = new Date(lic.expires_at).toLocaleString('id-ID', { timeZone: 'Asia/Jakarta' }) + ' WIB';
-                const statusBadge = isExpired 
-                    ? '<span class="bg-sky-500/20 text-cyan-400 border border-sky-500/30 text-[10px] px-2 py-0.5 rounded uppercase font-bold">Expired</span>'
-                    : '<span class="bg-green-500/20 text-green-400 border border-green-500/30 text-[10px] px-2 py-0.5 rounded uppercase font-bold">Aktif</span>';
-                return \`
-                <tr class="hover:bg-gray-800/50 transition border-b border-gray-850 last:border-0">
-                    <td class="p-1.5 text-[11px] font-mono text-gray-400">\${lic.email}</td>
-                    <td class="p-1.5 text-xs font-bold text-cyan-400 font-mono">\${escapeHtmlClient(lic.ip_address)}</td>
-                    <td class="p-1.5 text-xs text-gray-300 truncate max-w-[200px]">
-                        \${escapeHtmlClient(lic.vps_name)}
-                        \${lic.subdomain ? \`<br><span class="text-[9px] text-yellow-400 font-mono font-bold">\${escapeHtmlClient(lic.subdomain)}</span>\` : ''}
-                    </td>
-                    <td class="p-1.5 text-center">
-                        \${statusBadge}
-                        <br><span class="text-[9px] text-gray-500 font-mono mt-0.5 block">\${expDate}</span>
-                    </td>
-                    <td class="p-1.5 text-center">
-                        <button onclick="globalDeleteLicense('\${lic.id}', '\${lic.ip_address}')" class="bg-sky-600 hover:bg-sky-500 text-white text-[9px] px-2.5 py-1 rounded-lg uppercase font-bold transition shadow">Hapus Global</button>
-                    </td>
-                </tr>
-                \`;
-            }).join('');
-
-            // Update Pagination UI
-            document.getElementById('licenseAdminPagination').classList.remove('hidden');
-            document.getElementById('adminLicensePageInfo').innerText = 'Halaman ' + currentAdminLicensePage + ' dari ' + totalPages + ' (Total ' + licenses.length + ' IP)';
-            
-            const btnPrev = document.getElementById('btnPrevAdminLicense');
-            const btnNext = document.getElementById('btnNextAdminLicense');
-            
-            if (currentAdminLicensePage <= 1) {
-                btnPrev.disabled = true;
-                btnPrev.classList.add('opacity-50', 'pointer-events-none');
-            } else {
-                btnPrev.disabled = false;
-                btnPrev.classList.remove('opacity-50', 'pointer-events-none');
-            }
-
-            if (currentAdminLicensePage >= totalPages) {
-                btnNext.disabled = true;
-                btnNext.classList.add('opacity-50', 'pointer-events-none');
-            } else {
-                btnNext.disabled = false;
-                btnNext.classList.remove('opacity-50', 'pointer-events-none');
-            }
-        }
-
-        window.prevAdminLicensePage = function() {
-            if (currentAdminLicensePage > 1) {
-                currentAdminLicensePage--;
-                renderAdminLicenses();
-            }
-        }
-
-        window.nextAdminLicensePage = function() {
-            const totalPages = Math.ceil(filteredAdminLicenses.length / adminLicenseLimit);
-            if (currentAdminLicensePage < totalPages) {
-                currentAdminLicensePage++;
-                renderAdminLicenses();
-            }
-        }
-
-        function filterAdminLicenses() {
-            const keyword = document.getElementById('searchLicenseAdmin').value.toLowerCase().trim();
-            filteredAdminLicenses = allAdminLicenses.filter(l => l.ip_address.toLowerCase().includes(keyword) || l.email.toLowerCase().includes(keyword) || l.vps_name.toLowerCase().includes(keyword));
-            currentAdminLicensePage = 1;
-            renderAdminLicenses();
-        }
-
-        async function globalDeleteLicense(id, ip) {
-            const conf = await swalDark.fire({
-                title: 'Hapus Lisensi Global?',
-                text: 'IP ' + ip + ' akan dihapus paksa dari database. Tidak dapat di-undo.',
-                icon: 'warning', showCancelButton: true, confirmButtonColor: '#ef4444', confirmButtonText: 'Ya, Hapus!'
-            });
-            if(!conf.isConfirmed) return;
-
-            swalDark.fire({title: 'Menghapus...', didOpen: () => Swal.showLoading()});
-            try {
-                const res = await fetch('/api/license/delete', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ id }) });
-                if((await res.json()).success) { 
-                    await swalDark.fire('Dihapus', 'Lisensi IP berhasil dihapus secara global.', 'success'); 
-                    loadAdminLicenses(); 
-                }
-                else { swalDark.fire('Gagal', 'Sistem error.', 'error'); }
-            } catch(e) { swalDark.fire('Error', 'Koneksi bermasalah', 'error'); }
-        }
-
-
-        // ==========================================
-        // FILTER PRODUK XL (KMSP)
-        // ==========================================
-        let allAdminPkgs = [];
-        async function loadPkgManager() {
-            const tbody = document.getElementById('pkgManagerBody');
-            tbody.innerHTML = '<tr><td colspan="4" class="p-8 text-center text-purple-400 animate-pulse">Mengambil data dari Server KMSP...</td></tr>';
-            try {
-                const res = await fetch('/api/admin/kmsp-packages');
-                const data = await res.json();
-                if (data.success) {
-                    allAdminPkgs = data.data;
-                    renderAdminPkgs(allAdminPkgs);
-                } else {
-                    tbody.innerHTML = '<tr><td colspan="4" class="p-8 text-center text-sky-400">Gagal: ' + (data.message || 'Error mengambil data KMSP') + '</td></tr>';
-                }
-            } catch(e) {
-                tbody.innerHTML = '<tr><td colspan="4" class="p-8 text-center text-sky-400">Koneksi API Error.</td></tr>';
-            }
-        }
-
-        function renderAdminPkgs(pkgs) {
-            const tbody = document.getElementById('pkgManagerBody');
-            if (pkgs.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="4" class="p-8 text-center text-gray-500">Tidak ada paket yang sesuai kriteria.</td></tr>';
-                return;
-            }
-            tbody.innerHTML = pkgs.map(p => {
-                const isMelek = p.visible;
-                const eyeIcon = isMelek 
-                    ? \`<svg class="w-5 h-5 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>\` 
-                    : \`<svg class="w-5 h-5 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21"></path></svg>\`;
-                
-                const btnClass = isMelek ? 'bg-green-500/20 hover:bg-green-500/40 border-green-500/30' : 'bg-sky-500/20 hover:bg-sky-500/40 border-sky-500/30';
-                
-                return \`
-                <tr class="hover:bg-gray-800/50 transition">
-                    <td class="p-3 text-center">
-                        <button onclick="togglePkgVisibility('\${p.id}', \${!isMelek})" class="p-2 rounded-lg border transition shadow-sm \${btnClass}" title="\${isMelek ? 'Sembunyikan dari User' : 'Tampilkan ke User'}">
-                            \${eyeIcon}
-                        </button>
-                    </td>
-                    <td class="p-3 font-mono text-xs text-gray-400">\${p.id}</td>
-                    <td class="p-3 text-sm font-medium \${isMelek ? 'text-white' : 'text-gray-500 line-through'} max-w-xs truncate whitespace-normal leading-tight">\${escapeHtmlClient(p.name)}</td>
-                    <td class="p-3 text-sm text-yellow-400 font-mono">Rp \${p.price.toLocaleString('id-ID')}</td>
-                </tr>
-                \`;
-            }).join('');
-        }
-
-        function filterPkgAdmin() {
-            const keyword = document.getElementById('searchPkgAdmin').value.toLowerCase();
-            const filtered = allAdminPkgs.filter(p => p.name.toLowerCase().includes(keyword) || p.id.toLowerCase().includes(keyword));
-            renderAdminPkgs(filtered);
-        }
-
-        async function togglePkgVisibility(pkgId, makeVisible) {
-            try {
-                const res = await fetch('/api/admin/toggle-pkg', {
-                    method: 'POST', headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ pkgId, visible: makeVisible })
-                });
-                const data = await res.json();
-                if (data.success) {
-                    const idx = allAdminPkgs.findIndex(p => p.id === pkgId);
-                    if (idx !== -1) {
-                        allAdminPkgs[idx].visible = makeVisible;
-                        filterPkgAdmin();
-                    }
-                } else {
-                    swalDark.fire('Error', 'Gagal update status paket di database.', 'error');
-                }
-            } catch(e) {
-                swalDark.fire('Error', 'Koneksi error.', 'error');
-            }
-        }
-
-
         // ==========================================
         // FITUR PAGINATION MANAJEMEN PENGGUNA
         // ==========================================
@@ -2894,8 +2534,8 @@ async function renderAdminDashboard(env, currentUser, appSettings) {
                     ai_chat_active: document.getElementById('setAiActive').value === 'true',
                     ai_provider: document.getElementById('setAiProvider').value,
                     price_per_day: parseInt(document.getElementById('setPrice').value),
-                    script_price_per_day: parseInt(document.getElementById('setLicPrice').value),
-                    kmsp_markup: parseInt(document.getElementById('setMarkup').value),
+                    script_price_per_day: document.getElementById('setLicPrice') ? parseInt(document.getElementById('setLicPrice').value) : 0,
+                    kmsp_markup: document.getElementById('setMarkup') ? parseInt(document.getElementById('setMarkup').value) : 0,
                     telegram_bot_token: document.getElementById('setTgToken').value,
                     telegram_channel_id: document.getElementById('setTgChatId').value,
                     auto_backup_frequency: parseInt(document.getElementById('setBackupFreq').value),
