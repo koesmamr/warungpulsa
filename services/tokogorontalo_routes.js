@@ -1210,7 +1210,13 @@ function renderTokoGorontaloAdminModal() {
                   if (data.ipv6) tgDetectedIpv6 = data.ipv6;
                   if (displayEl) displayEl.innerText = tgDetectedIpv4 + ' (IPv4) | ' + tgDetectedIpv6 + ' (IPv6)';
                   if (waLinkEl) {
-                      const msg = encodeURIComponent('Halo Admin Toko Gorontalo, tolong daftarkan IP server VPS saya untuk transaksi H2H akun Member ID: 178082835085:\n- IPv4: ' + tgDetectedIpv4 + '\n- IPv6: ' + tgDetectedIpv6 + '\nTerima kasih!');
+                      const tgLines = [
+                          'Halo Admin Toko Gorontalo, tolong daftarkan IP server VPS saya untuk transaksi H2H akun Member ID: 178082835085:',
+                          '- IPv4: ' + tgDetectedIpv4,
+                          '- IPv6: ' + tgDetectedIpv6,
+                          'Terima kasih!'
+                      ];
+                      const msg = encodeURIComponent(tgLines.join(String.fromCharCode(10)));
                       waLinkEl.href = 'https://wa.me/62815240260221?text=' + msg;
                   }
               }
@@ -1220,7 +1226,13 @@ function renderTokoGorontaloAdminModal() {
       }
 
       function copyTgIpRegistrationFormat() {
-          const text = 'Halo Admin Toko Gorontalo, tolong daftarkan IP server VPS saya untuk transaksi H2H akun Member ID: 178082835085:\n- IPv4: ' + tgDetectedIpv4 + '\n- IPv6: ' + tgDetectedIpv6 + '\nTerima kasih!';
+          const tgLines = [
+              'Halo Admin Toko Gorontalo, tolong daftarkan IP server VPS saya untuk transaksi H2H akun Member ID: 178082835085:',
+              '- IPv4: ' + tgDetectedIpv4,
+              '- IPv6: ' + tgDetectedIpv6,
+              'Terima kasih!'
+          ];
+          const text = tgLines.join(String.fromCharCode(10));
           if (navigator.clipboard && navigator.clipboard.writeText) {
               navigator.clipboard.writeText(text).then(() => {
                   swalDark.fire({
