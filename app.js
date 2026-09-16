@@ -3765,10 +3765,9 @@ Berikan link berikut hanya jika ditanyakan spesifik:
 - Riwayat Transaksi Saldo: /mutasi
 - Kotak Masuk: /inbox
 - Pusat Bantuan: /tiket
-- Group Telegram: https://t.me/srpcomgroup
-- Channel Telegram: https://t.me/srpcomchannel
-- Admin/CS: https://t.me/srpcomadmin
-- Email: cs1@warungpulsa.com
+- Admin/CS Telegram: https://t.me/pejuanggto (@pejuanggto)
+- Admin/CS WhatsApp: 081128868882 (https://wa.me/6281128868882)
+- Email: admin@warungpulsa.com
 
 ATURAN KEAMANAN:
 - Dilarang membocorkan API Key, Kredensial, atau struktur Database.
@@ -5585,10 +5584,10 @@ Total : Rp.${totalSaldo.toLocaleString("id-ID")}
                                         <p class="text-xs sm:text-sm text-slate-500">Butuh informasi penting terkait akun atau transaksi berjalan? Hubungi tim kami:</p>
                                     </div>
                                     <div class="flex flex-wrap gap-2.5 shrink-0">
-                                        <a href="https://wa.me/6282175037525" target="_blank" class="bg-emerald-50 hover:bg-emerald-100 text-emerald-700 border border-emerald-200 text-xs font-bold px-4 py-2.5 rounded-xl transition flex items-center gap-2 shadow-xs">
+                                        <a href="https://wa.me/6281128868882" target="_blank" class="bg-emerald-50 hover:bg-emerald-100 text-emerald-700 border border-emerald-200 text-xs font-bold px-4 py-2.5 rounded-xl transition flex items-center gap-2 shadow-xs">
                                             <span>WhatsApp CS</span>
                                         </a>
-                                        <a href="https://t.me/srpcomadmin" target="_blank" class="bg-sky-50 hover:bg-sky-100 text-sky-700 border border-sky-200 text-xs font-bold px-4 py-2.5 rounded-xl transition flex items-center gap-2 shadow-xs">
+                                        <a href="https://t.me/pejuanggto" target="_blank" class="bg-sky-50 hover:bg-sky-100 text-sky-700 border border-sky-200 text-xs font-bold px-4 py-2.5 rounded-xl transition flex items-center gap-2 shadow-xs">
                                             <span>Telegram CS</span>
                                         </a>
                                         <button onclick="window.location.reload()" class="bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold px-4 py-2.5 rounded-xl transition flex items-center gap-2 shadow-md cursor-pointer">
@@ -6182,9 +6181,9 @@ Total : Rp.${totalSaldo.toLocaleString("id-ID")}
                                 <h4 class="font-bold text-slate-900 mb-4 uppercase tracking-wider text-sm">Layanan Pelanggan (CS)</h4>
                                 <p class="text-sm text-slate-600 mb-3">Jika mengalami kendala teknis atau transaksi, silakan hubungi CS kami (Arif):</p>
                                 <ul class="space-y-3 text-sm text-slate-700 font-medium">
-                                    <li><a href="https://wa.me/6282175037525" target="_blank" class="flex items-center gap-3 hover:text-emerald-600 transition group"><div class="bg-white border border-slate-200 p-2 rounded-full group-hover:border-emerald-300 shadow-xs"><svg class="w-4 h-4 text-emerald-600" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg></div><span>WhatsApp: 0821 7503 7525</span></a>
+                                    <li><a href="https://wa.me/6281128868882" target="_blank" class="flex items-center gap-3 hover:text-emerald-600 transition group"><div class="bg-white border border-slate-200 p-2 rounded-full group-hover:border-emerald-300 shadow-xs"><svg class="w-4 h-4 text-emerald-600" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg></div><span>WhatsApp: 081128868882</span></a>
                                     </li>
-                                    <li><a href="https://t.me/srpcomadmin" target="_blank" class="flex items-center gap-3 hover:text-sky-600 transition group"><div class="bg-white border border-slate-200 p-2 rounded-full group-hover:border-sky-300 shadow-xs"><svg class="w-4 h-4 text-sky-600" fill="currentColor" viewBox="0 0 24 24"><path d="M11.944 0A12 12 0 000 12a12 12 0 0012 12 12 12 0 0012-12A12 12 0 0012 0a12 12 0 00-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 01.171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.892-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg></div><span>Telegram: @srpcomadmin</span></a></li>
+                                    <li><a href="https://t.me/pejuanggto" target="_blank" class="flex items-center gap-3 hover:text-sky-600 transition group"><div class="bg-white border border-slate-200 p-2 rounded-full group-hover:border-sky-300 shadow-xs"><svg class="w-4 h-4 text-sky-600" fill="currentColor" viewBox="0 0 24 24"><path d="M11.944 0A12 12 0 000 12a12 12 0 0012 12 12 12 0 0012-12A12 12 0 0012 0a12 12 0 00-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 01.171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.892-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg></div><span>Telegram: @pejuanggto</span></a></li>
                                     <li><a href="mailto:admin@warungpulsa.com" class="flex items-center gap-3 hover:text-rose-600 transition group"><div class="bg-white border border-slate-200 p-2 rounded-full group-hover:border-rose-300 shadow-xs"><svg class="w-4 h-4 text-rose-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg></div><span>Email: admin@warungpulsa.com</span></a></li>
                                 </ul>
                             </div>
@@ -6339,7 +6338,7 @@ Total : Rp.${totalSaldo.toLocaleString("id-ID")}
 
                 <!-- Tombol Hubungi Admin via Telegram -->
                 <div class="mt-12 flex justify-center">
-                    <a href="https://t.me/srpcomadmin" target="_blank" class="inline-flex items-center gap-2.5 bg-[#229ED9] hover:bg-[#208ebe] text-white font-bold py-3.5 px-6 rounded-2xl shadow-lg shadow-[#229ED9]/20 transition-all duration-300 transform hover:-translate-y-0.5">
+                    <a href="https://t.me/pejuanggto" target="_blank" class="inline-flex items-center gap-2.5 bg-[#229ED9] hover:bg-[#208ebe] text-white font-bold py-3.5 px-6 rounded-2xl shadow-lg shadow-[#229ED9]/20 transition-all duration-300 transform hover:-translate-y-0.5">
                         <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
                             <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-1-.65-.35-1 .22-1.59.15-.15 2.71-2.48 2.76-2.69a.2.2 0 0 0-.05-.18c-.06-.05-.14-.03-.21-.02-.09.02-1.49.95-4.22 2.79-.4.27-.76.41-1.08.4-.36-.01-1.04-.2-1.55-.37-.63-.2-1.12-.31-1.08-.66.02-.18.27-.36.74-.55 2.92-1.27 4.86-2.11 5.83-2.51 2.78-1.16 3.35-1.36 3.73-1.37.08 0 .27.02.39.12.1.08.13.19.14.27-.01.06.01.24 0 .24z"/>
                         </svg>
@@ -7142,7 +7141,7 @@ Total : Rp.${totalSaldo.toLocaleString("id-ID")}
                             }).then((res) => {
                                 if (res.isConfirmed) {
                                     const waMsg = ['Halo Admin, saya ingin konfirmasi Top Up saldo.', 'Email Akun: ' + USER_EMAIL, 'Nominal: Rp ' + finalAmount.toLocaleString('id-ID'), 'Metode: QRIS Manual', '', 'Berikut adalah bukti transfer saya:'].join(String.fromCharCode(10));
-                                    window.open('https://wa.me/6282175037525?text=' + encodeURIComponent(waMsg), '_blank');
+                                    window.open('https://wa.me/6281128868882?text=' + encodeURIComponent(waMsg), '_blank');
                                 }
                             });
                             return;
@@ -7413,11 +7412,110 @@ Total : Rp.${totalSaldo.toLocaleString("id-ID")}
       return new Response(renderLayout("Profil Saya", content), { headers: { "Content-Type": "text/html;charset=UTF-8" } });
     }
     if (path === "/syarat-ketentuan" && method === "GET") {
-      const content = `<div class="max-w-4xl mx-auto px-4 md:px-8 py-8 md:py-16 relative z-10"><h1 class="text-3xl md:text-5xl font-black text-slate-900 mb-10 border-b border-slate-200 pb-6 tracking-tight">Syarat & Ketentuan</h1><div class="space-y-10 text-slate-700 leading-relaxed bg-white p-8 md:p-12 rounded-3xl border border-slate-200 shadow-xl text-lg"><section><h2 class="text-2xl font-bold text-sky-800 mb-4 flex items-center gap-2"><div class="w-2 h-8 bg-sky-500 rounded-full"></div> Penggunaan Layanan (AUP)</h2><p class="mb-3 text-slate-600">Anda <strong class="text-slate-900">DILARANG KERAS</strong> menggunakan layanan VPN untuk: Peretasan, Penipuan finansial, atau Serangan DDoS.</p></section><section><h2 class="text-2xl font-bold text-sky-800 mb-4 flex items-center gap-2"><div class="w-2 h-8 bg-sky-500 rounded-full"></div> Saldo & Refund</h2><p class="text-slate-600">Transaksi final. Tidak ada refund setelah VPN/Paket berstatus Aktif.</p></section></div></div>`;
+      const content = `<div class="max-w-4xl mx-auto px-4 md:px-8 py-8 md:py-16 relative z-10">
+        <div class="text-center md:text-left mb-10 border-b border-slate-200 pb-6">
+            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-sky-50 text-sky-700 text-xs font-bold uppercase tracking-wider mb-3">
+                <span>Kebijakan Layanan Resmi</span>
+            </div>
+            <h1 class="text-3xl md:text-5xl font-black text-slate-900 tracking-tight">Syarat & Ketentuan</h1>
+            <p class="text-slate-500 text-sm md:text-base mt-2">Harap membaca syarat dan ketentuan berikut sebelum bertransaksi di platform Warung Pulsa.</p>
+        </div>
+
+        <div class="space-y-8 text-slate-700 leading-relaxed bg-white p-6 sm:p-10 md:p-12 rounded-3xl border border-slate-200 shadow-xl text-base">
+            
+            <section>
+                <h2 class="text-xl md:text-2xl font-bold text-slate-900 mb-3 flex items-center gap-3">
+                    <div class="w-2 h-7 bg-sky-500 rounded-full"></div>
+                    1. Ketentuan Umum
+                </h2>
+                <p class="text-slate-600 mb-3">
+                    Warung Pulsa adalah platform penyedia produk digital terpadu yang melayani pembelian Pulsa Reguler All Operator, Paket Kuota Data Internet, Token Listrik PLN Prabayar, Top Up Saldo E-Wallet, Voucher Game, dan Pembayaran Tagihan PPOB secara otomatis 24 Jam nonstop.
+                </p>
+                <p class="text-slate-600">
+                    Dengan mendaftar, mengakses, atau bertransaksi di Warung Pulsa, Anda menyatakan telah membaca, memahami, dan menyetujui seluruh Syarat & Ketentuan yang berlaku.
+                </p>
+            </section>
+
+            <section>
+                <h2 class="text-xl md:text-2xl font-bold text-slate-900 mb-3 flex items-center gap-3">
+                    <div class="w-2 h-7 bg-sky-500 rounded-full"></div>
+                    2. Transaksi & Ketepatan Data
+                </h2>
+                <ul class="list-disc list-inside space-y-2 text-slate-600">
+                    <li>Pengguna bertanggung jawab penuh atas kebenaran nomor handphone, nomor meter/ID Pelanggan PLN, nomor akun E-Wallet, atau nomor tujuan lainnya yang diinput saat melakukan pembelian.</li>
+                    <li>Seluruh pesanan diproses secara otomatis oleh sistem server gateway secara seketika (realtime). Waktu normal proses pengisian adalah 5 s.d 60 detik.</li>
+                    <li>Jika terjadi gangguan teknis (cut-off atau maintenance) pada server pusat operator/biller, transaksi dapat mengalami penundaan (pending) dan akan diproses secara otomatis begitu jalur server pusat pulih.</li>
+                </ul>
+            </section>
+
+            <section>
+                <h2 class="text-xl md:text-2xl font-bold text-slate-900 mb-3 flex items-center gap-3">
+                    <div class="w-2 h-7 bg-sky-500 rounded-full"></div>
+                    3. Saldo Akun & Pengisian Saldo (Deposit)
+                </h2>
+                <ul class="list-disc list-inside space-y-2 text-slate-600">
+                    <li>Pengisian saldo akun dapat dilakukan melalui metode <strong>QRIS Otomatis</strong> (GoPay, ShopeePay, OVO, DANA, BCA, dan seluruh bank) maupun <strong>QRIS Manual</strong>.</li>
+                    <li>Pada pembayaran QRIS Otomatis, saldo akun Anda akan bertambah secara otomatis segera setelah transaksi berhasil divalidasi oleh Payment Gateway.</li>
+                    <li>Pada transfer QRIS Manual, pengguna wajib mentransfer nominal tepat sesuai kode unik dan mengirimkan konfirmasi bukti transfer ke WhatsApp Layanan Pelanggan.</li>
+                    <li>Saldo di dalam akun Warung Pulsa tidak memiliki masa kedaluwarsa dan dapat digunakan sewaktu-waktu untuk seluruh produk digital.</li>
+                </ul>
+            </section>
+
+            <section>
+                <h2 class="text-xl md:text-2xl font-bold text-slate-900 mb-3 flex items-center gap-3">
+                    <div class="w-2 h-7 bg-sky-500 rounded-full"></div>
+                    4. Kebijakan Pembatalan & Pengembalian Dana (Refund)
+                </h2>
+                <ul class="list-disc list-inside space-y-2 text-slate-600">
+                    <li>Transaksi yang telah berstatus <strong>Sukses</strong> (dengan Serial Number / SN resmi dari operator pusat) adalah bersifat <strong>final</strong> dan tidak dapat dibatalkan, ditarik kembali, atau ditukar dengan alasan apapun.</li>
+                    <li>Apabila transaksi dinyatakan <strong>Gagal</strong> oleh sistem operator/biller, saldo akun Anda akan dikembalikan 100% secara otomatis ke saldo akun Warung Pulsa Anda.</li>
+                    <li>Saldo yang sudah didepositkan ke akun Warung Pulsa tidak dapat dicairkan kembali (non-refundable) ke rekening bank/e-wallet pribadi, melainkan khusus digunakan untuk bertransaksi produk digital di platform ini.</li>
+                </ul>
+            </section>
+
+            <section>
+                <h2 class="text-xl md:text-2xl font-bold text-slate-900 mb-3 flex items-center gap-3">
+                    <div class="w-2 h-7 bg-sky-500 rounded-full"></div>
+                    5. Kebijakan Penggunaan Wajar & Keamanan
+                </h2>
+                <p class="text-slate-600 mb-2">
+                    Pengguna <strong class="text-rose-600">DILARANG KERAS</strong> menggunakan layanan, sistem, ataupun celah teknis pada platform Warung Pulsa untuk:
+                </p>
+                <ul class="list-disc list-inside space-y-1 text-slate-600">
+                    <li>Aktivitas penipuan finansial, phishing, pencucian uang (money laundering), atau tindakan melanggar hukum di wilayah Republik Indonesia.</li>
+                    <li>Eksploitasi bug sistem, carding, transaksi ilegal, maupun percobaan peretasan (hacking/DDoS).</li>
+                </ul>
+                <p class="text-slate-600 mt-2 text-sm">
+                    Manajemen Warung Pulsa berhak membekukan atau memblokir akun secara sepihak jika ditemukan indikasi kecurangan atau pelanggaran hukum yang merugikan sistem maupun pihak lain.
+                </p>
+            </section>
+
+            <section class="bg-sky-50/70 p-6 rounded-2xl border border-sky-100">
+                <h2 class="text-lg font-bold text-slate-900 mb-2 flex items-center gap-2">
+                    <span>💬</span> Hubungi Layanan Pelanggan
+                </h2>
+                <p class="text-sm text-slate-600 mb-4">
+                    Jika mengalami kendala transaksi, saldo belum masuk, atau pertanyaan seputar layanan kami, silakan hubungi Customer Service resmi Warung Pulsa:
+                </p>
+                <div class="flex flex-wrap gap-3">
+                    <a href="https://wa.me/6281128868882" target="_blank" class="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs shadow-sm transition">
+                        <span>WhatsApp: 081128868882</span>
+                    </a>
+                    <a href="https://t.me/pejuanggto" target="_blank" class="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-sky-600 hover:bg-sky-500 text-white font-bold text-xs shadow-sm transition">
+                        <span>Telegram: @pejuanggto</span>
+                    </a>
+                    <a href="mailto:admin@warungpulsa.com" class="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-white border border-slate-300 hover:bg-slate-50 text-slate-700 font-bold text-xs shadow-xs transition">
+                        <span>Email: admin@warungpulsa.com</span>
+                    </a>
+                </div>
+            </section>
+
+        </div>
+    </div>`;
       return new Response(renderLayout("Syarat & Ketentuan", content), { headers: { "Content-Type": "text/html;charset=UTF-8" } });
     }
     if (path === "/kontak" && method === "GET") {
-      const content = `<div class="max-w-6xl mx-auto px-4 md:px-8 py-8 md:py-16 relative z-10"><h1 class="text-3xl md:text-5xl font-black text-slate-900 mb-6 text-center tracking-tight">Pusat Bantuan CS</h1><p class="text-slate-500 text-center mb-12 text-lg font-medium">Kami siap membantu menyelesaikan kendala jaringan, aplikasi, dan status top-up.</p><div class="grid grid-cols-1 md:grid-cols-3 gap-8"><a href="https://wa.me/6282175037525" target="_blank" class="bg-white p-10 rounded-[2rem] border border-slate-200 hover:border-emerald-500 hover:shadow-[0_10px_30px_rgba(16,185,129,0.15)] transition-all text-center group"><div class="w-16 h-16 mx-auto mb-4 rounded-2xl bg-emerald-50 flex items-center justify-center text-emerald-600 group-hover:scale-110 transition"><svg class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24"><path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.711 2.598 2.664-.699c.971.53 1.761.814 2.796.814 3.18 0 5.767-2.587 5.768-5.766 0-3.18-2.587-5.768-5.768-5.768zm0 10.364c-.886 0-1.753-.238-2.508-.687l-.18-.107-1.862.489.497-1.815-.117-.187c-.496-.788-.758-1.708-.757-2.678.001-2.73 2.224-4.953 4.957-4.953 2.73 0 4.954 2.224 4.954 4.953 0 2.73-2.224 4.954-4.954 4.954z"/></svg></div><h2 class="text-2xl md:text-3xl font-black text-slate-900 mb-2">WhatsApp</h2><p class="text-emerald-600 font-mono font-bold text-xl md:text-lg lg:text-xl">0821 7503 7525</p></a><a href="https://t.me/srpcomadmin" target="_blank" class="bg-white p-10 rounded-[2rem] border border-slate-200 hover:border-sky-500 hover:shadow-[0_10px_30px_rgba(14,165,233,0.15)] transition-all text-center group"><div class="w-16 h-16 mx-auto mb-4 rounded-2xl bg-sky-50 flex items-center justify-center text-sky-600 group-hover:scale-110 transition"><svg class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69a.2.2 0 00-.05-.18c-.06-.05-.14-.03-.21-.02-.09.02-1.49.95-4.22 2.79-.4.27-.76.41-1.08.4-.36-.01-1.04-.2-1.55-.37-.63-.2-1.12-.31-1.08-.66.02-.18.27-.36.75-.55 2.95-1.28 4.92-2.13 5.9-2.54 2.81-1.17 3.4-.97 3.78-.96.08 0 .28.02.4.12.1.08.13.2.14.28-.01.06-.02.19-.04.28z"/></svg></div><h2 class="text-2xl md:text-3xl font-black text-slate-900 mb-2">Telegram</h2><p class="text-sky-600 font-mono font-bold text-xl md:text-lg lg:text-xl">@srpcomadmin</p></a><a href="mailto:admin@warungpulsa.com" class="bg-white p-10 rounded-[2rem] border border-slate-200 hover:border-purple-500 hover:shadow-[0_10px_30px_rgba(168,85,247,0.15)] transition-all text-center flex flex-col justify-center group"><div class="w-16 h-16 mx-auto mb-4 rounded-2xl bg-purple-50 flex items-center justify-center text-purple-600 group-hover:scale-110 transition"><svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg></div><h2 class="text-2xl md:text-3xl font-black text-slate-900 mb-2">Email</h2><p class="text-purple-600 font-mono font-bold text-lg md:text-base lg:text-lg truncate">admin@warungpulsa.com</p></a></div></div>`;
+      const content = `<div class="max-w-6xl mx-auto px-4 md:px-8 py-8 md:py-16 relative z-10"><h1 class="text-3xl md:text-5xl font-black text-slate-900 mb-6 text-center tracking-tight">Pusat Bantuan CS</h1><p class="text-slate-500 text-center mb-12 text-lg font-medium">Kami siap membantu menyelesaikan kendala transaksi pulsa, paket data, token PLN, e-wallet, dan deposit saldo.</p><div class="grid grid-cols-1 md:grid-cols-3 gap-8"><a href="https://wa.me/6281128868882" target="_blank" class="bg-white p-10 rounded-[2rem] border border-slate-200 hover:border-emerald-500 hover:shadow-[0_10px_30px_rgba(16,185,129,0.15)] transition-all text-center group"><div class="w-16 h-16 mx-auto mb-4 rounded-2xl bg-emerald-50 flex items-center justify-center text-emerald-600 group-hover:scale-110 transition"><svg class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24"><path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.711 2.598 2.664-.699c.971.53 1.761.814 2.796.814 3.18 0 5.767-2.587 5.768-5.766 0-3.18-2.587-5.768-5.768-5.768zm0 10.364c-.886 0-1.753-.238-2.508-.687l-.18-.107-1.862.489.497-1.815-.117-.187c-.496-.788-.758-1.708-.757-2.678.001-2.73 2.224-4.953 4.957-4.953 2.73 0 4.954 2.224 4.954 4.953 0 2.73-2.224 4.954-4.954 4.954z"/></svg></div><h2 class="text-2xl md:text-3xl font-black text-slate-900 mb-2">WhatsApp</h2><p class="text-emerald-600 font-mono font-bold text-xl md:text-lg lg:text-xl">081128868882</p></a><a href="https://t.me/pejuanggto" target="_blank" class="bg-white p-10 rounded-[2rem] border border-slate-200 hover:border-sky-500 hover:shadow-[0_10px_30px_rgba(14,165,233,0.15)] transition-all text-center group"><div class="w-16 h-16 mx-auto mb-4 rounded-2xl bg-sky-50 flex items-center justify-center text-sky-600 group-hover:scale-110 transition"><svg class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69a.2.2 0 00-.05-.18c-.06-.05-.14-.03-.21-.02-.09.02-1.49.95-4.22 2.79-.4.27-.76.41-1.08.4-.36-.01-1.04-.2-1.55-.37-.63-.2-1.12-.31-1.08-.66.02-.18.27-.36.75-.55 2.95-1.28 4.92-2.13 5.9-2.54 2.81-1.17 3.4-.97 3.78-.96.08 0 .28.02.4.12.1.08.13.2.14.28-.01.06-.02.19-.04.28z"/></svg></div><h2 class="text-2xl md:text-3xl font-black text-slate-900 mb-2">Telegram</h2><p class="text-sky-600 font-mono font-bold text-xl md:text-lg lg:text-xl">@pejuanggto</p></a><a href="mailto:admin@warungpulsa.com" class="bg-white p-10 rounded-[2rem] border border-slate-200 hover:border-purple-500 hover:shadow-[0_10px_30px_rgba(168,85,247,0.15)] transition-all text-center flex flex-col justify-center group"><div class="w-16 h-16 mx-auto mb-4 rounded-2xl bg-purple-50 flex items-center justify-center text-purple-600 group-hover:scale-110 transition"><svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg></div><h2 class="text-2xl md:text-3xl font-black text-slate-900 mb-2">Email</h2><p class="text-purple-600 font-mono font-bold text-lg md:text-base lg:text-lg truncate">admin@warungpulsa.com</p></a></div></div>`;
       return new Response(renderLayout("Kontak CS", content), { headers: { "Content-Type": "text/html;charset=UTF-8" } });
     }
     if (path === "/mutasi" && method === "GET") {
