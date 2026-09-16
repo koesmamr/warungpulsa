@@ -8,6 +8,28 @@ const DEFAULT_USERID = '178082835085';
 const DEFAULT_PIN = '650502';
 const DEFAULT_PASS = '35098019';
 
+// Pastikan koneksi outbound Node.js memprioritaskan IPv4
+const dns = require('dns');
+if (typeof dns.setDefaultResultOrder === 'function') {
+  try { dns.setDefaultResultOrder('ipv4first'); } catch {}
+}
+
+let ipv4Dispatcher = null;
+try {
+  const { Agent } = require('undici');
+  ipv4Dispatcher = new Agent({ connect: { family: 4 } });
+} catch (e) {
+  // undici fallback
+}
+
+function customFetch(url, options = {}) {
+  const opts = { ...options };
+  if (ipv4Dispatcher && !opts.dispatcher) {
+    opts.dispatcher = ipv4Dispatcher;
+  }
+  return fetch(url, opts);
+}
+
 // XOR encryption key helper sesuai protokol Apiumkm/Atrilinks
 function getSecretKey() {
   return [0x4e, 0x6d, 0x3e, 0x47, 0x2a, 0x5f, 0x72, 0x54, 0x3c, 0x2d, 0x71, 0x53, 0x26, 0x3b, 0x6f, 0x48]
@@ -49,7 +71,7 @@ class TokoGorontaloService {
     }
 
     const encPin = encryptPin(this.pin);
-    const res = await fetch(`${this.baseUrl}/webreport/login`, {
+    const res = await customFetch(`${this.baseUrl}/webreport/login`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -82,7 +104,7 @@ class TokoGorontaloService {
   async getBalance() {
     try {
       const session = await this.login();
-      const res = await fetch(`${this.baseUrl}/sesion/check-saldo`, {
+      const res = await customFetch(`${this.baseUrl}/sesion/check-saldo`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -120,7 +142,7 @@ class TokoGorontaloService {
    */
   async fetchPricelist() {
     const url = `${this.baseUrl}/h2h/produk/pricelist?userid=${encodeURIComponent(this.userid)}`;
-    const res = await fetch(url, {
+    const res = await customFetch(url, {
       method: 'GET',
       headers: { 'Accept': 'application/json' }
     });
@@ -281,7 +303,7 @@ class TokoGorontaloService {
    */
   async checkProductPrice(productCode) {
     const url = `${this.baseUrl}/h2h/produk/price?userid=${encodeURIComponent(this.userid)}&kodeproduk=${encodeURIComponent(productCode)}`;
-    const res = await fetch(url, {
+    const res = await customFetch(url, {
       method: 'GET',
       headers: { 'Accept': 'application/json' }
     });
@@ -329,7 +351,7 @@ class TokoGorontaloService {
       // Ignore login error, rely on H2H credentials
     }
 
-    const res = await fetch(endpoint, {
+    const res = await customFetch(endpoint, {
       method: 'POST',
       headers,
       body: JSON.stringify(payload)
@@ -351,7 +373,7 @@ class TokoGorontaloService {
    */
   async checkStatusToday({ reqid, tujuan }) {
     const url = `${this.baseUrl}/h2h/trx/checktoday?reqid=${encodeURIComponent(reqid)}&userid=${encodeURIComponent(this.userid)}&tujuan=${encodeURIComponent(tujuan)}`;
-    const res = await fetch(url, {
+    const res = await customFetch(url, {
       method: 'GET',
       headers: { 'Accept': 'application/json' }
     });
@@ -372,7 +394,7 @@ class TokoGorontaloService {
       url += `&urlcallback=${encodeURIComponent(urlcallback)}`;
     }
 
-    const res = await fetch(url, {
+    const res = await customFetch(url, {
       method: 'GET',
       headers: { 'Accept': 'application/json' }
     });

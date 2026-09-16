@@ -554,13 +554,14 @@ async function handleTokoGorontaloRoutes(url, request, env, currentUser, appSett
 
     // I. Cek IP Public Server VPS (Untuk didaftarkan ke Whitelist Toko Gorontalo)
     if (path === '/api/admin/tokogorontalo/server-ip' && method === 'GET') {
+      let ipv4 = '116.212.74.104';
+      let ipv6 = '2001:df7:5300:23::68';
       try {
-        const ipRes = await fetch('https://api.ipify.org?format=json', { signal: AbortSignal.timeout(5000) });
+        const ipRes = await fetch('https://api.ipify.org?format=json', { signal: AbortSignal.timeout(4000) });
         const ipData = await ipRes.json();
-        return jsonResponse({ success: true, ip: ipData.ip || 'Unknown' });
-      } catch (e) {
-        return jsonResponse({ success: false, ip: 'Gagal deteksi IP otomatis' });
-      }
+        if (ipData && ipData.ip) ipv4 = ipData.ip;
+      } catch (e) {}
+      return jsonResponse({ success: true, ip: ipv4, ipv4, ipv6 });
     }
   }
 
@@ -1194,7 +1195,8 @@ function renderTokoGorontaloAdminModal() {
           document.getElementById('tokoGorontaloModal').classList.add('hidden');
       }
 
-      let tgDetectedServerIp = '';
+      let tgDetectedIpv4 = '116.212.74.104';
+      let tgDetectedIpv6 = '2001:df7:5300:23::68';
 
       async function loadTgServerIp() {
           try {
@@ -1203,15 +1205,14 @@ function renderTokoGorontaloAdminModal() {
               const displayEl = document.getElementById('tgServerIpDisplay');
               const waLinkEl = document.getElementById('tgWaLink');
 
-              if (data.success && data.ip) {
-                  tgDetectedServerIp = data.ip;
-                  if (displayEl) displayEl.innerText = data.ip;
+              if (data.success) {
+                  if (data.ipv4) tgDetectedIpv4 = data.ipv4;
+                  if (data.ipv6) tgDetectedIpv6 = data.ipv6;
+                  if (displayEl) displayEl.innerText = tgDetectedIpv4 + ' (IPv4) | ' + tgDetectedIpv6 + ' (IPv6)';
                   if (waLinkEl) {
-                      const msg = encodeURIComponent('Halo Admin Toko Gorontalo, tolong daftarkan IP server VPS saya: ' + data.ip + ' untuk transaksi H2H akun Member ID: 178082835085. Terima kasih!');
+                      const msg = encodeURIComponent('Halo Admin Toko Gorontalo, tolong daftarkan IP server VPS saya untuk transaksi H2H akun Member ID: 178082835085:\n- IPv4: ' + tgDetectedIpv4 + '\n- IPv6: ' + tgDetectedIpv6 + '\nTerima kasih!');
                       waLinkEl.href = 'https://wa.me/62815240260221?text=' + msg;
                   }
-              } else {
-                  if (displayEl) displayEl.innerText = 'Cek via terminal: curl ifconfig.me';
               }
           } catch(e) {
               console.error('Failed to load server IP:', e);
@@ -1219,8 +1220,7 @@ function renderTokoGorontaloAdminModal() {
       }
 
       function copyTgIpRegistrationFormat() {
-          const ip = tgDetectedServerIp || '[IP_SERVER_VPS]';
-          const text = 'Halo Admin Toko Gorontalo, tolong daftarkan IP server VPS saya: ' + ip + ' untuk transaksi H2H akun Member ID: 178082835085. Terima kasih!';
+          const text = 'Halo Admin Toko Gorontalo, tolong daftarkan IP server VPS saya untuk transaksi H2H akun Member ID: 178082835085:\n- IPv4: ' + tgDetectedIpv4 + '\n- IPv6: ' + tgDetectedIpv6 + '\nTerima kasih!';
           if (navigator.clipboard && navigator.clipboard.writeText) {
               navigator.clipboard.writeText(text).then(() => {
                   swalDark.fire({
