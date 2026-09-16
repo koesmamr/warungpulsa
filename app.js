@@ -610,15 +610,15 @@ async function renderAdminDashboard(env, currentUser, appSettings) {
   const isGoPayOn = appSettings.payment_gopay !== false;
   return `
     <style>
-        /* Fix SweetAlert2 Select Options visibility in Dark Theme */
+        /* Fix SweetAlert2 Select Options visibility in Light Theme */
         .swal2-select {
-            background-color: #111827 !important;
-            color: #f3f4f6 !important;
-            border: 1px solid #4b5563 !important;
+            background-color: #ffffff !important;
+            color: #0f172a !important;
+            border: 1px solid #cbd5e1 !important;
         }
         .swal2-select option {
-            background-color: #1f2937 !important;
-            color: #f3f4f6 !important;
+            background-color: #ffffff !important;
+            color: #0f172a !important;
         }
 
         /* Scoped overrides to optimize space, paddings, and borders across the Admin panel */
@@ -626,9 +626,10 @@ async function renderAdminDashboard(env, currentUser, appSettings) {
         
         #adminPanelContainer, .fixed.inset-0 {
             font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif !important;
+            color: #0f172a;
         }
 
-        /* Mesh Gradient Background Accents */
+        /* Ambient Light Background Accents */
         #adminPanelContainer {
             position: relative;
         }
@@ -639,7 +640,7 @@ async function renderAdminDashboard(env, currentUser, appSettings) {
             left: 5%;
             width: 450px;
             height: 450px;
-            background: radial-gradient(circle, rgba(99, 102, 241, 0.08) 0%, transparent 70%);
+            background: radial-gradient(circle, rgba(14, 165, 233, 0.06) 0%, transparent 70%);
             filter: blur(80px);
             z-index: 0;
             pointer-events: none;
@@ -651,13 +652,13 @@ async function renderAdminDashboard(env, currentUser, appSettings) {
             right: 5%;
             width: 500px;
             height: 500px;
-            background: radial-gradient(circle, rgba(249, 115, 22, 0.06) 0%, transparent 70%);
+            background: radial-gradient(circle, rgba(2, 132, 199, 0.05) 0%, transparent 70%);
             filter: blur(90px);
             z-index: 0;
             pointer-events: none;
         }
         
-        /* 1. Thinner & Modern Border Styles */
+        /* 1. Thinner & Clean Light Border Styles */
         #adminPanelContainer .border, 
         #adminPanelContainer .border-gray-700, 
         #adminPanelContainer .border-gray-800, 
@@ -668,55 +669,54 @@ async function renderAdminDashboard(env, currentUser, appSettings) {
         .fixed.inset-0 .border-gray-800,
         .fixed.inset-0 .border-slate-700,
         .fixed.inset-0 .border-slate-800 {
-            border-color: rgba(255, 255, 255, 0.08) !important;
+            border-color: #e2e8f0 !important;
             border-width: 1px !important;
         }
         
-        /* Card Glassmorphism & Hover Effects */
+        /* Card Surface & Hover Effects */
         #adminPanelContainer .bg-gray-800 {
-            background: rgba(30, 41, 59, 0.45) !important;
-            backdrop-filter: blur(20px) !important;
-            -webkit-backdrop-filter: blur(20px) !important;
-            border: 1px solid rgba(255, 255, 255, 0.06) !important;
-            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1) !important;
-            box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5) !important;
+            background: #ffffff !important;
+            border: 1px solid #e2e8f0 !important;
+            color: #0f172a !important;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
+            box-shadow: 0 4px 15px -3px rgba(0, 0, 0, 0.05), 0 2px 6px -2px rgba(0, 0, 0, 0.03) !important;
         }
         #adminPanelContainer .bg-gray-800:hover {
             transform: translateY(-2px);
-            border-color: rgba(99, 102, 241, 0.25) !important;
-            box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.7), 0 0 30px 0 rgba(99, 102, 241, 0.05) !important;
-            background: rgba(30, 41, 59, 0.55) !important;
+            border-color: #38bdf8 !important;
+            box-shadow: 0 12px 25px -5px rgba(14, 165, 233, 0.12), 0 4px 10px -2px rgba(0, 0, 0, 0.04) !important;
+            background: #ffffff !important;
         }
 
-        /* Modal Glassmorphism */
+        /* Modal Light Styling */
         .fixed.inset-0 .bg-gray-900,
         .fixed.inset-0 .bg-gray-950 {
-            background: rgba(15, 23, 42, 0.85) !important;
-            backdrop-filter: blur(24px) !important;
-            -webkit-backdrop-filter: blur(24px) !important;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.8) !important;
-            border: 1px solid rgba(255, 255, 255, 0.08) !important;
+            background: #ffffff !important;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15) !important;
+            border: 1px solid #e2e8f0 !important;
+            color: #0f172a !important;
         }
         
-        /* Subtle Neon Accents for Modals */
-        #liveExplorerModal > div {
-            border: 1px solid rgba(6, 182, 212, 0.3) !important;
+        #adminPanelContainer h1, #adminPanelContainer h2, #adminPanelContainer h3, #adminPanelContainer h4,
+        .fixed.inset-0 h1, .fixed.inset-0 h2, .fixed.inset-0 h3, .fixed.inset-0 h4,
+        #adminPanelContainer .text-white, .fixed.inset-0 .text-white {
+            color: #0f172a !important;
         }
-        #monitorModal > div {
-            border: 1px solid rgba(99, 102, 241, 0.3) !important;
+        #adminPanelContainer .text-gray-400, #adminPanelContainer .text-gray-500,
+        .fixed.inset-0 .text-gray-400, .fixed.inset-0 .text-gray-500 {
+            color: #475569 !important;
         }
-        #globalTransactionsModal > div {
-            border: 1px solid rgba(249, 115, 22, 0.3) !important;
+        #adminPanelContainer .text-gray-300, .fixed.inset-0 .text-gray-300 {
+            color: #334155 !important;
         }
-        #mutasiUserModal > div {
-            border: 1px solid rgba(34, 197, 94, 0.3) !important;
-        }
-        #pkgManagerModal > div {
-            border: 1px solid rgba(168, 85, 247, 0.3) !important;
-        }
-        #ticketListModal > div, #chatTicketModal > div, #ticketManagerModal > div {
-            border: 1px solid rgba(20, 184, 166, 0.3) !important;
-        }
+        
+        /* Modal Accents */
+        #liveExplorerModal > div { border: 1px solid rgba(14, 165, 233, 0.4) !important; }
+        #monitorModal > div { border: 1px solid rgba(99, 102, 241, 0.4) !important; }
+        #globalTransactionsModal > div { border: 1px solid rgba(249, 115, 22, 0.4) !important; }
+        #mutasiUserModal > div { border: 1px solid rgba(34, 197, 94, 0.4) !important; }
+        #pkgManagerModal > div { border: 1px solid rgba(168, 85, 247, 0.4) !important; }
+        #ticketListModal > div, #chatTicketModal > div, #ticketManagerModal > div { border: 1px solid rgba(20, 184, 166, 0.4) !important; }
         
         /* 2. Premium Table Cell Paddings & Font Sizes */
         #adminPanelContainer table th, 
@@ -734,9 +734,9 @@ async function renderAdminDashboard(env, currentUser, appSettings) {
             font-weight: 700 !important;
             text-transform: uppercase !important;
             letter-spacing: 0.05em !important;
-            color: #9ca3af !important;
-            background-color: rgba(17, 24, 39, 0.95) !important;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
+            color: #334155 !important;
+            background-color: #f1f5f9 !important;
+            border-bottom: 1px solid #e2e8f0 !important;
         }
         
         /* Specific metadata and smaller text sizing in tables */
@@ -747,10 +747,10 @@ async function renderAdminDashboard(env, currentUser, appSettings) {
             font-size: 12px !important;
         }
         
-        /* Enhanced visibility for metadata in dark mode */
-        #adminPanelContainer table td.text-gray-500,
-        .fixed.inset-0 table td.text-gray-500 {
-            color: #9ca3af !important;
+        #adminPanelContainer table td,
+        .fixed.inset-0 table td {
+            color: #1e293b !important;
+            border-bottom: 1px solid #f1f5f9 !important;
         }
 
         #adminPanelContainer table tbody tr,
@@ -759,7 +759,7 @@ async function renderAdminDashboard(env, currentUser, appSettings) {
         }
         #adminPanelContainer table tbody tr:hover,
         .fixed.inset-0 table tbody tr:hover {
-            background-color: rgba(255, 255, 255, 0.02) !important;
+            background-color: #f8fafc !important;
         }
         
         /* Email/Description table wraps */
@@ -838,14 +838,14 @@ async function renderAdminDashboard(env, currentUser, appSettings) {
             height: 6px !important;
         }
         .custom-scrollbar::-webkit-scrollbar-track {
-            background: rgba(31, 41, 55, 0.3) !important;
+            background: #f1f5f9 !important;
         }
         .custom-scrollbar::-webkit-scrollbar-thumb {
-            background: rgba(75, 85, 99, 0.6) !important;
+            background: #cbd5e1 !important;
             border-radius: 3px !important;
         }
         .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-            background: rgba(107, 114, 128, 0.8) !important;
+            background: #94a3b8 !important;
         }
         
         /* 6. Form Fields Premium Styling & Focus Rings */
@@ -860,9 +860,9 @@ async function renderAdminDashboard(env, currentUser, appSettings) {
             padding: 10px 14px !important;
             font-size: 13.5px !important;
             border-radius: 8px !important;
-            border-color: rgba(75, 85, 99, 0.5) !important;
-            background-color: rgba(15, 23, 42, 0.6) !important;
-            color: #ffffff !important;
+            border: 1px solid #cbd5e1 !important;
+            background-color: #ffffff !important;
+            color: #0f172a !important;
             transition: all 0.2s ease !important;
         }
         #adminPanelContainer select:focus, 
@@ -873,17 +873,16 @@ async function renderAdminDashboard(env, currentUser, appSettings) {
         .fixed.inset-0 input[type="text"]:focus, 
         .fixed.inset-0 input[type="number"]:focus, 
         .fixed.inset-0 textarea:focus {
-            border-color: rgba(99, 102, 241, 0.8) !important;
-            background-color: rgba(15, 23, 42, 0.8) !important;
-            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2) !important;
+            border-color: #0284c7 !important;
+            box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.15) !important;
             outline: none !important;
         }
     </style>
     <div id="adminPanelContainer" class="max-w-7xl mx-auto px-4 md:px-8 py-8 md:py-12">
-        <h1 class="text-3xl font-black text-white mb-8 tracking-tight">Panel Kontrol Admin</h1>
+        <h1 class="text-3xl font-black text-slate-900 mb-8 tracking-tight">Panel Kontrol Admin</h1>
         
         <!-- Action Control Bar -->
-        <div class="flex flex-wrap gap-4 mb-8 border-b border-gray-800 pb-8">
+        <div class="flex flex-wrap gap-4 mb-8 border-b border-slate-200 pb-8">
             <button onclick="openSettingsModal()" class="bg-sky-600 hover:bg-sky-500 text-white font-bold py-3.5 px-6 rounded-xl shadow-lg transition flex items-center gap-3">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
                 Konfigurasi Sistem
@@ -5141,13 +5140,13 @@ __name222(handleAdminRoutes, "handleAdminRoutes");
 function renderMutasiPage(currentUser) {
   return `
     <div class="max-w-5xl mx-auto px-4 md:px-8 py-8 md:py-12 relative z-10">
-        <h1 class="text-3xl font-black text-white mb-2 tracking-tight">Riwayat Mutasi Saldo</h1>
-        <p class="text-gray-400 text-sm mb-8">Pantau arus kas masuk dan keluar dari dompet Anda.</p>
+        <h1 class="text-3xl font-black text-slate-900 mb-2 tracking-tight">Riwayat Mutasi Saldo</h1>
+        <p class="text-slate-600 text-sm mb-8">Pantau arus kas masuk dan keluar dari dompet Anda.</p>
         
-        <div class="bg-gray-800 rounded-3xl border border-gray-700 shadow-xl overflow-hidden">
+        <div class="bg-white rounded-3xl border border-slate-200 shadow-md overflow-hidden">
             <div class="overflow-x-auto custom-scrollbar">
-                <table class="w-full text-left text-sm text-gray-300 whitespace-nowrap">
-                    <thead class="bg-gray-950 text-gray-400 border-b border-gray-700">
+                <table class="w-full text-left text-sm text-slate-700 whitespace-nowrap">
+                    <thead class="bg-slate-100 text-slate-700 border-b border-slate-200">
                         <tr>
                             <th class="p-4 font-bold uppercase tracking-wider text-xs">Tanggal</th>
                             <th class="p-4 font-bold uppercase tracking-wider text-xs">Deskripsi Transaksi</th>
@@ -5155,18 +5154,18 @@ function renderMutasiPage(currentUser) {
                             <th class="p-4 font-bold uppercase tracking-wider text-xs text-right">Sisa Saldo</th>
                         </tr>
                     </thead>
-                    <tbody id="mutasiTableBody" class="divide-y divide-gray-800">
-                        <tr><td colspan="4" class="p-8 text-center text-cyan-400 animate-pulse">Memuat data transaksi...</td></tr>
+                    <tbody id="mutasiTableBody" class="divide-y divide-slate-100 text-slate-800">
+                        <tr><td colspan="4" class="p-8 text-center text-sky-600 animate-pulse">Memuat data transaksi...</td></tr>
                     </tbody>
                 </table>
             </div>
             <!-- Pagination Controls -->
-            <div class="p-4 bg-gray-900/50 border-t border-gray-700 flex items-center justify-between gap-4 flex-wrap">
-                <button id="prevBtn" onclick="changePage(currentPage - 1)" class="bg-gray-800 hover:bg-gray-750 border border-gray-700 text-white disabled:opacity-50 disabled:cursor-not-allowed px-4 py-2 rounded-xl text-xs font-bold transition flex items-center gap-1.5">
+            <div class="p-4 bg-slate-50 border-t border-slate-200 flex items-center justify-between gap-4 flex-wrap">
+                <button id="prevBtn" onclick="changePage(currentPage - 1)" class="bg-white hover:bg-slate-100 border border-slate-300 text-slate-700 disabled:opacity-50 disabled:cursor-not-allowed px-4 py-2 rounded-xl text-xs font-bold transition flex items-center gap-1.5 shadow-xs">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg> Sebelum
                 </button>
-                <span id="pageIndicator" class="text-xs text-gray-400 font-medium">Halaman 1 dari 1</span>
-                <button id="nextBtn" onclick="changePage(currentPage + 1)" class="bg-gray-800 hover:bg-gray-750 border border-gray-700 text-white disabled:opacity-50 disabled:cursor-not-allowed px-4 py-2 rounded-xl text-xs font-bold transition flex items-center gap-1.5">
+                <span id="pageIndicator" class="text-xs text-slate-600 font-medium">Halaman 1 dari 1</span>
+                <button id="nextBtn" onclick="changePage(currentPage + 1)" class="bg-white hover:bg-slate-100 border border-slate-300 text-slate-700 disabled:opacity-50 disabled:cursor-not-allowed px-4 py-2 rounded-xl text-xs font-bold transition flex items-center gap-1.5 shadow-xs">
                     Berikut <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
                 </button>
             </div>
@@ -5190,14 +5189,14 @@ function renderMutasiPage(currentUser) {
                 
                 if (data.success) {
                     if (data.data.length === 0) {
-                        tbody.innerHTML = '<tr><td colspan="4" class="p-8 text-center text-gray-500">Belum ada riwayat transaksi.</td></tr>';
+                        tbody.innerHTML = '<tr><td colspan="4" class="p-8 text-center text-slate-500">Belum ada riwayat transaksi.</td></tr>';
                         pageIndicator.innerText = 'Halaman 1 dari 1';
                         prevBtn.disabled = true;
                         nextBtn.disabled = true;
                     } else {
                         tbody.innerHTML = data.data.map(trx => {
                             const isMasuk = trx.type === 'IN';
-                            const nominalClass = isMasuk ? 'text-green-400' : 'text-cyan-400';
+                            const nominalClass = isMasuk ? 'text-emerald-600' : 'text-sky-600';
                             const sign = isMasuk ? '+' : '-';
                             
                             let sisaSaldoText = '-';
@@ -5209,11 +5208,11 @@ function renderMutasiPage(currentUser) {
                             const dateHtml = dateParts[1] ? \`\${dateParts[0]}<br>\${dateParts[1]}\` : (trx.created_at || '-');
                             
                             return \`
-                            <tr class="hover:bg-gray-800/50 transition">
-                                <td class="p-4 font-mono text-xs text-gray-500">\${dateHtml}</td>
-                                <td class="p-4 text-white font-medium leading-snug text-[11px]" style="font-family: 'Arial Narrow', Arial, sans-serif;">\${escapeHtmlClient(trx.description)}</td>
+                            <tr class="hover:bg-slate-50/80 transition">
+                                <td class="p-4 font-mono text-xs text-slate-500">\${dateHtml}</td>
+                                <td class="p-4 text-slate-900 font-medium leading-snug text-[12px]">\${escapeHtmlClient(trx.description)}</td>
                                 <td class="p-4 font-mono font-bold text-right \${nominalClass}">\${sign} Rp \${trx.amount.toLocaleString('id-ID')}</td>
-                                <td class="p-4 font-mono font-bold text-right text-gray-300">\${sisaSaldoText}</td>
+                                <td class="p-4 font-mono font-bold text-right text-slate-700">\${sisaSaldoText}</td>
                             </tr>\`;
                         }).join('');
                         
@@ -5224,21 +5223,17 @@ function renderMutasiPage(currentUser) {
                         nextBtn.disabled = pg.page >= pg.totalPages;
                     }
                 } else {
-                    tbody.innerHTML = '<tr><td colspan="4" class="p-8 text-center text-sky-400">Gagal mengambil data.</td></tr>';
+                    tbody.innerHTML = '<tr><td colspan="4" class="p-8 text-center text-rose-600">Gagal mengambil data.</td></tr>';
                 }
             } catch(e) {
-                tbody.innerHTML = '<tr><td colspan="4" class="p-8 text-center text-sky-400">Kesalahan koneksi internet.</td></tr>';
+                tbody.innerHTML = '<tr><td colspan="4" class="p-8 text-center text-rose-600">Kesalahan koneksi internet.</td></tr>';
             }
         }
-        
+
+        document.addEventListener('DOMContentLoaded', () => loadMutasi(1));
         function changePage(page) {
-            if (page >= 1 && page <= totalPages) {
-                loadMutasi(page);
-            }
+            if (page >= 1 && page <= totalPages) loadMutasi(page);
         }
-        
-        // Panggil saat halaman dimuat
-        loadMutasi(1);
     <\/script>
     `;
 }
@@ -6023,40 +6018,40 @@ function renderAIChatUI(currentUser, appSettings = {}) {
   }
   const userName = currentUser && currentUser.name ? currentUser.name.split(" ")[0] : "Sobat";
   const initialGreetingHTML = `
-        <div class="bg-gray-800 text-gray-300 p-3 rounded-2xl rounded-tl-none text-xs border border-gray-700 max-w-[85%] shadow-sm flex flex-col gap-2">
+        <div class="bg-white text-slate-800 p-3 rounded-2xl rounded-tl-none text-xs border border-slate-200 max-w-[85%] shadow-sm flex flex-col gap-2">
             <span>Assalamu'alaikum ${userName}! Saya Asisten Pintar <b>Warung Pulsa</b>. Ada yang bisa saya bantu terkait layanan toko atau sekadar ngobrol santai?</span>
             <div class="flex flex-wrap gap-2 mt-1">
-                <button onclick="window.sendQuickReply('buat vpn')" class="bg-sky-600 hover:bg-sky-500 text-white text-[10px] py-1 px-3 rounded-full transition shadow-sm border border-sky-600/50">\u{1F680} buat vpn</button>
-                <button onclick="window.sendQuickReply('cara topup')" class="bg-sky-600 hover:bg-sky-500 text-white text-[10px] py-1 px-3 rounded-full transition shadow-sm border border-sky-600/50">\u{1F4B3} cara topup</button>
-                <button onclick="window.sendQuickReply('cek pulsa xl')" class="bg-sky-600 hover:bg-sky-500 text-white text-[10px] py-1 px-3 rounded-full transition shadow-sm border border-sky-600/50">\u{1F4CA} cek pulsa</button>
+                <button onclick="window.sendQuickReply('buat vpn')" class="bg-sky-50 hover:bg-sky-100 text-sky-700 text-[10px] py-1 px-3 rounded-full transition shadow-xs border border-sky-300">🚀 buat vpn</button>
+                <button onclick="window.sendQuickReply('cara topup')" class="bg-sky-50 hover:bg-sky-100 text-sky-700 text-[10px] py-1 px-3 rounded-full transition shadow-xs border border-sky-300">💳 cara topup</button>
+                <button onclick="window.sendQuickReply('cek pulsa xl')" class="bg-sky-50 hover:bg-sky-100 text-sky-700 text-[10px] py-1 px-3 rounded-full transition shadow-xs border border-sky-300">📊 cek pulsa</button>
             </div>
         </div>
     `;
   return `
     <div id="aiChatWrapper" class="fixed bottom-6 right-6 z-[9999] font-sans">
-        <div id="aiChatWindow" class="hidden flex flex-col bg-gray-900 border border-gray-700 w-[320px] sm:w-[380px] h-[450px] rounded-3xl shadow-2xl overflow-hidden mb-4 transform transition-all duration-300 scale-95 opacity-0 origin-bottom-right">
-            <div class="bg-sky-600 p-4 flex justify-between items-center shadow-lg">
+        <div id="aiChatWindow" class="hidden flex flex-col bg-white border border-slate-200 w-[320px] sm:w-[380px] h-[450px] rounded-3xl shadow-2xl overflow-hidden mb-4 transform transition-all duration-300 scale-95 opacity-0 origin-bottom-right">
+            <div class="bg-gradient-to-r from-sky-600 to-blue-600 p-4 flex justify-between items-center shadow-md">
                 <div class="flex items-center gap-3">
-                    <div class="bg-white/20 p-2 rounded-xl">\u{1F916}</div>
-                    <div><h4 class="text-white font-bold text-sm leading-none">Asisten Digital</h4><span class="text-red-100 text-[10px] uppercase font-bold tracking-widest">Online</span></div>
+                    <div class="bg-white/20 p-2 rounded-xl text-white">🤖</div>
+                    <div><h4 class="text-white font-bold text-sm leading-none">Asisten Digital</h4><span class="text-sky-100 text-[10px] uppercase font-bold tracking-widest">Online</span></div>
                 </div>
                 <div class="flex items-center gap-3">
-                    <button onclick="window.clearAiChat()" class="text-white/60 hover:text-red-200 transition" title="Bersihkan Obrolan"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg></button>
-                    <button onclick="window.toggleAiChat()" class="text-white/60 hover:text-white text-2xl leading-none">&times;</button>
+                    <button onclick="window.clearAiChat()" class="text-white/75 hover:text-white transition" title="Bersihkan Obrolan"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg></button>
+                    <button onclick="window.toggleAiChat()" class="text-white/75 hover:text-white text-2xl leading-none">&times;</button>
                 </div>
             </div>
-            <div id="aiChatMessages" class="flex-1 p-4 overflow-y-auto custom-scrollbar flex flex-col gap-3 bg-[#0b1120]">
+            <div id="aiChatMessages" class="flex-1 p-4 overflow-y-auto custom-scrollbar flex flex-col gap-3 bg-slate-50">
                 ${initialGreetingHTML}
             </div>
-            <div class="p-3 bg-gray-950 border-t border-gray-800">
-                <div class="flex gap-2 bg-gray-900 border border-gray-700 rounded-2xl p-1 px-3 focus-within:border-sky-600 transition">
-                    <input type="text" id="aiInput" placeholder="Tanya sesuatu..." class="bg-transparent border-0 outline-none text-sm text-white flex-1 py-2" onkeypress="if(event.key === 'Enter') window.sendAiChat()">
-                    <button onclick="window.sendAiChat()" id="btnSendAi" class="text-sky-400 hover:text-cyan-400 p-1"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path></svg></button>
+            <div class="p-3 bg-white border-t border-slate-200">
+                <div class="flex gap-2 bg-slate-100 border border-slate-200 rounded-2xl p-1 px-3 focus-within:border-sky-500 transition">
+                    <input type="text" id="aiInput" placeholder="Tanya sesuatu..." class="bg-transparent border-0 outline-none text-sm text-slate-900 placeholder-slate-400 flex-1 py-2" onkeypress="if(event.key === 'Enter') window.sendAiChat()">
+                    <button onclick="window.sendAiChat()" id="btnSendAi" class="text-sky-600 hover:text-sky-700 p-1"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path></svg></button>
                 </div>
             </div>
         </div>
         <button onclick="window.toggleAiChat()" class="bg-sky-600 hover:bg-sky-500 text-white p-4 rounded-full shadow-2xl transition-transform active:scale-90 group relative flex items-center justify-center">
-            <span class="absolute -top-2 -left-2 bg-sky-500 text-[10px] font-bold px-1.5 py-0.5 rounded-full animate-bounce">AI</span>
+            <span class="absolute -top-2 -left-2 bg-sky-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full animate-bounce shadow-md">AI</span>
             <svg id="aiIconOpen" class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"></path></svg>
             <svg id="aiIconClose" class="w-7 h-7 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M6 18L18 6M6 6l12 12"></path></svg>
         </button>
@@ -6110,7 +6105,7 @@ function renderAIChatUI(currentUser, appSettings = {}) {
             container.innerHTML += '<div class="bg-sky-600 text-white p-3 rounded-2xl rounded-tr-none text-xs ml-auto max-w-[85%] shadow-sm">' + escapeHTML(msg) + '</div>';
             
             const loadingId = 'ai-loading-' + Date.now();
-            container.innerHTML += '<div id="' + loadingId + '" class="bg-gray-800 text-gray-400 p-3 rounded-2xl rounded-tl-none text-xs italic border border-gray-700 w-fit shadow-sm">Mengetik...</div>';
+            container.innerHTML += '<div id="' + loadingId + '" class="bg-white text-slate-500 p-3 rounded-2xl rounded-tl-none text-xs italic border border-slate-200 w-fit shadow-xs">Mengetik...</div>';
             container.scrollTop = container.scrollHeight;
             
             try {
@@ -6126,24 +6121,24 @@ function renderAIChatUI(currentUser, appSettings = {}) {
                 
                 if (data.success) {
                     let formatted = data.reply
-                        .replace(/(https?:\\/\\/[^\\s<]+)/g, '<a href="$1" target="_blank" class="text-cyan-400 hover:text-cyan-300 underline transition">$1</a>')
-                        .replace(/\\*\\*(.*?)\\*\\*/g, '<strong class="text-white font-bold">$1</strong>')
-                        .replace(/^-\\s+(.*)$/gm, '<div class="flex items-start gap-2 mt-1 mb-1"><span class="text-cyan-400 mt-[1px]">\u2726</span><span class="flex-1">$1</span></div>')
+                        .replace(/(https?:\\/\\/[^\\s<]+)/g, '<a href="$1" target="_blank" class="text-sky-600 hover:text-sky-700 underline font-semibold transition">$1</a>')
+                        .replace(/\\*\\*(.*?)\\*\\*/g, '<strong class="text-slate-900 font-bold">$1</strong>')
+                        .replace(/^-\\s+(.*)$/gm, '<div class="flex items-start gap-2 mt-1 mb-1"><span class="text-sky-600 mt-[1px]">\u2726</span><span class="flex-1 text-slate-800">$1</span></div>')
                         .replace(/\\n/g, '<br>');
                     
                     formatted = formatted.replace(/<\\/div><br>/g, '</div>').replace(/<br><div/g, '<div');
 
-                    container.innerHTML += '<div class="bg-gray-800 text-gray-200 p-3 rounded-2xl rounded-tl-none text-xs leading-relaxed border border-gray-700 max-w-[95%] shadow-sm">' + formatted + '</div>';
+                    container.innerHTML += '<div class="bg-white text-slate-800 p-3 rounded-2xl rounded-tl-none text-xs leading-relaxed border border-slate-200 max-w-[95%] shadow-xs">' + formatted + '</div>';
                     
                     window.aiHistory.push({ role: 'user', content: msg }, { role: 'assistant', content: data.reply });
                     if (window.aiHistory.length > 20) window.aiHistory = window.aiHistory.slice(-20);
                 } else { 
-                    container.innerHTML += '<div class="bg-sky-900/20 text-cyan-400 p-3 rounded-2xl text-[10px] text-center border border-sky-500/20">' + data.message + '</div>'; 
+                    container.innerHTML += '<div class="bg-rose-50 text-rose-600 p-3 rounded-2xl text-[10px] text-center border border-rose-200">' + data.message + '</div>'; 
                 }
             } catch(e) { 
                 const loader = document.getElementById(loadingId);
                 if (loader) loader.remove();
-                container.innerHTML += '<div class="bg-sky-900/20 text-cyan-400 p-3 rounded-2xl text-[10px] text-center border border-sky-500/20">Koneksi terputus. Coba lagi.</div>'; 
+                container.innerHTML += '<div class="bg-rose-50 text-rose-600 p-3 rounded-2xl text-[10px] text-center border border-rose-200">Koneksi terputus. Coba lagi.</div>'; 
             }
             container.scrollTop = container.scrollHeight; 
             input.disabled = false; 
@@ -6272,19 +6267,19 @@ async function renderLicensePage(env, currentUser, appSettings, url) {
     licenseListHtml = licenses.map((lic) => {
       const isExpired = lic.expires_at < Date.now();
       const expDate = new Date(lic.expires_at).toLocaleString("id-ID", { timeZone: "Asia/Jakarta" }) + " WIB";
-      const statusBadge = isExpired ? '<span class="bg-sky-500/20 text-cyan-400 border border-sky-500/30 text-[10px] px-2 py-1 rounded uppercase font-bold">Expired</span>' : '<span class="bg-green-500/20 text-green-400 border border-green-500/30 text-[10px] px-2 py-1 rounded uppercase font-bold">Aktif</span>';
+      const statusBadge = isExpired ? '<span class="bg-rose-50 text-rose-700 border border-rose-200 text-[10px] px-2 py-1 rounded uppercase font-bold">Expired</span>' : '<span class="bg-emerald-50 text-emerald-700 border border-emerald-200 text-[10px] px-2 py-1 rounded uppercase font-bold">Aktif</span>';
       return `
-            <tr class="hover:bg-gray-800/50 transition border-b border-gray-800 last:border-0">
-                <td class="p-4 font-mono text-sm text-cyan-400 font-bold">${escapeHTML(lic.ip_address)}</td>
-                <td class="p-4 text-sm text-gray-300 font-medium">
+            <tr class="hover:bg-slate-50/80 transition border-b border-slate-100 last:border-0">
+                <td class="p-4 font-mono text-sm text-sky-600 font-bold">${escapeHTML(lic.ip_address)}</td>
+                <td class="p-4 text-sm text-slate-800 font-medium">
                     ${escapeHTML(lic.vps_name)}
-                    ${lic.subdomain ? `<br><span class="text-[10px] text-yellow-400 font-mono font-bold">${escapeHTML(lic.subdomain)}</span>` : ""}
+                    ${lic.subdomain ? `<br><span class="text-[10px] text-amber-700 font-mono font-bold">${escapeHTML(lic.subdomain)}</span>` : ""}
                 </td>
-                <td class="p-4 text-xs font-mono ${isExpired ? "text-cyan-400" : "text-yellow-400"}">${expDate}</td>
+                <td class="p-4 text-xs font-mono ${isExpired ? "text-rose-600" : "text-slate-700"}">${expDate}</td>
                 <td class="p-4 text-center">${statusBadge}</td>
                 <td class="p-4 flex gap-2 justify-center">
-                    <button onclick="extendLicense('${lic.id}', '${lic.ip_address}')" class="bg-sky-600 hover:bg-sky-500 text-white text-[11px] px-3 py-1.5 rounded-lg uppercase font-bold transition shadow">Perpanjang</button>
-                    <button onclick="deleteLicense('${lic.id}', '${lic.ip_address}')" class="bg-sky-600 hover:bg-sky-500 text-white text-[11px] px-3 py-1.5 rounded-lg uppercase font-bold transition shadow">Hapus IP</button>
+                    <button onclick="extendLicense('${lic.id}', '${lic.ip_address}')" class="bg-sky-600 hover:bg-sky-500 text-white text-[11px] px-3 py-1.5 rounded-lg uppercase font-bold transition shadow-xs">Perpanjang</button>
+                    <button onclick="deleteLicense('${lic.id}', '${lic.ip_address}')" class="bg-white hover:bg-rose-50 text-slate-700 hover:text-rose-600 border border-slate-300 text-[11px] px-3 py-1.5 rounded-lg uppercase font-bold transition shadow-xs">Hapus IP</button>
                 </td>
             </tr>
             `;
@@ -6292,56 +6287,56 @@ async function renderLicensePage(env, currentUser, appSettings, url) {
   }
   return `
     <div class="max-w-6xl mx-auto px-4 md:px-8 py-8 md:py-12 relative z-10">
-        <div class="flex flex-col md:flex-row md:items-end justify-between mb-8 border-b border-gray-800 pb-5 gap-4">
+        <div class="flex flex-col md:flex-row md:items-end justify-between mb-8 border-b border-slate-200 pb-5 gap-4">
             <div>
-                <h1 class="text-3xl font-black text-white tracking-tight flex items-center gap-3">\u{1F4DC} Lisensi Autoscript</h1>
-                <p class="text-gray-400 text-sm mt-2">Daftarkan IP VPS Anda agar dapat menggunakan Autoscript Installer Premium kami.</p>
+                <h1 class="text-3xl font-black text-slate-900 tracking-tight flex items-center gap-3">📜 Lisensi Autoscript</h1>
+                <p class="text-slate-600 text-sm mt-2">Daftarkan IP VPS Anda agar dapat menggunakan Autoscript Installer Premium kami.</p>
             </div>
-            <div class="bg-gray-800 px-4 py-2.5 rounded-xl border border-gray-700 flex items-center gap-3 shadow-inner">
-                <span class="text-xs text-gray-400 font-bold uppercase">Harga Script</span>
-                <span class="bg-sky-500/20 text-cyan-400 px-2.5 py-0.5 rounded font-mono font-bold border border-sky-600/30">Rp ${pricePerDay.toLocaleString("id-ID")} / Hari</span>
+            <div class="bg-slate-50 px-4 py-2.5 rounded-xl border border-slate-200 flex items-center gap-3 shadow-xs">
+                <span class="text-xs text-slate-600 font-bold uppercase">Harga Script</span>
+                <span class="bg-sky-50 text-sky-700 px-2.5 py-0.5 rounded font-mono font-bold border border-sky-200">Rp ${pricePerDay.toLocaleString("id-ID")} / Hari</span>
             </div>
         </div>
 
         <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
             <!-- Form Registrasi IP -->
-            <div class="lg:col-span-1 bg-gray-900 p-6 md:p-8 rounded-3xl border border-sky-600/30 shadow-2xl h-fit">
-                <h2 class="text-xl font-bold text-white mb-6 border-b border-gray-800 pb-3">\u2795 Daftarkan IP Baru</h2>
+            <div class="lg:col-span-1 bg-white p-6 md:p-8 rounded-3xl border border-slate-200 shadow-md h-fit">
+                <h2 class="text-xl font-bold text-slate-900 mb-6 border-b border-slate-200 pb-3">➕ Daftarkan IP Baru</h2>
                 <form id="formBuyLicense" class="space-y-5">
                     <div>
-                        <label class="block text-xs font-bold text-gray-400 mb-2 uppercase">Nama VPS / Domain</label>
-                        <input type="text" id="licName" required placeholder="Contoh: xiaoyan123" class="w-full bg-gray-950 border border-gray-700 rounded-xl p-3 text-white focus:ring-2 focus:ring-sky-500 outline-none text-sm">
+                        <label class="block text-xs font-bold text-slate-700 mb-2 uppercase">Nama VPS / Domain</label>
+                        <input type="text" id="licName" required placeholder="Contoh: xiaoyan123" class="w-full bg-white border border-slate-300 rounded-xl p-3 text-slate-900 placeholder-slate-400 focus:ring-2 focus:ring-sky-500 outline-none text-sm">
                     </div>
                     <div>
-                        <label class="block text-xs font-bold text-gray-400 mb-2 uppercase">Alamat IPv4 VPS</label>
-                        <input type="text" id="licIp" required placeholder="Contoh: 103.123.45.67" pattern="^([0-9]{1,3}\\.){3}[0-9]{1,3}$" class="w-full bg-gray-950 border border-gray-700 rounded-xl p-3 text-cyan-400 font-mono focus:ring-2 focus:ring-sky-500 outline-none text-sm">
+                        <label class="block text-xs font-bold text-slate-700 mb-2 uppercase">Alamat IPv4 VPS</label>
+                        <input type="text" id="licIp" required placeholder="Contoh: 103.123.45.67" pattern="^([0-9]{1,3}\\.){3}[0-9]{1,3}$" class="w-full bg-white border border-slate-300 rounded-xl p-3 text-sky-600 font-mono placeholder-slate-400 focus:ring-2 focus:ring-sky-500 outline-none text-sm font-bold">
                     </div>
                     <div>
-                        <label class="block text-xs font-bold text-gray-400 mb-2 uppercase">Masa Aktif (Durasi)</label>
-                        <select id="licDuration" onchange="updateLicPrice()" class="w-full bg-gray-950 border border-gray-700 rounded-xl p-3 text-white focus:ring-2 focus:ring-sky-500 outline-none text-sm font-bold">
+                        <label class="block text-xs font-bold text-slate-700 mb-2 uppercase">Masa Aktif (Durasi)</label>
+                        <select id="licDuration" onchange="updateLicPrice()" class="w-full bg-white border border-slate-300 rounded-xl p-3 text-slate-900 focus:ring-2 focus:ring-sky-500 outline-none text-sm font-bold">
                             <option value="30">30 Hari (1 Bulan)</option>
                             <option value="90">90 Hari (3 Bulan)</option>
                             <option value="180">180 Hari (6 Bulan)</option>
                             <option value="365">365 Hari (1 Tahun)</option>
                         </select>
                     </div>
-                    <div class="flex justify-between items-center bg-black/30 p-4 rounded-xl border border-gray-800 mt-2">
-                        <span class="text-sm text-gray-400 font-medium">Total:</span>
-                        <span class="text-2xl font-black text-green-400 tracking-tight" id="licPriceDisplay">Rp ${(pricePerDay * 30).toLocaleString("id-ID")}</span>
+                    <div class="flex justify-between items-center bg-sky-50 p-4 rounded-xl border border-sky-200 mt-2">
+                        <span class="text-sm text-slate-600 font-medium">Total:</span>
+                        <span class="text-2xl font-black text-sky-600 tracking-tight" id="licPriceDisplay">Rp ${(pricePerDay * 30).toLocaleString("id-ID")}</span>
                     </div>
                     <button type="submit" id="btnBuyLic" class="w-full bg-sky-600 hover:bg-sky-500 text-white font-bold py-3.5 rounded-xl shadow-lg transition text-base mt-2">Bayar & Daftarkan</button>
                 </form>
             </div>
 
             <!-- Tabel Daftar IP -->
-            <div class="lg:col-span-3 bg-gray-900 rounded-3xl border border-gray-700 shadow-2xl overflow-hidden flex flex-col">
-                <div class="p-6 border-b border-gray-800 flex justify-between items-center bg-gray-800/50 font-bold">
-                    <h2 class="text-xl font-bold text-white">Daftar IP Saya</h2>
-                    <span class="text-xs text-gray-400">Gunakan perintah <code class="bg-black px-1.5 py-0.5 rounded text-pink-400">wget</code> untuk install di VPS.</span>
+            <div class="lg:col-span-3 bg-white rounded-3xl border border-slate-200 shadow-md overflow-hidden flex flex-col">
+                <div class="p-6 border-b border-slate-200 flex justify-between items-center bg-slate-50 font-bold">
+                    <h2 class="text-xl font-bold text-slate-900">Daftar IP Saya</h2>
+                    <span class="text-xs text-slate-500">Gunakan perintah <code class="bg-slate-200 px-1.5 py-0.5 rounded text-sky-700 font-mono">wget</code> untuk install di VPS.</span>
                 </div>
                 <div class="overflow-x-auto flex-grow custom-scrollbar">
-                    <table class="w-full text-left text-sm text-gray-300 whitespace-nowrap">
-                        <thead class="bg-gray-950 text-gray-400 border-b border-gray-700">
+                    <table class="w-full text-left text-sm text-slate-700 whitespace-nowrap">
+                        <thead class="bg-slate-100 text-slate-700 border-b border-slate-200">
                             <tr>
                                 <th class="p-4 font-bold uppercase tracking-wider text-xs">IP Address</th>
                                 <th class="p-4 font-bold uppercase tracking-wider text-xs">Nama VPS</th>
@@ -6350,7 +6345,7 @@ async function renderLicensePage(env, currentUser, appSettings, url) {
                                 <th class="p-4 font-bold uppercase tracking-wider text-xs text-center">Aksi</th>
                             </tr>
                         </thead>
-                        <tbody class="divide-y divide-gray-800">
+                        <tbody class="divide-y divide-slate-100 text-slate-800">
                             ${licenseListHtml}
                         </tbody>
                     </table>
@@ -6358,22 +6353,22 @@ async function renderLicensePage(env, currentUser, appSettings, url) {
                 
                 <!-- Pagination Controls -->
                 ${totalPages > 1 ? `
-                <div class="p-4 bg-gray-950 border-t border-gray-800 flex items-center justify-between gap-4 flex-wrap">
-                    <a href="${licPage > 1 ? `/lisensi?page=${licPage - 1}` : "#"}" class="bg-gray-900 hover:bg-gray-850 border border-gray-750 text-white px-3.5 py-1.5 rounded-lg text-xs font-bold transition flex items-center gap-1 ${licPage <= 1 ? "opacity-50 pointer-events-none" : ""}">
+                <div class="p-4 bg-slate-50 border-t border-slate-200 flex items-center justify-between gap-4 flex-wrap">
+                    <a href="${licPage > 1 ? `/lisensi?page=${licPage - 1}` : "#"}" class="bg-white hover:bg-slate-100 border border-slate-300 text-slate-700 px-3.5 py-1.5 rounded-lg text-xs font-bold transition flex items-center gap-1 shadow-xs ${licPage <= 1 ? "opacity-50 pointer-events-none" : ""}">
                         <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg> Sebelum
                     </a>
-                    <span class="text-xs text-gray-400 font-medium">Halaman ${licPage} dari ${totalPages} (Total ${totalLicenses} IP)</span>
-                    <a href="${licPage < totalPages ? `/lisensi?page=${licPage + 1}` : "#"}" class="bg-gray-900 hover:bg-gray-850 border border-gray-750 text-white px-3.5 py-1.5 rounded-lg text-xs font-bold transition flex items-center gap-1 ${licPage >= totalPages ? "opacity-50 pointer-events-none" : ""}">
+                    <span class="text-xs text-slate-600 font-medium">Halaman ${licPage} dari ${totalPages} (Total ${totalLicenses} IP)</span>
+                    <a href="${licPage < totalPages ? `/lisensi?page=${licPage + 1}` : "#"}" class="bg-white hover:bg-slate-100 border border-slate-300 text-slate-700 px-3.5 py-1.5 rounded-lg text-xs font-bold transition flex items-center gap-1 shadow-xs ${licPage >= totalPages ? "opacity-50 pointer-events-none" : ""}">
                         Berikut <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
                     </a>
                 </div>
                 ` : ""}
                 
                 <!-- Box Instruksi Install -->
-                <div class="p-6 bg-gray-950 border-t border-gray-800">
-                    <h3 class="text-sm font-bold text-yellow-400 mb-2 flex items-center gap-2">\u{1F680} Cara Install di VPS:</h3>
-                    <div class="bg-black p-3 rounded-lg border border-gray-800 flex items-center justify-between group">
-                        <code class="text-green-400 text-xs font-mono select-all">sudo wget -qO installx https://srpcom.cloud/installx && sudo chmod +x installx && sudo ./installx</code>
+                <div class="p-6 bg-slate-50 border-t border-slate-200">
+                    <h3 class="text-sm font-bold text-slate-900 mb-2 flex items-center gap-2">🚀 Cara Install di VPS:</h3>
+                    <div class="bg-slate-900 p-3.5 rounded-xl border border-slate-700 flex items-center justify-between group shadow-inner">
+                        <code class="text-emerald-400 text-xs font-mono select-all">sudo wget -qO installx https://srpcom.cloud/installx && sudo chmod +x installx && sudo ./installx</code>
                     </div>
                 </div>
             </div>
@@ -7738,30 +7733,30 @@ function renderCekKuotaPage() {
     <style>
         body { font-family: 'Poppins', sans-serif; }
         .glass-card {
-            background: rgba(17, 24, 39, 0.7);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 1px solid rgba(239, 68, 68, 0.2);
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.08), 0 10px 10px -5px rgba(0, 0, 0, 0.03);
         }
         @keyframes pulse-red {
-            0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7); }
-            70% { box-shadow: 0 0 0 10px rgba(239, 68, 68, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+            0% { box-shadow: 0 0 0 0 rgba(2, 132, 199, 0.7); }
+            70% { box-shadow: 0 0 0 10px rgba(2, 132, 199, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(2, 132, 199, 0); }
         }
         .pulsating-border {
-            border: 2px solid #ef4444;
+            border: 2px solid #0284c7;
             animation: pulse-red 2s infinite;
         }
         #cover-spin {
             position: fixed; width: 100%; height: 100%; left: 0; right: 0; top: 0; bottom: 0;
-            background-color: rgba(0, 0, 0, 0.7);
+            background-color: rgba(15, 23, 42, 0.5);
+            backdrop-filter: blur(4px);
             z-index: 9999; display: none;
         }
         @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
         #cover-spin::after {
             content: ''; display: block; position: absolute; left: 50%; top: 50%;
             margin-left: -20px; margin-top: -20px; width: 40px; height: 40px;
-            border-style: solid; border-color: #ef4444; border-top-color: transparent;
+            border-style: solid; border-color: #0284c7; border-top-color: transparent;
             border-width: 4px; border-radius: 50%; animation: spin .8s linear infinite;
         }
         input[type=number]::-webkit-inner-spin-button,
@@ -7769,26 +7764,26 @@ function renderCekKuotaPage() {
             -webkit-appearance: none; margin: 0;
         }
         input[type=number] { -moz-appearance: textfield; }
-        .glass-input::placeholder { color: rgba(255, 255, 255, 0.4); }
+        .glass-input::placeholder { color: #94a3b8; }
     </style>
 </head>
-<body class="bg-[#0B0F19] text-white flex min-h-screen items-center justify-center p-4 relative overflow-y-auto">
+<body class="bg-slate-50 text-slate-800 flex min-h-screen items-center justify-center p-4 relative overflow-y-auto font-sans">
 
     <!-- Abstract glowing background blobs -->
-    <div class="absolute top-[-10%] left-[-10%] w-96 h-96 bg-sky-900/20 rounded-full blur-3xl pointer-events-none"></div>
-    <div class="absolute bottom-[-10%] right-[-10%] w-96 h-96 bg-rose-900/15 rounded-full blur-3xl pointer-events-none"></div>
+    <div class="absolute top-[-10%] left-[-10%] w-96 h-96 bg-sky-100 rounded-full blur-3xl pointer-events-none"></div>
+    <div class="absolute bottom-[-10%] right-[-10%] w-96 h-96 bg-blue-100 rounded-full blur-3xl pointer-events-none"></div>
 
     <!-- Loading Spinner Overlay -->
     <div id="cover-spin"></div>
 
-    <div class="w-full max-w-md rounded-3xl shadow-2xl p-8 space-y-6 glass-card relative z-10">
+    <div class="w-full max-w-md rounded-3xl p-8 space-y-6 glass-card relative z-10">
         
         <!-- Header Section -->
         <div class="text-center">
-            <img src="${LOGO_URL}" alt="Logo SRPCOM" class="mx-auto h-16 w-16 rounded-full border border-gray-700 shadow-md" onerror="this.onerror=null; this.src='${LOGO_URL}';">
-            <h1 class="mt-4 text-3xl font-extrabold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-red-500 to-rose-400">WARUNG PULSA OTP XL</h1>
-            <p class="text-xs text-gray-400 mt-2">
-                Silakan bergabung ke <a href="https://t.me/srpcomgroup" target="_blank" class="text-cyan-400 hover:text-cyan-300 underline font-medium transition duration-200">t.me/srpcomgroup</a>
+            <img src="${LOGO_URL}" alt="Logo Warung Pulsa" class="mx-auto h-16 w-16 rounded-full border border-slate-200 shadow-md" onerror="this.onerror=null; this.src='${LOGO_URL}';">
+            <h1 class="mt-4 text-3xl font-extrabold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-sky-600 to-blue-700">WARUNG PULSA OTP XL</h1>
+            <p class="text-xs text-slate-500 mt-2">
+                Silakan bergabung ke <a href="https://t.me/srpcomgroup" target="_blank" class="text-sky-600 hover:text-sky-700 underline font-medium transition duration-200">t.me/srpcomgroup</a>
             </p>
         </div>
 
@@ -7797,22 +7792,22 @@ function renderCekKuotaPage() {
             
             <!-- MSISDN (Phone Number) Input -->
             <div>
-                <label for="msisdn" id="msisdn-label" class="block text-xs font-semibold tracking-wide text-cyan-400 uppercase mb-2 animate-pulse">Masukkan nomor XL disini</label>
-                <input type="number" id="msisdn" name="msisdn" class="glass-input pulsating-border mt-1 p-4 bg-gray-950/50 border border-sky-500/30 text-white rounded-xl w-full focus:outline-none focus:border-sky-500 transition duration-300 font-mono text-lg" placeholder="Contoh: 0878..." required>
+                <label for="msisdn" id="msisdn-label" class="block text-xs font-semibold tracking-wide text-sky-600 uppercase mb-2 animate-pulse">Masukkan nomor XL disini</label>
+                <input type="number" id="msisdn" name="msisdn" class="glass-input pulsating-border mt-1 p-4 bg-white border border-sky-400 text-slate-900 rounded-xl w-full focus:outline-none focus:border-sky-500 transition duration-300 font-mono text-lg shadow-xs" placeholder="Contoh: 0878..." required>
             </div>
 
             <!-- Action Buttons -->
             <div id="action-buttons-section" style="display: none;">
                 <div class="grid grid-cols-2 gap-4 pt-2">
-                     <button type="button" class="bg-gradient-to-r from-blue-600 to-cyan-500 hover:from-red-500 hover:to-rose-500 text-white font-bold p-3.5 rounded-xl transition duration-300 shadow-lg shadow-sky-600/20 active:scale-95" id="reqOTP">MINTA OTP</button>
-                     <button type="button" class="bg-gray-800 hover:bg-gray-700 text-cyan-400 border border-sky-500/20 font-bold p-3.5 rounded-xl transition duration-300 active:scale-95" id="checkQuotaPublicBtn">CEK KUOTA</button>
+                     <button type="button" class="bg-gradient-to-r from-sky-600 to-blue-600 hover:from-sky-500 hover:to-blue-500 text-white font-bold p-3.5 rounded-xl transition duration-300 shadow-lg shadow-sky-600/20 active:scale-95" id="reqOTP">MINTA OTP</button>
+                     <button type="button" class="bg-slate-100 hover:bg-slate-200 text-slate-800 border border-slate-300 font-bold p-3.5 rounded-xl transition duration-300 active:scale-95" id="checkQuotaPublicBtn">CEK KUOTA</button>
                 </div>
             </div>
 
             <!-- OTP Input -->
             <div id="otp-input-section" style="display: none;">
-                <label for="otp" class="block text-xs font-semibold text-gray-400 uppercase tracking-wide mb-2">Kode OTP</label>
-                <input type="text" id="otp" name="otp" class="glass-input mt-1 p-4 bg-gray-950/50 border border-gray-800 text-white rounded-xl w-full focus:outline-none focus:ring-2 focus:ring-sky-500 transition duration-300 text-center font-mono text-xl tracking-widest" placeholder="6 Digit Kode" required>
+                <label for="otp" class="block text-xs font-semibold text-slate-600 uppercase tracking-wide mb-2">Kode OTP</label>
+                <input type="text" id="otp" name="otp" class="glass-input mt-1 p-4 bg-white border border-slate-300 text-slate-900 rounded-xl w-full focus:outline-none focus:ring-2 focus:ring-sky-500 transition duration-300 text-center font-mono text-xl tracking-widest shadow-xs" placeholder="6 Digit Kode" required>
             </div>
 
             <!-- Verify OTP Button -->
@@ -7827,14 +7822,14 @@ function renderCekKuotaPage() {
         <!-- Log and Result Section -->
         <div id="log-section" class="space-y-4 pt-2" style="display: none;">
             <div>
-                <p class="text-xs font-semibold text-gray-400 uppercase tracking-wider">Log Respons:</p>
-                <textarea class="mt-2 w-full p-4 bg-black/40 border border-red-950/40 text-cyan-300 rounded-xl text-sm font-mono focus:outline-none focus:border-sky-500 transition duration-300" id="logResponse" rows="4" readonly></textarea>
+                <p class="text-xs font-semibold text-slate-600 uppercase tracking-wider">Log Respons:</p>
+                <textarea class="mt-2 w-full p-4 bg-slate-900 border border-slate-700 text-emerald-400 rounded-xl text-sm font-mono focus:outline-none focus:border-sky-500 transition duration-300 shadow-inner" id="logResponse" rows="4" readonly></textarea>
             </div>
             
             <!-- Final Action Buttons (New) -->
             <div id="final-action-buttons" class="grid grid-cols-2 gap-4 pt-2" style="display: none;">
                 <a href="https://t.me/srpcomchannel/419" target="_blank" class="text-center bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-500 hover:to-emerald-500 text-white font-bold p-3.5 rounded-xl transition duration-300 shadow-lg active:scale-95">QRIS ADMIN</a>
-                <a href="https://t.me/srpcomadmin" target="_blank" class="text-center bg-gray-800 hover:bg-gray-700 text-cyan-400 border border-sky-500/20 font-bold p-3.5 rounded-xl transition duration-300 active:scale-95">HUB ADMIN</a>
+                <a href="https://t.me/srpcomadmin" target="_blank" class="text-center bg-slate-100 hover:bg-slate-200 text-slate-800 border border-slate-300 font-bold p-3.5 rounded-xl transition duration-300 active:scale-95">HUB ADMIN</a>
             </div>
         </div>
     </div>
@@ -8455,20 +8450,22 @@ Total : Rp.${totalSaldo.toLocaleString("id-ID")}
                     <script src="https://accounts.google.com/gsi/client" async defer><\/script>
                     <style>@keyframes blob { 0% { transform: translate(0px, 0px) scale(1); } 33% { transform: translate(30px, -50px) scale(1.1); } 66% { transform: translate(-20px, 20px) scale(0.9); } 100% { transform: translate(0px, 0px) scale(1); } } .animate-blob { animation: blob 7s infinite; } .animation-delay-2000 { animation-delay: 2s; }</style>
                 </head>
-                <body class="bg-[#0b1120] flex items-center justify-center min-h-screen px-4 overflow-hidden relative text-gray-200 font-sans">
-                    <div class="absolute top-0 left-1/4 w-96 h-96 bg-sky-600/20 rounded-full mix-blend-screen filter blur-[100px] animate-blob z-0"></div>
-                    <div class="absolute top-1/4 right-1/4 w-96 h-96 bg-sky-600/20 rounded-full mix-blend-screen filter blur-[100px] animate-blob animation-delay-2000 z-0"></div>
+                <body class="bg-slate-50 flex items-center justify-center min-h-screen px-4 overflow-hidden relative text-slate-800 font-sans">
+                    <div class="absolute top-0 left-1/4 w-96 h-96 bg-sky-200/40 rounded-full filter blur-[100px] animate-blob z-0"></div>
+                    <div class="absolute top-1/4 right-1/4 w-96 h-96 bg-blue-200/30 rounded-full filter blur-[100px] animate-blob animation-delay-2000 z-0"></div>
+                    
+                    <div class="relative max-w-lg w-full bg-white border border-slate-200 p-8 md:p-10 rounded-3xl shadow-2xl text-center z-10">
                         <div class="relative mx-auto mb-6 w-24 h-24 flex items-center justify-center">
-                            <div class="absolute inset-0 bg-gradient-to-tr from-cyan-500 via-sky-500 to-blue-600 rounded-2xl blur-xl opacity-60 animate-pulse"></div>
-                            <div class="relative w-20 h-20 rounded-2xl p-1 bg-gray-950 border-2 border-sky-400/60 shadow-xl overflow-hidden">
+                            <div class="absolute inset-0 bg-gradient-to-tr from-cyan-400 via-sky-500 to-blue-600 rounded-2xl blur-xl opacity-30 animate-pulse"></div>
+                            <div class="relative w-20 h-20 rounded-2xl p-1 bg-gradient-to-tr from-sky-50 to-blue-50 border-2 border-sky-400 shadow-md overflow-hidden">
                                 <img src="${LOGO_URL}" alt="Logo Warung Pulsa" class="w-full h-full object-cover rounded-xl">
                             </div>
                         </div>
-                        <h1 class="text-3xl md:text-4xl font-black text-white mb-4 tracking-tight">Sistem Sedang Diperbarui</h1>
-                        <p class="text-gray-400 text-lg leading-relaxed mb-10">Untuk memberikan kualitas layanan dan fitur yang lebih maksimal, <b class="text-white">Warung Pulsa</b> saat ini sedang dalam proses pemeliharaan infrastruktur (Maintenance). Kami akan segera kembali beroperasi.</p>
-                        <div class="border-t border-gray-800 pt-8 mt-4 flex flex-col items-center justify-center">
-                            <span class="text-xs font-bold text-gray-500 uppercase tracking-widest mb-4">Akses Administrator Panel</span>
-                            ${currentUser ? `<div class="bg-sky-500/10 border border-sky-500/20 px-6 py-5 rounded-2xl text-center w-full max-w-sm"><p class="text-cyan-400 font-bold mb-1 text-lg">Akses Ditolak!</p><p class="text-gray-400 text-sm mb-5">Anda masuk sebagai:<br><strong class="text-gray-200 mt-1 block">${currentUser.email}</strong><br>Email tersebut bukan Administrator.</p><button onclick="logout()" class="bg-sky-600 hover:bg-sky-500 text-white text-sm font-bold py-3 px-6 rounded-xl transition w-full shadow-lg">Keluar Akun</button></div>` : `<div id="g_id_onload" data-client_id="${GOOGLE_CLIENT_ID}" data-callback="handleCredentialResponse" data-auto_prompt="false"></div><div class="g_id_signin shadow-xl rounded" data-type="standard" data-size="large" data-theme="filled_black" data-text="sign_in_with" data-shape="rectangular" data-logo_alignment="center"></div>`}
+                        <h1 class="text-3xl md:text-4xl font-black text-slate-900 mb-4 tracking-tight">Sistem Sedang Diperbarui</h1>
+                        <p class="text-slate-600 text-base leading-relaxed mb-8">Untuk memberikan kualitas layanan dan fitur yang lebih maksimal, <b class="text-slate-900">Warung Pulsa</b> saat ini sedang dalam proses pemeliharaan infrastruktur (Maintenance). Kami akan segera kembali beroperasi.</p>
+                        <div class="border-t border-slate-200 pt-6 mt-4 flex flex-col items-center justify-center">
+                            <span class="text-xs font-bold text-slate-500 uppercase tracking-widest mb-4">Akses Administrator Panel</span>
+                            ${currentUser ? `<div class="bg-rose-50 border border-rose-200 px-6 py-5 rounded-2xl text-center w-full max-w-sm"><p class="text-rose-600 font-bold mb-1 text-lg">Akses Ditolak!</p><p class="text-slate-600 text-sm mb-5">Anda masuk sebagai:<br><strong class="text-slate-900 mt-1 block font-bold">${currentUser.email}</strong><br>Email tersebut bukan Administrator.</p><button onclick="logout()" class="bg-sky-600 hover:bg-sky-500 text-white text-sm font-bold py-3 px-6 rounded-xl transition w-full shadow-md">Keluar Akun</button></div>` : `<div id="g_id_onload" data-client_id="${GOOGLE_CLIENT_ID}" data-callback="handleCredentialResponse" data-auto_prompt="false"></div><div class="g_id_signin shadow-md rounded" data-type="standard" data-size="large" data-theme="outline" data-text="sign_in_with" data-shape="rectangular" data-logo_alignment="center"></div>`}
                         </div>
                     </div>
                     <script>
@@ -8704,7 +8701,7 @@ Total : Rp.${totalSaldo.toLocaleString("id-ID")}
                 <meta name="title" content="${title} - Warung Pulsa">
                 <meta name="description" content="Warung Pulsa melayani pembuatan Proxy & VPN Premium (SSH, VMess, VLESS, Trojan) dan Top Up Paket Data XL Otomatis 24 Jam dengan layanan terbaik.">
                 <meta name="keywords" content="VPN Premium, Proxy, SSH, Trojan, VLESS, VMess, Tuban Store, Top Up XL, Tembak XL">
-                <meta name="theme-color" content="#111827">
+                <meta name="theme-color" content="#f8fafc">
                 <meta property="og:type" content="website">
                 <meta property="og:url" content="/">
                 <meta property="og:title" content="${title} | Warung Pulsa">
@@ -8718,7 +8715,7 @@ Total : Rp.${totalSaldo.toLocaleString("id-ID")}
                 <meta property="twitter:image" content="${LOGO_URL}">`;
       if (currentUser) {
         const unreadCount = currentUser.inbox_unread_count || 0;
-        const badgeHtml = unreadCount > 0 ? `<span class="bg-sky-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full ml-auto animate-pulse shadow-md shadow-sky-500/40">${unreadCount}</span>` : "";
+        const badgeHtml = unreadCount > 0 ? `<span class="bg-sky-600 text-white text-[10px] font-bold px-2 py-0.5 rounded-full ml-auto animate-pulse shadow-md shadow-sky-600/40">${unreadCount}</span>` : "";
         return `<!DOCTYPE html>
                 <html lang="id">
                 <head>
@@ -8733,33 +8730,33 @@ Total : Rp.${totalSaldo.toLocaleString("id-ID")}
                     <style>
                         html { scroll-behavior: smooth; } 
                         .custom-scrollbar::-webkit-scrollbar { width: 6px; height: 6px;} 
-                        .custom-scrollbar::-webkit-scrollbar-track { background: #1f2937; border-radius: 4px;} 
-                        .custom-scrollbar::-webkit-scrollbar-thumb { background: #4b5563; border-radius: 4px; } 
-                        .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #6b7280; }
+                        .custom-scrollbar::-webkit-scrollbar-track { background: #f1f5f9; border-radius: 4px;} 
+                        .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; } 
+                        .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
                         
-                        /* Fix SweetAlert2 Select Options visibility in Dark Theme */
+                        /* Fix SweetAlert2 Select Options visibility in Light Theme */
                         .swal2-select {
-                            background-color: #111827 !important;
-                            color: #f3f4f6 !important;
-                            border: 1px solid #4b5563 !important;
+                            background-color: #ffffff !important;
+                            color: #0f172a !important;
+                            border: 1px solid #cbd5e1 !important;
                         }
                         .swal2-select option {
-                            background-color: #1f2937 !important;
-                            color: #f3f4f6 !important;
+                            background-color: #ffffff !important;
+                            color: #0f172a !important;
                         }
                         
                         /* Pulse Hamburger Animation */
                         @keyframes pulseHamburger {
-                            0%, 100% { color: #ffffff; }
-                            50% { color: #374151; }
+                            0%, 100% { color: #0f172a; }
+                            50% { color: #0284c7; }
                         }
                         .pulse-hamburger {
                             animation: pulseHamburger 2s infinite ease-in-out;
                         }
                     </style>
                     <script>
-                        // Globalisasi Konfigurasi SwalDark
-                        const swalDark = Swal.mixin({ background: '#1f2937', color: '#f3f4f6', confirmButtonColor: '#0284c7', cancelButtonColor: '#475569', customClass: { popup: 'border border-gray-700 rounded-2xl shadow-2xl' } });
+                        // Globalisasi Konfigurasi SwalDark (Tema Cerah Bersih & Kontras)
+                        const swalDark = Swal.mixin({ background: '#ffffff', color: '#0f172a', confirmButtonColor: '#0284c7', cancelButtonColor: '#64748b', customClass: { popup: 'border border-slate-200 rounded-2xl shadow-2xl' } });
                         
                         // GLOBALISASI ESCAPE HTML AGAR BISA DIPAKAI DI SEMUA MENU (TIKET, ADMIN, DLL)
                         function escapeHtmlClient(str) {
@@ -8768,83 +8765,83 @@ Total : Rp.${totalSaldo.toLocaleString("id-ID")}
                         }
                     <\/script>
                 </head>
-                <body class="bg-gray-900 text-white font-sans flex h-screen overflow-hidden relative">
+                <body class="bg-slate-50 text-slate-800 font-sans flex h-screen overflow-hidden relative">
                     ${tsParticlesConfig}
-                    <div id="sidebarOverlay" class="fixed inset-0 bg-black/60 z-40 hidden md:hidden" onclick="toggleSidebar()"></div>
+                    <div id="sidebarOverlay" class="fixed inset-0 bg-slate-900/40 backdrop-blur-xs z-40 hidden md:hidden" onclick="toggleSidebar()"></div>
                     
                     <!-- Fullscreen Loading Overlay -->
-                    <div id="loadingOverlay" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-[9999] flex flex-col items-center justify-center hidden">
+                    <div id="loadingOverlay" class="fixed inset-0 bg-slate-900/70 backdrop-blur-sm z-[9999] flex flex-col items-center justify-center hidden">
                         <div class="relative flex items-center justify-center mb-6">
                             <!-- Outer spinning ring -->
-                            <div class="w-24 h-24 rounded-full border-4 border-sky-500/20 border-t-sky-500 animate-spin"></div>
+                            <div class="w-24 h-24 rounded-full border-4 border-sky-400/30 border-t-sky-500 animate-spin"></div>
                             <!-- Logo in the center -->
                             <img src="${LOGO_URL}" alt="Logo" class="w-14 h-14 rounded-full absolute object-cover shadow-lg shadow-sky-500/20">
                         </div>
                         <h3 class="text-xl font-black text-white tracking-wider uppercase mb-2 animate-pulse">proses create akun...wait...</h3>
-                        <p class="text-sm text-gray-400 font-medium">Mohon tunggu, jangan tutup atau memuat ulang halaman ini...</p>
+                        <p class="text-sm text-slate-200 font-medium">Mohon tunggu, jangan tutup atau memuat ulang halaman ini...</p>
                     </div>
                     
                     <!-- FIX TUMPANG TINDIH NAVBAR PC: Menambahkan md:z-0 pada aside agar modal tertutup -->
-                    <aside id="sidebar" class="fixed inset-y-0 left-0 bg-gray-950 border-r border-gray-800 w-64 transform -translate-x-full md:relative md:translate-x-0 transition-transform duration-300 ease-in-out z-50 md:z-0 flex flex-col shadow-2xl md:shadow-none">
-                        <div class="p-6 border-b border-gray-800 flex justify-between items-center relative z-10">
+                    <aside id="sidebar" class="fixed inset-y-0 left-0 bg-white border-r border-slate-200 w-64 transform -translate-x-full md:relative md:translate-x-0 transition-transform duration-300 ease-in-out z-50 md:z-0 flex flex-col shadow-xl md:shadow-none">
+                        <div class="p-6 border-b border-slate-200 flex justify-between items-center relative z-10">
                             <div class="flex items-center gap-3">
-                                <img src="${LOGO_URL}" alt="Logo" class="w-8 h-8 rounded-full border border-gray-700 shadow-md">
-                                <span class="text-xl font-black tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-sky-500 to-blue-600">Warung Pulsa</span>
+                                <img src="${LOGO_URL}" alt="Logo" class="w-8 h-8 rounded-full border border-slate-200 shadow-sm">
+                                <span class="text-xl font-black tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-cyan-600 via-sky-600 to-blue-700">Warung Pulsa</span>
                             </div>
-                            <button onclick="toggleSidebar()" class="md:hidden text-gray-400 hover:text-white p-1">
+                            <button onclick="toggleSidebar()" class="md:hidden text-slate-400 hover:text-slate-800 p-1">
                                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
                             </button>
                         </div>
-                        <div class="p-6 border-b border-gray-800 bg-gray-900/30 relative z-10">
-                            <p class="text-xs text-gray-500 font-bold uppercase tracking-wider mb-1">Total Saldo Aktif</p>
-                            <p class="text-2xl font-bold text-green-400 font-mono tracking-tight drop-shadow-md">Rp ${currentUser.balance.toLocaleString("id-ID")}</p>
+                        <div class="p-6 border-b border-slate-200 bg-slate-50/80 relative z-10">
+                            <p class="text-xs text-slate-500 font-bold uppercase tracking-wider mb-1">Total Saldo Aktif</p>
+                            <p class="text-2xl font-bold text-emerald-600 font-mono tracking-tight">Rp ${currentUser.balance.toLocaleString("id-ID")}</p>
                         </div>
-                        <nav class="flex-1 p-4 space-y-2 overflow-y-auto custom-scrollbar relative z-10">
+                        <nav class="flex-1 p-4 space-y-1.5 overflow-y-auto custom-scrollbar relative z-10">
                             ${isSuperAdmin(currentUser, env) ? `
-                            <div class="pb-4 mb-4 border-b border-gray-800">
-                                <a href="/admin" class="flex items-center gap-3 p-3 rounded-xl bg-yellow-900/20 border border-yellow-500/30 text-yellow-400 hover:bg-yellow-900/40 transition shadow-inner">
-                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2-2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
+                            <div class="pb-3 mb-3 border-b border-slate-200">
+                                <a href="/admin" class="flex items-center gap-3 p-3 rounded-xl bg-amber-50 border border-amber-200 text-amber-800 hover:bg-amber-100 transition shadow-xs">
+                                    <svg class="w-5 h-5 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2-2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
                                     <span class="font-bold text-sm tracking-wide">Admin Panel</span>
                                 </a>
                             </div>` : ""}
-                            <a href="/" class="flex items-center gap-3 p-3 rounded-xl hover:bg-gray-800 transition ${title === "Dashboard" ? "bg-gray-800 text-white shadow-md border border-gray-700" : "text-gray-400"}"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg><span class="font-medium text-sm">Dashboard Utama</span></a>
-                            <a href="/vpn-saya" class="flex items-center gap-3 p-3 rounded-xl hover:bg-gray-800 transition ${title === "VPN Saya" ? "bg-gray-800 text-white shadow-md border border-gray-700" : "text-gray-400"}"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14M5 12a2 2 0 01-2-2V6a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v4a2 2 0 01-2 2M5 12a2 2 0 00-2 2v4a2 2 0 002 2h14a2 2 0 002-2v-4a2 2 0 00-2-2m-2-4h.01M17 16h.01"></path></svg><span class="font-medium text-sm">VPN Saya</span></a>
-                            <a href="/paket-data" class="flex items-center gap-3 p-3 rounded-xl hover:bg-gray-800 transition ${title === "Paket Data XL" ? "bg-gray-800 text-white shadow-md border border-gray-700" : "text-gray-400"}"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"></path></svg><span class="font-medium text-sm">Paket Data XL</span></a>
-                            <a href="/lisensi" class="flex items-center gap-3 p-3 rounded-xl hover:bg-gray-800 transition ${title === "Lisensi Script" ? "bg-gray-800 text-white shadow-md border border-gray-700" : "text-gray-400"}"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg><span class="font-medium text-sm">Lisensi Script</span></a>
-                            <a href="/converter" class="flex items-center gap-3 p-3 rounded-xl hover:bg-gray-800 transition ${title === "Converter Config" ? "bg-gray-800 text-white shadow-md border border-gray-700" : "text-gray-400"}"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"></path></svg><span class="font-medium text-sm">Converter Config</span></a>
-                            <a href="/cekpulsa-otp" class="flex items-center gap-3 p-3 rounded-xl hover:bg-gray-800 transition ${title === "Cekpulsa / OTP" ? "bg-gray-800 text-white shadow-md border border-gray-700" : "text-gray-400"}"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8h2a2 2 0 012 2v6a2 2 0 01-2 2h-2v4l-4-4H9a1.994 1.994 0 01-1.414-.586m0 0L11 14h4a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2v4l.586-.586z"></path></svg><span class="font-medium text-sm">Cekpulsa / OTP</span></a>
-                            <a href="/inbox" class="flex items-center gap-3 p-3 rounded-xl hover:bg-gray-800 transition ${title === "Inbox" ? "bg-gray-800 text-white shadow-md border border-gray-700" : "text-gray-400"}"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"></path></svg><span class="font-medium text-sm">Kotak Masuk</span>${badgeHtml}</a>
-                            <a href="/mutasi" class="flex items-center gap-3 p-3 rounded-xl hover:bg-gray-800 transition ${title === "Riwayat Saldo" ? "bg-gray-800 text-white shadow-md border border-gray-700" : "text-gray-400"}"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg><span class="font-medium text-sm">Riwayat Saldo</span></a>
-                            <a href="/tiket" class="flex items-center gap-3 p-3 rounded-xl hover:bg-gray-800 transition ${title === "Pusat Bantuan" ? "bg-gray-800 text-white shadow-md border border-gray-700" : "text-gray-400"}"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192l-3.536 3.536M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-5 0a4 4 0 11-8 0 4 4 0 018 0z"></path></svg><span class="font-medium text-sm">Pusat Bantuan</span></a>
+                            <a href="/" class="flex items-center gap-3 p-3 rounded-xl transition ${title === "Dashboard" ? "bg-sky-50 text-sky-700 font-bold shadow-xs border border-sky-200" : "text-slate-600 hover:bg-slate-100 hover:text-sky-600 font-medium"}"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg><span class="text-sm">Dashboard Utama</span></a>
+                            <a href="/vpn-saya" class="flex items-center gap-3 p-3 rounded-xl transition ${title === "VPN Saya" ? "bg-sky-50 text-sky-700 font-bold shadow-xs border border-sky-200" : "text-slate-600 hover:bg-slate-100 hover:text-sky-600 font-medium"}"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14M5 12a2 2 0 01-2-2V6a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v4a2 2 0 01-2 2M5 12a2 2 0 00-2 2v4a2 2 0 002 2h14a2 2 0 002-2v-4a2 2 0 00-2-2m-2-4h.01M17 16h.01"></path></svg><span class="text-sm">VPN Saya</span></a>
+                            <a href="/paket-data" class="flex items-center gap-3 p-3 rounded-xl transition ${title === "Paket Data XL" ? "bg-sky-50 text-sky-700 font-bold shadow-xs border border-sky-200" : "text-slate-600 hover:bg-slate-100 hover:text-sky-600 font-medium"}"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"></path></svg><span class="text-sm">Paket Data XL</span></a>
+                            <a href="/lisensi" class="flex items-center gap-3 p-3 rounded-xl transition ${title === "Lisensi Script" ? "bg-sky-50 text-sky-700 font-bold shadow-xs border border-sky-200" : "text-slate-600 hover:bg-slate-100 hover:text-sky-600 font-medium"}"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg><span class="text-sm">Lisensi Script</span></a>
+                            <a href="/converter" class="flex items-center gap-3 p-3 rounded-xl transition ${title === "Converter Config" ? "bg-sky-50 text-sky-700 font-bold shadow-xs border border-sky-200" : "text-slate-600 hover:bg-slate-100 hover:text-sky-600 font-medium"}"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"></path></svg><span class="text-sm">Converter Config</span></a>
+                            <a href="/cekpulsa-otp" class="flex items-center gap-3 p-3 rounded-xl transition ${title === "Cekpulsa / OTP" ? "bg-sky-50 text-sky-700 font-bold shadow-xs border border-sky-200" : "text-slate-600 hover:bg-slate-100 hover:text-sky-600 font-medium"}"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8h2a2 2 0 012 2v6a2 2 0 01-2 2h-2v4l-4-4H9a1.994 1.994 0 01-1.414-.586m0 0L11 14h4a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2v4l.586-.586z"></path></svg><span class="text-sm">Cekpulsa / OTP</span></a>
+                            <a href="/inbox" class="flex items-center gap-3 p-3 rounded-xl transition ${title === "Inbox" ? "bg-sky-50 text-sky-700 font-bold shadow-xs border border-sky-200" : "text-slate-600 hover:bg-slate-100 hover:text-sky-600 font-medium"}"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"></path></svg><span class="text-sm">Kotak Masuk</span>${badgeHtml}</a>
+                            <a href="/mutasi" class="flex items-center gap-3 p-3 rounded-xl transition ${title === "Riwayat Saldo" ? "bg-sky-50 text-sky-700 font-bold shadow-xs border border-sky-200" : "text-slate-600 hover:bg-slate-100 hover:text-sky-600 font-medium"}"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg><span class="text-sm">Riwayat Saldo</span></a>
+                            <a href="/tiket" class="flex items-center gap-3 p-3 rounded-xl transition ${title === "Pusat Bantuan" ? "bg-sky-50 text-sky-700 font-bold shadow-xs border border-sky-200" : "text-slate-600 hover:bg-slate-100 hover:text-sky-600 font-medium"}"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192l-3.536 3.536M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-5 0a4 4 0 11-8 0 4 4 0 018 0z"></path></svg><span class="text-sm">Pusat Bantuan</span></a>
                         </nav>
-                        <div class="p-4 border-t border-gray-800 bg-gray-900/50 relative z-10">
-                            <a href="/profil" title="Buka Profil Saya" class="flex items-center gap-3 p-2 -mx-2 rounded-xl hover:bg-gray-800 transition cursor-pointer group">
+                        <div class="p-4 border-t border-slate-200 bg-slate-50/70 relative z-10">
+                            <a href="/profil" title="Buka Profil Saya" class="flex items-center gap-3 p-2 -mx-2 rounded-xl hover:bg-slate-100 transition cursor-pointer group">
                                 ${currentUser.picture ? `
-                                    <img src="${currentUser.picture}" alt="${escapeHTML(currentUser.name)}" class="w-10 h-10 rounded-full object-cover shadow-lg shrink-0 border border-gray-750 transition" referrerpolicy="no-referrer">
+                                    <img src="${currentUser.picture}" alt="${escapeHTML(currentUser.name)}" class="w-10 h-10 rounded-full object-cover shadow-sm shrink-0 border border-slate-300 transition" referrerpolicy="no-referrer">
                                 ` : `
-                                    <div class="w-10 h-10 rounded-full bg-sky-600 flex items-center justify-center font-bold text-white uppercase shadow-lg shrink-0 group-hover:bg-sky-500 transition">${currentUser.name.charAt(0)}</div>
+                                    <div class="w-10 h-10 rounded-full bg-sky-600 flex items-center justify-center font-bold text-white uppercase shadow-sm shrink-0 group-hover:bg-sky-500 transition">${currentUser.name.charAt(0)}</div>
                                 `}
                                 <div class="overflow-hidden flex-grow">
-                                    <p class="text-sm font-bold text-white truncate group-hover:text-cyan-400 transition">${escapeHTML(currentUser.name)}</p>
-                                    <p class="text-[10px] text-gray-500 truncate">${currentUser.email}</p>
+                                    <p class="text-sm font-bold text-slate-900 truncate group-hover:text-sky-600 transition">${escapeHTML(currentUser.name)}</p>
+                                    <p class="text-[10px] text-slate-500 truncate">${currentUser.email}</p>
                                 </div>
-                                <svg class="w-4 h-4 text-gray-500 group-hover:text-cyan-400 transition" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                                <svg class="w-4 h-4 text-slate-400 group-hover:text-sky-600 transition" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
                             </a>
                         </div>
                     </aside>
                     <div class="flex-1 flex flex-col h-screen overflow-hidden bg-transparent">
-                        <header class="md:hidden bg-gray-950 border-b border-gray-800 p-4 flex items-center justify-between z-30 shadow-md">
+                        <header class="md:hidden bg-white border-b border-slate-200 p-4 flex items-center justify-between z-30 shadow-xs">
                             <div class="flex items-center gap-3">
                                 <button onclick="toggleSidebar()" class="pulse-hamburger p-1"><svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg></button>
-                                <img src="${LOGO_URL}" alt="Logo" class="w-7 h-7 rounded-full border border-gray-700">
-                                <span class="text-lg font-bold text-white truncate">${title}</span>
+                                <img src="${LOGO_URL}" alt="Logo" class="w-7 h-7 rounded-full border border-slate-200">
+                                <span class="text-lg font-bold text-slate-900 truncate">${title}</span>
                             </div>
-                            ${unreadCount > 0 ? `<a href="/inbox" class="bg-sky-500 text-white text-[10px] font-bold px-2.5 py-1 rounded-full shadow-lg shadow-sky-500/50 animate-pulse">${unreadCount} Baru</a>` : ""}
+                            ${unreadCount > 0 ? `<a href="/inbox" class="bg-sky-600 text-white text-[10px] font-bold px-2.5 py-1 rounded-full shadow-md shadow-sky-600/30 animate-pulse">${unreadCount} Baru</a>` : ""}
                         </header>
                         <main class="flex-1 overflow-y-auto custom-scrollbar relative z-10">
                             ${content}
-                            <footer class="border-t border-gray-800 mt-12 py-8 text-center text-gray-600 text-xs flex items-center justify-center gap-2">
-                                <img src="${LOGO_URL}" alt="Logo" class="w-4 h-4 opacity-50 grayscale hover:grayscale-0 transition">
+                            <footer class="border-t border-slate-200 mt-12 py-8 text-center text-slate-500 text-xs flex items-center justify-center gap-2">
+                                <img src="${LOGO_URL}" alt="Logo" class="w-4 h-4 opacity-70 grayscale hover:grayscale-0 transition">
                                 <span>&copy; ${(/* @__PURE__ */ new Date()).getFullYear()} Warung Pulsa. Hak cipta dilindungi.</span>
                             </footer>
                         </main>
@@ -8871,50 +8868,50 @@ Total : Rp.${totalSaldo.toLocaleString("id-ID")}
                     <script src="https://cdn.tailwindcss.com"><\/script>
                     <script src="https://accounts.google.com/gsi/client" async defer><\/script>
                     <style>
-                        .glass-panel { background: rgba(31, 41, 55, 0.7); backdrop-filter: blur(10px); border: 1px solid rgba(75, 85, 99, 0.4); } 
+                        .glass-panel { background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(10px); border: 1px solid rgba(226, 232, 240, 0.8); } 
                         html { scroll-behavior: smooth; }
                         
                         /* Pulse Hamburger Animation */
                         @keyframes pulseHamburger {
-                            0%, 100% { color: #ffffff; }
-                            50% { color: #374151; }
+                            0%, 100% { color: #0f172a; }
+                            50% { color: #0284c7; }
                         }
                         .pulse-hamburger {
                             animation: pulseHamburger 2s infinite ease-in-out;
                         }
                     </style>
                 </head>
-                <body class="bg-gray-900 text-white font-sans min-h-screen flex flex-col relative">
+                <body class="bg-slate-50 text-slate-800 font-sans min-h-screen flex flex-col relative">
                     ${tsParticlesConfig}
-                    <nav class="bg-gray-900/90 backdrop-blur-md border-b border-gray-800 sticky top-0 z-50">
+                    <nav class="bg-white/95 backdrop-blur-md border-b border-slate-200 sticky top-0 z-50 shadow-xs">
                         <div class="max-w-6xl mx-auto px-4 py-4 flex justify-between items-center">
                             <a href="/" class="flex items-center gap-3 group">
-                                <img src="${LOGO_URL}" alt="Logo" class="w-8 h-8 md:w-10 md:h-10 rounded-full border border-gray-700 shadow-md group-hover:border-sky-500 transition duration-300">
-                                <span class="text-xl md:text-2xl font-bold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 via-sky-500 to-blue-600">Warung Pulsa</span>
+                                <img src="${LOGO_URL}" alt="Logo" class="w-8 h-8 md:w-10 md:h-10 rounded-full border border-slate-200 shadow-sm group-hover:border-sky-500 transition duration-300">
+                                <span class="text-xl md:text-2xl font-bold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-cyan-600 via-sky-600 to-blue-700">Warung Pulsa</span>
                             </a>
-                            <div class="hidden md:flex gap-7 items-center text-sm font-medium">
-                                <a href="/" class="text-gray-300 hover:text-white transition">Beranda</a>
-                                <a href="/produk" class="text-gray-300 hover:text-white transition">Produk & Harga</a>
-                                <a href="/paket-data" class="text-gray-300 hover:text-white transition">Paket Data XL</a>
-                                <a href="/cekpulsa-otp" class="text-gray-300 hover:text-white transition">Cekpulsa / OTP</a>
-                                <a href="/converter" class="text-gray-300 hover:text-white transition">Converter</a>
-                                <a href="/syarat-ketentuan" class="text-gray-300 hover:text-white transition">Syarat & Ketentuan</a>
-                                <a href="/login" class="bg-gradient-to-r from-sky-600 to-cyan-600 hover:from-sky-500 hover:to-cyan-500 text-white font-bold py-2 px-5 rounded-xl text-xs transition shadow-lg shadow-sky-600/30 flex items-center gap-2 border border-sky-400/30 active:scale-95">
+                            <div class="hidden md:flex gap-7 items-center text-sm font-semibold">
+                                <a href="/" class="text-slate-600 hover:text-sky-600 transition">Beranda</a>
+                                <a href="/produk" class="text-slate-600 hover:text-sky-600 transition">Produk & Harga</a>
+                                <a href="/paket-data" class="text-slate-600 hover:text-sky-600 transition">Paket Data XL</a>
+                                <a href="/cekpulsa-otp" class="text-slate-600 hover:text-sky-600 transition">Cekpulsa / OTP</a>
+                                <a href="/converter" class="text-slate-600 hover:text-sky-600 transition">Converter</a>
+                                <a href="/syarat-ketentuan" class="text-slate-600 hover:text-sky-600 transition">Syarat & Ketentuan</a>
+                                <a href="/login" class="bg-gradient-to-r from-sky-600 to-blue-600 hover:from-sky-500 hover:to-blue-500 text-white font-bold py-2 px-5 rounded-xl text-xs transition shadow-md shadow-sky-600/20 flex items-center gap-2 active:scale-95">
                                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"></path></svg>
                                     Masuk
                                 </a>
                             </div>
                             <button onclick="document.getElementById('mobileNav').classList.toggle('hidden')" class="md:hidden pulse-hamburger p-1"><svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg></button>
                         </div>
-                        <div id="mobileNav" class="hidden md:hidden bg-gray-950 border-t border-gray-800 absolute w-full left-0 top-[73px] shadow-2xl">
+                        <div id="mobileNav" class="hidden md:hidden bg-white border-t border-slate-200 absolute w-full left-0 top-[73px] shadow-2xl">
                             <div class="flex flex-col p-4 space-y-4">
-                                <a href="/" class="text-gray-300 hover:text-white font-medium text-lg border-b border-gray-800 pb-3 flex items-center gap-3">Beranda</a>
-                                <a href="/produk" class="text-gray-300 hover:text-white font-medium text-lg border-b border-gray-800 pb-3 flex items-center gap-3">Produk & Harga</a>
-                                <a href="/paket-data" class="text-gray-300 hover:text-white font-medium text-lg border-b border-gray-800 pb-3 flex items-center gap-3">Paket Data XL</a>
-                                <a href="/cekpulsa-otp" class="text-gray-300 hover:text-white font-medium text-lg border-b border-gray-800 pb-3 flex items-center gap-3">Cekpulsa / OTP</a>
-                                <a href="/converter" class="text-gray-300 hover:text-white font-medium text-lg border-b border-gray-800 pb-3 flex items-center gap-3">Converter</a>
-                                <a href="/syarat-ketentuan" class="text-gray-300 hover:text-white font-medium text-lg border-b border-gray-800 pb-3 flex items-center gap-3">Syarat & Ketentuan</a>
-                                <a href="/login" class="bg-gradient-to-r from-sky-600 to-cyan-600 text-white font-bold py-3 px-4 rounded-xl text-center text-sm flex items-center justify-center gap-2 shadow-lg mt-2">
+                                <a href="/" class="text-slate-700 hover:text-sky-600 font-semibold text-lg border-b border-slate-100 pb-3 flex items-center gap-3">Beranda</a>
+                                <a href="/produk" class="text-slate-700 hover:text-sky-600 font-semibold text-lg border-b border-slate-100 pb-3 flex items-center gap-3">Produk & Harga</a>
+                                <a href="/paket-data" class="text-slate-700 hover:text-sky-600 font-semibold text-lg border-b border-slate-100 pb-3 flex items-center gap-3">Paket Data XL</a>
+                                <a href="/cekpulsa-otp" class="text-slate-700 hover:text-sky-600 font-semibold text-lg border-b border-slate-100 pb-3 flex items-center gap-3">Cekpulsa / OTP</a>
+                                <a href="/converter" class="text-slate-700 hover:text-sky-600 font-semibold text-lg border-b border-slate-100 pb-3 flex items-center gap-3">Converter</a>
+                                <a href="/syarat-ketentuan" class="text-slate-700 hover:text-sky-600 font-semibold text-lg border-b border-slate-100 pb-3 flex items-center gap-3">Syarat & Ketentuan</a>
+                                <a href="/login" class="bg-gradient-to-r from-sky-600 to-blue-600 text-white font-bold py-3 px-4 rounded-xl text-center text-sm flex items-center justify-center gap-2 shadow-md mt-2">
                                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"></path></svg>
                                     Masuk Akun
                                 </a>
@@ -8922,36 +8919,36 @@ Total : Rp.${totalSaldo.toLocaleString("id-ID")}
                         </div>
                     </nav>
                     <main class="flex-grow relative z-10">${content}</main>
-                    <footer class="bg-gray-950 border-t border-gray-800 pt-12 pb-8 mt-16 relative z-10">
+                    <footer class="bg-slate-100 border-t border-slate-200 pt-12 pb-8 mt-16 relative z-10">
                         <div class="max-w-6xl mx-auto px-4 grid grid-cols-1 md:grid-cols-3 gap-10">
                             <div>
                                 <div class="flex items-center gap-3 mb-4">
-                                    <img src="${LOGO_URL}" alt="Logo" class="w-8 h-8 rounded-full border border-gray-800">
-                                    <h3 class="text-xl font-bold text-sky-400">Warung Pulsa</h3>
+                                    <img src="${LOGO_URL}" alt="Logo" class="w-8 h-8 rounded-full border border-slate-200">
+                                    <h3 class="text-xl font-bold text-sky-600">Warung Pulsa</h3>
                                 </div>
-                                <p class="text-gray-400 leading-relaxed text-sm">Solusi utama untuk privasi dan kebebasan internet Anda. Kami menyediakan layanan Proxy & VPN Premium berbasis Server Khusus dengan koneksi kecepatan tinggi, stabil, dan aman.</p>
+                                <p class="text-slate-600 leading-relaxed text-sm">Solusi utama untuk privasi dan kebebasan internet Anda. Kami menyediakan layanan Proxy & VPN Premium berbasis Server Khusus dengan koneksi kecepatan tinggi, stabil, dan aman.</p>
                             </div>
                             <div>
-                                <h4 class="font-bold text-white mb-4 uppercase tracking-wider text-sm">Tautan Cepat</h4>
-                                <ul class="space-y-2 text-sm text-gray-400">
-                                    <li><a href="/" class="hover:text-cyan-400 transition">Beranda / Dashboard</a></li>
-                                    <li><a href="/produk" class="hover:text-cyan-400 transition">Produk & Harga</a></li>
-                                    <li><a href="/paket-data" class="hover:text-cyan-400 transition">Isi Ulang Paket Data</a></li>
-                                    <li><a href="/syarat-ketentuan" class="hover:text-cyan-400 transition">Syarat & Ketentuan</a></li>
+                                <h4 class="font-bold text-slate-900 mb-4 uppercase tracking-wider text-sm">Tautan Cepat</h4>
+                                <ul class="space-y-2 text-sm text-slate-600 font-medium">
+                                    <li><a href="/" class="hover:text-sky-600 transition">Beranda / Dashboard</a></li>
+                                    <li><a href="/produk" class="hover:text-sky-600 transition">Produk & Harga</a></li>
+                                    <li><a href="/paket-data" class="hover:text-sky-600 transition">Isi Ulang Paket Data</a></li>
+                                    <li><a href="/syarat-ketentuan" class="hover:text-sky-600 transition">Syarat & Ketentuan</a></li>
                                 </ul>
                             </div>
                             <div>
-                                <h4 class="font-bold text-white mb-4 uppercase tracking-wider text-sm">Layanan Pelanggan (CS)</h4>
-                                <p class="text-sm text-gray-400 mb-3">Jika mengalami kendala teknis atau transaksi, silakan hubungi CS kami (Arif):</p>
-                                <ul class="space-y-3 text-sm text-gray-300">
-                                    <li><a href="https://wa.me/6282175037525" target="_blank" class="flex items-center gap-3 hover:text-green-400 transition group"><div class="bg-gray-800 p-2 rounded-full group-hover:bg-green-500/20"><svg class="w-4 h-4 text-green-500" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg></div><span>WhatsApp: 0821 7503 7525</span></a>
+                                <h4 class="font-bold text-slate-900 mb-4 uppercase tracking-wider text-sm">Layanan Pelanggan (CS)</h4>
+                                <p class="text-sm text-slate-600 mb-3">Jika mengalami kendala teknis atau transaksi, silakan hubungi CS kami (Arif):</p>
+                                <ul class="space-y-3 text-sm text-slate-700 font-medium">
+                                    <li><a href="https://wa.me/6282175037525" target="_blank" class="flex items-center gap-3 hover:text-emerald-600 transition group"><div class="bg-white border border-slate-200 p-2 rounded-full group-hover:border-emerald-300 shadow-xs"><svg class="w-4 h-4 text-emerald-600" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg></div><span>WhatsApp: 0821 7503 7525</span></a>
                                     </li>
-                                    <li><a href="https://t.me/srpcomadmin" target="_blank" class="flex items-center gap-3 hover:text-cyan-400 transition group"><div class="bg-gray-800 p-2 rounded-full group-hover:bg-sky-500/20"><svg class="w-4 h-4 text-cyan-400" fill="currentColor" viewBox="0 0 24 24"><path d="M11.944 0A12 12 0 000 12a12 12 0 0012 12 12 12 0 0012-12A12 12 0 0012 0a12 12 0 00-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 01.171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.892-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg></div><span>Telegram: @srpcomadmin</span></a></li>
-                                    <li><a href="mailto:admin@warungpulsa.com" class="flex items-center gap-3 hover:text-pink-400 transition group"><div class="bg-gray-800 p-2 rounded-full group-hover:bg-pink-500/20"><svg class="w-4 h-4 text-pink-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg></div><span>Email: admin@warungpulsa.com</span></a></li>
+                                    <li><a href="https://t.me/srpcomadmin" target="_blank" class="flex items-center gap-3 hover:text-sky-600 transition group"><div class="bg-white border border-slate-200 p-2 rounded-full group-hover:border-sky-300 shadow-xs"><svg class="w-4 h-4 text-sky-600" fill="currentColor" viewBox="0 0 24 24"><path d="M11.944 0A12 12 0 000 12a12 12 0 0012 12 12 12 0 0012-12A12 12 0 0012 0a12 12 0 00-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 01.171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.892-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg></div><span>Telegram: @srpcomadmin</span></a></li>
+                                    <li><a href="mailto:admin@warungpulsa.com" class="flex items-center gap-3 hover:text-rose-600 transition group"><div class="bg-white border border-slate-200 p-2 rounded-full group-hover:border-rose-300 shadow-xs"><svg class="w-4 h-4 text-rose-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg></div><span>Email: admin@warungpulsa.com</span></a></li>
                                 </ul>
                             </div>
                         </div>
-                        <div class="text-center text-gray-600 mt-10 pt-6 border-t border-gray-900 text-xs">&copy; ${(/* @__PURE__ */ new Date()).getFullYear()} Warung Pulsa. Hak cipta dilindungi.</div>
+                        <div class="text-center text-slate-500 mt-10 pt-6 border-t border-slate-200 text-xs">&copy; ${(/* @__PURE__ */ new Date()).getFullYear()} Warung Pulsa. Hak cipta dilindungi.</div>
                     </footer>
                 </body>
                 </html>`;
@@ -8960,11 +8957,11 @@ Total : Rp.${totalSaldo.toLocaleString("id-ID")}
     const renderIframePage = /* @__PURE__ */ __name222((title, frameUrl) => {
       const content = `
             <div class="w-full px-2 py-2 flex flex-col h-[90vh] min-h-[650px] relative z-10">
-                <div class="flex-grow bg-gray-900 rounded-3xl border border-gray-800 shadow-2xl overflow-hidden relative group">
-                    <div class="absolute inset-0 flex items-center justify-center z-0">
+                <div class="flex-grow bg-white rounded-3xl border border-slate-200 shadow-xl overflow-hidden relative group">
+                    <div class="absolute inset-0 flex items-center justify-center z-0 bg-slate-50">
                         <div class="flex flex-col items-center gap-3">
-                            <svg class="w-8 h-8 text-gray-600 animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
-                            <p class="text-gray-500 font-medium">Memuat halaman ${title}...</p>
+                            <svg class="w-8 h-8 text-sky-600 animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
+                            <p class="text-slate-500 font-medium">Memuat halaman ${title}...</p>
                         </div>
                     </div>
                     <iframe src="${frameUrl}" class="w-full h-full border-0 relative z-10 bg-transparent rounded-3xl" title="${title}"></iframe>
@@ -8986,25 +8983,25 @@ Total : Rp.${totalSaldo.toLocaleString("id-ID")}
       ).bind(currentUser.email, ticketLimit, ticketOffset).all();
       let ticketListHtml = "";
       if (!tickets || tickets.length === 0) {
-        ticketListHtml = `<div class="text-center py-16 bg-gray-800 rounded-3xl border border-gray-700"><p class="text-gray-400 text-lg">Belum ada riwayat tiket bantuan.</p></div>`;
+        ticketListHtml = `<div class="text-center py-16 bg-white rounded-3xl border border-slate-200 shadow-sm"><p class="text-slate-500 text-lg font-medium">Belum ada riwayat tiket bantuan.</p></div>`;
       } else {
         ticketListHtml = `
                 <div class="space-y-4">
                     ${tickets.map((t) => {
           let statusBadge = "";
-          if (t.status === "OPEN") statusBadge = '<span class="bg-sky-500/20 text-cyan-400 border border-sky-500/30 text-[10px] px-2.5 py-1 rounded uppercase font-bold tracking-wider">Menunggu Admin</span>';
-          else if (t.status === "PENDING") statusBadge = '<span class="bg-yellow-500/20 text-yellow-400 border border-yellow-500/30 text-[10px] px-2.5 py-1 rounded uppercase font-bold tracking-wider">Menunggu Balasan Anda</span>';
-          else statusBadge = '<span class="bg-gray-500/20 text-gray-400 border border-gray-500/30 text-[10px] px-2.5 py-1 rounded uppercase font-bold tracking-wider">Selesai (Closed)</span>';
+          if (t.status === "OPEN") statusBadge = '<span class="bg-sky-50 text-sky-700 border border-sky-200 text-[10px] px-2.5 py-1 rounded-lg uppercase font-bold tracking-wider">Menunggu Admin</span>';
+          else if (t.status === "PENDING") statusBadge = '<span class="bg-amber-50 text-amber-700 border border-amber-200 text-[10px] px-2.5 py-1 rounded-lg uppercase font-bold tracking-wider">Menunggu Balasan Anda</span>';
+          else statusBadge = '<span class="bg-slate-100 text-slate-600 border border-slate-200 text-[10px] px-2.5 py-1 rounded-lg uppercase font-bold tracking-wider">Selesai (Closed)</span>';
           return `
-                        <div onclick="openTicketView('${t.id}')" class="bg-gray-800 p-5 md:p-6 rounded-2xl border border-gray-700 shadow-xl hover:border-sky-600/50 hover:bg-gray-800/80 transition cursor-pointer">
+                        <div onclick="openTicketView('${t.id}')" class="bg-white p-5 md:p-6 rounded-2xl border border-slate-200 shadow-sm hover:border-sky-500/50 hover:shadow-md transition cursor-pointer">
                             <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 mb-3">
-                                <h3 class="text-lg font-bold text-white leading-snug truncate">${escapeHTML(t.subject)}</h3>
+                                <h3 class="text-lg font-bold text-slate-900 leading-snug truncate">${escapeHTML(t.subject)}</h3>
                                 <div class="shrink-0 flex items-center gap-3">
-                                    <span class="text-xs font-mono text-gray-500">${t.id}</span>
+                                    <span class="text-xs font-mono text-slate-500">${t.id}</span>
                                     ${statusBadge}
                                 </div>
                             </div>
-                            <div class="flex items-center gap-2 text-xs font-bold text-gray-500 uppercase tracking-wider">
+                            <div class="flex items-center gap-2 text-xs font-bold text-slate-400 uppercase tracking-wider">
                                 <span>${t.category}</span> &bull; <span>Update: ${t.updated_at}</span>
                             </div>
                         </div>`;
@@ -9013,12 +9010,12 @@ Total : Rp.${totalSaldo.toLocaleString("id-ID")}
                 
                 <!-- Pagination Controls -->
                 ${totalPages > 1 ? `
-                <div class="mt-8 flex items-center justify-between gap-4 flex-wrap bg-gray-800 p-4 border border-gray-700 rounded-2xl relative z-10">
-                    <a href="${ticketPage > 1 ? `/tiket?page=${ticketPage - 1}` : "#"}" class="bg-gray-900 hover:bg-gray-850 border border-gray-750 text-white px-4 py-2 rounded-xl text-xs font-bold transition flex items-center gap-1.5 ${ticketPage <= 1 ? "opacity-50 pointer-events-none" : ""}">
+                <div class="mt-8 flex items-center justify-between gap-4 flex-wrap bg-white p-4 border border-slate-200 rounded-2xl shadow-sm relative z-10">
+                    <a href="${ticketPage > 1 ? `/tiket?page=${ticketPage - 1}` : "#"}" class="bg-slate-100 hover:bg-slate-200 border border-slate-300 text-slate-700 px-4 py-2 rounded-xl text-xs font-bold transition flex items-center gap-1.5 ${ticketPage <= 1 ? "opacity-50 pointer-events-none" : ""}">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg> Sebelum
                     </a>
-                    <span class="text-xs text-gray-400 font-medium">Halaman ${ticketPage} dari ${totalPages} (Total ${totalTickets} Tiket)</span>
-                    <a href="${ticketPage < totalPages ? `/tiket?page=${ticketPage + 1}` : "#"}" class="bg-gray-900 hover:bg-gray-850 border border-gray-750 text-white px-4 py-2 rounded-xl text-xs font-bold transition flex items-center gap-1.5 ${ticketPage >= totalPages ? "opacity-50 pointer-events-none" : ""}">
+                    <span class="text-xs text-slate-500 font-medium">Halaman ${ticketPage} dari ${totalPages} (Total ${totalTickets} Tiket)</span>
+                    <a href="${ticketPage < totalPages ? `/tiket?page=${ticketPage + 1}` : "#"}" class="bg-slate-100 hover:bg-slate-200 border border-slate-300 text-slate-700 px-4 py-2 rounded-xl text-xs font-bold transition flex items-center gap-1.5 ${ticketPage >= totalPages ? "opacity-50 pointer-events-none" : ""}">
                         Berikut <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
                     </a>
                 </div>
@@ -9026,10 +9023,10 @@ Total : Rp.${totalSaldo.toLocaleString("id-ID")}
       }
       const content = `
             <div class="max-w-4xl mx-auto px-4 md:px-8 py-8 md:py-12 relative z-10">
-                <div class="flex flex-col md:flex-row md:items-end justify-between mb-8 border-b border-gray-800 pb-5 gap-4">
+                <div class="flex flex-col md:flex-row md:items-end justify-between mb-8 border-b border-slate-200 pb-5 gap-4">
                     <div>
-                        <h1 class="text-3xl font-black text-white tracking-tight flex items-center gap-3">Pusat Bantuan (Tiket)</h1>
-                        <p class="text-gray-400 text-sm mt-2">Laporkan kendala teknis atau masalah layanan Anda di sini.</p>
+                        <h1 class="text-3xl font-black text-slate-900 tracking-tight flex items-center gap-3">Pusat Bantuan (Tiket)</h1>
+                        <p class="text-slate-500 text-sm mt-2">Laporkan kendala teknis atau masalah layanan Anda di sini.</p>
                     </div>
                     <button onclick="openCreateTicketModal()" class="bg-sky-600 hover:bg-sky-500 text-white font-bold py-3 px-6 rounded-xl shadow-lg transition flex items-center gap-2">
                         \u2795 Buat Tiket Baru
@@ -9039,16 +9036,16 @@ Total : Rp.${totalSaldo.toLocaleString("id-ID")}
                 ${ticketListHtml}
 
                 <!-- Modal Buat Tiket -->
-                <div id="createTicketModal" class="fixed inset-0 bg-black/80 hidden z-50 flex items-center justify-center p-4 backdrop-blur-sm">
-                    <div class="bg-gray-900 p-6 md:p-8 rounded-3xl w-full max-w-lg border border-sky-600/30 shadow-2xl">
-                        <div class="flex justify-between items-center mb-6 border-b border-gray-800 pb-4">
-                            <h3 class="text-2xl font-bold text-white tracking-tight">Kirim Tiket Baru</h3>
-                            <button onclick="closeCreateTicketModal()" class="text-gray-400 hover:text-white text-3xl leading-none">&times;</button>
+                <div id="createTicketModal" class="fixed inset-0 bg-slate-900/60 hidden z-50 flex items-center justify-center p-4 backdrop-blur-sm">
+                    <div class="bg-white p-6 md:p-8 rounded-3xl w-full max-w-lg border border-slate-200 shadow-2xl">
+                        <div class="flex justify-between items-center mb-6 border-b border-slate-200 pb-4">
+                            <h3 class="text-2xl font-bold text-slate-900 tracking-tight">Kirim Tiket Baru</h3>
+                            <button onclick="closeCreateTicketModal()" class="text-slate-400 hover:text-slate-700 text-3xl leading-none">&times;</button>
                         </div>
                         <form id="createTicketForm" class="space-y-5">
                             <div>
-                                <label class="block text-sm font-bold text-gray-400 mb-2 uppercase tracking-wide">Kategori Kendala</label>
-                                <select id="ticketCategory" required class="w-full bg-gray-950 border border-gray-700 rounded-xl p-4 text-white focus:ring-2 focus:ring-sky-500 outline-none">
+                                <label class="block text-sm font-bold text-slate-700 mb-2 uppercase tracking-wide">Kategori Kendala</label>
+                                <select id="ticketCategory" required class="w-full bg-slate-50 border border-slate-300 rounded-xl p-4 text-slate-900 focus:bg-white focus:ring-2 focus:ring-sky-500 outline-none">
                                     <option value="Kendala Server VPN">Kendala Server VPN (Mati/Lemot)</option>
                                     <option value="Kendala Top Up Saldo">Kendala Top Up Saldo (QRIS)</option>
                                     <option value="Kendala Paket Data XL">Kendala Paket Data XL / Axis</option>
@@ -9056,12 +9053,12 @@ Total : Rp.${totalSaldo.toLocaleString("id-ID")}
                                 </select>
                             </div>
                             <div>
-                                <label class="block text-sm font-bold text-gray-400 mb-2 uppercase tracking-wide">Judul Masalah</label>
-                                <input type="text" id="ticketSubject" required placeholder="Singkat, padat, dan jelas..." class="w-full bg-gray-950 border border-gray-700 rounded-xl p-4 text-white focus:ring-2 focus:ring-sky-500 outline-none">
+                                <label class="block text-sm font-bold text-slate-700 mb-2 uppercase tracking-wide">Judul Masalah</label>
+                                <input type="text" id="ticketSubject" required placeholder="Singkat, padat, dan jelas..." class="w-full bg-slate-50 border border-slate-300 rounded-xl p-4 text-slate-900 focus:bg-white focus:ring-2 focus:ring-sky-500 outline-none">
                             </div>
                             <div>
-                                <label class="block text-sm font-bold text-gray-400 mb-2 uppercase tracking-wide">Detail Kendala</label>
-                                <textarea id="ticketMessage" required rows="4" placeholder="Jelaskan secara rinci (sertakan nomor XL, ID transaksi, atau Username VPN jika ada)..." class="w-full bg-gray-950 border border-gray-700 rounded-xl p-4 text-white focus:ring-2 focus:ring-sky-500 outline-none custom-scrollbar resize-none"></textarea>
+                                <label class="block text-sm font-bold text-slate-700 mb-2 uppercase tracking-wide">Detail Kendala</label>
+                                <textarea id="ticketMessage" required rows="4" placeholder="Jelaskan secara rinci (sertakan nomor XL, ID transaksi, atau Username VPN jika ada)..." class="w-full bg-slate-50 border border-slate-300 rounded-xl p-4 text-slate-900 focus:bg-white focus:ring-2 focus:ring-sky-500 outline-none custom-scrollbar resize-none"></textarea>
                             </div>
                             <button type="submit" id="btnSubmitTicket" class="w-full bg-sky-600 hover:bg-sky-500 text-white font-bold py-4 rounded-xl shadow-lg transition text-lg mt-4">Kirim Tiket Sekarang</button>
                         </form>
@@ -9069,31 +9066,31 @@ Total : Rp.${totalSaldo.toLocaleString("id-ID")}
                 </div>
 
                 <!-- Modal Lihat & Chat Tiket -->
-                <div id="ticketViewModal" class="fixed inset-0 bg-black/90 hidden z-50 flex items-center justify-center p-4 backdrop-blur-md">
-                    <div class="bg-gray-900 rounded-3xl w-full max-w-3xl max-h-[95vh] flex flex-col border border-gray-700 shadow-2xl">
-                        <div class="p-5 border-b border-gray-800 flex justify-between items-center bg-gray-950 rounded-t-3xl">
+                <div id="ticketViewModal" class="fixed inset-0 bg-slate-900/60 hidden z-50 flex items-center justify-center p-4 backdrop-blur-md">
+                    <div class="bg-white rounded-3xl w-full max-w-3xl max-h-[95vh] flex flex-col border border-slate-200 shadow-2xl">
+                        <div class="p-5 border-b border-slate-200 flex justify-between items-center bg-slate-50 rounded-t-3xl">
                             <div>
-                                <h3 class="text-xl font-bold text-white flex items-center gap-2" id="tvTitle">Judul</h3>
-                                <p class="text-xs text-gray-400 mt-1 font-mono" id="tvSubtitle">#ID - Kategori</p>
+                                <h3 class="text-xl font-bold text-slate-900 flex items-center gap-2" id="tvTitle">Judul</h3>
+                                <p class="text-xs text-slate-500 mt-1 font-mono" id="tvSubtitle">#ID - Kategori</p>
                             </div>
-                            <button onclick="closeTicketView()" class="text-gray-400 hover:text-white bg-gray-800 hover:bg-gray-700 p-2 rounded-xl transition">&times;</button>
+                            <button onclick="closeTicketView()" class="text-slate-400 hover:text-slate-700 bg-slate-100 hover:bg-slate-200 p-2 rounded-xl transition">&times;</button>
                         </div>
                         
-                        <div id="ticketChatContainer" class="flex-grow p-6 overflow-y-auto custom-scrollbar flex flex-col gap-4 bg-[#0b1120] bg-opacity-50">
+                        <div id="ticketChatContainer" class="flex-grow p-6 overflow-y-auto custom-scrollbar flex flex-col gap-4 bg-slate-50">
                             <!-- Chat Bubbles -->
                         </div>
                         
-                        <div class="p-4 border-t border-gray-800 bg-gray-950 rounded-b-3xl">
+                        <div class="p-4 border-t border-slate-200 bg-slate-50 rounded-b-3xl">
                             <div id="ticketReplyArea" class="flex gap-3">
                                 <input type="hidden" id="replyTicketId" value="">
-                                <textarea id="replyTicketMessage" rows="2" placeholder="Ketik balasan Anda di sini..." class="w-full bg-gray-900 border border-gray-700 rounded-xl p-3 text-white focus:ring-2 focus:ring-sky-500 outline-none custom-scrollbar text-sm resize-none"></textarea>
+                                <textarea id="replyTicketMessage" rows="2" placeholder="Ketik balasan Anda di sini..." class="w-full bg-white border border-slate-300 rounded-xl p-3 text-slate-900 focus:ring-2 focus:ring-sky-500 outline-none custom-scrollbar text-sm resize-none"></textarea>
                                 <div class="flex flex-col gap-2 shrink-0">
                                     <button onclick="sendTicketReply()" id="btnSendReply" class="bg-sky-600 hover:bg-sky-500 text-white font-bold px-5 py-2.5 rounded-xl transition shadow flex-grow">Kirim</button>
-                                    <button onclick="closeTicket()" id="btnCloseTicket" class="bg-gray-700 hover:bg-sky-600 text-gray-300 hover:text-white text-xs font-bold px-5 py-2 rounded-xl transition border border-gray-600 hover:border-sky-500">Tandai Selesai</button>
+                                    <button onclick="closeTicket()" id="btnCloseTicket" class="bg-slate-200 hover:bg-slate-300 text-slate-700 text-xs font-bold px-5 py-2 rounded-xl transition border border-slate-300">Tandai Selesai</button>
                                 </div>
                             </div>
                             <div id="ticketClosedArea" class="hidden text-center p-3">
-                                <p class="text-sm text-gray-500 font-bold">\u{1F512} Tiket ini telah ditutup karena masalah sudah diselesaikan.</p>
+                                <p class="text-sm text-slate-500 font-bold">\u{1F512} Tiket ini telah ditutup karena masalah sudah diselesaikan.</p>
                             </div>
                         </div>
                     </div>
@@ -9141,7 +9138,7 @@ Total : Rp.${totalSaldo.toLocaleString("id-ID")}
                 async function openTicketView(id) {
                     document.getElementById('ticketViewModal').classList.remove('hidden');
                     const chatContainer = document.getElementById('ticketChatContainer');
-                    chatContainer.innerHTML = '<p class="text-center text-cyan-400 mt-10 animate-pulse">Memuat riwayat chat...</p>';
+                    chatContainer.innerHTML = '<p class="text-center text-sky-600 mt-10 animate-pulse">Memuat riwayat chat...</p>';
                     document.getElementById('replyTicketId').value = id;
                     document.getElementById('replyTicketMessage').value = '';
 
@@ -9163,26 +9160,26 @@ Total : Rp.${totalSaldo.toLocaleString("id-ID")}
                             }
 
                             if (data.replies.length === 0) {
-                                chatContainer.innerHTML = '<p class="text-center text-gray-500 mt-10">Belum ada percakapan.</p>';
+                                chatContainer.innerHTML = '<p class="text-center text-slate-500 mt-10">Belum ada percakapan.</p>';
                             } else {
                                 chatContainer.innerHTML = data.replies.map(r => {
                                     const isUser = r.sender_type === 'user';
                                     const bubbleClass = isUser 
                                         ? 'bg-sky-600 text-white rounded-l-2xl rounded-tr-2xl ml-auto shadow-md' 
-                                        : 'bg-gray-800 text-gray-200 rounded-r-2xl rounded-tl-2xl mr-auto border border-gray-700';
+                                        : 'bg-white text-slate-800 rounded-r-2xl rounded-tl-2xl mr-auto border border-slate-200 shadow-sm';
                                     
-                                    const senderLabel = isUser ? '' : '<span class="text-[10px] font-bold text-teal-400 mb-1 block uppercase">Admin Support</span>';
+                                    const senderLabel = isUser ? '' : '<span class="text-[10px] font-bold text-sky-600 mb-1 block uppercase">Admin Support</span>';
 
                                     // FIX SPASI CHAT (Hapus Enter pada Template Literal)
-                                    return '<div class="max-w-[85%] md:max-w-[75%] ' + (isUser ? 'ml-auto' : 'mr-auto') + '">' + senderLabel + '<div class="px-4 py-2.5 text-sm whitespace-pre-wrap break-words leading-normal ' + bubbleClass + '">' + escapeHtmlClient(r.message) + '</div><span class="text-[10px] text-gray-500 block mt-1 ' + (isUser ? 'text-right font-mono' : 'text-left font-mono') + '">' + r.created_at + '</span></div>';
+                                    return '<div class="max-w-[85%] md:max-w-[75%] ' + (isUser ? 'ml-auto' : 'mr-auto') + '">' + senderLabel + '<div class="px-4 py-2.5 text-sm whitespace-pre-wrap break-words leading-normal ' + bubbleClass + '">' + escapeHtmlClient(r.message) + '</div><span class="text-[10px] text-slate-400 block mt-1 ' + (isUser ? 'text-right font-mono' : 'text-left font-mono') + '">' + r.created_at + '</span></div>';
                                 }).join('');
                                 
                                 setTimeout(() => { chatContainer.scrollTop = chatContainer.scrollHeight; }, 100);
                             }
                         } else {
-                            chatContainer.innerHTML = '<p class="text-center text-sky-400 mt-10">Gagal memuat tiket.</p>';
+                            chatContainer.innerHTML = '<p class="text-center text-sky-600 mt-10">Gagal memuat tiket.</p>';
                         }
-                    } catch(e) { chatContainer.innerHTML = '<p class="text-center text-sky-400 mt-10">Error koneksi.</p>'; }
+                    } catch(e) { chatContainer.innerHTML = '<p class="text-center text-sky-600 mt-10">Error koneksi.</p>'; }
                 }
 
                 async function sendTicketReply() {
@@ -9237,9 +9234,9 @@ Total : Rp.${totalSaldo.toLocaleString("id-ID")}
       let vpnHtml = "";
       if (vpns && vpns.length > 0) {
         vpnHtml = `
-                <div class="overflow-x-auto rounded-xl border border-gray-700 bg-gray-900 shadow-xl">
-                    <table class="w-full text-left text-sm text-gray-300 whitespace-nowrap">
-                        <thead class="bg-gray-950 text-gray-400 border-b border-gray-700">
+                <div class="overflow-x-auto rounded-2xl border border-slate-200 bg-white shadow-lg">
+                    <table class="w-full text-left text-sm text-slate-700 whitespace-nowrap">
+                        <thead class="bg-slate-50 text-slate-600 border-b border-slate-200">
                             <tr>
                                 <th class="p-4 font-bold uppercase tracking-wider text-xs">Username VPN</th>
                                 <th class="p-4 font-bold uppercase tracking-wider text-xs">Protokol & Server</th>
@@ -9247,18 +9244,18 @@ Total : Rp.${totalSaldo.toLocaleString("id-ID")}
                                 <th class="p-4 font-bold uppercase tracking-wider text-xs text-center">Aksi & Eksekusi</th>
                             </tr>
                         </thead>
-                        <tbody class="divide-y divide-gray-800">
+                        <tbody class="divide-y divide-slate-100">
                             ${vpns.map((v) => `
-                                <tr class="hover:bg-gray-800/50 transition">
-                                    <td class="p-4 font-bold text-cyan-400 font-mono text-base">${v.username}</td>
+                                <tr class="hover:bg-slate-50/70 transition">
+                                    <td class="p-4 font-bold text-sky-600 font-mono text-base">${v.username}</td>
                                     <td class="p-4 text-xs">
-                                        <span class="block text-gray-200 font-bold mb-0.5">${v.protocol}</span>
-                                        <span class="text-gray-500">${v.server}</span>
+                                        <span class="block text-slate-900 font-bold mb-0.5">${v.protocol}</span>
+                                        <span class="text-slate-500">${v.server}</span>
                                     </td>
-                                    <td class="p-4 text-xs font-mono font-bold ${v.exp.includes("1 Jam") ? "text-cyan-400" : "text-yellow-400"}">${v.exp}</td>
+                                    <td class="p-4 text-xs font-mono font-bold ${v.exp.includes("1 Jam") ? "text-sky-600" : "text-amber-600"}">${v.exp}</td>
                                     <td class="p-4 flex gap-2 justify-center">
-                                        <button onclick="detailVpn('${v.id}')" class="bg-gray-700 hover:bg-gray-600 text-white text-[11px] px-3 py-2 rounded-lg uppercase font-bold transition shadow-md flex items-center gap-1.5"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg> Detail</button>
-                                        ${v.exp.includes("1 Jam") ? `<span class="bg-sky-500/10 text-sky-400 border border-sky-500/20 text-[11px] px-3 py-2 rounded-lg uppercase font-bold text-center inline-block cursor-not-allowed">Trial Tidak Bisa Diperpanjang</span>` : `<button onclick="renewVpn('${v.id}', '${v.username}')" class="bg-sky-600 hover:bg-sky-500 text-white text-[11px] px-3 py-2 rounded-lg uppercase font-bold transition shadow-md flex items-center gap-1.5"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg> Perpanjang</button>`}
+                                        <button onclick="detailVpn('${v.id}')" class="bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-300 text-[11px] px-3 py-2 rounded-lg uppercase font-bold transition shadow-sm flex items-center gap-1.5"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg> Detail</button>
+                                        ${v.exp.includes("1 Jam") ? `<span class="bg-sky-50 text-sky-600 border border-sky-200 text-[11px] px-3 py-2 rounded-lg uppercase font-bold text-center inline-block cursor-not-allowed">Trial Tidak Bisa Diperpanjang</span>` : `<button onclick="renewVpn('${v.id}', '${v.username}')" class="bg-sky-600 hover:bg-sky-500 text-white text-[11px] px-3 py-2 rounded-lg uppercase font-bold transition shadow-md flex items-center gap-1.5"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg> Perpanjang</button>`}
                                     </td>
                                 </tr>
                             `).join("")}
@@ -9267,12 +9264,12 @@ Total : Rp.${totalSaldo.toLocaleString("id-ID")}
                     
                     <!-- Pagination controls -->
                     ${totalPages > 1 ? `
-                    <div class="p-4 bg-gray-950 border-t border-gray-800 flex items-center justify-between gap-4 flex-wrap">
-                        <a href="${vpnPage > 1 ? `/vpn-saya?page=${vpnPage - 1}` : "#"}" class="bg-gray-800 hover:bg-gray-750 border border-gray-700 text-white px-4 py-2 rounded-xl text-xs font-bold transition flex items-center gap-1.5 ${vpnPage <= 1 ? "opacity-50 pointer-events-none" : ""}">
+                    <div class="p-4 bg-slate-50 border-t border-slate-200 flex items-center justify-between gap-4 flex-wrap">
+                        <a href="${vpnPage > 1 ? `/vpn-saya?page=${vpnPage - 1}` : "#"}" class="bg-white hover:bg-slate-100 border border-slate-300 text-slate-700 px-4 py-2 rounded-xl text-xs font-bold transition flex items-center gap-1.5 ${vpnPage <= 1 ? "opacity-50 pointer-events-none" : ""}">
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg> Sebelum
                         </a>
-                        <span class="text-xs text-gray-400 font-medium">Halaman ${vpnPage} dari ${totalPages} (Total ${totalVpns} VPN)</span>
-                        <a href="${vpnPage < totalPages ? `/vpn-saya?page=${vpnPage + 1}` : "#"}" class="bg-gray-800 hover:bg-gray-750 border border-gray-700 text-white px-4 py-2 rounded-xl text-xs font-bold transition flex items-center gap-1.5 ${vpnPage >= totalPages ? "opacity-50 pointer-events-none" : ""}">
+                        <span class="text-xs text-slate-500 font-medium">Halaman ${vpnPage} dari ${totalPages} (Total ${totalVpns} VPN)</span>
+                        <a href="${vpnPage < totalPages ? `/vpn-saya?page=${vpnPage + 1}` : "#"}" class="bg-white hover:bg-slate-100 border border-slate-300 text-slate-700 px-4 py-2 rounded-xl text-xs font-bold transition flex items-center gap-1.5 ${vpnPage >= totalPages ? "opacity-50 pointer-events-none" : ""}">
                             Berikut <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
                         </a>
                     </div>
@@ -9280,28 +9277,28 @@ Total : Rp.${totalSaldo.toLocaleString("id-ID")}
                 </div>`;
       } else {
         vpnHtml = `
-                <div class="text-center py-16 bg-gray-800 rounded-3xl border border-gray-700 flex flex-col items-center justify-center shadow-inner relative z-10">
-                    <div class="w-20 h-20 bg-gray-900 rounded-full flex items-center justify-center mb-5 border border-gray-700">
-                        <svg class="w-10 h-10 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M5 12h14M5 12a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v4a2 2 0 01-2 2M5 12a2 2 0 00-2 2v4a2 2 0 002 2h14a2 2 0 002-2v-4a2 2 0 00-2-2m-2-4h.01M17 16h.01"></path></svg>
+                <div class="text-center py-16 bg-white rounded-3xl border border-slate-200 shadow-sm flex flex-col items-center justify-center relative z-10">
+                    <div class="w-20 h-20 bg-sky-50 rounded-full flex items-center justify-center mb-5 border border-sky-100">
+                        <svg class="w-10 h-10 text-sky-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M5 12h14M5 12a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v4a2 2 0 01-2 2M5 12a2 2 0 00-2 2v4a2 2 0 002 2h14a2 2 0 002-2v-4a2 2 0 00-2-2m-2-4h.01M17 16h.01"></path></svg>
                     </div>
-                    <p class="text-gray-400 text-lg font-medium mb-1">Anda belum memiliki VPN aktif.</p>
-                    <p class="text-gray-500 text-sm mb-6">Server VPN yang Anda buat akan muncul di sini.</p>
+                    <p class="text-slate-800 text-lg font-bold mb-1">Anda belum memiliki VPN aktif.</p>
+                    <p class="text-slate-500 text-sm mb-6">Server VPN yang Anda buat akan muncul di sini.</p>
                     <a href="/" class="bg-sky-600 hover:bg-sky-500 text-white px-8 py-3 rounded-xl transition font-bold shadow-lg shadow-sky-600/30">Buat VPN Sekarang</a>
                 </div>`;
       }
       const content = `
             <div class="max-w-6xl mx-auto px-4 md:px-8 py-8 md:py-12 relative z-10">
-                <div class="flex flex-col md:flex-row md:items-end justify-between mb-8 border-b border-gray-800 pb-5 gap-4">
+                <div class="flex flex-col md:flex-row md:items-end justify-between mb-8 border-b border-slate-200 pb-5 gap-4">
                     <div>
-                        <h1 class="text-3xl font-black text-white tracking-tight flex items-center gap-3">
-                            <svg class="w-8 h-8 text-sky-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14M5 12a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v4a2 2 0 01-2 2M5 12a2 2 0 00-2 2v4a2 2 0 002 2h14a2 2 0 002-2v-4a2 2 0 00-2-2m-2-4h.01M17 16h.01"></path></svg>
+                        <h1 class="text-3xl font-black text-slate-900 tracking-tight flex items-center gap-3">
+                            <svg class="w-8 h-8 text-sky-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14M5 12a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v4a2 2 0 01-2 2M5 12a2 2 0 00-2 2v4a2 2 0 002 2h14a2 2 0 002-2v-4a2 2 0 00-2-2m-2-4h.01M17 16h.01"></path></svg>
                             VPN Aktif Saya
                         </h1>
-                        <p class="text-gray-400 text-sm mt-2">Kelola, lihat detail, dan perpanjang masa aktif server VPN Anda di sini.</p>
+                        <p class="text-slate-500 text-sm mt-2">Kelola, lihat detail, dan perpanjang masa aktif server VPN Anda di sini.</p>
                     </div>
-                    <div class="bg-gray-800 px-4 py-2.5 rounded-xl border border-gray-700 flex items-center gap-3 shadow-inner">
-                        <span class="text-xs text-gray-400 font-bold uppercase">Total Akun</span>
-                        <span class="bg-sky-500/20 text-cyan-400 px-2.5 py-0.5 rounded font-mono font-bold border border-sky-600/30">${totalVpns}</span>
+                    <div class="bg-white px-4 py-2.5 rounded-xl border border-slate-200 flex items-center gap-3 shadow-sm">
+                        <span class="text-xs text-slate-500 font-bold uppercase">Total Akun</span>
+                        <span class="bg-sky-50 text-sky-700 px-2.5 py-0.5 rounded font-mono font-bold border border-sky-200">${totalVpns}</span>
                     </div>
                 </div>
                 ${vpnHtml}
@@ -9318,7 +9315,7 @@ Total : Rp.${totalSaldo.toLocaleString("id-ID")}
                         if (data.success) {
                             swalDark.fire({
                                 title: 'Detail Config VPN',
-                                html: \`<div class="bg-gray-950 p-4 rounded-xl mt-2 overflow-x-auto text-left border border-gray-800 shadow-inner"><pre class="text-green-400 font-mono text-[11px] leading-relaxed whitespace-pre-wrap select-all">\${data.detail}</pre></div>\`,
+                                html: \`<div class="bg-slate-900 p-4 rounded-xl mt-2 overflow-x-auto text-left border border-slate-800 shadow-inner"><pre class="text-emerald-400 font-mono text-[11px] leading-relaxed whitespace-pre-wrap select-all">\${data.detail}</pre></div>\`,
                                 width: '600px',
                                 confirmButtonText: 'Tutup',
                                 confirmButtonColor: '#374151'
@@ -9335,11 +9332,11 @@ Total : Rp.${totalSaldo.toLocaleString("id-ID")}
                     const { value: days, isDismissed } = await swalDark.fire({
                         title: 'Perpanjang VPN',
                         html: \`
-                            <div class="text-left bg-gray-800 p-4 rounded-xl border border-gray-700 mb-4">
-                                <p class="text-xs text-gray-400 font-bold uppercase mb-1">Username Akun</p>
-                                <p class="text-cyan-400 font-mono font-bold text-lg">\${username}</p>
+                            <div class="text-left bg-slate-50 p-4 rounded-xl border border-slate-200 mb-4">
+                                <p class="text-xs text-slate-500 font-bold uppercase mb-1">Username Akun</p>
+                                <p class="text-sky-600 font-mono font-bold text-lg">\${username}</p>
                             </div>
-                            <p class="text-sm text-gray-300 mb-4">Silakan pilih durasi perpanjangan. Saldo Web Anda akan otomatis terpotong sebesar <b>Rp \${PRICE_PER_DAY}/Hari</b>.</p>
+                            <p class="text-sm text-slate-600 mb-4">Silakan pilih durasi perpanjangan. Saldo Web Anda akan otomatis terpotong sebesar <b>Rp \${PRICE_PER_DAY}/Hari</b>.</p>
                         \`,
                         input: 'select',
                         inputOptions: {
@@ -9421,53 +9418,53 @@ Total : Rp.${totalSaldo.toLocaleString("id-ID")}
         .glow-pulse { animation: glowPulse 4s ease-in-out infinite; }
     </style>
 </head>
-<body class="bg-[#0b1120] text-gray-100 min-h-screen flex items-center justify-center p-4 relative overflow-hidden">
-    <div class="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-sky-500/15 rounded-full blur-[140px] pointer-events-none glow-pulse"></div>
-    <div class="absolute bottom-10 right-10 w-96 h-96 bg-blue-600/10 rounded-full blur-[120px] pointer-events-none"></div>
-    <div class="absolute top-10 left-10 w-80 h-80 bg-cyan-500/10 rounded-full blur-[100px] pointer-events-none"></div>
+<body class="bg-slate-50 text-slate-800 min-h-screen flex items-center justify-center p-4 relative overflow-hidden">
+    <div class="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-sky-200/50 rounded-full blur-[140px] pointer-events-none glow-pulse"></div>
+    <div class="absolute bottom-10 right-10 w-96 h-96 bg-blue-200/40 rounded-full blur-[120px] pointer-events-none"></div>
+    <div class="absolute top-10 left-10 w-80 h-80 bg-cyan-200/40 rounded-full blur-[100px] pointer-events-none"></div>
 
     <div class="relative z-10 w-full max-w-md my-auto">
         <div class="mb-6 text-center">
-            <a href="/" class="inline-flex items-center gap-2 text-xs font-semibold text-gray-400 hover:text-cyan-300 transition py-2 px-5 rounded-full bg-gray-900/80 border border-gray-800 hover:border-sky-500/40 backdrop-blur-md shadow-lg shadow-black/40">
+            <a href="/" class="inline-flex items-center gap-2 text-xs font-semibold text-slate-600 hover:text-sky-600 transition py-2 px-5 rounded-full bg-white/90 border border-slate-200 hover:border-sky-400 backdrop-blur-md shadow-sm">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
                 Kembali ke Beranda
             </a>
         </div>
 
-        <div class="bg-gradient-to-b from-gray-900/95 via-gray-900/85 to-gray-950/95 border border-sky-500/30 backdrop-blur-2xl rounded-[2.5rem] p-8 md:p-11 shadow-[0_25px_60px_-15px_rgba(0,0,0,0.8),0_0_50px_rgba(14,165,233,0.22)] text-center relative overflow-hidden">
-            <div class="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-transparent via-cyan-400 to-transparent"></div>
+        <div class="bg-white border border-slate-200 rounded-[2.5rem] p-8 md:p-11 shadow-[0_20px_50px_-15px_rgba(14,165,233,0.15)] text-center relative overflow-hidden">
+            <div class="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-transparent via-sky-500 to-transparent"></div>
 
             <div class="relative mx-auto mb-7 w-32 h-32 md:w-36 md:h-36 flex items-center justify-center float-logo">
-                <div class="absolute inset-0 bg-gradient-to-tr from-cyan-400 via-sky-500 to-blue-600 rounded-3xl blur-2xl opacity-70 glow-pulse"></div>
-                <div class="relative w-28 h-28 md:w-32 md:h-32 rounded-3xl p-2 bg-gray-950/95 border-2 border-sky-400/60 shadow-[0_10px_35px_rgba(14,165,233,0.4)] flex items-center justify-center overflow-hidden">
+                <div class="absolute inset-0 bg-gradient-to-tr from-cyan-400 via-sky-500 to-blue-600 rounded-3xl blur-2xl opacity-40 glow-pulse"></div>
+                <div class="relative w-28 h-28 md:w-32 md:h-32 rounded-3xl p-2 bg-white border-2 border-sky-400/60 shadow-[0_10px_35px_rgba(14,165,233,0.25)] flex items-center justify-center overflow-hidden">
                     <img src="${LOGO_URL}" alt="Logo Warung Pulsa" class="w-full h-full object-cover rounded-2xl">
                 </div>
             </div>
 
-            <h1 class="text-2xl md:text-3xl font-black text-white tracking-tight">
-                Warung <span class="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-sky-400 to-blue-500">Pulsa</span>
+            <h1 class="text-2xl md:text-3xl font-black text-slate-900 tracking-tight">
+                Warung <span class="text-transparent bg-clip-text bg-gradient-to-r from-sky-600 to-blue-600">Pulsa</span>
             </h1>
-            <p class="text-xs font-bold tracking-widest text-sky-400 uppercase mt-1 mb-3">Portal Member & Layanan Digital</p>
-            <p class="text-xs md:text-sm text-gray-400 leading-relaxed mb-8">Silakan masuk menggunakan akun Google Anda untuk mengakses dashboard, deposit saldo otomatis, dan membuat VPN instan.</p>
+            <p class="text-xs font-bold tracking-widest text-sky-600 uppercase mt-1 mb-3">Portal Member & Layanan Digital</p>
+            <p class="text-xs md:text-sm text-slate-600 leading-relaxed mb-8">Silakan masuk menggunakan akun Google Anda untuk mengakses dashboard, deposit saldo otomatis, dan membuat VPN instan.</p>
 
-            <div class="p-4 rounded-2xl bg-gray-950/70 border border-gray-800/90 mb-7 flex flex-col items-center justify-center shadow-inner">
+            <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200 mb-7 flex flex-col items-center justify-center shadow-inner">
                 <div id="g_id_onload" data-client_id="${GOOGLE_CLIENT_ID}" data-callback="handleCredentialResponse" data-auto_prompt="false"></div>
-                <div class="g_id_signin flex justify-center w-full shadow-xl" data-type="standard" data-size="large" data-theme="filled_black" data-text="sign_in_with" data-shape="rectangular" data-logo_alignment="left"></div>
+                <div class="g_id_signin flex justify-center w-full shadow-sm" data-type="standard" data-size="large" data-theme="outline" data-text="sign_in_with" data-shape="rectangular" data-logo_alignment="left"></div>
             </div>
 
-            <div class="grid grid-cols-2 gap-2.5 pt-5 border-t border-gray-800/80 text-[11px] text-gray-400">
-                <div class="flex items-center justify-center gap-1.5 py-2 px-2.5 rounded-xl bg-gray-950/50 border border-gray-800/80">
-                    <svg class="w-4 h-4 text-cyan-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>
-                    <span class="font-medium">OAuth Resmi Google</span>
+            <div class="grid grid-cols-2 gap-2.5 pt-5 border-t border-slate-200 text-[11px] text-slate-600">
+                <div class="flex items-center justify-center gap-1.5 py-2 px-2.5 rounded-xl bg-slate-50 border border-slate-200 font-medium">
+                    <svg class="w-4 h-4 text-sky-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>
+                    <span>OAuth Resmi Google</span>
                 </div>
-                <div class="flex items-center justify-center gap-1.5 py-2 px-2.5 rounded-xl bg-gray-950/50 border border-gray-800/80">
-                    <svg class="w-4 h-4 text-green-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
-                    <span class="font-medium">Sistem 100% Otomatis</span>
+                <div class="flex items-center justify-center gap-1.5 py-2 px-2.5 rounded-xl bg-slate-50 border border-slate-200 font-medium">
+                    <svg class="w-4 h-4 text-emerald-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                    <span>Sistem 100% Otomatis</span>
                 </div>
             </div>
         </div>
 
-        <p class="text-center text-xs text-gray-500 mt-6">&copy; ${new Date().getFullYear()} Warung Pulsa. Hak cipta dilindungi.</p>
+        <p class="text-center text-xs text-slate-400 mt-6">&copy; ${new Date().getFullYear()} Warung Pulsa. Hak cipta dilindungi.</p>
     </div>
 
     <script>
@@ -9502,46 +9499,46 @@ Total : Rp.${totalSaldo.toLocaleString("id-ID")}
                 <div class="relative overflow-hidden bg-transparent pt-12 md:pt-16 pb-28 md:pb-36">
                     <div class="absolute inset-0 z-0 pointer-events-none">
                         <div class="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-5"></div>
-                        <div class="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-sky-500/10 rounded-full blur-[140px]"></div>
-                        <div class="absolute bottom-0 left-0 right-0 h-40 bg-gradient-to-t from-gray-900 to-transparent"></div>
+                        <div class="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-sky-200/40 rounded-full blur-[140px]"></div>
+                        <div class="absolute bottom-0 left-0 right-0 h-40 bg-gradient-to-t from-slate-100 to-transparent"></div>
                     </div>
                     <div class="relative max-w-6xl mx-auto px-4 text-center z-10">
-                        <span class="inline-block py-1.5 px-4 rounded-full bg-sky-950/60 text-cyan-300 text-xs md:text-sm font-bold mb-6 border border-sky-500/30 shadow-lg shadow-sky-500/10 backdrop-blur-md">Mulai Rp ${appSettings.price_per_day}/Hari &bull; Layanan VPN & PPOB Otomatis</span>
-                        <h1 class="text-4xl md:text-6xl lg:text-7xl font-black text-white tracking-tight mb-5 drop-shadow-xl">Akses Internet <span class="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-sky-400 to-blue-500">Tanpa Batas</span></h1>
-                        <p class="mt-2 max-w-2xl text-base md:text-lg text-gray-400 mx-auto mb-10 leading-relaxed">Amankan koneksi Anda, buka blokir geografis, dan nikmati kecepatan tinggi dengan multi-protokol server dari Warung Pulsa.</p>
+                        <span class="inline-block py-1.5 px-4 rounded-full bg-sky-50 text-sky-700 text-xs md:text-sm font-bold mb-6 border border-sky-200 shadow-sm backdrop-blur-md">Mulai Rp ${appSettings.price_per_day}/Hari &bull; Layanan VPN & PPOB Otomatis</span>
+                        <h1 class="text-4xl md:text-6xl lg:text-7xl font-black text-slate-900 tracking-tight mb-5">Akses Internet <span class="text-transparent bg-clip-text bg-gradient-to-r from-sky-600 via-sky-500 to-blue-600">Tanpa Batas</span></h1>
+                        <p class="mt-2 max-w-2xl text-base md:text-lg text-slate-600 mx-auto mb-10 leading-relaxed">Amankan koneksi Anda, buka blokir geografis, dan nikmati kecepatan tinggi dengan multi-protokol server dari Warung Pulsa.</p>
 
                         <!-- Box Login Elegan dengan Logo Menonjol -->
                         <div class="relative inline-block w-full max-w-md mx-auto z-20 text-center">
-                            <div class="bg-gradient-to-b from-gray-900/95 via-gray-900/85 to-gray-950/95 border border-sky-500/30 backdrop-blur-2xl p-8 md:p-10 rounded-[2.5rem] shadow-[0_25px_60px_-15px_rgba(0,0,0,0.8),0_0_50px_rgba(14,165,233,0.22)] relative overflow-hidden">
-                                <div class="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-transparent via-cyan-400 to-transparent"></div>
+                            <div class="bg-white border border-slate-200 p-8 md:p-10 rounded-[2.5rem] shadow-[0_25px_60px_-15px_rgba(14,165,233,0.15)] relative overflow-hidden">
+                                <div class="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-transparent via-sky-500 to-transparent"></div>
 
                                 <!-- Logo Warung Pulsa Lebih Besar & Elegan -->
                                 <div class="relative mx-auto mb-6 w-28 h-28 md:w-32 md:h-32 flex items-center justify-center">
-                                    <div class="absolute inset-0 bg-gradient-to-tr from-cyan-400 via-sky-500 to-blue-600 rounded-3xl blur-xl opacity-65 animate-pulse"></div>
-                                    <div class="relative w-24 h-24 md:w-28 md:h-28 rounded-3xl p-1.5 bg-gray-950 border-2 border-sky-400/60 shadow-2xl flex items-center justify-center overflow-hidden hover:scale-105 transition-transform duration-300">
+                                    <div class="absolute inset-0 bg-gradient-to-tr from-cyan-400 via-sky-500 to-blue-600 rounded-3xl blur-xl opacity-40 animate-pulse"></div>
+                                    <div class="relative w-24 h-24 md:w-28 md:h-28 rounded-3xl p-1.5 bg-white border-2 border-sky-400/60 shadow-xl flex items-center justify-center overflow-hidden hover:scale-105 transition-transform duration-300">
                                         <img src="${LOGO_URL}" alt="Logo Warung Pulsa" class="w-full h-full object-cover rounded-2xl">
                                     </div>
                                 </div>
 
-                                <h3 class="text-2xl font-black text-white tracking-tight mb-1">
-                                    Masuk ke <span class="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-sky-400 to-blue-500">Warung Pulsa</span>
+                                <h3 class="text-2xl font-black text-slate-900 tracking-tight mb-1">
+                                    Masuk ke <span class="text-transparent bg-clip-text bg-gradient-to-r from-sky-600 to-blue-600">Warung Pulsa</span>
                                 </h3>
-                                <p class="text-xs font-bold text-sky-400 uppercase tracking-widest mb-3">Portal Member & Transaksi</p>
-                                <p class="text-xs md:text-sm text-gray-400 mb-6 leading-relaxed">Login satu klik menggunakan akun Google Anda untuk mengisi saldo, membuat akun VPN, dan mengelola layanan.</p>
+                                <p class="text-xs font-bold text-sky-600 uppercase tracking-widest mb-3">Portal Member & Transaksi</p>
+                                <p class="text-xs md:text-sm text-slate-600 mb-6 leading-relaxed">Login satu klik menggunakan akun Google Anda untuk mengisi saldo, membuat akun VPN, dan mengelola layanan.</p>
 
-                                <div class="p-3.5 rounded-2xl bg-gray-950/70 border border-gray-800 flex flex-col items-center justify-center mb-6 shadow-inner">
+                                <div class="p-3.5 rounded-2xl bg-slate-50 border border-slate-200 flex flex-col items-center justify-center mb-6 shadow-inner">
                                     <div id="g_id_onload" data-client_id="${GOOGLE_CLIENT_ID}" data-callback="handleCredentialResponse" data-auto_prompt="false"></div>
-                                    <div class="g_id_signin flex justify-center w-full shadow-lg" data-type="standard" data-size="large" data-theme="filled_black" data-text="sign_in_with" data-shape="rectangular" data-logo_alignment="left"></div>
+                                    <div class="g_id_signin flex justify-center w-full shadow-sm" data-type="standard" data-size="large" data-theme="outline" data-text="sign_in_with" data-shape="rectangular" data-logo_alignment="left"></div>
                                 </div>
 
-                                <div class="grid grid-cols-2 gap-2 pt-4 border-t border-gray-800/80 text-[11px] text-gray-400">
-                                    <div class="flex items-center justify-center gap-1.5 py-1.5 px-2 rounded-xl bg-gray-950/40 border border-gray-800/80">
-                                        <svg class="w-3.5 h-3.5 text-cyan-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
-                                        <span class="font-medium">OAuth Resmi Google</span>
+                                <div class="grid grid-cols-2 gap-2 pt-4 border-t border-slate-200 text-[11px] text-slate-600">
+                                    <div class="flex items-center justify-center gap-1.5 py-1.5 px-2 rounded-xl bg-slate-50 border border-slate-200 font-medium">
+                                        <svg class="w-3.5 h-3.5 text-sky-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
+                                        <span>OAuth Resmi Google</span>
                                     </div>
-                                    <div class="flex items-center justify-center gap-1.5 py-1.5 px-2 rounded-xl bg-gray-950/40 border border-gray-800/80">
-                                        <svg class="w-3.5 h-3.5 text-green-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                                        <span class="font-medium">Aktif Otomatis 24/7</span>
+                                    <div class="flex items-center justify-center gap-1.5 py-1.5 px-2 rounded-xl bg-slate-50 border border-slate-200 font-medium">
+                                        <svg class="w-3.5 h-3.5 text-emerald-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                        <span>Aktif Otomatis 24/7</span>
                                     </div>
                                 </div>
                             </div>
@@ -9549,62 +9546,62 @@ Total : Rp.${totalSaldo.toLocaleString("id-ID")}
                     </div>
                 </div>
 
-                <div class="py-16 md:py-24 bg-gray-800/80 border-y border-gray-800 relative z-10 backdrop-blur-sm">
+                <div class="py-16 md:py-24 bg-white border-y border-slate-200 relative z-10">
                     <div class="max-w-6xl mx-auto px-4">
                         <div class="text-center mb-16">
-                            <h2 class="text-3xl md:text-4xl font-bold text-white">Mengapa Memilih Warung Pulsa?</h2>
-                            <div class="w-20 h-1.5 bg-sky-500 mx-auto mt-6 rounded-full shadow-lg shadow-sky-600/50"></div>
+                            <h2 class="text-3xl md:text-4xl font-bold text-slate-900">Mengapa Memilih Warung Pulsa?</h2>
+                            <div class="w-20 h-1.5 bg-sky-500 mx-auto mt-6 rounded-full shadow-md"></div>
                         </div>
                         <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                            <div class="bg-gray-900 p-8 rounded-3xl border border-gray-700 shadow-xl hover:-translate-y-2 hover:border-sky-600 transition-all duration-300">
-                                <div class="w-14 h-14 bg-sky-950/50 rounded-2xl flex items-center justify-center mb-6 text-cyan-400 shadow-inner border border-sky-600/20"><svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg></div>
-                                <h3 class="text-xl font-bold text-white mb-3">Kecepatan Tinggi</h3>
-                                <p class="text-gray-400 text-sm leading-relaxed">Server berkinerja tinggi yang dihosting di cloud terkemuka, menjamin ping rendah dan bandwidth besar untuk streaming & gaming.</p>
+                            <div class="bg-slate-50 p-8 rounded-3xl border border-slate-200 shadow-sm hover:-translate-y-2 hover:border-sky-500 hover:shadow-xl transition-all duration-300">
+                                <div class="w-14 h-14 bg-sky-100 rounded-2xl flex items-center justify-center mb-6 text-sky-600 border border-sky-200"><svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg></div>
+                                <h3 class="text-xl font-bold text-slate-900 mb-3">Kecepatan Tinggi</h3>
+                                <p class="text-slate-600 text-sm leading-relaxed">Server berkinerja tinggi yang dihosting di cloud terkemuka, menjamin ping rendah dan bandwidth besar untuk streaming & gaming.</p>
                             </div>
-                            <div class="bg-gray-900 p-8 rounded-3xl border border-gray-700 shadow-xl hover:-translate-y-2 hover:border-sky-600 transition-all duration-300">
-                                <div class="w-14 h-14 bg-sky-950/50 rounded-2xl flex items-center justify-center mb-6 text-cyan-400 shadow-inner border border-sky-600/20"><svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg></div>
-                                <h3 class="text-xl font-bold text-white mb-3">Pilihan Protokol Luas</h3>
-                                <p class="text-gray-400 text-sm leading-relaxed">Tersedia jaringan SSH Premium, L2TP, VMess, VLESS, hingga Trojan WebSocket yang dapat disesuaikan dengan kebutuhan Anda.</p>
+                            <div class="bg-slate-50 p-8 rounded-3xl border border-slate-200 shadow-sm hover:-translate-y-2 hover:border-sky-500 hover:shadow-xl transition-all duration-300">
+                                <div class="w-14 h-14 bg-sky-100 rounded-2xl flex items-center justify-center mb-6 text-sky-600 border border-sky-200"><svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg></div>
+                                <h3 class="text-xl font-bold text-slate-900 mb-3">Pilihan Protokol Luas</h3>
+                                <p class="text-slate-600 text-sm leading-relaxed">Tersedia jaringan SSH Premium, L2TP, VMess, VLESS, hingga Trojan WebSocket yang dapat disesuaikan dengan kebutuhan Anda.</p>
                             </div>
-                            <div class="bg-gray-900 p-8 rounded-3xl border border-gray-700 shadow-xl hover:-translate-y-2 hover:border-green-500 transition-all duration-300">
-                                <div class="w-14 h-14 bg-green-900/50 rounded-2xl flex items-center justify-center mb-6 text-green-400 shadow-inner border border-green-500/20"><svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192l-3.536 3.536M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-5 0a4 4 0 11-8 0 4 4 0 018 0z"></path></svg></div>
-                                <h3 class="text-xl font-bold text-white mb-3">Sistem Otomatis</h3>
-                                <p class="text-gray-400 text-sm leading-relaxed">Top up saldo via QRIS Realtime dan pembuatan server VPN dilakukan 100% otomatis dalam hitungan detik tanpa campur tangan admin.</p>
+                            <div class="bg-slate-50 p-8 rounded-3xl border border-slate-200 shadow-sm hover:-translate-y-2 hover:border-emerald-500 hover:shadow-xl transition-all duration-300">
+                                <div class="w-14 h-14 bg-emerald-100 rounded-2xl flex items-center justify-center mb-6 text-emerald-600 border border-emerald-200"><svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192l-3.536 3.536M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-5 0a4 4 0 11-8 0 4 4 0 018 0z"></path></svg></div>
+                                <h3 class="text-xl font-bold text-slate-900 mb-3">Sistem Otomatis</h3>
+                                <p class="text-slate-600 text-sm leading-relaxed">Top up saldo via QRIS Realtime dan pembuatan server VPN dilakukan 100% otomatis dalam hitungan detik tanpa campur tangan admin.</p>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <div class="py-16 md:py-24 bg-gray-900/80 relative z-10 backdrop-blur-sm">
+                <div class="py-16 md:py-24 bg-slate-50/80 relative z-10">
                     <div class="max-w-6xl mx-auto px-4">
                         <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-start">
                             <div>
-                                <h2 class="text-3xl md:text-4xl font-bold text-white mb-4">Tentang Warung Pulsa</h2>
+                                <h2 class="text-3xl md:text-4xl font-bold text-slate-900 mb-4">Tentang Warung Pulsa</h2>
                                 <div class="w-16 h-1.5 bg-sky-500 rounded-full mb-8"></div>
-                                <p class="text-gray-400 leading-relaxed mb-6 text-justify text-lg"><strong>Warung Pulsa</strong> adalah platform penyedia layanan Virtual Private Network (VPN) dan Proxy premium terpercaya. Kami membangun infrastruktur ini di atas server berkinerja tinggi untuk memastikan Anda mendapatkan kecepatan tanpa kompromi.</p>
-                                <div class="bg-gradient-to-r from-gray-800 to-gray-900 p-6 rounded-2xl border border-sky-600/30 shadow-lg mb-6">
-                                    <p class="text-red-100 font-medium leading-relaxed text-justify">Produk utama yang kami jual adalah layanan <strong>VPN Premium</strong>. Anda dapat menikmati seluruh fitur dan keunggulan jaringan proxy kami dengan sistem tarif transparan sebesar <strong>Rp ${appSettings.price_per_day} per hari</strong>.</p>
+                                <p class="text-slate-700 leading-relaxed mb-6 text-justify text-lg"><strong>Warung Pulsa</strong> adalah platform penyedia layanan Virtual Private Network (VPN) dan Proxy premium terpercaya. Kami membangun infrastruktur ini di atas server berkinerja tinggi untuk memastikan Anda mendapatkan kecepatan tanpa kompromi.</p>
+                                <div class="bg-white p-6 rounded-2xl border border-sky-200 shadow-md mb-6">
+                                    <p class="text-slate-800 font-medium leading-relaxed text-justify">Produk utama yang kami jual adalah layanan <strong>VPN Premium</strong>. Anda dapat menikmati seluruh fitur dan keunggulan jaringan proxy kami dengan sistem tarif transparan sebesar <strong>Rp ${appSettings.price_per_day} per hari</strong>.</p>
                                 </div>
-                                <p class="text-gray-400 leading-relaxed text-justify mb-6 text-lg">Seluruh ekosistem website ini\u2014mulai dari pendaftaran, pengisian saldo, hingga proses <em>deployment</em> server VPN\u2014berjalan <strong>100% secara otomatis 24 jam nonstop</strong>.</p>
+                                <p class="text-slate-700 leading-relaxed text-justify mb-6 text-lg">Seluruh ekosistem website ini\u2014mulai dari pendaftaran, pengisian saldo, hingga proses <em>deployment</em> server VPN\u2014berjalan <strong>100% secara otomatis 24 jam nonstop</strong>.</p>
                             </div>
-                            <div class="bg-gray-800 p-6 md:p-10 rounded-3xl border border-gray-700 shadow-2xl relative">
-                                <h2 class="text-2xl md:text-3xl font-bold text-white mb-8 border-b border-gray-700 pb-4">Alur Transaksi Otomatis</h2>
+                            <div class="bg-white p-6 md:p-10 rounded-3xl border border-slate-200 shadow-xl relative">
+                                <h2 class="text-2xl md:text-3xl font-bold text-slate-900 mb-8 border-b border-slate-200 pb-4">Alur Transaksi Otomatis</h2>
                                 <div class="space-y-8">
                                     <div class="flex gap-5 items-start">
-                                        <div class="w-12 h-12 rounded-2xl bg-sky-950/50 text-cyan-400 flex items-center justify-center font-black text-xl border border-sky-600/30 shrink-0 shadow-lg">1</div>
-                                        <div><h3 class="text-white font-bold mb-2 text-lg">Login dengan Akun Google</h3><p class="text-sm text-gray-400 leading-relaxed">Tidak perlu repot mengisi form. Akses dashboard langsung dengan 1 klik menggunakan akun Google Anda.</p></div>
+                                        <div class="w-12 h-12 rounded-2xl bg-sky-100 text-sky-600 flex items-center justify-center font-black text-xl border border-sky-200 shrink-0 shadow-sm">1</div>
+                                        <div><h3 class="text-slate-900 font-bold mb-2 text-lg">Login dengan Akun Google</h3><p class="text-sm text-slate-600 leading-relaxed">Tidak perlu repot mengisi form. Akses dashboard langsung dengan 1 klik menggunakan akun Google Anda.</p></div>
                                     </div>
                                     <div class="flex gap-5 items-start">
-                                        <div class="w-12 h-12 rounded-2xl bg-green-900/50 text-green-400 flex items-center justify-center font-black text-xl border border-green-500/30 shrink-0 shadow-lg">2</div>
-                                        <div><h3 class="text-white font-bold mb-2 text-lg">Top Up Saldo via QRIS</h3><p class="text-sm text-gray-400 leading-relaxed">Pilih nominal top up dan scan QRIS melalui aplikasi bank/e-wallet Anda. Saldo otomatis bertambah.</p></div>
+                                        <div class="w-12 h-12 rounded-2xl bg-emerald-100 text-emerald-600 flex items-center justify-center font-black text-xl border border-emerald-200 shrink-0 shadow-sm">2</div>
+                                        <div><h3 class="text-slate-900 font-bold mb-2 text-lg">Top Up Saldo via QRIS</h3><p class="text-sm text-slate-600 leading-relaxed">Pilih nominal top up dan scan QRIS melalui aplikasi bank/e-wallet Anda. Saldo otomatis bertambah.</p></div>
                                     </div>
                                     <div class="flex gap-5 items-start">
-                                        <div class="w-12 h-12 rounded-2xl bg-yellow-900/50 text-yellow-400 flex items-center justify-center font-black text-xl border border-yellow-500/30 shrink-0 shadow-lg">3</div>
-                                        <div><h3 class="text-white font-bold mb-2 text-lg">Pembuatan VPN Instan</h3><p class="text-sm text-gray-400 leading-relaxed">Pilih Server, Protokol, Username dan Durasi di dashboard lalu klik 'Bayar'. Server langsung dieksekusi.</p></div>
+                                        <div class="w-12 h-12 rounded-2xl bg-amber-100 text-amber-700 flex items-center justify-center font-black text-xl border border-amber-200 shrink-0 shadow-sm">3</div>
+                                        <div><h3 class="text-slate-900 font-bold mb-2 text-lg">Pembuatan VPN Instan</h3><p class="text-sm text-slate-600 leading-relaxed">Pilih Server, Protokol, Username dan Durasi di dashboard lalu klik 'Bayar'. Server langsung dieksekusi.</p></div>
                                     </div>
                                     <div class="flex gap-5 items-start">
-                                        <div class="w-12 h-12 rounded-2xl bg-pink-900/50 text-pink-400 flex items-center justify-center font-black text-xl border border-pink-500/30 shrink-0 shadow-lg">4</div>
-                                        <div><h3 class="text-white font-bold mb-2 text-lg">Detail Masuk ke Inbox</h3><p class="text-sm text-gray-400 leading-relaxed">Detail config lengkap VPN Anda akan langsung dikirim ke menu <strong>Inbox</strong>. Siap digunakan!</p></div>
+                                        <div class="w-12 h-12 rounded-2xl bg-purple-100 text-purple-700 flex items-center justify-center font-black text-xl border border-purple-200 shrink-0 shadow-sm">4</div>
+                                        <div><h3 class="text-slate-900 font-bold mb-2 text-lg">Detail Masuk ke Inbox</h3><p class="text-sm text-slate-600 leading-relaxed">Detail config lengkap VPN Anda akan langsung dikirim ke menu <strong>Inbox</strong>. Siap digunakan!</p></div>
                                     </div>
                                 </div>
                             </div>
@@ -9640,39 +9637,39 @@ Total : Rp.${totalSaldo.toLocaleString("id-ID")}
         if (isQrisManualOn) activeMethods.push({ value: "manual", label: "QRIS Manual (Konfirmasi Admin)" });
         if (activeMethods.length > 1) {
           let optionsHtml = activeMethods.map((m) => `<option value="${m.value}">${m.label}</option>`).join("");
-          paymentMethodHtml = `<select id="topupMethod" class="w-full mb-3 bg-gray-900 border border-gray-700 rounded-xl p-3 text-sm outline-none text-white focus:ring-2 focus:ring-sky-500 transition">${optionsHtml}</select>`;
+          paymentMethodHtml = `<select id="topupMethod" class="w-full mb-3 bg-slate-50 border border-slate-300 rounded-xl p-3 text-sm outline-none text-slate-900 focus:bg-white focus:ring-2 focus:ring-sky-500 transition">${optionsHtml}</select>`;
         } else if (activeMethods.length === 1) {
           paymentMethodHtml = `<input type="hidden" id="topupMethod" value="${activeMethods[0].value}">`;
         } else {
-          paymentMethodHtml = `<p class="text-cyan-400 text-xs mb-3 font-bold bg-sky-900/20 p-2 rounded-lg border border-sky-500/20">Metode Top Up saat ini sedang dinonaktifkan Admin.</p>`;
+          paymentMethodHtml = `<p class="text-amber-700 text-xs mb-3 font-bold bg-amber-50 p-2.5 rounded-xl border border-amber-200">Metode Top Up saat ini sedang dinonaktifkan Admin.</p>`;
         }
-        const disableTopupButton = activeMethods.length === 0 ? 'disabled class="bg-gray-700 text-gray-400 font-bold py-3 px-6 rounded-xl cursor-not-allowed shrink-0"' : 'class="bg-sky-600 hover:bg-sky-500 text-white font-bold py-3 px-6 rounded-xl transition shadow-lg shrink-0"';
+        const disableTopupButton = activeMethods.length === 0 ? 'disabled class="bg-slate-200 text-slate-400 font-bold py-3 px-6 rounded-xl cursor-not-allowed shrink-0"' : 'class="bg-sky-600 hover:bg-sky-500 text-white font-bold py-3 px-6 rounded-xl transition shadow-lg shrink-0"';
         let pendingBannerHtml = "";
         if (currentUser.unpaid_invoices && currentUser.unpaid_invoices.length > 0) {
           pendingBannerHtml = `
-                        <div class="bg-yellow-900/40 border border-yellow-500/50 p-4 md:p-5 rounded-3xl mb-8 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 shadow-lg">
+                        <div class="bg-amber-50 border border-amber-300 p-4 md:p-5 rounded-3xl mb-8 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 shadow-sm">
                             <div class="flex items-center gap-4">
-                                <div class="bg-yellow-500/20 p-3 rounded-full shrink-0"><svg class="w-6 h-6 text-yellow-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg></div>
-                                <div><h4 class="text-yellow-400 font-bold text-lg">Menunggu Pembayaran!</h4><p class="text-sm text-yellow-200 mt-1">Anda memiliki <b>${currentUser.unpaid_invoices.length}</b> tagihan Top Up Saldo yang belum dibayar.</p></div>
+                                <div class="bg-amber-100 p-3 rounded-full shrink-0"><svg class="w-6 h-6 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg></div>
+                                <div><h4 class="text-amber-900 font-bold text-lg">Menunggu Pembayaran!</h4><p class="text-sm text-amber-700 mt-1">Anda memiliki <b>${currentUser.unpaid_invoices.length}</b> tagihan Top Up Saldo yang belum dibayar.</p></div>
                             </div>
-                            <a href="/inbox" class="w-full md:w-auto text-center bg-yellow-600 hover:bg-yellow-500 text-white text-sm font-bold px-5 py-2.5 rounded-xl transition shadow whitespace-nowrap border border-yellow-500">Cek Inbox Pembayaran</a>
+                            <a href="/inbox" class="w-full md:w-auto text-center bg-amber-600 hover:bg-amber-500 text-white text-sm font-bold px-5 py-2.5 rounded-xl transition shadow whitespace-nowrap">Cek Inbox Pembayaran</a>
                         </div>
                     `;
         }
         const content = `
                 <div class="max-w-4xl mx-auto px-4 md:px-8 py-8">
                     <div class="mb-8 hidden md:block text-center relative z-10">
-                        <h1 class="text-3xl font-black text-white mb-2 tracking-tight">Dashboard Utama</h1>
-                        <p class="text-gray-400 text-sm">Kelola isi saldo dompet dan buat akun VPN baru Anda.</p>
+                        <h1 class="text-3xl font-black text-slate-900 mb-2 tracking-tight">Dashboard Utama</h1>
+                        <p class="text-slate-500 text-sm">Kelola isi saldo dompet dan buat akun VPN baru Anda.</p>
                     </div>
 
                     ${pendingBannerHtml}
 
                     <div class="space-y-8 relative z-10">
-                        <div class="bg-gradient-to-br from-gray-800 to-gray-900 p-6 md:p-8 rounded-3xl shadow-2xl border border-gray-700 relative overflow-hidden">
-                            <div class="absolute -right-6 -top-6 text-gray-700 opacity-20"><svg class="w-32 h-32" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm.31-8.86c-1.77-.45-2.34-.94-2.34-1.67 0-.84.79-1.43 2.1-1.43 1.38 0 1.9.66 1.94 1.64h1.71c-.05-1.34-.87-2.57-2.49-2.97V5H10.9v1.69c-1.51.32-2.72 1.3-2.72 2.81 0 1.79 1.49 2.69 3.66 3.21 1.95.46 2.34 1.15 2.34 1.87 0 .53-.39 1.64-2.25 1.64-1.74 0-2.26-.87-2.32-1.92H7.9c.07 1.8 1.46 3.1 3 3.5V19h2.34v-1.67c1.52-.29 2.72-1.16 2.73-2.77-.01-2.2-1.9-2.96-3.66-3.42z"/></svg></div>
-                            <h2 class="text-gray-400 font-bold uppercase tracking-wider text-xs mb-2">Total Saldo Aktif</h2>
-                            <p class="text-4xl md:text-5xl font-black text-green-400 mb-4 tracking-tighter drop-shadow-lg">${formatRupiah(currentUser.balance)}</p>
+                        <div class="bg-white p-6 md:p-8 rounded-3xl shadow-xl border border-slate-200 relative overflow-hidden">
+                            <div class="absolute -right-6 -top-6 text-slate-100"><svg class="w-32 h-32" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm.31-8.86c-1.77-.45-2.34-.94-2.34-1.67 0-.84.79-1.43 2.1-1.43 1.38 0 1.9.66 1.94 1.64h1.71c-.05-1.34-.87-2.57-2.49-2.97V5H10.9v1.69c-1.51.32-2.72 1.3-2.72 2.81 0 1.79 1.49 2.69 3.66 3.21 1.95.46 2.34 1.15 2.34 1.87 0 .53-.39 1.64-2.25 1.64-1.74 0-2.26-.87-2.32-1.92H7.9c.07 1.8 1.46 3.1 3 3.5V19h2.34v-1.67c1.52-.29 2.72-1.16 2.73-2.77-.01-2.2-1.9-2.96-3.66-3.42z"/></svg></div>
+                            <h2 class="text-slate-500 font-bold uppercase tracking-wider text-xs mb-2">Total Saldo Aktif</h2>
+                            <p class="text-4xl md:text-5xl font-black text-emerald-600 mb-4 tracking-tighter">${formatRupiah(currentUser.balance)}</p>
                             
                             <!-- Tombol Toggle Form Top Up -->
                             <button id="btnToggleTopup" onclick="document.getElementById('topupFormContainer').classList.toggle('hidden'); this.querySelector('.toggle-icon').classList.toggle('rotate-45');" class="bg-sky-600 hover:bg-sky-500 text-white font-bold py-2.5 px-5 rounded-xl transition shadow-lg flex items-center gap-2 text-sm relative z-20">
@@ -9680,11 +9677,11 @@ Total : Rp.${totalSaldo.toLocaleString("id-ID")}
                                 <span>Top Up Saldo</span>
                             </button>
 
-                            <div id="topupFormContainer" class="hidden mt-6 bg-gray-950 p-5 rounded-2xl border border-gray-800 relative z-20">
-                                <h3 class="text-sm font-bold text-white mb-3">Isi Ulang Saldo</h3>
+                            <div id="topupFormContainer" class="hidden mt-6 bg-slate-50 p-5 rounded-2xl border border-slate-200 relative z-20">
+                                <h3 class="text-sm font-bold text-slate-800 mb-3">Isi Ulang Saldo</h3>
                                 ${paymentMethodHtml}
                                 <div class="flex flex-col sm:flex-row gap-3">
-                                    <select id="topupAmount" class="flex-grow bg-gray-900 border border-gray-700 rounded-xl p-3 text-sm outline-none text-white focus:ring-2 focus:ring-sky-500 transition">
+                                    <select id="topupAmount" class="flex-grow bg-white border border-slate-300 rounded-xl p-3 text-sm outline-none text-slate-900 focus:ring-2 focus:ring-sky-500 transition">
                                         <option value="1000">Rp 1.000</option>
                                         <option value="5000">Rp 5.000</option>
                                         <option value="10000">Rp 10.000</option>
@@ -9698,23 +9695,23 @@ Total : Rp.${totalSaldo.toLocaleString("id-ID")}
                             </div>
                         </div>
 
-                        <div class="bg-gradient-to-br from-red-950 to-red-900 p-6 md:p-8 rounded-3xl shadow-2xl border border-sky-600 relative z-20">
-                            <h2 class="text-xl md:text-2xl font-bold text-white mb-6">\u2795 Buat Akun VPN Baru</h2>
+                        <div class="bg-white p-6 md:p-8 rounded-3xl shadow-xl border border-slate-200 relative z-20">
+                            <h2 class="text-xl md:text-2xl font-black text-slate-900 mb-6 flex items-center gap-2">\u2795 Buat Akun VPN Baru</h2>
                             <div class="space-y-5 mb-8">
                                 <div>
-                                    <label class="block text-xs text-red-200 mb-2 font-bold tracking-wide">USERNAME VPN (HURUF & ANGKA)</label>
-                                    <input type="text" id="vpnUsername" placeholder="Contoh: jagoan123" required pattern="[a-zA-Z0-9]+" class="w-full bg-gray-900 border border-red-800/50 rounded-xl p-3.5 text-white focus:ring-2 focus:ring-red-400 outline-none transition placeholder-gray-600 relative z-20">
+                                    <label class="block text-xs text-slate-600 mb-2 font-bold tracking-wide uppercase">USERNAME VPN (HURUF & ANGKA)</label>
+                                    <input type="text" id="vpnUsername" placeholder="Contoh: jagoan123" required pattern="[a-zA-Z0-9]+" class="w-full bg-slate-50 border border-slate-300 rounded-xl p-3.5 text-slate-900 focus:bg-white focus:ring-2 focus:ring-sky-500 outline-none transition placeholder-slate-400 relative z-20">
                                 </div>
                                 <div>
-                                    <label class="block text-xs text-red-200 mb-2 font-bold tracking-wide">PILIH SERVER TUJUAN</label>
-                                    <select id="vpnServer" class="w-full bg-gray-900 border border-red-800/50 rounded-xl p-3.5 text-white focus:ring-2 focus:ring-red-400 outline-none relative z-20">
+                                    <label class="block text-xs text-slate-600 mb-2 font-bold tracking-wide uppercase">PILIH SERVER TUJUAN</label>
+                                    <select id="vpnServer" class="w-full bg-slate-50 border border-slate-300 rounded-xl p-3.5 text-slate-900 focus:bg-white focus:ring-2 focus:ring-sky-500 outline-none relative z-20">
                                         ${serverOptions}
                                     </select>
                                 </div>
                                 <div class="grid grid-cols-2 gap-4 relative z-20">
                                     <div>
-                                        <label class="block text-xs text-red-200 mb-2 font-bold tracking-wide">PROTOKOL</label>
-                                        <select id="vpnProtocol" class="w-full bg-gray-900 border border-red-800/50 rounded-xl p-3.5 text-white focus:ring-2 focus:ring-red-400 outline-none">
+                                        <label class="block text-xs text-slate-600 mb-2 font-bold tracking-wide uppercase">PROTOKOL</label>
+                                        <select id="vpnProtocol" class="w-full bg-slate-50 border border-slate-300 rounded-xl p-3.5 text-slate-900 focus:bg-white focus:ring-2 focus:ring-sky-500 outline-none">
                                             <option value="trojanws">Trojan WS</option>
                                             <option value="vmessws">VMess WS</option>
                                             <option value="vlessws">VLESS WS</option>
@@ -9723,8 +9720,8 @@ Total : Rp.${totalSaldo.toLocaleString("id-ID")}
                                         </select>
                                     </div>
                                     <div>
-                                        <label class="block text-xs text-red-200 mb-2 font-bold tracking-wide">DURASI</label>
-                                        <select id="vpnDuration" onchange="updatePrice()" class="w-full bg-gray-900 border border-red-800/50 rounded-xl p-3.5 text-white focus:ring-2 focus:ring-red-400 outline-none">
+                                        <label class="block text-xs text-slate-600 mb-2 font-bold tracking-wide uppercase">DURASI</label>
+                                        <select id="vpnDuration" onchange="updatePrice()" class="w-full bg-slate-50 border border-slate-300 rounded-xl p-3.5 text-slate-900 focus:bg-white focus:ring-2 focus:ring-sky-500 outline-none">
                                             <option value="10">10 Hari</option>
                                             <option value="20">20 Hari</option>
                                             <option value="30" selected>30 Hari</option>
@@ -9736,11 +9733,11 @@ Total : Rp.${totalSaldo.toLocaleString("id-ID")}
                                 </div>
                             </div>
                             
-                            <div class="flex justify-between items-center mb-6 bg-black/30 p-5 rounded-2xl border border-sky-600/30">
-                                <span class="text-sm text-red-100 font-medium">Total Harga:</span>
-                                <span class="text-3xl font-black text-yellow-400 tracking-tight" id="totalPriceDisplay">Rp ${(appSettings.price_per_day * 30).toLocaleString("id-ID")}</span>
+                            <div class="flex justify-between items-center mb-6 bg-slate-50 p-5 rounded-2xl border border-slate-200">
+                                <span class="text-sm text-slate-600 font-medium">Total Harga:</span>
+                                <span class="text-3xl font-black text-sky-600 tracking-tight" id="totalPriceDisplay">Rp ${(appSettings.price_per_day * 30).toLocaleString("id-ID")}</span>
                             </div>
-                            <button onclick="buyVPN()" id="btnBuy" class="w-full bg-green-500 hover:bg-green-400 text-gray-900 font-black py-4 px-4 rounded-xl shadow-[0_0_20px_rgba(34,197,94,0.4)] transition transform hover:-translate-y-1 text-lg relative z-20">BAYAR & BUAT AKUN</button>
+                            <button onclick="buyVPN()" id="btnBuy" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-black py-4 px-4 rounded-xl shadow-lg shadow-emerald-600/20 transition transform hover:-translate-y-0.5 text-lg relative z-20">BAYAR & BUAT AKUN</button>
                         </div>
                     </div>
                 </div>
@@ -9796,22 +9793,22 @@ Total : Rp.${totalSaldo.toLocaleString("id-ID")}
 
                         swalDark.fire({
                             title: data.method === 'shopeepay' ? '💳 QRIS Otomatis (autocek by system)' : ('💳 Pembayaran ' + titleMethod + ' QRIS'),
-                            html: '<div class="text-left text-sm text-gray-300 space-y-3">' +
-                                  '  <div class="bg-gray-900 p-3.5 rounded-2xl border border-gray-700 text-center">' +
-                                  '    <p class="text-xs text-gray-400 uppercase font-bold tracking-wider mb-1">Total Wajib Bayar</p>' +
-                                  '    <p class="text-3xl font-black text-green-400 tracking-tight">Rp ' + Number(data.total_amount).toLocaleString('id-ID') + '</p>' +
-                                  '    <span class="inline-block mt-1 text-xs bg-yellow-500/20 text-yellow-300 border border-yellow-500/30 px-2.5 py-0.5 rounded-md font-mono">Termasuk kode unik Rp ' + data.unique_code + '</span>' +
+                            html: '<div class="text-left text-sm text-slate-700 space-y-3">' +
+                                  '  <div class="bg-slate-50 p-3.5 rounded-2xl border border-slate-200 text-center">' +
+                                  '    <p class="text-xs text-slate-500 uppercase font-bold tracking-wider mb-1">Total Wajib Bayar</p>' +
+                                  '    <p class="text-3xl font-black text-emerald-600 tracking-tight">Rp ' + Number(data.total_amount).toLocaleString('id-ID') + '</p>' +
+                                  '    <span class="inline-block mt-1 text-xs bg-amber-50 text-amber-800 border border-amber-200 px-2.5 py-0.5 rounded-md font-mono">Termasuk kode unik Rp ' + data.unique_code + '</span>' +
                                   '  </div>' +
                                   '  <div class="text-center my-2 relative">' +
-                                  '    <img src="' + qrImgSrc + '" alt="QRIS" class="mx-auto rounded-2xl w-60 h-60 object-contain shadow-2xl border border-gray-700 bg-white p-2">' +
-                                  '    <p class="text-[11px] text-gray-400 mt-2">Scan QRIS dengan <b>BCA / DANA / OVO / ShopeePay / GoPay / Semua Bank & E-Wallet</b>.</p>' +
+                                  '    <img src="' + qrImgSrc + '" alt="QRIS" class="mx-auto rounded-2xl w-60 h-60 object-contain shadow-md border border-slate-200 bg-white p-2">' +
+                                  '    <p class="text-[11px] text-slate-500 mt-2">Scan QRIS dengan <b>BCA / DANA / OVO / ShopeePay / GoPay / Semua Bank & E-Wallet</b>.</p>' +
                                   '  </div>' +
-                                  '  <div class="bg-gray-950 p-3.5 rounded-xl border border-gray-800 text-xs font-mono space-y-1.5">' +
-                                  '    <div class="flex justify-between items-center"><span class="text-gray-500">No. Ref:</span><span class="text-white font-bold">' + data.ref + '</span></div>' +
-                                  '    <div class="flex justify-between items-center"><span class="text-gray-500">Batas Waktu:</span><span id="qrisTimer" class="text-cyan-400 font-bold">15:00</span></div>' +
-                                  '    <div class="flex justify-between items-center pt-1 border-t border-gray-850"><span class="text-gray-500">Status Live:</span>' +
-                                  '      <span id="qrisStatusBadge" class="inline-flex items-center gap-1.5 text-xs text-yellow-400 font-bold">' +
-                                  '        <span class="relative flex h-2 w-2"><span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-yellow-400 opacity-75"></span><span class="relative inline-flex rounded-full h-2 w-2 bg-yellow-500"></span></span>' +
+                                  '  <div class="bg-slate-50 p-3.5 rounded-xl border border-slate-200 text-xs font-mono space-y-1.5">' +
+                                  '    <div class="flex justify-between items-center"><span class="text-slate-500">No. Ref:</span><span class="text-slate-900 font-bold">' + data.ref + '</span></div>' +
+                                  '    <div class="flex justify-between items-center"><span class="text-slate-500">Batas Waktu:</span><span id="qrisTimer" class="text-sky-600 font-bold">15:00</span></div>' +
+                                  '    <div class="flex justify-between items-center pt-1 border-t border-slate-200"><span class="text-slate-500">Status Live:</span>' +
+                                  '      <span id="qrisStatusBadge" class="inline-flex items-center gap-1.5 text-xs text-amber-600 font-bold">' +
+                                  '        <span class="relative flex h-2 w-2"><span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span><span class="relative inline-flex rounded-full h-2 w-2 bg-amber-500"></span></span>' +
                                   '        Mendeteksi otomatis...' +
                                   '      </span>' +
                                   '    </div>' +
@@ -9820,8 +9817,8 @@ Total : Rp.${totalSaldo.toLocaleString("id-ID")}
                             showCancelButton: true,
                             confirmButtonText: '🔍 Cek Status Sekarang',
                             cancelButtonText: 'Tutup',
-                            confirmButtonColor: '#22c55e',
-                            cancelButtonColor: '#6b7280',
+                            confirmButtonColor: '#0ea5e9',
+                            cancelButtonColor: '#64748b',
                             didOpen: () => {
                                 const timerEl = document.getElementById('qrisTimer');
                                 const badgeEl = document.getElementById('qrisStatusBadge');
@@ -9840,14 +9837,14 @@ Total : Rp.${totalSaldo.toLocaleString("id-ID")}
                                             if (paymentCheckInterval) clearInterval(paymentCheckInterval);
                                             playSuccessChime();
                                             if (badgeEl) {
-                                                badgeEl.innerHTML = '<span class="inline-flex items-center gap-1 text-green-400 font-bold">✅ Berhasil Terbayar!</span>';
+                                                badgeEl.innerHTML = '<span class="inline-flex items-center gap-1 text-emerald-600 font-bold">✅ Berhasil Terbayar!</span>';
                                             }
                                             await swalDark.fire({
                                                 title: 'Pembayaran Berhasil! 🎉',
-                                                html: '<p class="text-sm text-gray-300">Dana sebesar <b class="text-green-400 text-xl font-bold">Rp ' + Number(data.total_amount).toLocaleString('id-ID') + '</b> telah otomatis ditambahkan ke saldo akun Anda!</p>',
+                                                html: '<p class="text-sm text-slate-600">Dana sebesar <b class="text-emerald-600 text-xl font-bold">Rp ' + Number(data.total_amount).toLocaleString('id-ID') + '</b> telah otomatis ditambahkan ke saldo akun Anda!</p>',
                                                 icon: 'success',
                                                 confirmButtonText: 'Mantap!',
-                                                confirmButtonColor: '#22c55e'
+                                                confirmButtonColor: '#0ea5e9'
                                             });
                                             window.location.reload();
                                             return true;
@@ -9868,7 +9865,7 @@ Total : Rp.${totalSaldo.toLocaleString("id-ID")}
                                     }
                                     if (timeLeft <= 0) {
                                         clearInterval(paymentCheckInterval);
-                                        if (badgeEl) { badgeEl.innerHTML = '<span class="text-sky-400 font-bold">Kedaluwarsa</span>'; }
+                                        if (badgeEl) { badgeEl.innerHTML = '<span class="text-red-500 font-bold">Kedaluwarsa</span>'; }
                                     } else if (timeLeft % 3 === 0) {
                                         await checkPaymentFn(false);
                                     }
@@ -9910,10 +9907,10 @@ Total : Rp.${totalSaldo.toLocaleString("id-ID")}
 
                             swalDark.fire({
                                 title: 'QRIS Pembayaran Manual',
-                                html: '<p class="mb-4 text-sm text-gray-300">Silakan transfer <b>TEPAT SEJUMLAH</b> <b class="text-green-400 text-xl">Rp ' + finalAmount.toLocaleString('id-ID') + '</b> ke QRIS di bawah ini.</p>' +
-                                      '<p class="text-xs text-yellow-400 mb-4 bg-yellow-500/10 p-2.5 rounded-lg border border-yellow-500/20 shadow-sm">*Angka unik <b>' + uniqueCode + '</b> di belakang ditambahkan otomatis agar Admin dapat memverifikasi dana Anda lebih cepat.</p>' +
-                                      '<img src="/qris-manual.jpg" alt="QRIS Manual" class="mx-auto rounded-xl w-64 mb-4 shadow-lg border border-gray-700">' +
-                                      '<p class="text-xs text-gray-400 mb-2">Setelah transfer selesai, wajib klik tombol di bawah ini untuk mengirimkan <b>Bukti Transfer</b> kepada Admin melalui WhatsApp.</p>',
+                                html: '<p class="mb-4 text-sm text-slate-700">Silakan transfer <b>TEPAT SEJUMLAH</b> <b class="text-emerald-600 text-xl">Rp ' + finalAmount.toLocaleString('id-ID') + '</b> ke QRIS di bawah ini.</p>' +
+                                      '<p class="text-xs text-amber-800 mb-4 bg-amber-50 p-2.5 rounded-lg border border-amber-200 shadow-sm">*Angka unik <b>' + uniqueCode + '</b> di belakang ditambahkan otomatis agar Admin dapat memverifikasi dana Anda lebih cepat.</p>' +
+                                      '<img src="/qris-manual.jpg" alt="QRIS Manual" class="mx-auto rounded-xl w-64 mb-4 shadow-md border border-slate-200">' +
+                                      '<p class="text-xs text-slate-500 mb-2">Setelah transfer selesai, wajib klik tombol di bawah ini untuk mengirimkan <b>Bukti Transfer</b> kepada Admin melalui WhatsApp.</p>',
                                 showCancelButton: true, confirmButtonText: 'Konfirmasi via WA', cancelButtonText: 'Batal', confirmButtonColor: '#22c55e'
                             }).then((res) => {
                                 if (res.isConfirmed) {
@@ -9996,40 +9993,40 @@ Total : Rp.${totalSaldo.toLocaleString("id-ID")}
       const content = `
             <div class="max-w-5xl mx-auto px-4 md:px-8 py-12 md:py-16 relative z-10">
                 <div class="text-center mb-12 md:mb-16">
-                    <h1 class="text-4xl md:text-5xl font-black text-white mb-4 tracking-tight">Produk & Harga</h1>
-                    <p class="text-lg md:text-xl text-gray-400 max-w-2xl mx-auto">Kami menyediakan tarif flat dan transparan. Satu harga untuk akses semua protokol dan jaringan proxy terbaik kami.</p>
-                    <div class="w-24 h-1.5 bg-sky-500 mx-auto mt-6 rounded-full shadow-lg shadow-sky-600/50"></div>
+                    <h1 class="text-4xl md:text-5xl font-black text-slate-900 mb-4 tracking-tight">Produk & Harga</h1>
+                    <p class="text-lg md:text-xl text-slate-600 max-w-2xl mx-auto">Kami menyediakan tarif flat dan transparan. Satu harga untuk akses semua protokol dan jaringan proxy terbaik kami.</p>
+                    <div class="w-24 h-1.5 bg-sky-500 mx-auto mt-6 rounded-full shadow-md"></div>
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-10 lg:gap-16 items-center">
-                    <div class="bg-gradient-to-b from-gray-800 to-gray-900 rounded-[2rem] border border-gray-700 shadow-2xl overflow-hidden relative transform transition hover:-translate-y-2">
-                        <div class="absolute top-0 right-0 bg-yellow-500 text-yellow-900 font-bold text-xs px-5 py-1.5 rounded-bl-xl uppercase tracking-wider shadow-md">Tarif Flat</div>
-                        <div class="p-8 md:p-10 border-b border-gray-700 text-center">
-                            <h2 class="text-2xl font-bold text-white mb-2">VPN & Proxy All-in-One</h2>
-                            <p class="text-gray-400 text-sm mb-6">Hitungan murni berdasarkan pemakaian hari</p>
+                    <div class="bg-white rounded-[2rem] border border-slate-200 shadow-xl overflow-hidden relative transform transition hover:-translate-y-2">
+                        <div class="absolute top-0 right-0 bg-amber-500 text-white font-bold text-xs px-5 py-1.5 rounded-bl-xl uppercase tracking-wider shadow-sm">Tarif Flat</div>
+                        <div class="p-8 md:p-10 border-b border-slate-200 text-center">
+                            <h2 class="text-2xl font-bold text-slate-900 mb-2">VPN & Proxy All-in-One</h2>
+                            <p class="text-slate-500 text-sm mb-6">Hitungan murni berdasarkan pemakaian hari</p>
                             <div class="flex justify-center items-baseline gap-1">
-                                <span class="text-3xl font-bold text-cyan-400">Rp</span>
-                                <span class="text-6xl font-black text-white">${appSettings.price_per_day}</span>
+                                <span class="text-3xl font-bold text-sky-600">Rp</span>
+                                <span class="text-6xl font-black text-slate-900">${appSettings.price_per_day}</span>
                             </div>
-                            <p class="text-gray-500 text-sm mt-2">/ Hari</p>
+                            <p class="text-slate-500 text-sm mt-2">/ Hari</p>
                         </div>
-                        <div class="p-8 md:p-10 bg-gray-900/50">
+                        <div class="p-8 md:p-10 bg-slate-50">
                             <ul class="space-y-4 mb-8">
-                                <li class="flex items-center gap-3"><svg class="w-5 h-5 text-green-400 shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg> <span class="text-gray-300 text-sm md:text-base">Bebas Pilih Server</span></li>
-                                <li class="flex items-center gap-3"><svg class="w-5 h-5 text-green-400 shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg> <span class="text-gray-300 text-sm md:text-base">Bebas Pilih Protokol (SSH/VMess/Vless/Trojan)</span></li>
-                                <li class="flex items-center gap-3"><svg class="w-5 h-5 text-green-400 shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg> <span class="text-gray-300 text-sm md:text-base">Limit 2 Device / IP Bersamaan</span></li>
-                                <li class="flex items-center gap-3"><svg class="w-5 h-5 text-green-400 shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg> <span class="text-gray-300 text-sm md:text-base">Aktivasi Otomatis via API</span></li>
+                                <li class="flex items-center gap-3"><svg class="w-5 h-5 text-emerald-600 shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg> <span class="text-slate-700 text-sm md:text-base font-medium">Bebas Pilih Server</span></li>
+                                <li class="flex items-center gap-3"><svg class="w-5 h-5 text-emerald-600 shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg> <span class="text-slate-700 text-sm md:text-base font-medium">Bebas Pilih Protokol (SSH/VMess/Vless/Trojan)</span></li>
+                                <li class="flex items-center gap-3"><svg class="w-5 h-5 text-emerald-600 shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg> <span class="text-slate-700 text-sm md:text-base font-medium">Limit 2 Device / IP Bersamaan</span></li>
+                                <li class="flex items-center gap-3"><svg class="w-5 h-5 text-emerald-600 shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg> <span class="text-slate-700 text-sm md:text-base font-medium">Aktivasi Otomatis via API</span></li>
                             </ul>
                             <a href="/" class="block w-full bg-sky-600 hover:bg-sky-500 text-white text-center font-bold py-4 px-4 rounded-xl transition shadow-lg shadow-sky-600/30 relative z-20">BUAT SEKARANG (Dashboard)</a>
                         </div>
                     </div>
                     <div>
-                        <h3 class="text-2xl md:text-3xl font-bold text-white mb-6">Pilihan Durasi Bebas</h3>
-                        <p class="text-gray-400 leading-relaxed mb-8 text-base">Sistem kami memungkinkan Anda mengatur durasi pemakaian (10, 20, 30, 60, hingga 90 hari) sesuai kebutuhan dompet Anda. Saldo akan otomatis terpotong proporsional.</p>
+                        <h3 class="text-2xl md:text-3xl font-bold text-slate-900 mb-6">Pilihan Durasi Bebas</h3>
+                        <p class="text-slate-600 leading-relaxed mb-8 text-base">Sistem kami memungkinkan Anda mengatur durasi pemakaian (10, 20, 30, 60, hingga 90 hari) sesuai kebutuhan dompet Anda. Saldo akan otomatis terpotong proporsional.</p>
                         <div class="space-y-5">
-                            <div class="bg-gray-800 p-5 rounded-2xl border border-gray-700 flex justify-between items-center relative z-20"><span class="text-gray-300 font-bold text-lg">10 Hari</span><span class="text-cyan-400 font-mono text-lg">Rp ${(appSettings.price_per_day * 10).toLocaleString("id-ID")}</span></div>
-                            <div class="bg-gray-800 p-5 rounded-2xl border border-sky-600/50 shadow-[0_0_20px_rgba(59,130,246,0.15)] flex justify-between items-center transform scale-105 my-6 relative z-20"><span class="text-white font-black text-lg md:text-xl">30 Hari (Recomend)</span><span class="text-yellow-400 font-black text-xl font-mono">Rp ${(appSettings.price_per_day * 30).toLocaleString("id-ID")}</span></div>
-                            <div class="bg-gray-800 p-5 rounded-2xl border border-gray-700 flex justify-between items-center relative z-20"><span class="text-gray-300 font-bold text-lg">90 Hari</span><span class="text-cyan-400 font-mono text-lg">Rp ${(appSettings.price_per_day * 90).toLocaleString("id-ID")}</span></div>
+                            <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex justify-between items-center relative z-20"><span class="text-slate-800 font-bold text-lg">10 Hari</span><span class="text-sky-600 font-mono font-bold text-lg">Rp ${(appSettings.price_per_day * 10).toLocaleString("id-ID")}</span></div>
+                            <div class="bg-white p-5 rounded-2xl border-2 border-sky-500 shadow-lg shadow-sky-500/10 flex justify-between items-center transform scale-105 my-6 relative z-20"><span class="text-slate-900 font-black text-lg md:text-xl">30 Hari (Rekomendasi)</span><span class="text-amber-600 font-black text-xl font-mono">Rp ${(appSettings.price_per_day * 30).toLocaleString("id-ID")}</span></div>
+                            <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex justify-between items-center relative z-20"><span class="text-slate-800 font-bold text-lg">90 Hari</span><span class="text-sky-600 font-mono font-bold text-lg">Rp ${(appSettings.price_per_day * 90).toLocaleString("id-ID")}</span></div>
                         </div>
                     </div>
                 </div>
@@ -10048,31 +10045,31 @@ Total : Rp.${totalSaldo.toLocaleString("id-ID")}
       const isAdminStr = isSuperAdmin(currentUser, env) ? "true" : "false";
       const content = `
             <div class="max-w-4xl mx-auto px-4 md:px-8 py-8 md:py-12 relative z-10">
-                <h1 class="text-3xl font-black text-white mb-6 border-b border-gray-800 pb-4 tracking-tight">Beli Paket Data XL</h1>
+                <h1 class="text-3xl font-black text-slate-900 mb-6 border-b border-slate-200 pb-4 tracking-tight">Beli Paket Data XL</h1>
                 
-                <div class="bg-gray-800 rounded-3xl border border-gray-700 shadow-2xl p-6 md:p-8">
+                <div class="bg-white rounded-3xl border border-slate-200 shadow-xl p-6 md:p-8">
                     <div class="space-y-6">
                         <div class="relative z-20">
-                            <label class="block text-sm font-bold text-gray-400 mb-2 uppercase flex justify-between items-center">
+                            <label class="block text-sm font-bold text-slate-700 mb-2 uppercase flex justify-between items-center">
                                 <span>Nomor HP Tujuan</span>
-                                <button onclick="openPhonebook()" class="text-xs text-cyan-400 font-bold bg-sky-950/20 hover:bg-sky-950/40 px-3 py-1.5 rounded transition flex items-center gap-1.5 shadow-sm border border-sky-600/30">
+                                <button onclick="openPhonebook()" class="text-xs text-sky-600 font-bold bg-sky-50 hover:bg-sky-100 px-3 py-1.5 rounded-lg transition flex items-center gap-1.5 shadow-sm border border-sky-200">
                                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg> \u{1F4D6} Nomorku
                                 </button>
                             </label>
-                            <input type="number" id="xlPhone" value="${savedPhone}" oninput="resetOtpState()" placeholder="Contoh: 0818xxxxxx" class="w-full bg-gray-900 border border-gray-700 rounded-xl p-4 text-white text-lg focus:ring-2 focus:ring-sky-500 outline-none transition font-mono tracking-wider shadow-inner">
+                            <input type="number" id="xlPhone" value="${savedPhone}" oninput="resetOtpState()" placeholder="Contoh: 0818xxxxxx" class="w-full bg-slate-50 border border-slate-300 rounded-xl p-4 text-slate-900 text-lg focus:bg-white focus:ring-2 focus:ring-sky-500 outline-none transition font-mono tracking-wider shadow-inner">
                         </div>
                         
                         <div id="packageSelectionSection" class="relative z-20">
-                            <label class="block text-sm font-bold text-gray-400 mb-2 uppercase">Pilih Paket Data</label>
+                            <label class="block text-sm font-bold text-slate-700 mb-2 uppercase">Pilih Paket Data</label>
                             <div class="relative mb-2">
-                                <div class="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none"><svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg></div>
-                                <input type="text" id="searchPackage" placeholder="Ketik pencarian: xtra combo, unlimited..." class="w-full bg-gray-950 border border-gray-700 rounded-xl py-3 pl-12 pr-4 text-white text-sm focus:ring-2 focus:ring-sky-500 outline-none transition shadow-inner">
+                                <div class="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none"><svg class="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg></div>
+                                <input type="text" id="searchPackage" placeholder="Ketik pencarian: xtra combo, unlimited..." class="w-full bg-slate-50 border border-slate-300 rounded-xl py-3 pl-12 pr-4 text-slate-900 text-sm focus:bg-white focus:ring-2 focus:ring-sky-500 outline-none transition shadow-inner">
                             </div>
                             
-                            <div id="packageListContainer" class="w-full bg-gray-900 border border-gray-700 rounded-xl max-h-64 overflow-y-auto custom-scrollbar p-2 space-y-1">
+                            <div id="packageListContainer" class="w-full bg-slate-50 border border-slate-300 rounded-xl max-h-64 overflow-y-auto custom-scrollbar p-2 space-y-1">
                                 <div class="p-4 flex justify-center items-center gap-3">
-                                    <svg class="w-5 h-5 text-sky-400 animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
-                                    <span class="text-gray-400 text-sm font-medium">Sinkronisasi produk dengan Server...</span>
+                                    <svg class="w-5 h-5 text-sky-600 animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
+                                    <span class="text-slate-500 text-sm font-medium">Sinkronisasi produk dengan Server...</span>
                                 </div>
                             </div>
                             
@@ -10080,68 +10077,68 @@ Total : Rp.${totalSaldo.toLocaleString("id-ID")}
                             <input type="hidden" id="xlPackagePrice" value="0">
                             <input type="hidden" id="xlNeedOtp" value="false">
                             <input type="hidden" id="xlPackageName" value="">
-                            <p class="text-xs text-gray-500 mt-2 text-right font-mono" id="pkgCount">Total: 0 paket</p>
+                            <p class="text-xs text-slate-500 mt-2 text-right font-mono" id="pkgCount">Total: 0 paket</p>
                         </div>
 
-                        <div id="otpSection" class="hidden bg-gray-950 p-5 rounded-2xl border border-gray-800 space-y-4 shadow-inner relative z-20">
+                        <div id="otpSection" class="hidden bg-slate-50 p-5 rounded-2xl border border-slate-200 space-y-4 shadow-inner relative z-20">
                             <div id="otpVerifyMode">
                                 <div class="flex gap-3 mb-4 items-start">
-                                    <svg class="w-6 h-6 text-yellow-500 shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"></path></svg>
-                                    <div><h4 class="text-sm font-bold text-white mb-1">Paket Khusus MyXL</h4><p class="text-xs text-gray-400 leading-relaxed">Paket ini mewajibkan verifikasi nomor HP Anda. Klik tombol di bawah dan sistem akan mengecek apakah sesi Anda masih tersimpan.</p></div>
+                                    <svg class="w-6 h-6 text-amber-500 shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"></path></svg>
+                                    <div><h4 class="text-sm font-bold text-slate-900 mb-1">Paket Khusus MyXL</h4><p class="text-xs text-slate-600 leading-relaxed">Paket ini mewajibkan verifikasi nomor HP Anda. Klik tombol di bawah dan sistem akan mengecek apakah sesi Anda masih tersimpan.</p></div>
                                 </div>
-                                <button onclick="verifySmartOtp()" id="btnSmartVerify" class="w-full bg-yellow-600 hover:bg-yellow-500 text-white font-bold py-3 rounded-xl transition shadow">\u{1F6E1}\uFE0F Verifikasi Nomor Ini</button>
+                                <button onclick="verifySmartOtp()" id="btnSmartVerify" class="w-full bg-amber-600 hover:bg-amber-500 text-white font-bold py-3 rounded-xl transition shadow">\u{1F6E1}\uFE0F Verifikasi Nomor Ini</button>
                             </div>
                             <div id="otpManualMode" class="hidden">
-                                <label class="block text-sm font-bold text-yellow-400 mb-2">Kode OTP telah dikirim ke nomor Anda</label>
+                                <label class="block text-sm font-bold text-amber-700 mb-2">Kode OTP telah dikirim ke nomor Anda</label>
                                 <div class="flex gap-2">
-                                    <input type="text" id="xlOtpCode" placeholder="6 Digit OTP" class="w-full bg-gray-800 border border-gray-600 rounded-xl p-3 text-white text-center tracking-widest text-lg font-mono focus:ring-2 focus:ring-yellow-500 outline-none">
-                                    <button onclick="submitManualOtp()" id="btnSubmitOtp" class="bg-green-600 hover:bg-green-500 text-white font-bold px-6 rounded-xl transition shadow shrink-0">Kirim</button>
+                                    <input type="text" id="xlOtpCode" placeholder="6 Digit OTP" class="w-full bg-white border border-slate-300 rounded-xl p-3 text-slate-900 text-center tracking-widest text-lg font-mono focus:ring-2 focus:ring-amber-500 outline-none">
+                                    <button onclick="submitManualOtp()" id="btnSubmitOtp" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-6 rounded-xl transition shadow shrink-0">Kirim</button>
                                 </div>
                             </div>
                             <div id="otpSuccessMode" class="hidden">
-                                <div class="flex flex-col sm:flex-row items-center justify-between gap-4 bg-green-900/20 p-4 rounded-xl border border-green-500/30">
+                                <div class="flex flex-col sm:flex-row items-center justify-between gap-4 bg-emerald-50 p-4 rounded-xl border border-emerald-200">
                                     <div class="flex items-center gap-3">
-                                        <div class="bg-green-500/20 p-2 rounded-full"><svg class="w-5 h-5 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg></div>
-                                        <div><span class="block text-sm font-bold text-green-400">Sesi Aktif Terverifikasi!</span><span class="text-xs text-gray-400">Tombol Beli sekarang terbuka.</span></div>
+                                        <div class="bg-emerald-100 p-2 rounded-full"><svg class="w-5 h-5 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg></div>
+                                        <div><span class="block text-sm font-bold text-emerald-700">Sesi Aktif Terverifikasi!</span><span class="text-xs text-slate-500">Tombol Beli sekarang terbuka.</span></div>
                                     </div>
-                                    <button onclick="checkPulsa()" id="btnCheckPulsa" class="w-full sm:w-auto bg-gray-800 hover:bg-gray-700 text-gray-300 hover:text-white border border-gray-600 text-xs font-bold py-2.5 px-4 rounded-lg transition flex items-center justify-center gap-2 shadow">\u{1F4B3} Cek Pulsa, Kuota & Lokasi</button>
+                                    <button onclick="checkPulsa()" id="btnCheckPulsa" class="w-full sm:w-auto bg-white hover:bg-slate-50 text-slate-700 border border-slate-300 text-xs font-bold py-2.5 px-4 rounded-lg transition flex items-center justify-center gap-2 shadow">\u{1F4B3} Cek Pulsa, Kuota & Lokasi</button>
                                 </div>
                             </div>
                         </div>
                         
-                        <div class="bg-gray-900 p-5 rounded-2xl border border-gray-700 flex flex-col mb-4 relative z-20">
+                        <div class="bg-slate-50 p-5 rounded-2xl border border-slate-200 flex flex-col mb-4 relative z-20">
                             <div class="flex justify-between items-center">
-                                <span class="text-gray-400 font-bold">Harga Jual:</span>
-                                <span class="text-3xl font-black text-green-400 font-mono tracking-tight" id="xlPriceDisplay">Rp 0</span>
+                                <span class="text-slate-600 font-bold">Harga Jual:</span>
+                                <span class="text-3xl font-black text-emerald-600 font-mono tracking-tight" id="xlPriceDisplay">Rp 0</span>
                             </div>
-                            <div id="xlDescDisplay" class="border-t border-gray-800 pt-3 mt-3 hidden"></div>
+                            <div id="xlDescDisplay" class="border-t border-slate-200 pt-3 mt-3 hidden"></div>
                         </div>
 
                         <div class="mb-4 relative z-20">
-                            <label class="block text-sm font-bold text-gray-400 mb-2 uppercase">Metode Pembayaran</label>
-                            <select id="xlPaymentMethod" class="w-full bg-gray-950 border border-gray-700 rounded-xl p-3.5 text-white focus:ring-2 focus:ring-sky-500 outline-none transition">
+                            <label class="block text-sm font-bold text-slate-700 mb-2 uppercase">Metode Pembayaran</label>
+                            <select id="xlPaymentMethod" class="w-full bg-slate-50 border border-slate-300 rounded-xl p-3.5 text-slate-900 focus:bg-white focus:ring-2 focus:ring-sky-500 outline-none transition">
                                 <option value="BALANCE">Saldo Web (Potong Penuh)</option>
                             </select>
-                            <p id="xlPaymentNotice" class="text-xs text-yellow-500 mt-2">*Catatan: Silakan pilih paket terlebih dahulu untuk melihat info pembayaran.</p>
+                            <p id="xlPaymentNotice" class="text-xs text-amber-600 mt-2 font-medium">*Catatan: Silakan pilih paket terlebih dahulu untuk melihat info pembayaran.</p>
                         </div>
 
-                        <button onclick="buyXL()" id="btnBuyXL" disabled class="w-full bg-gray-700 text-gray-400 font-black py-4 rounded-xl shadow-lg transition text-lg mt-4 cursor-not-allowed relative z-20">PILIH PAKET TERLEBIH DAHULU</button>
+                        <button onclick="buyXL()" id="btnBuyXL" disabled class="w-full bg-slate-200 text-slate-400 font-black py-4 rounded-xl shadow transition text-lg mt-4 cursor-not-allowed relative z-20">PILIH PAKET TERLEBIH DAHULU</button>
                     </div>
                 </div>
 
-                <div id="phonebookModal" class="fixed inset-0 bg-black/80 hidden z-50 flex items-center justify-center p-4 backdrop-blur-sm">
-                    <div class="bg-gray-900 p-6 rounded-3xl w-full max-w-md border border-sky-600/30 shadow-2xl flex flex-col max-h-[80vh]">
-                        <div class="flex justify-between items-center mb-5 border-b border-gray-800 pb-3">
-                            <h3 class="text-xl font-bold text-white flex items-center gap-2">\u{1F4D6} Buku Telepon</h3>
-                            <button onclick="closePhonebook()" class="text-gray-400 hover:text-white text-3xl leading-none">&times;</button>
+                <div id="phonebookModal" class="fixed inset-0 bg-slate-900/60 hidden z-50 flex items-center justify-center p-4 backdrop-blur-sm">
+                    <div class="bg-white p-6 rounded-3xl w-full max-w-md border border-slate-200 shadow-2xl flex flex-col max-h-[80vh]">
+                        <div class="flex justify-between items-center mb-5 border-b border-slate-200 pb-3">
+                            <h3 class="text-xl font-bold text-slate-900 flex items-center gap-2">\u{1F4D6} Buku Telepon</h3>
+                            <button onclick="closePhonebook()" class="text-slate-400 hover:text-slate-700 text-3xl leading-none">&times;</button>
                         </div>
                         <div class="mb-4 flex gap-2">
-                            <input type="number" id="newPhoneNumber" placeholder="Ketik No. Baru..." class="w-full bg-gray-950 border border-gray-700 rounded-xl p-3 text-white focus:ring-2 focus:ring-sky-500 outline-none text-sm font-mono tracking-wider">
+                            <input type="number" id="newPhoneNumber" placeholder="Ketik No. Baru..." class="w-full bg-slate-50 border border-slate-300 rounded-xl p-3 text-slate-900 focus:bg-white focus:ring-2 focus:ring-sky-500 outline-none text-sm font-mono tracking-wider">
                             <button onclick="addNumberToPhonebook()" class="bg-sky-600 hover:bg-sky-500 text-white font-bold px-5 py-3 rounded-xl transition shadow-lg text-sm shrink-0">Simpan</button>
                         </div>
                         <div class="flex justify-between items-center mb-2">
-                            <p class="text-xs font-bold text-gray-400 uppercase tracking-wider">Daftar Tersimpan</p>
-                            <p class="text-xs text-gray-500 font-mono" id="phonebookCount">0/10</p>
+                            <p class="text-xs font-bold text-slate-500 uppercase tracking-wider">Daftar Tersimpan</p>
+                            <p class="text-xs text-slate-400 font-mono" id="phonebookCount">0/10</p>
                         </div>
                         <div id="phonebookList" class="overflow-y-auto custom-scrollbar flex-grow space-y-2"></div>
                     </div>
@@ -10170,9 +10167,9 @@ Total : Rp.${totalSaldo.toLocaleString("id-ID")}
                     const list = getPhonebook();
                     const container = document.getElementById('phonebookList');
                     document.getElementById('phonebookCount').innerText = list.length + '/10';
-                    if (list.length === 0) { container.innerHTML = '<p class="text-center text-gray-500 text-sm py-6">Belum ada nomor tersimpan.</p>'; return; }
+                    if (list.length === 0) { container.innerHTML = '<p class="text-center text-slate-400 text-sm py-6">Belum ada nomor tersimpan.</p>'; return; }
                     container.innerHTML = list.map((phone, index) => 
-                        '<div class="flex justify-between items-center bg-gray-800 p-3 rounded-xl border border-gray-700 hover:border-sky-600/50 transition"><span class="text-white font-mono font-medium tracking-wider">' + phone + '</span><div class="flex gap-2"><button onclick="selectPhone(\\'' + phone + '\\')" class="bg-green-600 hover:bg-green-500 text-white px-4 py-1.5 rounded-lg text-xs font-bold transition shadow-md">Pilih</button><button onclick="deletePhone(' + index + ')" class="bg-sky-600/20 hover:bg-sky-600/40 text-cyan-400 border border-sky-500/30 px-3 py-1.5 rounded-lg text-xs font-bold transition">Hapus</button></div></div>'
+                        '<div class="flex justify-between items-center bg-slate-50 p-3 rounded-xl border border-slate-200 hover:border-sky-300 transition"><span class="text-slate-800 font-mono font-medium tracking-wider">' + phone + '</span><div class="flex gap-2"><button onclick="selectPhone(\\'' + phone + '\\')" class="bg-emerald-600 hover:bg-emerald-500 text-white px-4 py-1.5 rounded-lg text-xs font-bold transition shadow-sm">Pilih</button><button onclick="deletePhone(' + index + ')" class="bg-red-50 hover:bg-red-100 text-red-600 border border-red-200 px-3 py-1.5 rounded-lg text-xs font-bold transition">Hapus</button></div></div>'
                     ).join('');
                 }
 
@@ -10202,16 +10199,16 @@ Total : Rp.${totalSaldo.toLocaleString("id-ID")}
                             allPackages = data.data || [];
                             renderPackages(allPackages);
                         } else {
-                            document.getElementById('packageListContainer').innerHTML = '<div class="p-4 text-center text-cyan-400 text-sm font-bold">' + (data.message || 'Gagal memuat API') + '</div>';
+                            document.getElementById('packageListContainer').innerHTML = '<div class="p-4 text-center text-sky-600 text-sm font-bold">' + (data.message || 'Gagal memuat API') + '</div>';
                         }
-                    } catch(e) { document.getElementById('packageListContainer').innerHTML = '<div class="p-4 text-center text-cyan-400 text-sm">Error koneksi: ' + e.message + '</div>'; }
+                    } catch(e) { document.getElementById('packageListContainer').innerHTML = '<div class="p-4 text-center text-sky-600 text-sm">Error koneksi: ' + e.message + '</div>'; }
                 }
 
                 function renderPackages(packagesToRender) {
                     const container = document.getElementById('packageListContainer');
                     const countText = document.getElementById('pkgCount');
                     if (!packagesToRender || packagesToRender.length === 0) {
-                        container.innerHTML = '<div class="p-4 text-center text-gray-500 text-sm">-- Tidak ada paket ditemukan --</div>';
+                        container.innerHTML = '<div class="p-4 text-center text-slate-400 text-sm">-- Tidak ada paket ditemukan --</div>';
                         countText.innerText = 'Total: 0 paket';
                         updateCheckoutUI('', 0, false);
                         return;
@@ -10219,9 +10216,9 @@ Total : Rp.${totalSaldo.toLocaleString("id-ID")}
                     container.innerHTML = packagesToRender.map(pkg => {
                         const idStr = pkg.id || pkg.package_code || pkg.service_id;
                         const needOtpStr = pkg.no_need_login ? 'false' : 'true'; 
-                        const badge = needOtpStr === 'true' ? '<span class="ml-2 text-[10px] bg-yellow-500/20 text-yellow-500 border border-yellow-500/30 px-1.5 py-0.5 rounded uppercase font-bold shrink-0">Butuh OTP</span>' : '';
+                        const badge = needOtpStr === 'true' ? '<span class="ml-2 text-[10px] bg-amber-50 text-amber-700 border border-amber-200 px-1.5 py-0.5 rounded uppercase font-bold shrink-0">Butuh OTP</span>' : '';
                         const safeNameHTML = pkg.name.replace(/"/g, '&quot;'); 
-                        return '<div data-id="' + idStr + '" data-price="' + pkg.price + '" data-otp="' + needOtpStr + '" data-name="' + safeNameHTML + '" onclick="selectPackage(this)" class="package-item w-full flex justify-between items-center p-3 rounded-xl hover:bg-gray-800 cursor-pointer border border-transparent transition"><div class="flex-grow pr-4 flex flex-col sm:flex-row sm:items-center gap-1"><span class="text-sm font-medium text-gray-200">' + safeNameHTML + '</span>' + badge + '</div><span class="text-sm font-mono font-black text-green-400 shrink-0">Rp ' + pkg.price.toLocaleString('id-ID') + '</span></div>';
+                        return '<div data-id="' + idStr + '" data-price="' + pkg.price + '" data-otp="' + needOtpStr + '" data-name="' + safeNameHTML + '" onclick="selectPackage(this)" class="package-item w-full flex justify-between items-center p-3 rounded-xl hover:bg-sky-50 cursor-pointer border border-transparent transition"><div class="flex-grow pr-4 flex flex-col sm:flex-row sm:items-center gap-1"><span class="text-sm font-medium text-slate-800">' + safeNameHTML + '</span>' + badge + '</div><span class="text-sm font-mono font-black text-emerald-600 shrink-0">Rp ' + pkg.price.toLocaleString('id-ID') + '</span></div>';
                     }).join('');
                     countText.innerText = 'Total: ' + packagesToRender.length + ' paket';
                     if(!document.getElementById('xlPackageId').value) updateCheckoutUI('', 0, false);
@@ -10239,8 +10236,8 @@ Total : Rp.${totalSaldo.toLocaleString("id-ID")}
                     document.getElementById('xlNeedOtp').value = needOtpStr;
                     document.getElementById('xlPackageName').value = pkgName;
                     
-                    document.querySelectorAll('.package-item').forEach(el => { el.classList.remove('bg-sky-950/30', 'border-sky-600/40'); el.classList.add('hover:bg-gray-800'); });
-                    element.classList.remove('hover:bg-gray-800'); element.classList.add('bg-sky-950/30', 'border-sky-600/40');
+                    document.querySelectorAll('.package-item').forEach(el => { el.classList.remove('bg-sky-100/80', 'border-sky-400'); el.classList.add('hover:bg-sky-50'); });
+                    element.classList.remove('hover:bg-sky-50'); element.classList.add('bg-sky-100/80', 'border-sky-400');
 
                     const paymentSelect = document.getElementById('xlPaymentMethod');
                     const paymentNotice = document.getElementById('xlPaymentNotice');
@@ -10264,7 +10261,7 @@ Total : Rp.${totalSaldo.toLocaleString("id-ID")}
                     document.getElementById('xlPriceDisplay').innerText = 'Rp ' + parseInt(price).toLocaleString('id-ID');
 
                     if (!id) {
-                        btnBuy.disabled = true; btnBuy.className = 'w-full bg-gray-700 text-gray-400 font-black py-4 rounded-xl shadow-lg transition text-lg mt-4 cursor-not-allowed relative z-20'; btnBuy.innerText = 'PILIH PAKET TERLEBIH DAHULU';
+                        btnBuy.disabled = true; btnBuy.className = 'w-full bg-slate-200 text-slate-400 font-black py-4 rounded-xl shadow transition text-lg mt-4 cursor-not-allowed relative z-20'; btnBuy.innerText = 'PILIH PAKET TERLEBIH DAHULU';
                         otpSection.classList.add('hidden');
                         descContainer.classList.add('hidden');
                         return;
@@ -10272,9 +10269,9 @@ Total : Rp.${totalSaldo.toLocaleString("id-ID")}
                     
                     descContainer.classList.remove('hidden');
                     const descText = pkgDescMap[id] || 'Belum ada deskripsi penjelasan untuk paket ini.';
-                    let descHtml = '<p class="text-sm text-[#F38020] whitespace-pre-wrap leading-relaxed">' + escapeHtmlClient(descText) + '</p>';
+                    let descHtml = '<p class="text-sm text-amber-700 whitespace-pre-wrap leading-relaxed">' + escapeHtmlClient(descText) + '</p>';
                     if (IS_ADMIN) {
-                        descHtml += '<button onclick="editPkgDesc(\\'' + id + '\\')" class="mt-3 text-xs bg-sky-600/20 hover:bg-sky-600/40 text-cyan-400 border border-sky-600/30 px-3 py-1.5 rounded transition font-bold flex items-center gap-1.5"><svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg> Edit Deskripsi Paket</button>';
+                        descHtml += '<button onclick="editPkgDesc(\\'' + id + '\\')" class="mt-3 text-xs bg-sky-50 hover:bg-sky-100 text-sky-600 border border-sky-200 px-3 py-1.5 rounded-lg transition font-bold flex items-center gap-1.5"><svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg> Edit Deskripsi Paket</button>';
                     }
                     descContainer.innerHTML = descHtml;
 
@@ -10285,7 +10282,7 @@ Total : Rp.${totalSaldo.toLocaleString("id-ID")}
                             btnBuy.disabled = false; btnBuy.className = 'w-full bg-sky-600 hover:bg-sky-500 text-white font-black py-4 rounded-xl shadow-lg transition text-lg mt-4 relative z-20'; btnBuy.innerText = 'BELI SEKARANG';
                         } else {
                             document.getElementById('otpVerifyMode').classList.remove('hidden'); document.getElementById('otpManualMode').classList.add('hidden'); document.getElementById('otpSuccessMode').classList.add('hidden');
-                            btnBuy.disabled = true; btnBuy.className = 'w-full bg-gray-700 text-gray-400 font-black py-4 rounded-xl shadow-lg transition text-lg mt-4 cursor-not-allowed relative z-20'; btnBuy.innerText = 'VERIFIKASI OTP TERLEBIH DAHULU';
+                            btnBuy.disabled = true; btnBuy.className = 'w-full bg-slate-200 text-slate-400 font-black py-4 rounded-xl shadow transition text-lg mt-4 cursor-not-allowed relative z-20'; btnBuy.innerText = 'VERIFIKASI OTP TERLEBIH DAHULU';
                         }
                     } else {
                         otpSection.classList.add('hidden');
@@ -10297,7 +10294,7 @@ Total : Rp.${totalSaldo.toLocaleString("id-ID")}
                     const pkgName = document.getElementById('xlPackageName').value;
                     const { value: text, isConfirmed } = await swalDark.fire({
                         title: 'Edit Deskripsi Paket',
-                        html: '<p class="text-sm text-gray-400 mb-2">' + pkgName + '</p>',
+                        html: '<p class="text-sm text-slate-500 mb-2">' + pkgName + '</p>',
                         input: 'textarea',
                         inputValue: pkgDescMap[id] || '',
                         inputPlaceholder: 'Ketikkan penjelasan / deskripsi paket di sini...',
@@ -10382,7 +10379,7 @@ Total : Rp.${totalSaldo.toLocaleString("id-ID")}
 
                 async function checkPulsa() {
                     const btn = document.getElementById('btnCheckPulsa');
-                    btn.innerHTML = '<svg class="w-4 h-4 animate-spin text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg> Mengecek...';
+                    btn.innerHTML = '<svg class="w-4 h-4 animate-spin text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg> Mengecek...';
                     btn.disabled = true;
                     try {
                         const res = await fetch('/api/xl/check-balance', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({accessToken: currentAccessToken}) });
@@ -10390,23 +10387,23 @@ Total : Rp.${totalSaldo.toLocaleString("id-ID")}
                         if (data.success) {
                             let quotaHtml = '';
                             if (data.quota && data.quota.quotas && Array.isArray(data.quota.quotas) && data.quota.quotas.length > 0) {
-                                quotaHtml = '<div class="mt-4 border-t border-gray-700 pt-3"><h4 class="text-sm font-bold text-cyan-400 mb-3">Detail Paket & Kuota:</h4>';
+                                quotaHtml = '<div class="mt-4 border-t border-slate-200 pt-3"><h4 class="text-sm font-bold text-sky-700 mb-3">Detail Paket & Kuota:</h4>';
                                 data.quota.quotas.forEach(q => { 
                                     let benefitsHtml = '';
                                     if (q.benefits && Array.isArray(q.benefits)) {
                                         q.benefits.forEach(b => {
-                                            benefitsHtml += '<div class="ml-2 mt-1 border-l-2 border-gray-600 pl-3 py-1"><p class="text-xs text-gray-300">' + b.name + '</p><p class="text-[11px] font-mono font-bold text-yellow-400">Sisa: ' + (b.remaining_quota || b.remaining || '-') + ' / ' + (b.quota || b.total || '-') + '</p></div>';
+                                            benefitsHtml += '<div class="ml-2 mt-1 border-l-2 border-slate-300 pl-3 py-1"><p class="text-xs text-slate-700 font-medium">' + b.name + '</p><p class="text-[11px] font-mono font-bold text-amber-700">Sisa: ' + (b.remaining_quota || b.remaining || '-') + ' / ' + (b.quota || b.total || '-') + '</p></div>';
                                         });
                                     }
-                                    quotaHtml += '<div class="mb-3 bg-gray-800 p-4 rounded-xl border border-gray-600 shadow-sm"><p class="text-sm font-bold text-white leading-tight">' + (q.name || 'Paket Data') + '</p><p class="text-[11px] text-gray-400 mt-1 mb-2">\u{1F342} Aktif Hingga: ' + (q.expired_at || '-') + '</p>' + benefitsHtml + '</div>'; 
+                                    quotaHtml += '<div class="mb-3 bg-white p-4 rounded-xl border border-slate-200 shadow-sm"><p class="text-sm font-bold text-slate-900 leading-tight">' + (q.name || 'Paket Data') + '</p><p class="text-[11px] text-slate-500 mt-1 mb-2">\u{1F342} Aktif Hingga: ' + (q.expired_at || '-') + '</p>' + benefitsHtml + '</div>'; 
                                 });
                                 quotaHtml += '</div>';
-                            } else { quotaHtml = '<div class="mt-4 border-t border-gray-700 pt-3"><p class="text-xs text-gray-500 text-center py-2">Tidak ada paket/kuota aktif ditemukan.</p></div>'; }
+                            } else { quotaHtml = '<div class="mt-4 border-t border-slate-200 pt-3"><p class="text-xs text-slate-400 text-center py-2">Tidak ada paket/kuota aktif ditemukan.</p></div>'; }
 
                             let lokasiText = (data.location && data.location.location) ? data.location.location : 'Tidak Terdeteksi';
 
                             swalDark.fire({
-                                html: '<h3 class="text-xl font-bold text-white mb-4 mt-2">Informasi Detail XL Anda</h3><div class="text-left bg-gray-900 p-5 rounded-xl border border-gray-700 max-h-[75vh] overflow-y-auto custom-scrollbar"><div class="space-y-3 text-sm"><p><span class="text-gray-400">Nomor:</span> <span class="font-mono text-white float-right">' + (data.info.msisdn || '-') + '</span></p><p><span class="text-gray-400">Status:</span> <span class="font-bold text-green-400 float-right">' + (data.info.subscription_status || 'Aktif') + '</span></p><p><span class="text-gray-400">Lokasi:</span> <span class="font-bold text-cyan-400 float-right">' + lokasiText + '</span></p><p class="pt-3 border-t border-gray-800"><span class="text-gray-400">Pulsa:</span> <span class="font-mono font-black text-yellow-400 float-right">' + (data.info.pulsa_real || data.info.pulsa || 'Rp 0') + '</span></p><p><span class="text-gray-400">Masa Aktif:</span> <span class="text-gray-200 float-right">' + (data.info.active_until || '-') + '</span></p></div>' + quotaHtml + '</div>',
+                                html: '<h3 class="text-xl font-bold text-slate-900 mb-4 mt-2">Informasi Detail XL Anda</h3><div class="text-left bg-slate-50 p-5 rounded-xl border border-slate-200 max-h-[75vh] overflow-y-auto custom-scrollbar"><div class="space-y-3 text-sm"><p><span class="text-slate-500">Nomor:</span> <span class="font-mono text-slate-900 font-bold float-right">' + (data.info.msisdn || '-') + '</span></p><p><span class="text-slate-500">Status:</span> <span class="font-bold text-emerald-600 float-right">' + (data.info.subscription_status || 'Aktif') + '</span></p><p><span class="text-slate-500">Lokasi:</span> <span class="font-bold text-sky-600 float-right">' + lokasiText + '</span></p><p class="pt-3 border-t border-slate-200"><span class="text-slate-500">Pulsa:</span> <span class="font-mono font-black text-amber-600 float-right">' + (data.info.pulsa_real || data.info.pulsa || 'Rp 0') + '</span></p><p><span class="text-slate-500">Masa Aktif:</span> <span class="text-slate-700 float-right">' + (data.info.active_until || '-') + '</span></p></div>' + quotaHtml + '</div>',
                                 width: '44em',
                                 showCloseButton: true,
                                 confirmButtonText: 'Tutup'
@@ -10445,7 +10442,7 @@ Total : Rp.${totalSaldo.toLocaleString("id-ID")}
                                 if (data.payment_data && data.payment_data.deeplink_data && data.payment_data.deeplink_data.deeplink_url) {
                                     swalDark.fire({
                                         title: 'Lanjutkan ke Pembayaran',
-                                        html: '<p class="text-sm mb-4">Saldo Web dipotong <b>Rp ' + data.deducted_amount.toLocaleString('id-ID') + '</b> (Biaya Admin).</p><p class="text-sm text-gray-400 mb-4">Klik tombol di bawah untuk membayar harga paket via aplikasi <b>' + paymentMethod + '</b>.</p>',
+                                        html: '<p class="text-sm mb-4 text-slate-700">Saldo Web dipotong <b>Rp ' + data.deducted_amount.toLocaleString('id-ID') + '</b> (Biaya Admin).</p><p class="text-sm text-slate-500 mb-4">Klik tombol di bawah untuk membayar harga paket via aplikasi <b>' + paymentMethod + '</b>.</p>',
                                         showConfirmButton: true, confirmButtonText: 'Buka Aplikasi ' + paymentMethod, showCancelButton: true, cancelButtonText: 'Tutup', allowOutsideClick: false
                                     }).then((result) => { if (result.isConfirmed) { window.open(data.payment_data.deeplink_data.deeplink_url, '_blank'); } window.location.reload(); });
                                 } else {
@@ -10501,7 +10498,7 @@ Total : Rp.${totalSaldo.toLocaleString("id-ID")}
       const { results: inboxResults } = await env.DB.prepare(
         "SELECT * FROM inbox WHERE email = ? ORDER BY id DESC LIMIT ? OFFSET ?"
       ).bind(currentUser.email, inboxLimit, inboxOffset).all();
-      let inboxHtml = `<div class="text-center py-16 bg-gray-800 rounded-3xl border border-gray-700 relative z-10"><p class="text-gray-400 text-lg">Belum ada pesan di kotak masuk Anda.</p></div>`;
+      let inboxHtml = `<div class="text-center py-16 bg-white rounded-3xl border border-slate-200 shadow-sm relative z-10"><p class="text-slate-500 text-lg font-medium">Belum ada pesan di kotak masuk Anda.</p></div>`;
       let pendingRefs = [];
       if (inboxResults && inboxResults.length > 0) {
         inboxHtml = inboxResults.map((msg) => {
@@ -10510,25 +10507,25 @@ Total : Rp.${totalSaldo.toLocaleString("id-ID")}
           if (msg.title.includes("[PENDING]") && refMatch) {
             pendingRefs.push(refMatch[1]);
             if (!msgBody.includes("checkInboxPayment")) {
-              msgBody += `<div style="text-align: center; margin-top: 20px;"><button onclick="checkInboxPayment('${refMatch[1]}', true)" class="bg-green-600 hover:bg-green-500 text-white font-bold py-3 px-6 rounded-xl text-sm transition shadow-lg inline-flex items-center gap-2 cursor-pointer border border-green-400/30 hover:scale-105"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg> 🔍 Cek Status Pembayaran</button><div class="mt-2 text-xs text-yellow-400/80 font-mono flex items-center justify-center gap-1.5"><span class="relative flex h-2 w-2"><span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-yellow-400 opacity-75"></span><span class="relative inline-flex rounded-full h-2 w-2 bg-yellow-500"></span></span> Deteksi live aktif di latar belakang...</div></div>`;
+              msgBody += `<div style="text-align: center; margin-top: 20px;"><button onclick="checkInboxPayment('${refMatch[1]}', true)" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-3 px-6 rounded-xl text-sm transition shadow-md inline-flex items-center gap-2 cursor-pointer hover:scale-105"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg> 🔍 Cek Status Pembayaran</button><div class="mt-2 text-xs text-amber-700 bg-amber-50 px-3 py-1 rounded-full border border-amber-200 font-mono inline-flex items-center justify-center gap-1.5"><span class="relative flex h-2 w-2"><span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span><span class="relative inline-flex rounded-full h-2 w-2 bg-amber-500"></span></span> Deteksi live aktif di latar belakang...</div></div>`;
             }
           }
-          return `<div class="bg-gray-800 p-6 md:p-8 rounded-3xl border border-gray-700 shadow-xl mb-6 hover:border-sky-600/50 transition relative z-10"><div class="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-4 border-b border-gray-700 pb-4 gap-2"><h3 class="text-xl font-bold text-cyan-400 leading-snug">${msg.title}</h3><span class="text-xs font-mono text-gray-500 bg-gray-900 px-3 py-1.5 rounded-lg shrink-0">${msg.date}</span></div><div class="text-gray-300 text-sm md:text-base leading-relaxed break-words">${msgBody}</div></div>`;
+          return `<div class="bg-white p-6 md:p-8 rounded-3xl border border-slate-200 shadow-sm hover:shadow-md mb-6 hover:border-sky-400 transition relative z-10"><div class="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-4 border-b border-slate-100 pb-4 gap-2"><h3 class="text-xl font-bold text-sky-800 leading-snug">${msg.title}</h3><span class="text-xs font-mono text-slate-500 bg-slate-100 border border-slate-200 px-3 py-1.5 rounded-lg shrink-0">${msg.date}</span></div><div class="text-slate-700 text-sm md:text-base leading-relaxed break-words">${msgBody}</div></div>`;
         }).join("");
         if (totalPages > 1) {
           inboxHtml += `
-                    <div class="mt-8 flex items-center justify-between gap-4 flex-wrap bg-gray-800 p-4 border border-gray-700 rounded-2xl relative z-10">
-                        <a href="${inboxPage > 1 ? `/inbox?page=${inboxPage - 1}` : "#"}" class="bg-gray-900 hover:bg-gray-850 border border-gray-750 text-white px-4 py-2 rounded-xl text-xs font-bold transition flex items-center gap-1.5 ${inboxPage <= 1 ? "opacity-50 pointer-events-none" : ""}">
+                    <div class="mt-8 flex items-center justify-between gap-4 flex-wrap bg-white p-4 border border-slate-200 rounded-2xl shadow-sm relative z-10">
+                        <a href="${inboxPage > 1 ? `/inbox?page=${inboxPage - 1}` : "#"}" class="bg-slate-100 hover:bg-slate-200 border border-slate-200 text-slate-700 px-4 py-2 rounded-xl text-xs font-bold transition flex items-center gap-1.5 ${inboxPage <= 1 ? "opacity-50 pointer-events-none" : ""}">
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg> Sebelum
                         </a>
-                        <span class="text-xs text-gray-400 font-medium">Halaman ${inboxPage} dari ${totalPages} (Total ${totalInbox} Pesan)</span>
-                        <a href="${inboxPage < totalPages ? `/inbox?page=${inboxPage + 1}` : "#"}" class="bg-gray-900 hover:bg-gray-850 border border-gray-750 text-white px-4 py-2 rounded-xl text-xs font-bold transition flex items-center gap-1.5 ${inboxPage >= totalPages ? "opacity-50 pointer-events-none" : ""}">
+                        <span class="text-xs text-slate-500 font-semibold">Halaman ${inboxPage} dari ${totalPages} (Total ${totalInbox} Pesan)</span>
+                        <a href="${inboxPage < totalPages ? `/inbox?page=${inboxPage + 1}` : "#"}" class="bg-slate-100 hover:bg-slate-200 border border-slate-200 text-slate-700 px-4 py-2 rounded-xl text-xs font-bold transition flex items-center gap-1.5 ${inboxPage >= totalPages ? "opacity-50 pointer-events-none" : ""}">
                             Berikut <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
                         </a>
                     </div>`;
         }
       }
-      const content = `<div class="max-w-4xl mx-auto px-4 md:px-8 py-8 md:py-12 relative z-10"><h1 class="text-3xl font-black text-white mb-8 tracking-tight">Kotak Masuk (Inbox)</h1>${inboxHtml}</div>
+      const content = `<div class="max-w-4xl mx-auto px-4 md:px-8 py-8 md:py-12 relative z-10"><h1 class="text-3xl font-black text-slate-900 mb-8 tracking-tight">Kotak Masuk (Inbox)</h1>${inboxHtml}</div>
       <script>
       function playSuccessChime() {
           try {
@@ -10611,25 +10608,25 @@ Total : Rp.${totalSaldo.toLocaleString("id-ID")}
       if (!currentUser) return Response.redirect(url.origin + "/", 302);
       const content = `
             <div class="max-w-3xl mx-auto px-4 md:px-8 py-8 md:py-12 relative z-10">
-                <h1 class="text-3xl font-black text-white mb-8 border-b border-gray-800 pb-4 tracking-tight">Profil Saya</h1>
-                <div class="bg-gray-800 p-6 md:p-10 rounded-3xl border border-gray-700 shadow-2xl">
-                    <div class="flex flex-col items-center mb-8 border-b border-gray-700 pb-6">
+                <h1 class="text-3xl font-black text-slate-900 mb-8 border-b border-slate-200 pb-4 tracking-tight">Profil Saya</h1>
+                <div class="bg-white p-6 md:p-10 rounded-3xl border border-slate-200 shadow-xl">
+                    <div class="flex flex-col items-center mb-8 border-b border-slate-100 pb-6">
                         ${currentUser.picture ? `
-                            <img src="${currentUser.picture}" alt="${escapeHTML(currentUser.name)}" class="w-20 h-20 rounded-full object-cover shadow-2xl border-2 border-sky-500/50 mb-3" referrerpolicy="no-referrer">
+                            <img src="${currentUser.picture}" alt="${escapeHTML(currentUser.name)}" class="w-20 h-20 rounded-full object-cover shadow-md border-2 border-sky-500 mb-3" referrerpolicy="no-referrer">
                         ` : `
-                            <div class="w-20 h-20 rounded-full bg-sky-600 flex items-center justify-center font-bold text-white text-2xl uppercase shadow-2xl mb-3">${currentUser.name.charAt(0)}</div>
+                            <div class="w-20 h-20 rounded-full bg-sky-600 flex items-center justify-center font-bold text-white text-2xl uppercase shadow-md mb-3">${currentUser.name.charAt(0)}</div>
                         `}
-                        <h2 class="text-lg font-bold text-white">${escapeHTML(currentUser.name)}</h2>
-                        <p class="text-xs text-gray-500 font-mono mt-1">${currentUser.email}</p>
+                        <h2 class="text-lg font-bold text-slate-900">${escapeHTML(currentUser.name)}</h2>
+                        <p class="text-xs text-slate-500 font-mono mt-1">${currentUser.email}</p>
                     </div>
                     <form id="profileForm" class="space-y-6">
-                        <div><label class="block text-sm font-bold tracking-wide text-gray-400 mb-2 uppercase">Email Akun (Terkunci)</label><input type="email" value="${currentUser.email}" disabled class="w-full bg-gray-900 border border-gray-800 rounded-xl p-4 text-gray-500 cursor-not-allowed font-medium"></div>
-                        <div><label class="block text-sm font-bold tracking-wide text-gray-400 mb-2 uppercase">Nama Lengkap</label><input type="text" id="profileName" value="${escapeHTML(currentUser.name)}" required class="w-full bg-gray-900 border border-gray-700 rounded-xl p-4 text-white focus:ring-2 focus:ring-sky-500 outline-none transition font-medium"></div>
-                        <div><label class="block text-sm font-bold tracking-wide text-gray-400 mb-2 uppercase">Nomor WhatsApp / XL Tersimpan</label><input type="text" id="profilePhone" value="${currentUser.phone || ""}" placeholder="Contoh: 081234567890" class="w-full bg-gray-900 border border-gray-700 rounded-xl p-4 text-white focus:ring-2 focus:ring-sky-500 outline-none transition font-medium"></div>
+                        <div><label class="block text-sm font-bold tracking-wide text-slate-600 mb-2 uppercase">Email Akun (Terkunci)</label><input type="email" value="${currentUser.email}" disabled class="w-full bg-slate-100 border border-slate-200 rounded-xl p-4 text-slate-500 cursor-not-allowed font-medium"></div>
+                        <div><label class="block text-sm font-bold tracking-wide text-slate-600 mb-2 uppercase">Nama Lengkap</label><input type="text" id="profileName" value="${escapeHTML(currentUser.name)}" required class="w-full bg-slate-50 border border-slate-200 rounded-xl p-4 text-slate-900 focus:bg-white focus:ring-2 focus:ring-sky-500 outline-none transition font-medium"></div>
+                        <div><label class="block text-sm font-bold tracking-wide text-slate-600 mb-2 uppercase">Nomor WhatsApp / XL Tersimpan</label><input type="text" id="profilePhone" value="${currentUser.phone || ""}" placeholder="Contoh: 081234567890" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-4 text-slate-900 focus:bg-white focus:ring-2 focus:ring-sky-500 outline-none transition font-medium"></div>
                         <div class="pt-4"><button type="submit" id="btnUpdateProfile" class="w-full bg-sky-600 hover:bg-sky-500 text-white font-black py-4 px-4 rounded-xl transition shadow-lg text-lg tracking-wide">Simpan Perubahan</button></div>
                     </form>
-                    <div class="mt-8 pt-6 border-t border-gray-700">
-                        <button onclick="logout()" type="button" class="w-full bg-sky-500/10 hover:bg-sky-500 text-sky-400 hover:text-white border border-sky-500/30 hover:border-sky-500 font-bold py-4 rounded-xl transition shadow-lg text-lg tracking-wide flex items-center justify-center gap-2">
+                    <div class="mt-8 pt-6 border-t border-slate-100">
+                        <button onclick="logout()" type="button" class="w-full bg-red-50 hover:bg-red-500 text-red-600 hover:text-white border border-red-200 hover:border-red-500 font-bold py-4 rounded-xl transition shadow-sm text-lg tracking-wide flex items-center justify-center gap-2">
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg> Keluar Akun
                         </button>
                     </div>
@@ -10645,11 +10642,11 @@ Total : Rp.${totalSaldo.toLocaleString("id-ID")}
       return new Response(renderLayout("Profil Saya", content), { headers: { "Content-Type": "text/html;charset=UTF-8" } });
     }
     if (path === "/syarat-ketentuan" && method === "GET") {
-      const content = `<div class="max-w-4xl mx-auto px-4 md:px-8 py-8 md:py-16 relative z-10"><h1 class="text-3xl md:text-5xl font-black text-white mb-10 border-b border-gray-800 pb-6 tracking-tight">Syarat & Ketentuan</h1><div class="space-y-10 text-gray-300 leading-relaxed bg-gray-800 p-8 md:p-12 rounded-3xl border border-gray-700 shadow-2xl text-lg"><section><h2 class="text-2xl font-bold text-cyan-400 mb-4 flex items-center gap-2"><div class="w-2 h-8 bg-sky-500 rounded-full"></div> Penggunaan Layanan (AUP)</h2><p class="mb-3 text-gray-400">Anda <strong>DILARANG KERAS</strong> menggunakan layanan VPN untuk: Peretasan, Penipuan finansial, atau Serangan DDoS.</p></section><section><h2 class="text-2xl font-bold text-cyan-400 mb-4 flex items-center gap-2"><div class="w-2 h-8 bg-sky-500 rounded-full"></div> Saldo & Refund</h2><p class="text-gray-400">Transaksi final. Tidak ada refund setelah VPN/Paket berstatus Aktif.</p></section></div></div>`;
+      const content = `<div class="max-w-4xl mx-auto px-4 md:px-8 py-8 md:py-16 relative z-10"><h1 class="text-3xl md:text-5xl font-black text-slate-900 mb-10 border-b border-slate-200 pb-6 tracking-tight">Syarat & Ketentuan</h1><div class="space-y-10 text-slate-700 leading-relaxed bg-white p-8 md:p-12 rounded-3xl border border-slate-200 shadow-xl text-lg"><section><h2 class="text-2xl font-bold text-sky-800 mb-4 flex items-center gap-2"><div class="w-2 h-8 bg-sky-500 rounded-full"></div> Penggunaan Layanan (AUP)</h2><p class="mb-3 text-slate-600">Anda <strong class="text-slate-900">DILARANG KERAS</strong> menggunakan layanan VPN untuk: Peretasan, Penipuan finansial, atau Serangan DDoS.</p></section><section><h2 class="text-2xl font-bold text-sky-800 mb-4 flex items-center gap-2"><div class="w-2 h-8 bg-sky-500 rounded-full"></div> Saldo & Refund</h2><p class="text-slate-600">Transaksi final. Tidak ada refund setelah VPN/Paket berstatus Aktif.</p></section></div></div>`;
       return new Response(renderLayout("Syarat & Ketentuan", content), { headers: { "Content-Type": "text/html;charset=UTF-8" } });
     }
     if (path === "/kontak" && method === "GET") {
-      const content = `<div class="max-w-6xl mx-auto px-4 md:px-8 py-8 md:py-16 relative z-10"><h1 class="text-3xl md:text-5xl font-black text-white mb-6 text-center tracking-tight">Pusat Bantuan CS</h1><p class="text-gray-400 text-center mb-12 text-lg">Kami siap membantu menyelesaikan kendala jaringan, aplikasi, dan status top-up.</p><div class="grid grid-cols-1 md:grid-cols-3 gap-8"><a href="https://wa.me/6282175037525" target="_blank" class="bg-gray-800 p-10 rounded-[2rem] border border-gray-700 hover:border-green-500 hover:shadow-[0_0_40px_rgba(34,197,94,0.15)] transition-all text-center"><h2 class="text-2xl md:text-3xl font-black text-white mb-2">WhatsApp</h2><p class="text-green-400 font-mono text-xl md:text-lg lg:text-xl">0821 7503 7525</p></a><a href="https://t.me/srpcomadmin" target="_blank" class="bg-gray-800 p-10 rounded-[2rem] border border-gray-700 hover:border-sky-600 hover:shadow-[0_0_40px_rgba(59,130,246,0.15)] transition-all text-center"><h2 class="text-2xl md:text-3xl font-black text-white mb-2">Telegram</h2><p class="text-cyan-400 font-mono text-xl md:text-lg lg:text-xl">@srpcomadmin</p></a><a href="mailto:admin@warungpulsa.com" class="bg-gray-800 p-10 rounded-[2rem] border border-gray-700 hover:border-pink-500 hover:shadow-[0_0_40px_rgba(236,72,153,0.15)] transition-all text-center flex flex-col justify-center"><h2 class="text-2xl md:text-3xl font-black text-white mb-2">Email</h2><p class="text-pink-400 font-mono text-lg md:text-base lg:text-lg truncate">admin@warungpulsa.com</p></a></div></div>`;
+      const content = `<div class="max-w-6xl mx-auto px-4 md:px-8 py-8 md:py-16 relative z-10"><h1 class="text-3xl md:text-5xl font-black text-slate-900 mb-6 text-center tracking-tight">Pusat Bantuan CS</h1><p class="text-slate-500 text-center mb-12 text-lg font-medium">Kami siap membantu menyelesaikan kendala jaringan, aplikasi, dan status top-up.</p><div class="grid grid-cols-1 md:grid-cols-3 gap-8"><a href="https://wa.me/6282175037525" target="_blank" class="bg-white p-10 rounded-[2rem] border border-slate-200 hover:border-emerald-500 hover:shadow-[0_10px_30px_rgba(16,185,129,0.15)] transition-all text-center group"><div class="w-16 h-16 mx-auto mb-4 rounded-2xl bg-emerald-50 flex items-center justify-center text-emerald-600 group-hover:scale-110 transition"><svg class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24"><path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.711 2.598 2.664-.699c.971.53 1.761.814 2.796.814 3.18 0 5.767-2.587 5.768-5.766 0-3.18-2.587-5.768-5.768-5.768zm0 10.364c-.886 0-1.753-.238-2.508-.687l-.18-.107-1.862.489.497-1.815-.117-.187c-.496-.788-.758-1.708-.757-2.678.001-2.73 2.224-4.953 4.957-4.953 2.73 0 4.954 2.224 4.954 4.953 0 2.73-2.224 4.954-4.954 4.954z"/></svg></div><h2 class="text-2xl md:text-3xl font-black text-slate-900 mb-2">WhatsApp</h2><p class="text-emerald-600 font-mono font-bold text-xl md:text-lg lg:text-xl">0821 7503 7525</p></a><a href="https://t.me/srpcomadmin" target="_blank" class="bg-white p-10 rounded-[2rem] border border-slate-200 hover:border-sky-500 hover:shadow-[0_10px_30px_rgba(14,165,233,0.15)] transition-all text-center group"><div class="w-16 h-16 mx-auto mb-4 rounded-2xl bg-sky-50 flex items-center justify-center text-sky-600 group-hover:scale-110 transition"><svg class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69a.2.2 0 00-.05-.18c-.06-.05-.14-.03-.21-.02-.09.02-1.49.95-4.22 2.79-.4.27-.76.41-1.08.4-.36-.01-1.04-.2-1.55-.37-.63-.2-1.12-.31-1.08-.66.02-.18.27-.36.75-.55 2.95-1.28 4.92-2.13 5.9-2.54 2.81-1.17 3.4-.97 3.78-.96.08 0 .28.02.4.12.1.08.13.2.14.28-.01.06-.02.19-.04.28z"/></svg></div><h2 class="text-2xl md:text-3xl font-black text-slate-900 mb-2">Telegram</h2><p class="text-sky-600 font-mono font-bold text-xl md:text-lg lg:text-xl">@srpcomadmin</p></a><a href="mailto:admin@warungpulsa.com" class="bg-white p-10 rounded-[2rem] border border-slate-200 hover:border-purple-500 hover:shadow-[0_10px_30px_rgba(168,85,247,0.15)] transition-all text-center flex flex-col justify-center group"><div class="w-16 h-16 mx-auto mb-4 rounded-2xl bg-purple-50 flex items-center justify-center text-purple-600 group-hover:scale-110 transition"><svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg></div><h2 class="text-2xl md:text-3xl font-black text-slate-900 mb-2">Email</h2><p class="text-purple-600 font-mono font-bold text-lg md:text-base lg:text-lg truncate">admin@warungpulsa.com</p></a></div></div>`;
       return new Response(renderLayout("Kontak CS", content), { headers: { "Content-Type": "text/html;charset=UTF-8" } });
     }
     if (path === "/mutasi" && method === "GET") {
