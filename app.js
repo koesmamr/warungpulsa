@@ -881,8 +881,53 @@ async function renderAdminDashboard(env, currentUser, appSettings) {
     <div id="adminPanelContainer" class="max-w-7xl mx-auto px-4 md:px-8 py-8 md:py-12">
         <h1 class="text-3xl font-black text-slate-900 mb-8 tracking-tight">Panel Kontrol Admin</h1>
         
+        <!-- Status Banner Mode Maintenance -->
+        ${appSettings.maintenance_mode ? `
+        <div class="mb-8 p-5 md:p-6 rounded-3xl bg-gradient-to-r from-rose-50 via-red-50 to-amber-50 border-2 border-rose-300 shadow-xl flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+            <div class="flex items-start md:items-center gap-4">
+                <div class="w-12 h-12 rounded-2xl bg-rose-600 text-white flex items-center justify-center shrink-0 shadow-lg shadow-rose-600/30">
+                    <svg class="w-6 h-6 animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+                </div>
+                <div>
+                    <div class="flex items-center gap-2 mb-1 flex-wrap">
+                        <span class="bg-rose-600 text-white text-[11px] font-black uppercase tracking-widest px-2.5 py-0.5 rounded-full shadow-sm">RESTRICTED ACCESS</span>
+                        <h3 class="text-slate-900 font-extrabold text-lg">Mode Maintenance SEDANG AKTIF</h3>
+                    </div>
+                    <p class="text-slate-600 text-xs md:text-sm leading-relaxed">Website saat ini ditutup untuk pengunjung umum & pengguna biasa. HANYA Administrator yang dapat login dan mengelola sistem.</p>
+                </div>
+            </div>
+            <button onclick="toggleMaintenanceQuick()" class="bg-rose-600 hover:bg-rose-700 active:scale-95 text-white font-black py-3 px-6 rounded-xl text-sm transition shadow-lg flex items-center gap-2 shrink-0 cursor-pointer">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 5.636a9 9 0 010 12.728m0 0l-2.829-2.829m2.829 2.829L21 21M15.536 8.464a5 5 0 010 7.072m0 0l-2.829-2.829m-4.243 2.829a4.978 4.978 0 01-1.414-2.83m-1.414 5.658a9 9 0 01-2.167-9.238m7.824 2.167a1 1 0 111.414 1.414m-1.414-1.414L3 3m8.293 8.293l1.414 1.414"></path></svg>
+                Matikan Maintenance Mode
+            </button>
+        </div>
+        ` : `
+        <div class="mb-8 p-5 md:p-6 rounded-3xl bg-emerald-50 border border-emerald-200 shadow-sm flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+            <div class="flex items-start md:items-center gap-4">
+                <div class="w-12 h-12 rounded-2xl bg-emerald-600 text-white flex items-center justify-center shrink-0 shadow-lg shadow-emerald-600/30">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                </div>
+                <div>
+                    <div class="flex items-center gap-2 mb-1 flex-wrap">
+                        <span class="bg-emerald-600 text-white text-[11px] font-black uppercase tracking-widest px-2.5 py-0.5 rounded-full shadow-sm">LIVE / NORMAL</span>
+                        <h3 class="text-slate-900 font-extrabold text-lg">Website Beroperasi Normal (Publik)</h3>
+                    </div>
+                    <p class="text-slate-600 text-xs md:text-sm leading-relaxed">Website dapat diakses secara publik dan seluruh pengguna dapat melakukan login, transaksi QRIS, serta order VPN secara normal.</p>
+                </div>
+            </div>
+            <button onclick="toggleMaintenanceQuick()" class="bg-white hover:bg-slate-100 active:scale-95 text-slate-800 border-2 border-slate-300 font-black py-3 px-6 rounded-xl text-sm transition shadow-sm flex items-center gap-2 shrink-0 cursor-pointer">
+                <span class="w-2.5 h-2.5 rounded-full bg-rose-600"></span>
+                Aktifkan Maintenance Mode
+            </button>
+        </div>
+        `}
+        
         <!-- Action Control Bar -->
         <div class="flex flex-wrap gap-4 mb-8 border-b border-slate-200 pb-8">
+            <button onclick="toggleMaintenanceQuick()" class="${appSettings.maintenance_mode ? 'bg-rose-600 hover:bg-rose-500 ring-4 ring-rose-200' : 'bg-slate-800 hover:bg-slate-700'} text-white font-bold py-3.5 px-6 rounded-xl shadow-lg transition flex items-center gap-3">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+                Maintenance: ${appSettings.maintenance_mode ? '🔴 AKTIF (ON)' : '🟢 NONAKTIF (OFF)'}
+            </button>
             <button onclick="openSettingsModal()" class="bg-sky-600 hover:bg-sky-500 text-white font-bold py-3.5 px-6 rounded-xl shadow-lg transition flex items-center gap-3">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
                 Konfigurasi Sistem
@@ -1888,6 +1933,58 @@ async function renderAdminDashboard(env, currentUser, appSettings) {
         function escapeHtmlClient(str) {
             if (!str) return '';
             return str.replace(/[&<>'"]/g, tag => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[tag]));
+        }
+
+        // Kontrol Cepat Mode Maintenance
+        async function toggleMaintenanceQuick() {
+            const isCurrentlyOn = ${appSettings.maintenance_mode === true};
+            const confirmTitle = isCurrentlyOn ? 'Matikan Mode Maintenance?' : 'Aktifkan Mode Maintenance?';
+            const confirmText = isCurrentlyOn 
+                ? 'Website akan kembali dibuka untuk publik. Semua pengguna biasa dan pengunjung dapat mengakses serta login ke website secara normal.' 
+                : 'Website akan terkunci dan menampilkan halaman pemeliharaan (Maintenance). Pengguna biasa TIDAK BISA login. HANYA Administrator yang dapat mengakses website.';
+            
+            const result = await swalDark.fire({
+                title: confirmTitle,
+                text: confirmText,
+                icon: isCurrentlyOn ? 'question' : 'warning',
+                showCancelButton: true,
+                confirmButtonColor: isCurrentlyOn ? '#10b981' : '#e11d48',
+                cancelButtonColor: '#64748b',
+                confirmButtonText: isCurrentlyOn ? 'Ya, Buka Akses Publik' : 'Ya, Aktifkan Maintenance',
+                cancelButtonText: 'Batal'
+            });
+
+            if (result.isConfirmed) {
+                swalDark.fire({
+                    title: 'Memproses...',
+                    text: 'Sedang memperbarui status pemeliharaan sistem...',
+                    allowOutsideClick: false,
+                    didOpen: () => { swalDark.showLoading(); }
+                });
+
+                try {
+                    const res = await fetch('/api/admin/toggle-maintenance', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' }
+                    });
+                    const data = await res.json();
+                    if (data.success) {
+                        await swalDark.fire({
+                            title: 'Berhasil!',
+                            text: data.maintenance_mode 
+                                ? 'Mode Maintenance berhasil DIAKTIFKAN. Website kini dalam status pemeliharaan.' 
+                                : 'Mode Maintenance berhasil DIMATIKAN. Website kembali beroperasi normal untuk publik.',
+                            icon: 'success',
+                            confirmButtonColor: '#0284c7'
+                        });
+                        window.location.reload();
+                    } else {
+                        swalDark.fire('Gagal', data.message || 'Gagal mengubah status maintenance.', 'error');
+                    }
+                } catch (e) {
+                    swalDark.fire('Error', 'Terjadi kesalahan komunikasi dengan server.', 'error');
+                }
+            }
         }
 
         // Kontrol Modal
@@ -4440,6 +4537,26 @@ Status: ${user.is_blocked === 1 ? "Aktif Kembali" : "Diblokir"}`, appSettings);
         }
       }
       return jsonResponse({ success: true });
+    } catch (e) {
+      return jsonResponse({ success: false, message: e.message }, 500);
+    }
+  }
+  if (url.pathname === "/api/admin/toggle-maintenance" && request.method === "POST") {
+    try {
+      const current = await getAppSettings(env);
+      const newStatus = !current.maintenance_mode;
+      const updatedSettings = Object.assign({}, current, { maintenance_mode: newStatus });
+      const settingStr = JSON.stringify(updatedSettings);
+      const existing = await env.DB.prepare("SELECT key FROM settings WHERE key = 'app'").first();
+      if (existing) await env.DB.prepare("UPDATE settings SET value = ? WHERE key = 'app'").bind(settingStr).run();
+      else await env.DB.prepare("INSERT INTO settings (key, value) VALUES ('app', ?)").bind(settingStr).run();
+      setCachedAppSettings(updatedSettings);
+      if (sendTelegramLog2) {
+        await sendTelegramLog2(`\u2699\uFE0F ADMIN MODE MAINTENANCE DIUBAH`, `Status: ${newStatus ? "\u{1F534} AKTIF (ON) - Akses Terkunci Khusus Admin" : "\u{1F7E2} NONAKTIF (OFF) - Normal Publik"}
+Diubah oleh: ${currentUser ? currentUser.email : "Super Admin"}
+Waktu: ${getWIBTime()}`, updatedSettings);
+      }
+      return jsonResponse({ success: true, maintenance_mode: newStatus });
     } catch (e) {
       return jsonResponse({ success: false, message: e.message }, 500);
     }
@@ -8447,30 +8564,219 @@ Total : Rp.${totalSaldo.toLocaleString("id-ID")}
                     <title>Sistem Dalam Pemeliharaan - Warung Pulsa</title>
                     <link rel="icon" type="image/png" href="${LOGO_URL}">
                     <script src="https://cdn.tailwindcss.com"><\/script>
+                    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"><\/script>
                     <script src="https://accounts.google.com/gsi/client" async defer><\/script>
-                    <style>@keyframes blob { 0% { transform: translate(0px, 0px) scale(1); } 33% { transform: translate(30px, -50px) scale(1.1); } 66% { transform: translate(-20px, 20px) scale(0.9); } 100% { transform: translate(0px, 0px) scale(1); } } .animate-blob { animation: blob 7s infinite; } .animation-delay-2000 { animation-delay: 2s; }</style>
+                    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+                    <style>
+                        body { font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif; }
+                        @keyframes blob { 0% { transform: translate(0px, 0px) scale(1); } 33% { transform: translate(30px, -50px) scale(1.1); } 66% { transform: translate(-20px, 20px) scale(0.9); } 100% { transform: translate(0px, 0px) scale(1); } }
+                        .animate-blob { animation: blob 8s infinite ease-in-out; }
+                        .animation-delay-2000 { animation-delay: 2s; }
+                        .animation-delay-4000 { animation-delay: 4s; }
+                        .grid-pattern {
+                            background-image: radial-gradient(rgba(14, 165, 233, 0.15) 1px, transparent 1px);
+                            background-size: 24px 24px;
+                        }
+                    </style>
                 </head>
-                <body class="bg-slate-50 flex items-center justify-center min-h-screen px-4 overflow-hidden relative text-slate-800 font-sans">
-                    <div class="absolute top-0 left-1/4 w-96 h-96 bg-sky-200/40 rounded-full filter blur-[100px] animate-blob z-0"></div>
-                    <div class="absolute top-1/4 right-1/4 w-96 h-96 bg-blue-200/30 rounded-full filter blur-[100px] animate-blob animation-delay-2000 z-0"></div>
-                    
-                    <div class="relative max-w-lg w-full bg-white border border-slate-200 p-8 md:p-10 rounded-3xl shadow-2xl text-center z-10">
-                        <div class="relative mx-auto mb-6 w-24 h-24 flex items-center justify-center">
-                            <div class="absolute inset-0 bg-gradient-to-tr from-cyan-400 via-sky-500 to-blue-600 rounded-2xl blur-xl opacity-30 animate-pulse"></div>
-                            <div class="relative w-20 h-20 rounded-2xl p-1 bg-gradient-to-tr from-sky-50 to-blue-50 border-2 border-sky-400 shadow-md overflow-hidden">
-                                <img src="${LOGO_URL}" alt="Logo Warung Pulsa" class="w-full h-full object-cover rounded-xl">
+                <body class="bg-slate-50 text-slate-800 min-h-screen relative flex flex-col justify-between overflow-x-hidden selection:bg-sky-500 selection:text-white">
+                    <!-- Ambient Lighting Glows -->
+                    <div class="fixed top-0 left-1/4 w-[500px] h-[500px] bg-sky-200/40 rounded-full filter blur-[120px] animate-blob -z-10 pointer-events-none"></div>
+                    <div class="fixed bottom-0 right-1/4 w-[500px] h-[500px] bg-blue-200/30 rounded-full filter blur-[120px] animate-blob animation-delay-2000 -z-10 pointer-events-none"></div>
+                    <div class="fixed top-1/3 right-1/3 w-[400px] h-[400px] bg-indigo-200/30 rounded-full filter blur-[120px] animate-blob animation-delay-4000 -z-10 pointer-events-none"></div>
+                    <div class="fixed inset-0 grid-pattern -z-10 opacity-60 pointer-events-none"></div>
+
+                    <!-- Corporate Header -->
+                    <header class="w-full border-b border-slate-200/80 bg-white/80 backdrop-blur-md sticky top-0 z-30 shadow-xs">
+                        <div class="max-w-6xl mx-auto px-4 sm:px-6 py-3.5 flex items-center justify-between">
+                            <div class="flex items-center gap-3">
+                                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-sky-500 to-blue-600 p-0.5 shadow-md shadow-sky-500/20">
+                                    <img src="${LOGO_URL}" alt="Warung Pulsa Logo" class="w-full h-full object-cover rounded-[10px]">
+                                </div>
+                                <div>
+                                    <span class="text-xl font-extrabold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-slate-900 via-sky-800 to-blue-900 block leading-tight">Warung Pulsa</span>
+                                    <span class="text-[10px] uppercase font-bold tracking-widest text-slate-400 block">Cloud Infrastructure & Network</span>
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <span class="relative flex h-2.5 w-2.5">
+                                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
+                                    <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-amber-500"></span>
+                                </span>
+                                <span class="text-xs font-bold text-amber-700 bg-amber-50 border border-amber-200 px-3 py-1 rounded-full tracking-wide inline-flex">
+                                    MAINTENANCE IN PROGRESS
+                                </span>
                             </div>
                         </div>
-                        <h1 class="text-3xl md:text-4xl font-black text-slate-900 mb-4 tracking-tight">Sistem Sedang Diperbarui</h1>
-                        <p class="text-slate-600 text-base leading-relaxed mb-8">Untuk memberikan kualitas layanan dan fitur yang lebih maksimal, <b class="text-slate-900">Warung Pulsa</b> saat ini sedang dalam proses pemeliharaan infrastruktur (Maintenance). Kami akan segera kembali beroperasi.</p>
-                        <div class="border-t border-slate-200 pt-6 mt-4 flex flex-col items-center justify-center">
-                            <span class="text-xs font-bold text-slate-500 uppercase tracking-widest mb-4">Akses Administrator Panel</span>
-                            ${currentUser ? `<div class="bg-rose-50 border border-rose-200 px-6 py-5 rounded-2xl text-center w-full max-w-sm"><p class="text-rose-600 font-bold mb-1 text-lg">Akses Ditolak!</p><p class="text-slate-600 text-sm mb-5">Anda masuk sebagai:<br><strong class="text-slate-900 mt-1 block font-bold">${currentUser.email}</strong><br>Email tersebut bukan Administrator.</p><button onclick="logout()" class="bg-sky-600 hover:bg-sky-500 text-white text-sm font-bold py-3 px-6 rounded-xl transition w-full shadow-md">Keluar Akun</button></div>` : `<div id="g_id_onload" data-client_id="${GOOGLE_CLIENT_ID}" data-callback="handleCredentialResponse" data-auto_prompt="false"></div><div class="g_id_signin shadow-md rounded" data-type="standard" data-size="large" data-theme="outline" data-text="sign_in_with" data-shape="rectangular" data-logo_alignment="center"></div>`}
+                    </header>
+
+                    <!-- Main Section -->
+                    <main class="flex-grow flex items-center justify-center px-4 py-10 sm:py-14">
+                        <div class="max-w-4xl w-full mx-auto">
+                            
+                            <!-- Hero Statement -->
+                            <div class="text-center mb-10">
+                                <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-sky-50 border border-sky-200 text-sky-700 text-xs font-bold uppercase tracking-wider mb-5 shadow-xs">
+                                    <svg class="w-4 h-4 text-sky-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                                    <span>Pemberitahuan Pemeliharaan Sistem Skala Penuh</span>
+                                </div>
+                                
+                                <h1 class="text-3xl sm:text-5xl font-black text-slate-900 tracking-tight mb-4 leading-tight">
+                                    Peningkatan & Optimalisasi <br class="hidden sm:inline">
+                                    <span class="text-transparent bg-clip-text bg-gradient-to-r from-sky-600 via-blue-600 to-indigo-700">Infrastruktur Jaringan</span>
+                                </h1>
+                                
+                                <p class="text-slate-600 text-base sm:text-lg max-w-2xl mx-auto leading-relaxed">
+                                    Untuk menjamin stabilitas kecepatan bandwidth, keandalan routing proxy gateway, serta pembaruan standar keamanan enkripsi data, platform <b class="text-slate-900">Warung Pulsa</b> saat ini sedang menjalani proses pemeliharaan infrastruktur rutin.
+                                </p>
+                                <div class="mt-4">
+                                    <span class="text-xs sm:text-sm text-emerald-700 bg-emerald-50 border border-emerald-200 inline-flex items-center gap-1.5 px-4 py-2 rounded-xl font-medium shadow-xs">
+                                        <svg class="w-4 h-4 text-emerald-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>
+                                        <span><b>Jaminan Keamanan:</b> Seluruh saldo akun, masa aktif VPN, dan riwayat transaksi aman 100% dan akan pulih otomatis.</span>
+                                    </span>
+                                </div>
+                            </div>
+
+                            <!-- 4 Telemetry Status Cards -->
+                            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+                                <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md transition">
+                                    <div class="flex items-center justify-between mb-3">
+                                        <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Node & Proxy</span>
+                                        <span class="relative flex h-2.5 w-2.5">
+                                            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-sky-400 opacity-75"></span>
+                                            <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-sky-500"></span>
+                                        </span>
+                                    </div>
+                                    <div class="text-base font-bold text-slate-900 mb-1">Optimasi Node Jaringan</div>
+                                    <p class="text-xs text-slate-500 leading-relaxed">Peningkatan kapasitas throughput dan redundansi failover server SG & ID.</p>
+                                </div>
+
+                                <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md transition">
+                                    <div class="flex items-center justify-between mb-3">
+                                        <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Saldo & Akun</span>
+                                        <span class="text-emerald-600 text-sm font-black">✔</span>
+                                    </div>
+                                    <div class="text-base font-bold text-slate-900 mb-1">100% Aman Terenkripsi</div>
+                                    <p class="text-xs text-slate-500 leading-relaxed">Snapshot database terverifikasi penuh tanpa ada risiko data hilang.</p>
+                                </div>
+
+                                <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md transition">
+                                    <div class="flex items-center justify-between mb-3">
+                                        <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Gateway QRIS</span>
+                                        <span class="bg-amber-100 text-amber-800 text-[10px] font-bold px-2 py-0.5 rounded-md">STANDBY</span>
+                                    </div>
+                                    <div class="text-base font-bold text-slate-900 mb-1">Sistem Pembayaran</div>
+                                    <p class="text-xs text-slate-500 leading-relaxed">Deteksi otomatis QRIS dinonaktifkan sementara selama pemeliharaan.</p>
+                                </div>
+
+                                <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md transition">
+                                    <div class="flex items-center justify-between mb-3">
+                                        <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Estimasi Waktu</span>
+                                        <svg class="w-4 h-4 text-sky-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                    </div>
+                                    <div class="text-base font-bold text-slate-900 mb-1">Segera Pulih Kembali</div>
+                                    <p class="text-xs text-slate-500 leading-relaxed">Website otomatis dapat diakses kembali setelah audit selesai.</p>
+                                </div>
+                            </div>
+
+                            <!-- Emergency Helpdesk & Administrator Portal Box -->
+                            <div class="bg-white rounded-3xl border border-slate-200 shadow-xl p-6 sm:p-8 mb-8">
+                                <div class="flex flex-col sm:flex-row items-center justify-between gap-6 pb-6 border-b border-slate-100">
+                                    <div>
+                                        <h3 class="text-lg font-bold text-slate-900 mb-1 flex items-center gap-2">
+                                            <span>📞</span> Layanan Bantuan Darurat
+                                        </h3>
+                                        <p class="text-xs sm:text-sm text-slate-500">Butuh informasi penting terkait akun atau transaksi berjalan? Hubungi tim kami:</p>
+                                    </div>
+                                    <div class="flex flex-wrap gap-2.5 shrink-0">
+                                        <a href="https://wa.me/6282175037525" target="_blank" class="bg-emerald-50 hover:bg-emerald-100 text-emerald-700 border border-emerald-200 text-xs font-bold px-4 py-2.5 rounded-xl transition flex items-center gap-2 shadow-xs">
+                                            <span>WhatsApp CS</span>
+                                        </a>
+                                        <a href="https://t.me/srpcomadmin" target="_blank" class="bg-sky-50 hover:bg-sky-100 text-sky-700 border border-sky-200 text-xs font-bold px-4 py-2.5 rounded-xl transition flex items-center gap-2 shadow-xs">
+                                            <span>Telegram CS</span>
+                                        </a>
+                                        <button onclick="window.location.reload()" class="bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold px-4 py-2.5 rounded-xl transition flex items-center gap-2 shadow-md cursor-pointer">
+                                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
+                                            <span>Periksa Status Website</span>
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <!-- Dedicated Administrator Authentication Portal -->
+                                <div class="mt-6 pt-2">
+                                    <div class="max-w-md mx-auto text-center">
+                                        <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-100 text-slate-600 text-[11px] font-extrabold uppercase tracking-wider mb-3">
+                                            <svg class="w-3.5 h-3.5 text-sky-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
+                                            <span>Gerbang Khusus Administrator</span>
+                                        </div>
+                                        <p class="text-xs text-slate-500 mb-5 leading-relaxed">Area terbatas untuk administrator pengelola platform. Pengguna biasa <b>tidak diizinkan login</b> selama mode maintenance aktif.</p>
+
+                                        ${currentUser ? `
+                                            <div class="bg-amber-50 border border-amber-200 p-5 rounded-2xl text-center">
+                                                <p class="text-amber-800 font-bold text-sm mb-1">Akses Pengguna Ditangguhkan</p>
+                                                <p class="text-slate-600 text-xs mb-4">Anda saat ini masuk sebagai:<br><strong class="text-slate-900 font-mono text-sm block mt-1">${currentUser.email}</strong><br><span class="text-slate-500 text-[11px]">(Akun ini bukan Administrator)</span></p>
+                                                <button onclick="logout()" class="bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold py-3 px-6 rounded-xl transition w-full shadow-md cursor-pointer">Keluar Akun (Logout)</button>
+                                            </div>
+                                        ` : `
+                                            <div class="flex flex-col items-center justify-center p-3 bg-slate-50 border border-slate-200 rounded-2xl">
+                                                <div id="g_id_onload" data-client_id="${GOOGLE_CLIENT_ID}" data-callback="handleCredentialResponse" data-auto_prompt="false"></div>
+                                                <div class="g_id_signin shadow-xs rounded" data-type="standard" data-size="large" data-theme="outline" data-text="sign_in_with" data-shape="rectangular" data-logo_alignment="center"></div>
+                                            </div>
+                                        `}
+                                    </div>
+                                </div>
+                            </div>
+
                         </div>
-                    </div>
+                    </main>
+
+                    <!-- Corporate Footer -->
+                    <footer class="w-full border-t border-slate-200/80 bg-white/60 py-6 text-center text-xs text-slate-400">
+                        <p>&copy; ${(/* @__PURE__ */ new Date()).getFullYear()} Warung Pulsa Infrastructure. Seluruh hak cipta dilindungi undang-undang.</p>
+                    </footer>
+
                     <script>
-                        async function handleCredentialResponse(response) { const res = await fetch('/api/auth', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ credential: response.credential }) }); if(res.ok) { window.location.reload(); } else { alert('Gagal login ke Sistem.'); } }
-                        async function logout() { await fetch('/api/logout', { method: 'POST' }); window.location.reload(); }
+                        async function handleCredentialResponse(response) {
+                            Swal.fire({
+                                title: 'Verifikasi Hak Akses...',
+                                text: 'Memeriksa otorisasi administrator ke server...',
+                                allowOutsideClick: false,
+                                didOpen: () => { Swal.showLoading(); }
+                            });
+                            try {
+                                const res = await fetch('/api/auth', {
+                                    method: 'POST',
+                                    headers: { 'Content-Type': 'application/json' },
+                                    body: JSON.stringify({ credential: response.credential })
+                                });
+                                const data = await res.json();
+                                if (res.ok && data.success) {
+                                    Swal.fire({
+                                        title: 'Autentikasi Berhasil! 🎉',
+                                        text: 'Selamat datang, Administrator. Mengalihkan ke Panel Kontrol...',
+                                        icon: 'success',
+                                        timer: 1500,
+                                        showConfirmButton: false
+                                    }).then(() => {
+                                        window.location.href = '/admin';
+                                    });
+                                } else {
+                                    Swal.fire({
+                                        title: 'Akses Ditolak (403)',
+                                        text: data.message || 'Akun Google Anda bukan akun Administrator. Selama masa pemeliharaan, pengguna biasa tidak diizinkan login.',
+                                        icon: 'error',
+                                        confirmButtonColor: '#0284c7',
+                                        confirmButtonText: 'Tutup'
+                                    });
+                                }
+                            } catch(e) {
+                                Swal.fire('Error', 'Gagal memproses autentikasi server.', 'error');
+                            }
+                        }
+                        async function logout() {
+                            await fetch('/api/logout', { method: 'POST' });
+                            window.location.reload();
+                        }
                     <\/script>
                 </body>
                 </html>
@@ -8830,6 +9136,16 @@ Total : Rp.${totalSaldo.toLocaleString("id-ID")}
                         </div>
                     </aside>
                     <div class="flex-1 flex flex-col h-screen overflow-hidden bg-transparent">
+                        ${appSettings && appSettings.maintenance_mode === true ? `
+                        <div class="bg-rose-600 text-white font-bold text-center py-2.5 px-4 text-xs tracking-wider uppercase shadow-md flex items-center justify-center gap-2 z-40 shrink-0">
+                            <span class="relative flex h-2 w-2">
+                                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-white opacity-75"></span>
+                                <span class="relative inline-flex rounded-full h-2 w-2 bg-white"></span>
+                            </span>
+                            <span>\u{1F6A8} MODE MAINTENANCE AKTIF — Website terkunci untuk umum. Anda masuk sebagai Administrator.</span>
+                            <a href="/admin" class="underline hover:text-rose-100 font-extrabold normal-case ml-2">Panel Kontrol &rarr;</a>
+                        </div>
+                        ` : ""}
                         <header class="md:hidden bg-white border-b border-slate-200 p-4 flex items-center justify-between z-30 shadow-xs">
                             <div class="flex items-center gap-3">
                                 <button onclick="toggleSidebar()" class="pulse-hamburger p-1"><svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg></button>
@@ -8883,6 +9199,16 @@ Total : Rp.${totalSaldo.toLocaleString("id-ID")}
                 </head>
                 <body class="bg-slate-50 text-slate-800 font-sans min-h-screen flex flex-col relative">
                     ${tsParticlesConfig}
+                    ${appSettings && appSettings.maintenance_mode === true ? `
+                    <div class="bg-rose-600 text-white font-bold text-center py-2.5 px-4 text-xs tracking-wider uppercase shadow-md flex items-center justify-center gap-2 z-50 shrink-0">
+                        <span class="relative flex h-2 w-2">
+                            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-white opacity-75"></span>
+                            <span class="relative inline-flex rounded-full h-2 w-2 bg-white"></span>
+                        </span>
+                        <span>\u{1F6A8} MODE MAINTENANCE AKTIF — Website terkunci untuk umum.</span>
+                        <a href="/admin" class="underline hover:text-rose-100 font-extrabold normal-case ml-2">Panel Admin &rarr;</a>
+                    </div>
+                    ` : ""}
                     <nav class="bg-white/95 backdrop-blur-md border-b border-slate-200 sticky top-0 z-50 shadow-xs">
                         <div class="max-w-6xl mx-auto px-4 py-4 flex justify-between items-center">
                             <a href="/" class="flex items-center gap-3 group">
@@ -10724,6 +11050,12 @@ ${message}`, appSettings);
         const { credential } = await request.json();
         const payload = await (await fetch(`https://oauth2.googleapis.com/tokeninfo?id_token=${credential}`)).json();
         if (payload.aud !== GOOGLE_CLIENT_ID) return jsonResponse({ success: false, message: "Invalid Client ID" }, 400);
+        if (appSettings.maintenance_mode === true && !isSuperAdmin(payload.email, env)) {
+          return jsonResponse({
+            success: false,
+            message: "Akses Ditolak: Sistem sedang dalam pemeliharaan berkala (Maintenance Mode). Saat ini hanya Administrator yang dapat login ke sistem."
+          }, 403);
+        }
         let isNewUser = false;
         let user = await env.DB.prepare("SELECT * FROM users WHERE email = ?").bind(payload.email).first();
         if (!user) {
