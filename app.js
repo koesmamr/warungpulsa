@@ -5699,7 +5699,7 @@ TUGASMU: Beritahu data detail di atas kepada user dengan gaya yang sangat rapi, 
                   }
                 }
                 if (!hasSession) {
-                  dbResult = `GAGAL: Nomor ${phone} belum memiliki sesi OTP aktif di sistem. TUGASMU: Beritahu user dengan santai "Wah, nomor ${phone} belum terverifikasi OTP nih. Silakan login OTP dulu melalui menu 'Cekpulsa / OTP' atau 'Paket Data XL' di layar kamu ya. Setelah berhasil verifikasi di sana, kamu bisa balik lagi ke sini dan minta saya cek!"`;
+                  dbResult = `GAGAL: Nomor ${phone} belum memiliki sesi OTP aktif di sistem. TUGASMU: Beritahu user dengan santai "Wah, nomor ${phone} belum terverifikasi OTP nih. Silakan login OTP dulu melalui menu 'Cekpulsa / OTP' di layar kamu ya. Setelah berhasil verifikasi di sana, kamu bisa balik lagi ke sini dan minta saya cek!"`;
                 }
               }
             } else if (addBalanceMatch || deductBalanceMatch) {
@@ -9011,19 +9011,19 @@ Total : Rp.${totalSaldo.toLocaleString("id-ID")}
     const renderLayout = /* @__PURE__ */ __name222((title, content) => {
       const metaTags = `
                 <meta name="title" content="${title} - Warung Pulsa">
-                <meta name="description" content="Warung Pulsa melayani pembuatan Proxy & VPN Premium (SSH, VMess, VLESS, Trojan) dan Top Up Paket Data XL Otomatis 24 Jam dengan layanan terbaik.">
-                <meta name="keywords" content="VPN Premium, Proxy, SSH, Trojan, VLESS, VMess, Tuban Store, Top Up XL, Tembak XL">
+                <meta name="description" content="Warung Pulsa melayani pembuatan Proxy & VPN Premium (SSH, VMess, VLESS, Trojan) dan Pulsa & PPOB Otomatis 24 Jam dengan layanan terbaik.">
+                <meta name="keywords" content="VPN Premium, Proxy, SSH, Trojan, VLESS, VMess, Warung Pulsa, Pulsa, PPOB, Paket Data, Token PLN">
                 <meta name="theme-color" content="#f8fafc">
                 <meta property="og:type" content="website">
                 <meta property="og:url" content="/">
                 <meta property="og:title" content="${title} | Warung Pulsa">
-                <meta property="og:description" content="Layanan Proxy & VPN Premium serta Top Up Paket Data XL Otomatis 24 Jam. Nikmati koneksi internet cepat, aman, dan tanpa batas!">
+                <meta property="og:description" content="Layanan Proxy & VPN Premium serta Pulsa & PPOB Otomatis 24 Jam. Nikmati transaksi cepat, aman, dan tanpa batas!">
                 <meta property="og:image" content="${LOGO_URL}">
                 <meta property="og:site_name" content="Warung Pulsa">
                 <meta property="twitter:card" content="summary_large_image">
                 <meta property="twitter:url" content="/">
                 <meta property="twitter:title" content="${title} | Warung Pulsa">
-                <meta property="twitter:description" content="Layanan Proxy & VPN Premium serta Top Up Paket Data XL Otomatis 24 Jam. Nikmati koneksi internet cepat, aman, dan tanpa batas!">
+                <meta property="twitter:description" content="Layanan Proxy & VPN Premium serta Pulsa & PPOB Otomatis 24 Jam. Nikmati transaksi cepat, aman, dan tanpa batas!">
                 <meta property="twitter:image" content="${LOGO_URL}">`;
       if (currentUser) {
         const unreadCount = currentUser.inbox_unread_count || 0;
@@ -9119,7 +9119,6 @@ Total : Rp.${totalSaldo.toLocaleString("id-ID")}
                             <a href="/" class="flex items-center gap-3 p-3 rounded-xl transition ${title === "Dashboard" ? "bg-sky-50 text-sky-700 font-bold shadow-xs border border-sky-200" : "text-slate-600 hover:bg-slate-100 hover:text-sky-600 font-medium"}"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg><span class="text-sm">Dashboard Utama</span></a>
                             <a href="/pulsa-ppob" class="flex items-center gap-3 p-3 rounded-xl transition ${title === "Beli Pulsa & PPOB" || title === "Pulsa & PPOB" ? "bg-sky-50 text-sky-700 font-bold shadow-xs border border-sky-200" : "text-slate-600 hover:bg-slate-100 hover:text-sky-600 font-medium"}"><svg class="w-5 h-5 text-sky-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg><span class="text-sm font-bold">Pulsa & PPOB</span></a>
                             <a href="/vpn-saya" class="flex items-center gap-3 p-3 rounded-xl transition ${title === "VPN Saya" ? "bg-sky-50 text-sky-700 font-bold shadow-xs border border-sky-200" : "text-slate-600 hover:bg-slate-100 hover:text-sky-600 font-medium"}"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14M5 12a2 2 0 01-2-2V6a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v4a2 2 0 01-2 2M5 12a2 2 0 00-2 2v4a2 2 0 002 2h14a2 2 0 002-2v-4a2 2 0 00-2-2m-2-4h.01M17 16h.01"></path></svg><span class="text-sm">VPN Saya</span></a>
-                            <a href="/paket-data" class="flex items-center gap-3 p-3 rounded-xl transition ${title === "Paket Data XL" ? "bg-sky-50 text-sky-700 font-bold shadow-xs border border-sky-200" : "text-slate-600 hover:bg-slate-100 hover:text-sky-600 font-medium"}"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"></path></svg><span class="text-sm">Paket Data XL</span></a>
                             <a href="/lisensi" class="flex items-center gap-3 p-3 rounded-xl transition ${title === "Lisensi Script" ? "bg-sky-50 text-sky-700 font-bold shadow-xs border border-sky-200" : "text-slate-600 hover:bg-slate-100 hover:text-sky-600 font-medium"}"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg><span class="text-sm">Lisensi Script</span></a>
                             <a href="/converter" class="flex items-center gap-3 p-3 rounded-xl transition ${title === "Converter Config" ? "bg-sky-50 text-sky-700 font-bold shadow-xs border border-sky-200" : "text-slate-600 hover:bg-slate-100 hover:text-sky-600 font-medium"}"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"></path></svg><span class="text-sm">Converter Config</span></a>
                             <a href="/cekpulsa-otp" class="flex items-center gap-3 p-3 rounded-xl transition ${title === "Cekpulsa / OTP" ? "bg-sky-50 text-sky-700 font-bold shadow-xs border border-sky-200" : "text-slate-600 hover:bg-slate-100 hover:text-sky-600 font-medium"}"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8h2a2 2 0 012 2v6a2 2 0 01-2 2h-2v4l-4-4H9a1.994 1.994 0 01-1.414-.586m0 0L11 14h4a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2v4l.586-.586z"></path></svg><span class="text-sm">Cekpulsa / OTP</span></a>
@@ -9226,7 +9225,6 @@ Total : Rp.${totalSaldo.toLocaleString("id-ID")}
                                 <a href="/" class="text-slate-600 hover:text-sky-600 transition">Beranda</a>
                                 <a href="/pulsa-ppob" class="text-sky-600 font-bold hover:text-sky-700 transition flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>Pulsa & PPOB</a>
                                 <a href="/produk" class="text-slate-600 hover:text-sky-600 transition">Produk & Harga</a>
-                                <a href="/paket-data" class="text-slate-600 hover:text-sky-600 transition">Paket Data XL</a>
                                 <a href="/cekpulsa-otp" class="text-slate-600 hover:text-sky-600 transition">Cekpulsa / OTP</a>
                                 <a href="/converter" class="text-slate-600 hover:text-sky-600 transition">Converter</a>
                                 <a href="/syarat-ketentuan" class="text-slate-600 hover:text-sky-600 transition">Syarat & Ketentuan</a>
@@ -9242,7 +9240,6 @@ Total : Rp.${totalSaldo.toLocaleString("id-ID")}
                                 <a href="/" class="text-slate-700 hover:text-sky-600 font-semibold text-lg border-b border-slate-100 pb-3 flex items-center gap-3">Beranda</a>
                                 <a href="/pulsa-ppob" class="text-sky-600 font-bold text-lg border-b border-slate-100 pb-3 flex items-center gap-3">Pulsa & PPOB (Instan 24 Jam)</a>
                                 <a href="/produk" class="text-slate-700 hover:text-sky-600 font-semibold text-lg border-b border-slate-100 pb-3 flex items-center gap-3">Produk & Harga</a>
-                                <a href="/paket-data" class="text-slate-700 hover:text-sky-600 font-semibold text-lg border-b border-slate-100 pb-3 flex items-center gap-3">Paket Data XL</a>
                                 <a href="/cekpulsa-otp" class="text-slate-700 hover:text-sky-600 font-semibold text-lg border-b border-slate-100 pb-3 flex items-center gap-3">Cekpulsa / OTP</a>
                                 <a href="/converter" class="text-slate-700 hover:text-sky-600 font-semibold text-lg border-b border-slate-100 pb-3 flex items-center gap-3">Converter</a>
                                 <a href="/syarat-ketentuan" class="text-slate-700 hover:text-sky-600 font-semibold text-lg border-b border-slate-100 pb-3 flex items-center gap-3">Syarat & Ketentuan</a>
@@ -9267,8 +9264,8 @@ Total : Rp.${totalSaldo.toLocaleString("id-ID")}
                                 <h4 class="font-bold text-slate-900 mb-4 uppercase tracking-wider text-sm">Tautan Cepat</h4>
                                 <ul class="space-y-2 text-sm text-slate-600 font-medium">
                                     <li><a href="/" class="hover:text-sky-600 transition">Beranda / Dashboard</a></li>
+                                    <li><a href="/pulsa-ppob" class="hover:text-sky-600 transition">Pulsa & PPOB</a></li>
                                     <li><a href="/produk" class="hover:text-sky-600 transition">Produk & Harga</a></li>
-                                    <li><a href="/paket-data" class="hover:text-sky-600 transition">Isi Ulang Paket Data</a></li>
                                     <li><a href="/syarat-ketentuan" class="hover:text-sky-600 transition">Syarat & Ketentuan</a></li>
                                 </ul>
                             </div>
@@ -9383,7 +9380,7 @@ Total : Rp.${totalSaldo.toLocaleString("id-ID")}
                                 <select id="ticketCategory" required class="w-full bg-slate-50 border border-slate-300 rounded-xl p-4 text-slate-900 focus:bg-white focus:ring-2 focus:ring-sky-500 outline-none">
                                     <option value="Kendala Server VPN">Kendala Server VPN (Mati/Lemot)</option>
                                     <option value="Kendala Top Up Saldo">Kendala Top Up Saldo (QRIS)</option>
-                                    <option value="Kendala Paket Data XL">Kendala Paket Data XL / Axis</option>
+                                    <option value="Kendala Pulsa / PPOB">Kendala Pulsa / PPOB</option>
                                     <option value="Pertanyaan Lainnya">Pertanyaan Lainnya</option>
                                 </select>
                             </div>
@@ -10368,430 +10365,8 @@ Total : Rp.${totalSaldo.toLocaleString("id-ID")}
             </div>`;
       return new Response(renderLayout("Produk & Harga", content), { headers: { "Content-Type": "text/html;charset=UTF-8" } });
     }
-    if (path === "/paket-data" && method === "GET") {
-      if (!currentUser) return Response.redirect(url.origin + "/", 302);
-      const savedPhone = currentUser.phone || "";
-      let pkgDescStr;
-      try {
-        pkgDescStr = await env.DB.prepare("SELECT value FROM settings WHERE key = 'pkg_desc'").first("value");
-      } catch (e) {
-      }
-      let pkgDescMap = pkgDescStr ? JSON.parse(pkgDescStr) : {};
-      const isAdminStr = isSuperAdmin(currentUser, env) ? "true" : "false";
-      const content = `
-            <div class="max-w-4xl mx-auto px-4 md:px-8 py-8 md:py-12 relative z-10">
-                <h1 class="text-3xl font-black text-slate-900 mb-6 border-b border-slate-200 pb-4 tracking-tight">Beli Paket Data XL</h1>
-                
-                <div class="bg-white rounded-3xl border border-slate-200 shadow-xl p-6 md:p-8">
-                    <div class="space-y-6">
-                        <div class="relative z-20">
-                            <label class="block text-sm font-bold text-slate-700 mb-2 uppercase flex justify-between items-center">
-                                <span>Nomor HP Tujuan</span>
-                                <button onclick="openPhonebook()" class="text-xs text-sky-600 font-bold bg-sky-50 hover:bg-sky-100 px-3 py-1.5 rounded-lg transition flex items-center gap-1.5 shadow-sm border border-sky-200">
-                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg> \u{1F4D6} Nomorku
-                                </button>
-                            </label>
-                            <input type="number" id="xlPhone" value="${savedPhone}" oninput="resetOtpState()" placeholder="Contoh: 0818xxxxxx" class="w-full bg-slate-50 border border-slate-300 rounded-xl p-4 text-slate-900 text-lg focus:bg-white focus:ring-2 focus:ring-sky-500 outline-none transition font-mono tracking-wider shadow-inner">
-                        </div>
-                        
-                        <div id="packageSelectionSection" class="relative z-20">
-                            <label class="block text-sm font-bold text-slate-700 mb-2 uppercase">Pilih Paket Data</label>
-                            <div class="relative mb-2">
-                                <div class="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none"><svg class="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg></div>
-                                <input type="text" id="searchPackage" placeholder="Ketik pencarian: xtra combo, unlimited..." class="w-full bg-slate-50 border border-slate-300 rounded-xl py-3 pl-12 pr-4 text-slate-900 text-sm focus:bg-white focus:ring-2 focus:ring-sky-500 outline-none transition shadow-inner">
-                            </div>
-                            
-                            <div id="packageListContainer" class="w-full bg-slate-50 border border-slate-300 rounded-xl max-h-64 overflow-y-auto custom-scrollbar p-2 space-y-1">
-                                <div class="p-4 flex justify-center items-center gap-3">
-                                    <svg class="w-5 h-5 text-sky-600 animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
-                                    <span class="text-slate-500 text-sm font-medium">Sinkronisasi produk dengan Server...</span>
-                                </div>
-                            </div>
-                            
-                            <input type="hidden" id="xlPackageId" value="">
-                            <input type="hidden" id="xlPackagePrice" value="0">
-                            <input type="hidden" id="xlNeedOtp" value="false">
-                            <input type="hidden" id="xlPackageName" value="">
-                            <p class="text-xs text-slate-500 mt-2 text-right font-mono" id="pkgCount">Total: 0 paket</p>
-                        </div>
-
-                        <div id="otpSection" class="hidden bg-slate-50 p-5 rounded-2xl border border-slate-200 space-y-4 shadow-inner relative z-20">
-                            <div id="otpVerifyMode">
-                                <div class="flex gap-3 mb-4 items-start">
-                                    <svg class="w-6 h-6 text-amber-500 shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"></path></svg>
-                                    <div><h4 class="text-sm font-bold text-slate-900 mb-1">Paket Khusus MyXL</h4><p class="text-xs text-slate-600 leading-relaxed">Paket ini mewajibkan verifikasi nomor HP Anda. Klik tombol di bawah dan sistem akan mengecek apakah sesi Anda masih tersimpan.</p></div>
-                                </div>
-                                <button onclick="verifySmartOtp()" id="btnSmartVerify" class="w-full bg-amber-600 hover:bg-amber-500 text-white font-bold py-3 rounded-xl transition shadow">\u{1F6E1}\uFE0F Verifikasi Nomor Ini</button>
-                            </div>
-                            <div id="otpManualMode" class="hidden">
-                                <label class="block text-sm font-bold text-amber-700 mb-2">Kode OTP telah dikirim ke nomor Anda</label>
-                                <div class="flex gap-2">
-                                    <input type="text" id="xlOtpCode" placeholder="6 Digit OTP" class="w-full bg-white border border-slate-300 rounded-xl p-3 text-slate-900 text-center tracking-widest text-lg font-mono focus:ring-2 focus:ring-amber-500 outline-none">
-                                    <button onclick="submitManualOtp()" id="btnSubmitOtp" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-6 rounded-xl transition shadow shrink-0">Kirim</button>
-                                </div>
-                            </div>
-                            <div id="otpSuccessMode" class="hidden">
-                                <div class="flex flex-col sm:flex-row items-center justify-between gap-4 bg-emerald-50 p-4 rounded-xl border border-emerald-200">
-                                    <div class="flex items-center gap-3">
-                                        <div class="bg-emerald-100 p-2 rounded-full"><svg class="w-5 h-5 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg></div>
-                                        <div><span class="block text-sm font-bold text-emerald-700">Sesi Aktif Terverifikasi!</span><span class="text-xs text-slate-500">Tombol Beli sekarang terbuka.</span></div>
-                                    </div>
-                                    <button onclick="checkPulsa()" id="btnCheckPulsa" class="w-full sm:w-auto bg-white hover:bg-slate-50 text-slate-700 border border-slate-300 text-xs font-bold py-2.5 px-4 rounded-lg transition flex items-center justify-center gap-2 shadow">\u{1F4B3} Cek Pulsa, Kuota & Lokasi</button>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="bg-slate-50 p-5 rounded-2xl border border-slate-200 flex flex-col mb-4 relative z-20">
-                            <div class="flex justify-between items-center">
-                                <span class="text-slate-600 font-bold">Harga Jual:</span>
-                                <span class="text-3xl font-black text-emerald-600 font-mono tracking-tight" id="xlPriceDisplay">Rp 0</span>
-                            </div>
-                            <div id="xlDescDisplay" class="border-t border-slate-200 pt-3 mt-3 hidden"></div>
-                        </div>
-
-                        <div class="mb-4 relative z-20">
-                            <label class="block text-sm font-bold text-slate-700 mb-2 uppercase">Metode Pembayaran</label>
-                            <select id="xlPaymentMethod" class="w-full bg-slate-50 border border-slate-300 rounded-xl p-3.5 text-slate-900 focus:bg-white focus:ring-2 focus:ring-sky-500 outline-none transition">
-                                <option value="BALANCE">Saldo Web (Potong Penuh)</option>
-                            </select>
-                            <p id="xlPaymentNotice" class="text-xs text-amber-600 mt-2 font-medium">*Catatan: Silakan pilih paket terlebih dahulu untuk melihat info pembayaran.</p>
-                        </div>
-
-                        <button onclick="buyXL()" id="btnBuyXL" disabled class="w-full bg-slate-200 text-slate-400 font-black py-4 rounded-xl shadow transition text-lg mt-4 cursor-not-allowed relative z-20">PILIH PAKET TERLEBIH DAHULU</button>
-                    </div>
-                </div>
-
-                <div id="phonebookModal" class="fixed inset-0 bg-slate-900/60 hidden z-50 flex items-center justify-center p-4 backdrop-blur-sm">
-                    <div class="bg-white p-6 rounded-3xl w-full max-w-md border border-slate-200 shadow-2xl flex flex-col max-h-[80vh]">
-                        <div class="flex justify-between items-center mb-5 border-b border-slate-200 pb-3">
-                            <h3 class="text-xl font-bold text-slate-900 flex items-center gap-2">\u{1F4D6} Buku Telepon</h3>
-                            <button onclick="closePhonebook()" class="text-slate-400 hover:text-slate-700 text-3xl leading-none">&times;</button>
-                        </div>
-                        <div class="mb-4 flex gap-2">
-                            <input type="number" id="newPhoneNumber" placeholder="Ketik No. Baru..." class="w-full bg-slate-50 border border-slate-300 rounded-xl p-3 text-slate-900 focus:bg-white focus:ring-2 focus:ring-sky-500 outline-none text-sm font-mono tracking-wider">
-                            <button onclick="addNumberToPhonebook()" class="bg-sky-600 hover:bg-sky-500 text-white font-bold px-5 py-3 rounded-xl transition shadow-lg text-sm shrink-0">Simpan</button>
-                        </div>
-                        <div class="flex justify-between items-center mb-2">
-                            <p class="text-xs font-bold text-slate-500 uppercase tracking-wider">Daftar Tersimpan</p>
-                            <p class="text-xs text-slate-400 font-mono" id="phonebookCount">0/10</p>
-                        </div>
-                        <div id="phonebookList" class="overflow-y-auto custom-scrollbar flex-grow space-y-2"></div>
-                    </div>
-                </div>
-            </div>
-
-            <script>
-                const USER_EMAIL = "${currentUser.email}";
-                const IS_ADMIN = ${isAdminStr};
-                let pkgDescMap = ${JSON.stringify(pkgDescMap)};
-                let phonebookList = ${currentUser.phonebook || "[]"};
-
-                function getPhonebook() { return phonebookList; }
-
-                function savePhonebook(data) {
-                    phonebookList = data;
-                    fetch('/api/phonebook', {
-                        method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ phonebook: data })
-                    }).catch(e => console.error("Gagal simpan phonebook", e));
-                }
-
-                function openPhonebook() { document.getElementById('phonebookModal').classList.remove('hidden'); renderPhonebook(); }
-                function closePhonebook() { document.getElementById('phonebookModal').classList.add('hidden'); }
-
-                function renderPhonebook() {
-                    const list = getPhonebook();
-                    const container = document.getElementById('phonebookList');
-                    document.getElementById('phonebookCount').innerText = list.length + '/10';
-                    if (list.length === 0) { container.innerHTML = '<p class="text-center text-slate-400 text-sm py-6">Belum ada nomor tersimpan.</p>'; return; }
-                    container.innerHTML = list.map((phone, index) => 
-                        '<div class="flex justify-between items-center bg-slate-50 p-3 rounded-xl border border-slate-200 hover:border-sky-300 transition"><span class="text-slate-800 font-mono font-medium tracking-wider">' + phone + '</span><div class="flex gap-2"><button onclick="selectPhone(\\'' + phone + '\\')" class="bg-emerald-600 hover:bg-emerald-500 text-white px-4 py-1.5 rounded-lg text-xs font-bold transition shadow-sm">Pilih</button><button onclick="deletePhone(' + index + ')" class="bg-red-50 hover:bg-red-100 text-red-600 border border-red-200 px-3 py-1.5 rounded-lg text-xs font-bold transition">Hapus</button></div></div>'
-                    ).join('');
-                }
-
-                function addNumberToPhonebook(number = null) {
-                    const newPhone = number || document.getElementById('newPhoneNumber').value.trim();
-                    if (!newPhone) return;
-                    let list = getPhonebook();
-                    if (list.includes(newPhone)) { if (!number) swalDark.fire('Info', 'Nomor sudah ada di buku telepon.', 'info'); return; }
-                    if (list.length >= 10) { if (!number) swalDark.fire('Penuh', 'Buku telepon penuh (Maks 10 nomor). Hapus nomor lama terlebih dahulu.', 'warning'); return; }
-                    list.push(newPhone);
-                    savePhonebook(list);
-                    if (!number) { document.getElementById('newPhoneNumber').value = ''; renderPhonebook(); swalDark.fire('Tersimpan', 'Nomor berhasil ditambahkan ke Buku Telepon.', 'success'); }
-                }
-
-                function deletePhone(index) { let list = getPhonebook(); list.splice(index, 1); savePhonebook(list); renderPhonebook(); }
-                function selectPhone(phone) { document.getElementById('xlPhone').value = phone; resetOtpState(); closePhonebook(); }
-
-                let allPackages = [];
-                let currentAuthId = '';
-                let currentAccessToken = '';
-                
-                async function loadPackages() {
-                    try {
-                        const res = await fetch('/api/kmsp/services');
-                        const data = await res.json();
-                        if(data.success) {
-                            allPackages = data.data || [];
-                            renderPackages(allPackages);
-                        } else {
-                            document.getElementById('packageListContainer').innerHTML = '<div class="p-4 text-center text-sky-600 text-sm font-bold">' + (data.message || 'Gagal memuat API') + '</div>';
-                        }
-                    } catch(e) { document.getElementById('packageListContainer').innerHTML = '<div class="p-4 text-center text-sky-600 text-sm">Error koneksi: ' + e.message + '</div>'; }
-                }
-
-                function renderPackages(packagesToRender) {
-                    const container = document.getElementById('packageListContainer');
-                    const countText = document.getElementById('pkgCount');
-                    if (!packagesToRender || packagesToRender.length === 0) {
-                        container.innerHTML = '<div class="p-4 text-center text-slate-400 text-sm">-- Tidak ada paket ditemukan --</div>';
-                        countText.innerText = 'Total: 0 paket';
-                        updateCheckoutUI('', 0, false);
-                        return;
-                    }
-                    container.innerHTML = packagesToRender.map(pkg => {
-                        const idStr = pkg.id || pkg.package_code || pkg.service_id;
-                        const needOtpStr = pkg.no_need_login ? 'false' : 'true'; 
-                        const badge = needOtpStr === 'true' ? '<span class="ml-2 text-[10px] bg-amber-50 text-amber-700 border border-amber-200 px-1.5 py-0.5 rounded uppercase font-bold shrink-0">Butuh OTP</span>' : '';
-                        const safeNameHTML = pkg.name.replace(/"/g, '&quot;'); 
-                        return '<div data-id="' + idStr + '" data-price="' + pkg.price + '" data-otp="' + needOtpStr + '" data-name="' + safeNameHTML + '" onclick="selectPackage(this)" class="package-item w-full flex justify-between items-center p-3 rounded-xl hover:bg-sky-50 cursor-pointer border border-transparent transition"><div class="flex-grow pr-4 flex flex-col sm:flex-row sm:items-center gap-1"><span class="text-sm font-medium text-slate-800">' + safeNameHTML + '</span>' + badge + '</div><span class="text-sm font-mono font-black text-emerald-600 shrink-0">Rp ' + pkg.price.toLocaleString('id-ID') + '</span></div>';
-                    }).join('');
-                    countText.innerText = 'Total: ' + packagesToRender.length + ' paket';
-                    if(!document.getElementById('xlPackageId').value) updateCheckoutUI('', 0, false);
-                }
-
-                function selectPackage(element) {
-                    const id = element.getAttribute('data-id');
-                    const price = element.getAttribute('data-price');
-                    const needOtpStr = element.getAttribute('data-otp');
-                    const pkgName = element.getAttribute('data-name');
-                    const isNeedOtp = needOtpStr === 'true';
-                    
-                    document.getElementById('xlPackageId').value = id;
-                    document.getElementById('xlPackagePrice').value = price;
-                    document.getElementById('xlNeedOtp').value = needOtpStr;
-                    document.getElementById('xlPackageName').value = pkgName;
-                    
-                    document.querySelectorAll('.package-item').forEach(el => { el.classList.remove('bg-sky-100/80', 'border-sky-400'); el.classList.add('hover:bg-sky-50'); });
-                    element.classList.remove('hover:bg-sky-50'); element.classList.add('bg-sky-100/80', 'border-sky-400');
-
-                    const paymentSelect = document.getElementById('xlPaymentMethod');
-                    const paymentNotice = document.getElementById('xlPaymentNotice');
-
-                    if (pkgName.includes('[Method E-Wallet]')) {
-                        paymentSelect.innerHTML = '<option value="DANA">DANA (Hanya Biaya Admin)</option><option value="GOPAY">GOPAY (Hanya Biaya Admin)</option>';
-                        paymentNotice.innerHTML = '*Catatan: Saldo Web Anda HANYA dipotong sebesar Biaya Admin. Harga paket dibayar langsung via Aplikasi DANA/GOPAY.';
-                    } else {
-                        paymentSelect.innerHTML = '<option value="BALANCE">Saldo Web</option>';
-                        if (pkgName.includes('[Method Pulsa]')) paymentNotice.innerHTML = '*Catatan: Pembayaran paket akan <b>memotong PULSA XL</b> Anda secara langsung. Saldo Web Anda HANYA dipotong untuk <b>Biaya Admin</b>.';
-                        else paymentNotice.innerHTML = '*Catatan: Saldo Web Anda akan dipotong secara penuh sesuai dengan Harga Jual.';
-                    }
-                    updateCheckoutUI(id, price, isNeedOtp);
-                }
-
-                function updateCheckoutUI(id, price, isNeedOtp) {
-                    const btnBuy = document.getElementById('btnBuyXL');
-                    const otpSection = document.getElementById('otpSection');
-                    const descContainer = document.getElementById('xlDescDisplay');
-                    
-                    document.getElementById('xlPriceDisplay').innerText = 'Rp ' + parseInt(price).toLocaleString('id-ID');
-
-                    if (!id) {
-                        btnBuy.disabled = true; btnBuy.className = 'w-full bg-slate-200 text-slate-400 font-black py-4 rounded-xl shadow transition text-lg mt-4 cursor-not-allowed relative z-20'; btnBuy.innerText = 'PILIH PAKET TERLEBIH DAHULU';
-                        otpSection.classList.add('hidden');
-                        descContainer.classList.add('hidden');
-                        return;
-                    }
-                    
-                    descContainer.classList.remove('hidden');
-                    const descText = pkgDescMap[id] || 'Belum ada deskripsi penjelasan untuk paket ini.';
-                    let descHtml = '<p class="text-sm text-amber-700 whitespace-pre-wrap leading-relaxed">' + escapeHtmlClient(descText) + '</p>';
-                    if (IS_ADMIN) {
-                        descHtml += '<button onclick="editPkgDesc(\\'' + id + '\\')" class="mt-3 text-xs bg-sky-50 hover:bg-sky-100 text-sky-600 border border-sky-200 px-3 py-1.5 rounded-lg transition font-bold flex items-center gap-1.5"><svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg> Edit Deskripsi Paket</button>';
-                    }
-                    descContainer.innerHTML = descHtml;
-
-                    if (isNeedOtp) {
-                        otpSection.classList.remove('hidden');
-                        if (currentAccessToken !== '') {
-                            document.getElementById('otpVerifyMode').classList.add('hidden'); document.getElementById('otpManualMode').classList.add('hidden'); document.getElementById('otpSuccessMode').classList.remove('hidden');
-                            btnBuy.disabled = false; btnBuy.className = 'w-full bg-sky-600 hover:bg-sky-500 text-white font-black py-4 rounded-xl shadow-lg transition text-lg mt-4 relative z-20'; btnBuy.innerText = 'BELI SEKARANG';
-                        } else {
-                            document.getElementById('otpVerifyMode').classList.remove('hidden'); document.getElementById('otpManualMode').classList.add('hidden'); document.getElementById('otpSuccessMode').classList.add('hidden');
-                            btnBuy.disabled = true; btnBuy.className = 'w-full bg-slate-200 text-slate-400 font-black py-4 rounded-xl shadow transition text-lg mt-4 cursor-not-allowed relative z-20'; btnBuy.innerText = 'VERIFIKASI OTP TERLEBIH DAHULU';
-                        }
-                    } else {
-                        otpSection.classList.add('hidden');
-                        btnBuy.disabled = false; btnBuy.className = 'w-full bg-sky-600 hover:bg-sky-500 text-white font-black py-4 rounded-xl shadow-lg transition text-lg mt-4 relative z-20'; btnBuy.innerText = 'BELI SEKARANG (INSTAN)';
-                    }
-                }
-                
-                async function editPkgDesc(id) {
-                    const pkgName = document.getElementById('xlPackageName').value;
-                    const { value: text, isConfirmed } = await swalDark.fire({
-                        title: 'Edit Deskripsi Paket',
-                        html: '<p class="text-sm text-slate-500 mb-2">' + pkgName + '</p>',
-                        input: 'textarea',
-                        inputValue: pkgDescMap[id] || '',
-                        inputPlaceholder: 'Ketikkan penjelasan / deskripsi paket di sini...',
-                        showCancelButton: true,
-                        confirmButtonText: 'Simpan ke Database',
-                        cancelButtonText: 'Batal'
-                    });
-                    
-                    if (isConfirmed) {
-                        const loadingAlert = swalDark.fire({ title: 'Menyimpan...', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
-                        try {
-                            const res = await fetch('/api/admin/save-pkg-desc', {
-                                method: 'POST', headers: { 'Content-Type': 'application/json' },
-                                body: JSON.stringify({ pkgId: id, description: text })
-                            });
-                            const data = await res.json();
-                            if (data.success) {
-                                pkgDescMap[id] = text;
-                                updateCheckoutUI(id, document.getElementById('xlPackagePrice').value, document.getElementById('xlNeedOtp').value === 'true');
-                                swalDark.fire('Berhasil', 'Deskripsi paket berhasil disimpan!', 'success');
-                            } else {
-                                swalDark.fire('Gagal', 'Terjadi kesalahan sistem saat menyimpan deskripsi.', 'error');
-                            }
-                        } catch(e) {
-                            swalDark.fire('Error', 'Koneksi API bermasalah.', 'error');
-                        }
-                    }
-                }
-
-                document.getElementById('searchPackage').addEventListener('input', function(e) {
-                    const keyword = e.target.value.toLowerCase();
-                    const filteredPackages = allPackages.filter(pkg => pkg.name.toLowerCase().includes(keyword));
-                    renderPackages(filteredPackages);
-                });
-
-                function resetOtpState() {
-                    currentAuthId = ''; currentAccessToken = ''; document.getElementById('xlOtpCode').value = '';
-                    const isNeedOtp = document.getElementById('xlNeedOtp').value === 'true';
-                    if (isNeedOtp && document.getElementById('xlPackageId').value !== '') updateCheckoutUI(document.getElementById('xlPackageId').value, document.getElementById('xlPackagePrice').value, true);
-                }
-
-                async function verifySmartOtp() {
-                    const phone = document.getElementById('xlPhone').value;
-                    if (!phone) return swalDark.fire('Perhatian', 'Isi nomor HP terlebih dahulu!', 'warning');
-                    
-                    const btn = document.getElementById('btnSmartVerify');
-                    btn.disabled = true; btn.innerText = 'Mengecek Sesi API...';
-                    try {
-                        const res = await fetch('/api/xl/smart-verify', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({phone}) });
-                        const data = await res.json();
-                        if (data.success) {
-                            if (data.needs_otp === false) {
-                                currentAccessToken = data.access_token;
-                                await swalDark.fire({ icon: 'success', title: 'Sesi XL Ditemukan', text: 'Sesi login lama Anda berhasil diperpanjang. Tidak perlu repot isi OTP lagi!', timer: 3000, showConfirmButton: false });
-                                updateCheckoutUI(document.getElementById('xlPackageId').value, document.getElementById('xlPackagePrice').value, true);
-                            } else {
-                                currentAuthId = data.auth_id;
-                                document.getElementById('otpVerifyMode').classList.add('hidden'); document.getElementById('otpManualMode').classList.remove('hidden'); document.getElementById('xlOtpCode').focus();
-                            }
-                        } else { swalDark.fire('Gagal', data.message, 'error'); }
-                    } catch(e) { swalDark.fire('Error', 'Kesalahan jaringan', 'error'); }
-                    btn.disabled = false; btn.innerText = '\u{1F6E1}\uFE0F Verifikasi Nomor Ini';
-                }
-
-                async function submitManualOtp() {
-                    const phone = document.getElementById('xlPhone').value;
-                    const otp = document.getElementById('xlOtpCode').value;
-                    if (!otp || otp.length < 4) return swalDark.fire('Perhatian', 'Masukkan kode OTP SMS!', 'warning');
-                    
-                    const btn = document.getElementById('btnSubmitOtp');
-                    btn.disabled = true; btn.innerText = 'Cek...';
-                    try {
-                        const res = await fetch('/api/xl/login-otp', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({phone, authId: currentAuthId, otp}) });
-                        const data = await res.json();
-                        if (data.success) {
-                            currentAccessToken = data.data.access_token;
-                            updateCheckoutUI(document.getElementById('xlPackageId').value, document.getElementById('xlPackagePrice').value, true);
-                        } else { swalDark.fire('Verifikasi Gagal', data.message, 'error'); }
-                    } catch(e) { swalDark.fire('Error', 'Kesalahan jaringan', 'error'); }
-                    btn.disabled = false; btn.innerText = 'Kirim';
-                }
-
-                async function checkPulsa() {
-                    const btn = document.getElementById('btnCheckPulsa');
-                    btn.innerHTML = '<svg class="w-4 h-4 animate-spin text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg> Mengecek...';
-                    btn.disabled = true;
-                    try {
-                        const res = await fetch('/api/xl/check-balance', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({accessToken: currentAccessToken}) });
-                        const data = await res.json();
-                        if (data.success) {
-                            let quotaHtml = '';
-                            if (data.quota && data.quota.quotas && Array.isArray(data.quota.quotas) && data.quota.quotas.length > 0) {
-                                quotaHtml = '<div class="mt-4 border-t border-slate-200 pt-3"><h4 class="text-sm font-bold text-sky-700 mb-3">Detail Paket & Kuota:</h4>';
-                                data.quota.quotas.forEach(q => { 
-                                    let benefitsHtml = '';
-                                    if (q.benefits && Array.isArray(q.benefits)) {
-                                        q.benefits.forEach(b => {
-                                            benefitsHtml += '<div class="ml-2 mt-1 border-l-2 border-slate-300 pl-3 py-1"><p class="text-xs text-slate-700 font-medium">' + b.name + '</p><p class="text-[11px] font-mono font-bold text-amber-700">Sisa: ' + (b.remaining_quota || b.remaining || '-') + ' / ' + (b.quota || b.total || '-') + '</p></div>';
-                                        });
-                                    }
-                                    quotaHtml += '<div class="mb-3 bg-white p-4 rounded-xl border border-slate-200 shadow-sm"><p class="text-sm font-bold text-slate-900 leading-tight">' + (q.name || 'Paket Data') + '</p><p class="text-[11px] text-slate-500 mt-1 mb-2">\u{1F342} Aktif Hingga: ' + (q.expired_at || '-') + '</p>' + benefitsHtml + '</div>'; 
-                                });
-                                quotaHtml += '</div>';
-                            } else { quotaHtml = '<div class="mt-4 border-t border-slate-200 pt-3"><p class="text-xs text-slate-400 text-center py-2">Tidak ada paket/kuota aktif ditemukan.</p></div>'; }
-
-                            let lokasiText = (data.location && data.location.location) ? data.location.location : 'Tidak Terdeteksi';
-
-                            swalDark.fire({
-                                html: '<h3 class="text-xl font-bold text-slate-900 mb-4 mt-2">Informasi Detail XL Anda</h3><div class="text-left bg-slate-50 p-5 rounded-xl border border-slate-200 max-h-[75vh] overflow-y-auto custom-scrollbar"><div class="space-y-3 text-sm"><p><span class="text-slate-500">Nomor:</span> <span class="font-mono text-slate-900 font-bold float-right">' + (data.info.msisdn || '-') + '</span></p><p><span class="text-slate-500">Status:</span> <span class="font-bold text-emerald-600 float-right">' + (data.info.subscription_status || 'Aktif') + '</span></p><p><span class="text-slate-500">Lokasi:</span> <span class="font-bold text-sky-600 float-right">' + lokasiText + '</span></p><p class="pt-3 border-t border-slate-200"><span class="text-slate-500">Pulsa:</span> <span class="font-mono font-black text-amber-600 float-right">' + (data.info.pulsa_real || data.info.pulsa || 'Rp 0') + '</span></p><p><span class="text-slate-500">Masa Aktif:</span> <span class="text-slate-700 float-right">' + (data.info.active_until || '-') + '</span></p></div>' + quotaHtml + '</div>',
-                                width: '44em',
-                                showCloseButton: true,
-                                confirmButtonText: 'Tutup'
-                            });
-                        } else { swalDark.fire('Gagal Cek Pulsa', data.message, 'error'); }
-                    } catch(e) { swalDark.fire('Error', 'Gagal memanggil API', 'error'); }
-                    btn.disabled = false; btn.innerHTML = '\u{1F4B3} Cek Pulsa, Kuota & Lokasi';
-                }
-
-                async function buyXL() {
-                    const phone = document.getElementById('xlPhone').value;
-                    const serviceId = document.getElementById('xlPackageId').value;
-                    const price = parseInt(document.getElementById('xlPackagePrice').value) || 0;
-                    const paymentMethod = document.getElementById('xlPaymentMethod').value;
-                    const pkgName = document.getElementById('xlPackageName').value;
-                    
-                    if(!phone || !serviceId) return swalDark.fire('Perhatian', 'Harap isi Nomor HP dan Pilih Paket dari daftar', 'warning');
-                    
-                    let confirmText = '\\nSaldo Anda akan dipotong Rp ' + price.toLocaleString('id-ID') + ' secara penuh. Lanjutkan?';
-                    if (pkgName.includes('[Method Pulsa]')) confirmText = 'Anda memilih paket [Method Pulsa]. Harga paket akan memotong PULSA XL Anda, dan Saldo Web HANYA akan dipotong untuk Biaya Admin. Lanjutkan?';
-                    else if (paymentMethod !== 'BALANCE') confirmText = 'Anda memilih metode ' + paymentMethod + '. Saldo Web Anda HANYA akan dipotong untuk Markup/Biaya Admin. Harga paket dibayar langsung di aplikasi ' + paymentMethod + '. Lanjutkan?';
-
-                    const confirm = await swalDark.fire({ title: 'Konfirmasi Pembelian', text: confirmText, icon: 'question', showCancelButton: true });
-                    if(!confirm.isConfirmed) return;
-
-                    const btn = document.getElementById('btnBuyXL');
-                    btn.disabled = true; btn.innerText = 'Memproses Transaksi...';
-
-                    try {
-                        const res = await fetch('/api/buy-xl', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ phone, serviceId, accessToken: currentAccessToken, paymentMethod }) });
-                        const data = await res.json();
-                        
-                        if(data.success) {
-                            addNumberToPhonebook(phone);
-                            if (data.is_pending_payment) {
-                                if (data.payment_data && data.payment_data.deeplink_data && data.payment_data.deeplink_data.deeplink_url) {
-                                    swalDark.fire({
-                                        title: 'Lanjutkan ke Pembayaran',
-                                        html: '<p class="text-sm mb-4 text-slate-700">Saldo Web dipotong <b>Rp ' + data.deducted_amount.toLocaleString('id-ID') + '</b> (Biaya Admin).</p><p class="text-sm text-slate-500 mb-4">Klik tombol di bawah untuk membayar harga paket via aplikasi <b>' + paymentMethod + '</b>.</p>',
-                                        showConfirmButton: true, confirmButtonText: 'Buka Aplikasi ' + paymentMethod, showCancelButton: true, cancelButtonText: 'Tutup', allowOutsideClick: false
-                                    }).then((result) => { if (result.isConfirmed) { window.open(data.payment_data.deeplink_data.deeplink_url, '_blank'); } window.location.reload(); });
-                                } else {
-                                    await swalDark.fire('Berhasil', 'Pesanan berhasil dibuat. Silakan selesaikan pembayaran via ' + paymentMethod + '. Link tersedia di Inbox Anda.', 'success'); window.location.reload();
-                                }
-                            } else { await swalDark.fire('Berhasil!', 'Pembelian sukses diproses! Bukti transaksi dikirim ke Inbox.', 'success'); window.location.reload(); }
-                        } else { swalDark.fire('Transaksi Gagal', data.message, 'error'); }
-                    } catch(e) { swalDark.fire('Error', 'Kesalahan jaringan', 'error'); }
-                    btn.disabled = false; btn.innerText = 'BELI SEKARANG';
-                }
-                loadPackages();
-            <\/script>
-            `;
-      return new Response(renderLayout("Paket Data XL", content), { headers: { "Content-Type": "text/html;charset=UTF-8" } });
+    if (path === "/paket-data") {
+      return Response.redirect(url.origin + "/pulsa-ppob", 301);
     }
     if ((path === "/pulsa-ppob" || path === "/pulsa") && method === "GET") {
       const ppobContent = renderPPOBContent(currentUser, appSettings, env);
@@ -11097,7 +10672,7 @@ Waktu: ${getWIBTime()}`, appSettings);
                                          <ul>
                                             <li>Mengisi saldo secara otomatis via QRIS</li>
                                             <li>Membangun server VPN baru hanya dalam hitungan detik</li>
-                                            <li>Melakukan pengisian Paket Data XL/Axis</li>
+                                            <li>Melakukan pembelian Pulsa & PPOB</li>
                                          </ul>
                                          <p>Mulai pengalaman berinternet tanpa batas bersama kami hari ini.</p>
                                          <div style="text-align: center;"><a href="https://${url.hostname}/" class="btn">Masuk ke Dashboard Utama</a></div>`;
@@ -11603,7 +11178,7 @@ Saldo otomatis ditambahkan.`, appSettings);
                                                <tr><td>Waktu Validasi</td><td>${getWIBTime()}</td></tr>
                                                <tr><td>Nominal Saldo</td><td style="color: #10b981; font-size: 18px;">Rp ${Number(invoice.amount).toLocaleString("id-ID")}</td></tr>
                                            </table>
-                                           <p>Saldo web Anda telah ditambahkan secara otomatis dan kini dapat langsung digunakan untuk berlangganan layanan VPN maupun Paket Data XL tanpa hambatan.</p>
+                                           <p>Saldo web Anda telah ditambahkan secara otomatis dan kini dapat langsung digunakan untuk berlangganan layanan VPN maupun Pulsa & PPOB tanpa hambatan.</p>
                                            <div style="text-align: center;"><a href="/" class="btn">Kembali ke Dashboard Utama</a></div>`;
             ctx.waitUntil(sendEmailViaGAS(invoice.email, topUpSubject, buildEmailTemplate("Bukti Transaksi Top Up", topUpBody), env));
           }
