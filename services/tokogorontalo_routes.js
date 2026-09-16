@@ -194,6 +194,27 @@ async function handleTokoGorontaloRoutes(url, request, env, currentUser, appSett
         return jsonResponse({ success: false, message: 'Produk tidak ditemukan atau sedang tidak aktif.' }, 404);
       }
 
+      // Proteksi Anti Double-Click / Idempotency (30 Detik)
+      // Mencegah saldo terpotong ganda jika user menekan tombol berulang kali saat koneksi lambat
+      const recentTx = rawDb.prepare(`
+        SELECT reqid, product_code, customer_no, created_at,
+          CAST((strftime('%s', 'now') - strftime('%s', created_at)) AS INTEGER) as elapsed_sec
+        FROM ppob_transactions
+        WHERE email = ?
+        ORDER BY id DESC
+        LIMIT 1
+      `).get(currentUser.email);
+
+      if (recentTx && recentTx.elapsed_sec !== null && recentTx.elapsed_sec < 30) {
+        const remaining = Math.max(1, 30 - Math.max(0, recentTx.elapsed_sec));
+        return jsonResponse({
+          success: false,
+          locked: true,
+          remaining_seconds: remaining,
+          message: `Proteksi Anti Double-Click: Anda baru saja mengirim pesanan. Mohon tunggu ${remaining} detik sebelum transaksi baru untuk mencegah saldo terpotong ganda.`
+        }, 429);
+      }
+
       // Ambil data user terkini
       const user = rawDb.prepare('SELECT balance FROM users WHERE email = ?').get(currentUser.email);
       const userBalance = Number(user.balance) || 0;
@@ -664,6 +685,26 @@ function renderPPOBContent(currentUser, appSettings, env) {
 
           <!-- Products Grid -->
           <div>
+              <!-- Anti Double-Click / Idempotency 30s Lock Banner -->
+              <div id="trxLockNotice" class="hidden mb-6 p-4 rounded-2xl bg-gradient-to-r from-amber-500/10 via-amber-500/5 to-transparent border-2 border-amber-300 text-amber-900 shadow-sm flex items-center justify-between">
+                  <div class="flex items-center gap-3">
+                      <div class="w-10 h-10 rounded-xl bg-amber-500 text-white flex items-center justify-center font-bold text-lg shadow-sm shrink-0">
+                          ⏳
+                      </div>
+                      <div>
+                          <div class="font-extrabold text-sm text-amber-950 flex items-center gap-2">
+                              <span>Proteksi Anti Double-Click Aktif</span>
+                              <span class="px-2 py-0.5 rounded-full text-[10px] font-black bg-amber-200 text-amber-900 uppercase">30 Detik</span>
+                          </div>
+                          <p class="text-xs text-amber-800 mt-0.5">Tombol transaksi dikunci sementara untuk mencegah saldo terpotong ganda saat koneksi internet lambat.</p>
+                      </div>
+                  </div>
+                  <div class="text-right shrink-0 pl-3">
+                      <span class="text-[11px] font-bold text-amber-700 block uppercase tracking-wider">Terkunci</span>
+                      <span id="trxLockTimerBadge" class="text-2xl font-black font-mono text-amber-900">30s</span>
+                  </div>
+              </div>
+
               <div class="flex items-center justify-between mb-4">
                   <h3 class="text-sm font-bold text-slate-700 uppercase tracking-wider" id="productListTitle">Pilihan Produk</h3>
                   <span id="productCountBadge" class="text-xs text-slate-400 font-medium">0 produk tersedia</span>
@@ -861,10 +902,97 @@ function renderPPOBContent(currentUser, appSettings, env) {
           }
       }
 
+      const TRX_LOCK_STORAGE_KEY = 'wp_trx_lock_until';
+      let trxLockInterval = null;
+
+      function getTrxLockUntil() {
+          try {
+              return parseInt(localStorage.getItem(TRX_LOCK_STORAGE_KEY) || '0', 10);
+          } catch(e) {
+              return 0;
+          }
+      }
+
+      function isTrxLocked() {
+          return getTrxRemainingSeconds() > 0;
+      }
+
+      function getTrxRemainingSeconds() {
+          const lockUntil = getTrxLockUntil();
+          const now = Date.now();
+          if (lockUntil > now) {
+              return Math.ceil((lockUntil - now) / 1000);
+          }
+          return 0;
+      }
+
+      function setTrxLock(seconds = 30) {
+          try {
+              const expireAt = Date.now() + (seconds * 1000);
+              localStorage.setItem(TRX_LOCK_STORAGE_KEY, String(expireAt));
+          } catch(e) {}
+          startTrxLockCountdown();
+      }
+
+      function clearTrxLock() {
+          try {
+              localStorage.removeItem(TRX_LOCK_STORAGE_KEY);
+          } catch(e) {}
+          if (trxLockInterval) {
+              clearInterval(trxLockInterval);
+              trxLockInterval = null;
+          }
+          const notice = document.getElementById('trxLockNotice');
+          if (notice) notice.classList.add('hidden');
+          updateAllButtonsLockState(0);
+      }
+
+      function startTrxLockCountdown() {
+          if (trxLockInterval) clearInterval(trxLockInterval);
+
+          const tick = () => {
+              const remaining = getTrxRemainingSeconds();
+              const notice = document.getElementById('trxLockNotice');
+              const badge = document.getElementById('trxLockTimerBadge');
+
+              if (remaining <= 0) {
+                  clearTrxLock();
+                  return;
+              }
+
+              if (notice) notice.classList.remove('hidden');
+              if (badge) badge.innerText = remaining + 's';
+              updateAllButtonsLockState(remaining);
+          };
+
+          tick();
+          trxLockInterval = setInterval(tick, 1000);
+      }
+
+      function updateAllButtonsLockState(remaining = 0) {
+          const isLocked = remaining > 0;
+          document.querySelectorAll('.btn-buy-product').forEach(btn => {
+              if (isLocked) {
+                  btn.disabled = true;
+                  btn.classList.remove('bg-sky-600', 'hover:bg-sky-500', 'cursor-pointer');
+                  btn.classList.add('bg-slate-300', 'text-slate-600', 'cursor-not-allowed');
+                  btn.innerText = '⏳ Tunggu (' + remaining + 's)';
+              } else {
+                  btn.disabled = false;
+                  btn.classList.add('bg-sky-600', 'hover:bg-sky-500', 'cursor-pointer');
+                  btn.classList.remove('bg-slate-300', 'text-slate-600', 'cursor-not-allowed');
+                  btn.innerText = 'Beli';
+              }
+          });
+      }
+
       function renderProductCards(products) {
           const grid = document.getElementById('productsGrid');
+          const remaining = getTrxRemainingSeconds();
+          const isLocked = remaining > 0;
+
           grid.innerHTML = products.map(p => \`
-              <div onclick="confirmOrder('\${p.product_code}')" class="p-5 rounded-2xl border-2 border-slate-200 bg-white hover:border-sky-500 hover:shadow-lg transition cursor-pointer flex flex-col justify-between group">
+              <div onclick="handleCardClick('\${p.product_code}')" class="p-5 rounded-2xl border-2 border-slate-200 bg-white hover:border-sky-500 hover:shadow-lg transition cursor-pointer flex flex-col justify-between group">
                   <div>
                       <div class="flex items-start justify-between gap-2 mb-2">
                           <span class="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-md bg-slate-100 text-slate-600">
@@ -885,15 +1013,42 @@ function renderPPOBContent(currentUser, appSettings, env) {
                       <div class="text-lg font-black text-sky-600 font-mono">
                           Rp \${Number(p.selling_price).toLocaleString('id-ID')}
                       </div>
-                      <button class="bg-sky-600 hover:bg-sky-500 text-white font-bold text-xs px-3.5 py-2 rounded-xl transition shadow-xs">
-                          Beli
+                      <button type="button" class="btn-buy-product \${isLocked ? 'bg-slate-300 text-slate-600 cursor-not-allowed' : 'bg-sky-600 hover:bg-sky-500 text-white cursor-pointer'} font-bold text-xs px-3.5 py-2 rounded-xl transition shadow-xs" \${isLocked ? 'disabled' : ''}>
+                          \${isLocked ? '⏳ Tunggu (' + remaining + 's)' : 'Beli'}
                       </button>
                   </div>
               </div>
           \`).join('');
       }
 
+      function handleCardClick(productCode) {
+          if (isTrxLocked()) {
+              const rem = getTrxRemainingSeconds();
+              swalDark.fire({
+                  title: 'Tombol Transaksi Dikunci',
+                  html: \`Tombol transaksi dikunci selama <b>\${rem} detik</b> untuk mencegah saldo terpotong ganda saat koneksi lambat.<br><br><span class="text-xs text-slate-500">Silakan tunggu hitungan mundur selesai.</span>\`,
+                  icon: 'warning',
+                  timer: 3500,
+                  timerProgressBar: true
+              });
+              return;
+          }
+          confirmOrder(productCode);
+      }
+
       async function confirmOrder(productCode) {
+          if (isTrxLocked()) {
+              const rem = getTrxRemainingSeconds();
+              swalDark.fire({
+                  title: 'Tombol Transaksi Dikunci',
+                  html: \`Tombol transaksi sedang dikunci selama <b>\${rem} detik</b> untuk proteksi saldo ganda.\`,
+                  icon: 'warning',
+                  timer: 3000,
+                  timerProgressBar: true
+              });
+              return;
+          }
+
           const product = cachedProducts.find(p => p.product_code === productCode);
           if (!product) return;
 
@@ -927,7 +1082,16 @@ function renderPPOBContent(currentUser, appSettings, env) {
               showCancelButton: true,
               confirmButtonText: 'Bayar Sekarang',
               cancelButtonText: 'Batal',
-              confirmButtonColor: '#0284c7'
+              confirmButtonColor: '#0284c7',
+              showLoaderOnConfirm: true,
+              preConfirm: () => {
+                  const confirmBtn = Swal.getConfirmButton();
+                  if (confirmBtn) {
+                      confirmBtn.disabled = true;
+                      confirmBtn.innerText = 'Memproses...';
+                  }
+                  return true;
+              }
           });
 
           if (result.isConfirmed) {
@@ -936,6 +1100,9 @@ function renderPPOBContent(currentUser, appSettings, env) {
       }
 
       async function executeOrder(productCode, customerNo) {
+          // Kunci tombol transaksi selama 30 detik setelah diklik
+          setTrxLock(30);
+
           document.getElementById('loadingOverlay').classList.remove('hidden');
 
           try {
@@ -946,6 +1113,12 @@ function renderPPOBContent(currentUser, appSettings, env) {
               });
               const data = await res.json();
               document.getElementById('loadingOverlay').classList.add('hidden');
+
+              if (res.status === 429 && data.locked) {
+                  setTrxLock(data.remaining_seconds || 30);
+                  swalDark.fire('Proteksi Anti Double-Click', data.message, 'warning');
+                  return;
+              }
 
               if (data.success) {
                   const isSuccess = data.status === 'success';
@@ -998,6 +1171,9 @@ function renderPPOBContent(currentUser, appSettings, env) {
                   });
                   window.location.reload();
               } else {
+                  if (!data.locked) {
+                      clearTrxLock();
+                  }
                   swalDark.fire('Gagal', data.message || 'Transaksi gagal diproses', 'error');
               }
           } catch(e) {
@@ -1008,6 +1184,9 @@ function renderPPOBContent(currentUser, appSettings, env) {
 
       // Initial run
       window.addEventListener('DOMContentLoaded', () => {
+          if (isTrxLocked()) {
+              startTrxLockCountdown();
+          }
           selectCategory('pulsa');
       });
   </script>

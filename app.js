@@ -120,6 +120,8 @@ function parseWIBDateString(wibStr) {
   if (match) {
     return Date.UTC(parseInt(match[3]), parseInt(match[2]) - 1, parseInt(match[1]), parseInt(match[4]) - 7, parseInt(match[5]), parseInt(match[6]));
   }
+  const fallback = Date.parse(wibStr);
+  if (!isNaN(fallback)) return fallback;
   return 0;
 }
 __name(parseWIBDateString, "parseWIBDateString");
@@ -7121,7 +7123,57 @@ Total : Rp.${totalSaldo.toLocaleString("id-ID")}
                         });
                     }
 
+                    let topupLockInterval = null;
+                    function checkTopupLock() {
+                        try {
+                            const lockUntil = parseInt(localStorage.getItem('wp_topup_lock_until') || '0', 10);
+                            const now = Date.now();
+                            const btn = document.getElementById('btnTopup');
+                            if (!btn) return;
+
+                            if (lockUntil > now) {
+                                btn.disabled = true;
+                                btn.classList.add('opacity-75', 'cursor-not-allowed');
+                                const updateBtn = () => {
+                                    const rem = Math.ceil((lockUntil - Date.now()) / 1000);
+                                    if (rem <= 0) {
+                                        if (topupLockInterval) clearInterval(topupLockInterval);
+                                        topupLockInterval = null;
+                                        localStorage.removeItem('wp_topup_lock_until');
+                                        btn.disabled = false;
+                                        btn.classList.remove('opacity-75', 'cursor-not-allowed');
+                                        btn.innerText = 'Top Up';
+                                    } else {
+                                        btn.innerText = '⏳ Tunggu (' + rem + 's)';
+                                    }
+                                };
+                                updateBtn();
+                                if (topupLockInterval) clearInterval(topupLockInterval);
+                                topupLockInterval = setInterval(updateBtn, 1000);
+                            } else {
+                                btn.disabled = false;
+                                btn.classList.remove('opacity-75', 'cursor-not-allowed');
+                                btn.innerText = 'Top Up';
+                            }
+                        } catch(e) {}
+                    }
+
+                    function lockTopupButton(sec = 30) {
+                        try {
+                            localStorage.setItem('wp_topup_lock_until', String(Date.now() + (sec * 1000)));
+                            checkTopupLock();
+                        } catch(e) {}
+                    }
+
                     async function topUp() {
+                        try {
+                            const lockUntil = parseInt(localStorage.getItem('wp_topup_lock_until') || '0', 10);
+                            if (lockUntil > Date.now()) {
+                                const rem = Math.ceil((lockUntil - Date.now()) / 1000);
+                                return swalDark.fire('Proteksi Anti Double-Click', 'Tombol transaksi sedang dikunci selama ' + rem + ' detik untuk mencegah pembuatan tagihan ganda.', 'warning');
+                            }
+                        } catch(e) {}
+
                         const amount = document.getElementById('topupAmount').value;
                         const methodEl = document.getElementById('topupMethod');
                         const method = methodEl ? methodEl.value : 'none';
@@ -7148,11 +7200,17 @@ Total : Rp.${totalSaldo.toLocaleString("id-ID")}
                         }
 
                         const btn = document.getElementById('btnTopup');
-                        btn.innerText = 'Tunggu...'; btn.disabled = true;
+                        btn.innerText = '⏳ Memproses...'; btn.disabled = true;
                         try {
                             const res = await fetch('/api/topup', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ amount: parseInt(amount), method: method }) });
                             const data = await res.json();
+                            if (res.status === 429 && data.locked) {
+                                lockTopupButton(data.remaining_seconds || 30);
+                                swalDark.fire('Proteksi Anti Double-Click', data.message, 'warning');
+                                return;
+                            }
                             if(data.success) {
+                                lockTopupButton(30);
                                 if (data.method === 'shopeepay' || data.method === 'gopay') {
                                     showAutoGoPayModal(data);
                                 } else if (data.checkout_url) {
@@ -7162,10 +7220,17 @@ Total : Rp.${totalSaldo.toLocaleString("id-ID")}
                                 }
                             } else {
                                 swalDark.fire('Gagal', data.message, 'error');
+                                btn.innerText = 'Top Up'; btn.disabled = false;
                             }
-                        } catch(e) { swalDark.fire('Error', 'Gagal menghubungi server.', 'error'); }
-                        btn.innerText = 'Top Up'; btn.disabled = false;
+                        } catch(e) {
+                            swalDark.fire('Error', 'Gagal menghubungi server.', 'error');
+                            btn.innerText = 'Top Up'; btn.disabled = false;
+                        }
                     }
+
+                    window.addEventListener('DOMContentLoaded', () => {
+                        checkTopupLock();
+                    });
                 <\/script>
                 `;
         return new Response(renderLayout("Dashboard", content), { headers: { "Content-Type": "text/html;charset=UTF-8" } });
@@ -7701,6 +7766,22 @@ Waktu: ${getWIBTime()}`, appSettings);
         currentUser.unpaid_invoices = validUnpaid;
         const unpaidCount = currentUser.unpaid_invoices ? currentUser.unpaid_invoices.length : 0;
         if (unpaidCount >= 3) return jsonResponse({ success: false, message: "Terlalu banyak tagihan UNPAID. Harap lunasi atau tunggu 1 jam hingga tagihan sebelumnya kadaluarsa otomatis." }, 400);
+
+        // Proteksi Anti Double-Click / Idempotency (30 Detik)
+        if (validUnpaid && validUnpaid.length > 0) {
+          const latestInv = validUnpaid[validUnpaid.length - 1];
+          const latestTs = parseWIBDateString(latestInv.date);
+          if (latestTs > 0 && (nowTs - latestTs < 30000)) {
+            const remSec = Math.max(1, Math.ceil((30000 - (nowTs - latestTs)) / 1000));
+            return jsonResponse({
+              success: false,
+              locked: true,
+              remaining_seconds: remSec,
+              message: `Proteksi Anti Double-Click: Anda baru saja membuat tagihan top up. Mohon tunggu ${remSec} detik untuk mencegah duplikasi tagihan.`
+            }, 429);
+          }
+        }
+
         const { amount, method: selectedMethod } = await request.json();
         if (typeof amount !== "number" || isNaN(amount) || amount < 1e3 || amount > 1e7 || !Number.isInteger(amount)) {
           return jsonResponse({ success: false, message: "Nominal top up tidak valid. Minimal Rp 1.000 dan Maksimal Rp 10.000.000." }, 400);
