@@ -5,7 +5,8 @@
 
 const DEFAULT_BASE_URL = 'https://app.tupo.my.id';
 const DEFAULT_USERID = '178082835085';
-const DEFAULT_PIN = '190501';
+const DEFAULT_PIN = '650502';
+const DEFAULT_PASS = '35098019';
 
 // XOR encryption key helper sesuai protokol Apiumkm/Atrilinks
 function getSecretKey() {
@@ -35,6 +36,7 @@ class TokoGorontaloService {
     this.baseUrl = config.baseUrl || process.env.TOKOGORONTALO_BASE_URL || DEFAULT_BASE_URL;
     this.userid = config.userid || process.env.TOKOGORONTALO_USERID || DEFAULT_USERID;
     this.pin = config.pin || process.env.TOKOGORONTALO_PIN || DEFAULT_PIN;
+    this.pass = config.pass || process.env.TOKOGORONTALO_PASS || DEFAULT_PASS;
   }
 
   /**
@@ -305,7 +307,7 @@ class TokoGorontaloService {
       jenistrx: Number(jenistrx) || 1,
       urlcallback: urlcallback || '',
       pin: this.pin,
-      pass: this.pin
+      pass: this.pass || this.pin
     };
 
     if (jenistrx === 2 && nominaltrx) {
@@ -317,9 +319,19 @@ class TokoGorontaloService {
 
     console.log(`[TokoGorontalo] Sending TRX -> reqid: ${reqid}, kode: ${kodeproduk}, tujuan: ${tujuan}`);
 
+    const headers = { 'Content-Type': 'application/json' };
+    try {
+      const session = await this.login();
+      if (session && session.token) {
+        headers['Authorization'] = `Bearer ${session.token}`;
+      }
+    } catch (e) {
+      // Ignore login error, rely on H2H credentials
+    }
+
     const res = await fetch(endpoint, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers,
       body: JSON.stringify(payload)
     });
 
