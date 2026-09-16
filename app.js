@@ -3740,72 +3740,31 @@ INFORMASI USER SAAT INI:
 - Nama Panggilan: ${userName}
 - Saldo Saat Ini: Rp ${(currentUser.balance || 0).toLocaleString("id-ID")}
 
-DAFTAR HARGA VPN (PASTI & JANGAN MENGARANG MATEMATIKA SENDIRI):
-- 10 hari = Rp ${p10.toLocaleString("id-ID")}
-- 20 hari = Rp ${p20.toLocaleString("id-ID")}
-- 30 hari = Rp ${p30.toLocaleString("id-ID")}
-- 60 hari = Rp ${p60.toLocaleString("id-ID")}
-- 90 hari = Rp ${p90.toLocaleString("id-ID")}
-- Trial 1 Jam = Gratis (Rp 0)
+LAYANAN UTAMA WARUNG PULSA:
+Warung Pulsa adalah platform penyedia produk digital Pulsa & PPOB termurah, tercepat, dan otomatis 24 Jam nonstop.
+Produk yang tersedia meliputi:
+1. Pulsa Reguler All Operator (Telkomsel, Indosat Ooredoo, XL Axiata, Axis, Tri, Smartfren).
+2. Paket Data & Kuota Internet (Harian, Mingguan, Bulanan, Unlimited, Extra Kuota).
+3. Token Listrik PLN Prabayar & Tagihan Listrik Pascabayar.
+4. Top Up E-Wallet: DANA, GoPay, OVO, ShopeePay, LinkAja, Maxim Driver/Customer, dll.
+5. Voucher Game: Mobile Legends, Free Fire, PUBG Mobile, Genshin Impact, dll.
+6. Tagihan PPOB Lainnya: BPJS Kesehatan, PDAM Air, Telkom Indihome, Multifinance.
 
-INFORMASI CARA TOP UP SALDO (PENTING):
-Jika user bertanya bagaimana cara top up atau isi saldo, beritahu mereka dengan ramah: "Untuk mengisi saldo, silakan tutup jendela chat ini sebentar, lalu klik tombol atau menu 'Top Up' yang ada di halaman utama aplikasi. Di sana kamu bisa memilih nominal dan metode pembayarannya (QRIS Otomatis atau Manual) ya." JANGAN memberikan link eksternal untuk top up.
-
-PENGETAHUAN PRODUK & TROUBLESHOOTING (WAJIB TAHU UNTUK MENJAWAB PERTANYAAN USER):
-- Panduan Protokol: Trojan sangat direkomendasikan untuk Game Online (karena ping sangat rendah & ringan). VMess/VLESS paling stabil untuk Streaming YouTube/browsing. SSH/L2TP cocok untuk tunneling dasar.
-- Aturan Pemakaian VPN: Dilarang keras digunakan untuk Torrenting, DDOS, Hacking, atau Carding. Batas maksimal pemakaian adalah 2 Device/IP secara bersamaan. Jika melanggar, akun akan dibanned otomatis oleh server!
-- Troubleshooting Klien: Jika VPN "konek tapi bengong" (tidak ada akses internet), arahkan user untuk melakukan Mode Pesawat (ON/OFF 5 detik) untuk merefresh jaringan atau ganti Bug/SNI. Jika susah konek, minta user mengecek sisa kuota/opok mereka.
-- Seputar Tembak Paket XL (KMSP): Jika SMS OTP MyXL tidak masuk, beritahu user bahwa sistem pusat kadang delay dan minta mereka mencoba lagi setelah 5 menit. Jelaskan juga bahwa pembayaran metode E-Wallet hanya memotong saldo web untuk "Biaya Admin" saja, sedangkan harga paket asli dibayar langsung via aplikasi e-wallet (DANA/Gopay) pengguna.
-- Info Top Up: QRIS Otomatis (ShopeePay / GoPay) akan masuk dalam hitungan detik. QRIS Manual harus transfer sesuai nominal unik dan wajib menekan tombol Konfirmasi.
-
-DAFTAR SERVER AKTIF (PENTING):
-${serverListStr}
-
-ATURAN SAAT DITANYA SALDO:
-Jika user hanya bertanya saldo (contoh: "cek saldo", "sisa saldo"), cukup sebutkan Saldo Saat Ini. JANGAN membahas/melanjutkan pesanan VPN jika memang pesanannya sudah selesai atau user tidak memintanya.
-
-FITUR PEMBELIAN VPN INTERAKTIF (URUTAN WAJIB):
-Pandu user secara BERTAHAP (SATU PER SATU). JANGAN menanyakan semuanya sekaligus dalam satu balasan.
-
-1. Langkah 1 (Tanya PROTOKOL): Tampilkan list angka 1-5 (SSH, VMess, VLESS, Trojan, L2TP). TUNGGU JAWABAN.
-2. Langkah 2 (Tanya SERVER): Tampilkan "DAFTAR SERVER AKTIF" di atas menggunakan angka urutan. TUNGGU JAWABAN.
-3. Langkah 3 (Tanya DURASI): Tampilkan list angka 1-6 (10, 20, 30, 60, 90 hari, atau 6. Trial 1 Jam). TUNGGU JAWABAN.
-4. Langkah 4 (Tanya USERNAME): 
-   - JIKA USER MEMILIH TRIAL (6): JANGAN TANYA USERNAME! LANGSUNG LOMPAT KE LANGKAH 5.
-   - JIKA BERBAYAR (1-5): Minta user membuat username (huruf/angka, maks 15 karakter). TUNGGU JAWABAN.
-5. Langkah 5 (Konfirmasi & CEK SALDO): Sebutkan rincian pesanan dan Total Harga (ambil dari DAFTAR HARGA VPN di atas). 
-   - WAJIB CEK SALDO: Bandingkan Total Harga dengan "Saldo Saat Ini" (Rp ${(currentUser.balance || 0).toLocaleString("id-ID")}). 
-   - Jika saldo kurang, beritahu dengan sopan bahwa saldonya tidak cukup dan arahkan untuk Top Up. JANGAN LANJUT KE LANGKAH 6.
-   - Jika saldo cukup atau pesanan gratis, katakan "Saldo kamu cukup" lalu tanyakan konfirmasi persetujuan.
-6. Langkah 6 (Eksekusi): Jika user menjawab "YA" atau "SETUJU" pada saat konfirmasi pesanan, KAMU WAJIB MERESPON HANYA DENGAN KODE INI SAJA (TANPA BASA-BASI LAIN):
-   [ACTION_BUY_VPN:protokol:serverId:durasi:username]
-   - protokol: ssh, vmessws, vlessws, trojanws, l2tp
-   - durasi: 10, 20, 30, 60, 90, trial
-   - username: huruf/angka (maks 15 karakter). Jika TRIAL, KOSONGKAN/ABAIKAN saja bagian ini.
-   Contoh Berbayar yang Benar: [ACTION_BUY_VPN:vmessws:srv1:10:depsek2]
-   Contoh Trial yang Benar: [ACTION_BUY_VPN:vmessws:srv1:trial]
-   PENTING: Jangan tulis kalimat apapun selain kode siku tersebut agar sistem backend bisa membaca pesanan!
-
-FITUR PERPANJANG VPN (RENEW):
-Jika user meminta memperpanjang akun VPN miliknya, ikuti langkah ini:
-1. Tanya username VPN yang mau diperpanjang (jika user belum menyebutkannya).
-2. Tanya durasi perpanjangan (10, 20, 30, 60, atau 90 hari). Trial tidak berlaku.
-3. Sebutkan Total Harga dan cek Saldo Saat Ini.
-4. Jika user Setuju/Ya, keluarkan HANYA kode ini: [ACTION_RENEW_VPN:username_vpn:durasi_angka]
-   Contoh: [ACTION_RENEW_VPN:depsek2:30]
-
-FITUR CEK PULSA & KUOTA XL (INTERAKTIF):
-Jika user meminta "cek pulsa", "cek kuota", "cek lokasi", tanyakan nomor XL/Axis mereka (misal: "Boleh ketik nomor XL/Axis-nya yang mau dicek?").
-Jika user memberikan nomor HP (contoh: 0819xxx), KAMU WAJIB MERESPON HANYA DENGAN KODE INI SAJA (TANPA BASA-BASI LAIN):
-[ACTION_CHECK_PULSA:nomor_hp]
-Contoh: [ACTION_CHECK_PULSA:081912345678]
+PANDUAN & ATURAN LAYANAN:
+- Jika user ingin membeli pulsa/paket/token/topup: arahkan mereka untuk membuka menu "Pulsa & PPOB" di (/pulsa-ppob). Di halaman tersebut user cukup memasukkan nomor tujuan/ID pelanggan dan memilih produk yang diinginkan.
+- Jika user bertanya cara Top Up / Isi Saldo: beritahu mereka dengan ramah bahwa pengisian saldo dapat dilakukan langsung melalui menu "Top Up" di dashboard utama dengan pembayaran QRIS otomatis yang langsung masuk dalam hitungan detik.
+- Jika user bertanya tentang layanan VPN atau Cek Pulsa / OTP: sampaikan dengan santai dan ramah bahwa layanan VPN dan Cek Pulsa/OTP telah dinonaktifkan, dan sistem kini fokus penuh pada transaksi Pulsa & PPOB serba otomatis.
+- Jika user hanya bertanya saldo (contoh: "cek saldo", "sisa saldo"): cukup sebutkan Saldo Saat Ini.
 
 TUGAS SETELAH EKSEKUSI BERHASIL:
-Jika sistem memberikan pesan balasan "[SYSTEM RESPONSE]: ...", kamu WAJIB membalas user dengan menampilkan teks informasi/konfigurasi tersebut SECARA UTUH DAN LENGKAP agar user bisa menyalinnya langsung dari layar chat ini.
+Jika sistem memberikan pesan balasan "[SYSTEM RESPONSE]: ...", kamu WAJIB membalas user dengan menampilkan teks informasi tersebut SECARA UTUH DAN LENGKAP.
 
 ATURAN PENGALIHAN LINK:
 Berikan link berikut hanya jika ditanyakan spesifik:
-- Cek Pulsa: /cekpulsa-otp
+- Pulsa & PPOB: /pulsa-ppob
+- Riwayat Transaksi Saldo: /mutasi
+- Kotak Masuk: /inbox
+- Pusat Bantuan: /tiket
 - Group Telegram: https://t.me/srpcomgroup
 - Channel Telegram: https://t.me/srpcomchannel
 - Admin/CS: https://t.me/srpcomadmin
@@ -3927,7 +3886,6 @@ DAFTAR KODE (PILIH SALAH SATU DAN KETIK TANPA BASA-BASI):
         reply = reply.replace(/</g, "&lt;").replace(/>/g, "&gt;");
         let buyVpnMatch = reply.match(/ACTION_BUY_VPN\s*:\s*([^:]+)\s*:\s*([^:]+)\s*:\s*([^:\]\n]+)(?:\s*:\s*([^\]\n]*))?/i);
         let renewVpnMatch = reply.match(/ACTION_RENEW_VPN\s*:\s*([^:\s\]]+)\s*:\s*([^\]\n]+)/i);
-        let checkPulsaMatch = reply.match(/ACTION_CHECK_PULSA\s*:\s*([^\]\n]+)/i);
         let statsMatch = isAdmin ? reply.match(/DB_STATS/i) : null;
         let userMatch = isAdmin ? reply.match(/DB_USER\s*:\s*([^\]\n\s]+)/i) : null;
         let recentVpnMatch = isAdmin ? reply.match(/DB_RECENT_VPN/i) : null;
@@ -3938,69 +3896,12 @@ DAFTAR KODE (PILIH SALAH SATU DAN KETIK TANPA BASA-BASI):
         let userTrxMatch = isAdmin ? reply.match(/DB_USER_TRANSACTIONS\s*:\s*([^\]\n\s]+)/i) : null;
         let addBalanceMatch = isAdmin ? reply.match(/ACTION_ADD_BALANCE\s*:\s*([^:\s\]]+)\s*:\s*([^\]\n]+)/i) : null;
         let deductBalanceMatch = isAdmin ? reply.match(/ACTION_DEDUCT_BALANCE\s*:\s*([^:\s\]]+)\s*:\s*([^\]\n]+)/i) : null;
-        if (buyVpnMatch || renewVpnMatch || checkPulsaMatch || statsMatch || userMatch || recentVpnMatch || searchVpnMatch || detailVpnMatch || backupMatch || recentTrxMatch || userTrxMatch || addBalanceMatch || deductBalanceMatch) {
+        if (buyVpnMatch || renewVpnMatch || statsMatch || userMatch || recentVpnMatch || searchVpnMatch || detailVpnMatch || backupMatch || recentTrxMatch || userTrxMatch || addBalanceMatch || deductBalanceMatch) {
           let dbResult = "";
           let priceToRefund = 0;
           let refundProtocol = "";
           try {
-            if (checkPulsaMatch) {
-              let phone = checkPulsaMatch[1].replace(/[^0-9]/g, "");
-              if (!env.KMSP_API_KEY) {
-                dbResult = "GAGAL: API Key KMSP belum disetel oleh Admin.";
-              } else {
-                const tokenListRes = await KMSP.getAccessTokenList(env.KMSP_API_KEY, phone);
-                let hasSession = false;
-                if (tokenListRes.success && tokenListRes.data && tokenListRes.data.length > 0) {
-                  const activeTokenObj = tokenListRes.data.find((t) => String(t.msisdn).includes(phone) || String(phone).includes(String(t.msisdn)));
-                  if (activeTokenObj) {
-                    const authIdToken = `${activeTokenObj.session_id}:${activeTokenObj.token}`;
-                    const extendRes = await KMSP.extendSession(env.KMSP_API_KEY, phone, authIdToken);
-                    if (extendRes.success && extendRes.data && extendRes.data.access_token) {
-                      hasSession = true;
-                      const accessToken = extendRes.data.access_token;
-                      const [infoRes, quotaRes, locRes] = await Promise.all([
-                        KMSP.cekPulsaMasaAktif(env.KMSP_API_KEY, accessToken),
-                        KMSP.cekPaketAktif(env.KMSP_API_KEY, accessToken),
-                        KMSP.cekLokasi(env.KMSP_API_KEY, accessToken)
-                      ]);
-                      if (infoRes.success) {
-                        let quotaDetails = "";
-                        if (quotaRes.success && quotaRes.data && quotaRes.data.quotas) {
-                          quotaRes.data.quotas.forEach((q) => {
-                            quotaDetails += `
-- **${q.name || "Paket Data"}** (Aktif s.d ${q.expired_at || "-"}):`;
-                            if (q.benefits && Array.isArray(q.benefits)) {
-                              q.benefits.forEach((b) => {
-                                quotaDetails += `
-  \u2022 ${b.name}: Sisa ${b.remaining_quota || b.remaining || "-"} / ${b.quota || b.total || "-"}`;
-                              });
-                            }
-                          });
-                        } else {
-                          quotaDetails = "\n- Tidak ada paket/kuota aktif ditemukan.";
-                        }
-                        let loc = locRes.success && locRes.data ? locRes.data.location : "Tidak Terdeteksi";
-                        dbResult = `DATA XL (BERHASIL):
-Nomor: ${infoRes.data.msisdn}
-Status: ${infoRes.data.subscription_status}
-Lokasi: ${loc}
-Pulsa: ${infoRes.data.pulsa_real || infoRes.data.pulsa || "Rp 0"}
-Masa Aktif: ${infoRes.data.active_until || "-"}
-
-Detail Kuota:${quotaDetails}
-
-TUGASMU: Beritahu data detail di atas kepada user dengan gaya yang sangat rapi, santai, dan gunakan bullet points tanpa mengubah isi angka/data aslinya.`;
-                      } else {
-                        dbResult = `GAGAL: ${infoRes.message}`;
-                      }
-                    }
-                  }
-                }
-                if (!hasSession) {
-                  dbResult = `GAGAL: Nomor ${phone} belum memiliki sesi OTP aktif di sistem. TUGASMU: Beritahu user dengan santai "Wah, nomor ${phone} belum terverifikasi OTP nih. Silakan login OTP dulu melalui menu 'Cekpulsa / OTP' di layar kamu ya. Setelah berhasil verifikasi di sana, kamu bisa balik lagi ke sini dan minta saya cek!"`;
-                }
-              }
-            } else if (addBalanceMatch || deductBalanceMatch) {
+            if (addBalanceMatch || deductBalanceMatch) {
               let activeMatch = addBalanceMatch ? addBalanceMatch : deductBalanceMatch;
               let targetEmail = activeMatch[1].trim().toLowerCase();
               let amountStr = activeMatch[2].trim().replace(/[^0-9]/g, "");
@@ -4442,9 +4343,9 @@ function renderAIChatUI(currentUser, appSettings = {}) {
         <div class="bg-white text-slate-800 p-3 rounded-2xl rounded-tl-none text-xs border border-slate-200 max-w-[85%] shadow-sm flex flex-col gap-2">
             <span>Assalamu'alaikum ${userName}! Saya Asisten Pintar <b>Warung Pulsa</b>. Ada yang bisa saya bantu terkait layanan toko atau sekadar ngobrol santai?</span>
             <div class="flex flex-wrap gap-2 mt-1">
-                <button onclick="window.sendQuickReply('buat vpn')" class="bg-sky-50 hover:bg-sky-100 text-sky-700 text-[10px] py-1 px-3 rounded-full transition shadow-xs border border-sky-300">🚀 buat vpn</button>
+                <button onclick="window.sendQuickReply('beli pulsa')" class="bg-sky-50 hover:bg-sky-100 text-sky-700 text-[10px] py-1 px-3 rounded-full transition shadow-xs border border-sky-300">⚡ beli pulsa</button>
                 <button onclick="window.sendQuickReply('cara topup')" class="bg-sky-50 hover:bg-sky-100 text-sky-700 text-[10px] py-1 px-3 rounded-full transition shadow-xs border border-sky-300">💳 cara topup</button>
-                <button onclick="window.sendQuickReply('cek pulsa xl')" class="bg-sky-50 hover:bg-sky-100 text-sky-700 text-[10px] py-1 px-3 rounded-full transition shadow-xs border border-sky-300">📊 cek pulsa</button>
+                <button onclick="window.sendQuickReply('daftar harga')" class="bg-sky-50 hover:bg-sky-100 text-sky-700 text-[10px] py-1 px-3 rounded-full transition shadow-xs border border-sky-300">📋 daftar harga</button>
             </div>
         </div>
     `;
@@ -5073,260 +4974,7 @@ __name2(renderConverterPage, "renderConverterPage");
 __name22(renderConverterPage, "renderConverterPage");
 __name222(renderConverterPage, "renderConverterPage");
 function renderCekKuotaPage() {
-  return `<!DOCTYPE html>
-<html lang="id">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <meta name="robots" content="noindex, nofollow">
-    <title>WARUNG PULSA OTP XL</title>
-    
-    <!-- Favicon -->
-    <link rel="icon" href="https://files.catbox.moe/xemyih.jpg" type="image/jpeg">
-    
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"><\/script>
-    
-    <!-- Google Fonts: Poppins -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet">
-    
-    <!-- jQuery -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"><\/script>
-
-    <style>
-        body { font-family: 'Poppins', sans-serif; }
-        .glass-card {
-            background: #ffffff;
-            border: 1px solid #e2e8f0;
-            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.08), 0 10px 10px -5px rgba(0, 0, 0, 0.03);
-        }
-        @keyframes pulse-red {
-            0% { box-shadow: 0 0 0 0 rgba(2, 132, 199, 0.7); }
-            70% { box-shadow: 0 0 0 10px rgba(2, 132, 199, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(2, 132, 199, 0); }
-        }
-        .pulsating-border {
-            border: 2px solid #0284c7;
-            animation: pulse-red 2s infinite;
-        }
-        #cover-spin {
-            position: fixed; width: 100%; height: 100%; left: 0; right: 0; top: 0; bottom: 0;
-            background-color: rgba(15, 23, 42, 0.5);
-            backdrop-filter: blur(4px);
-            z-index: 9999; display: none;
-        }
-        @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-        #cover-spin::after {
-            content: ''; display: block; position: absolute; left: 50%; top: 50%;
-            margin-left: -20px; margin-top: -20px; width: 40px; height: 40px;
-            border-style: solid; border-color: #0284c7; border-top-color: transparent;
-            border-width: 4px; border-radius: 50%; animation: spin .8s linear infinite;
-        }
-        input[type=number]::-webkit-inner-spin-button,
-        input[type=number]::-webkit-outer-spin-button {
-            -webkit-appearance: none; margin: 0;
-        }
-        input[type=number] { -moz-appearance: textfield; }
-        .glass-input::placeholder { color: #94a3b8; }
-    </style>
-</head>
-<body class="bg-slate-50 text-slate-800 flex min-h-screen items-center justify-center p-4 relative overflow-y-auto font-sans">
-
-    <!-- Abstract glowing background blobs -->
-    <div class="absolute top-[-10%] left-[-10%] w-96 h-96 bg-sky-100 rounded-full blur-3xl pointer-events-none"></div>
-    <div class="absolute bottom-[-10%] right-[-10%] w-96 h-96 bg-blue-100 rounded-full blur-3xl pointer-events-none"></div>
-
-    <!-- Loading Spinner Overlay -->
-    <div id="cover-spin"></div>
-
-    <div class="w-full max-w-md rounded-3xl p-8 space-y-6 glass-card relative z-10">
-        
-        <!-- Header Section -->
-        <div class="text-center">
-            <img src="${LOGO_URL}" alt="Logo Warung Pulsa" class="mx-auto h-16 w-16 rounded-full border border-slate-200 shadow-md" onerror="this.onerror=null; this.src='${LOGO_URL}';">
-            <h1 class="mt-4 text-3xl font-extrabold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-sky-600 to-blue-700">WARUNG PULSA OTP XL</h1>
-            <p class="text-xs text-slate-500 mt-2">
-                Silakan bergabung ke <a href="https://t.me/srpcomgroup" target="_blank" class="text-sky-600 hover:text-sky-700 underline font-medium transition duration-200">t.me/srpcomgroup</a>
-            </p>
-        </div>
-
-        <!-- Main Form Section -->
-        <form action="" method="POST" onsubmit="return false;" class="space-y-4">
-            
-            <!-- MSISDN (Phone Number) Input -->
-            <div>
-                <label for="msisdn" id="msisdn-label" class="block text-xs font-semibold tracking-wide text-sky-600 uppercase mb-2 animate-pulse">Masukkan nomor XL disini</label>
-                <input type="number" id="msisdn" name="msisdn" class="glass-input pulsating-border mt-1 p-4 bg-white border border-sky-400 text-slate-900 rounded-xl w-full focus:outline-none focus:border-sky-500 transition duration-300 font-mono text-lg shadow-xs" placeholder="Contoh: 0878..." required>
-            </div>
-
-            <!-- Action Buttons -->
-            <div id="action-buttons-section" style="display: none;">
-                <div class="grid grid-cols-2 gap-4 pt-2">
-                     <button type="button" class="bg-gradient-to-r from-sky-600 to-blue-600 hover:from-sky-500 hover:to-blue-500 text-white font-bold p-3.5 rounded-xl transition duration-300 shadow-lg shadow-sky-600/20 active:scale-95" id="reqOTP">MINTA OTP</button>
-                     <button type="button" class="bg-slate-100 hover:bg-slate-200 text-slate-800 border border-slate-300 font-bold p-3.5 rounded-xl transition duration-300 active:scale-95" id="checkQuotaPublicBtn">CEK KUOTA</button>
-                </div>
-            </div>
-
-            <!-- OTP Input -->
-            <div id="otp-input-section" style="display: none;">
-                <label for="otp" class="block text-xs font-semibold text-slate-600 uppercase tracking-wide mb-2">Kode OTP</label>
-                <input type="text" id="otp" name="otp" class="glass-input mt-1 p-4 bg-white border border-slate-300 text-slate-900 rounded-xl w-full focus:outline-none focus:ring-2 focus:ring-sky-500 transition duration-300 text-center font-mono text-xl tracking-widest shadow-xs" placeholder="6 Digit Kode" required>
-            </div>
-
-            <!-- Verify OTP Button -->
-             <div id="login-button-section" style="display: none;">
-                <button type="button" class="w-full bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-500 hover:to-emerald-500 text-white font-bold p-3.5 rounded-xl transition duration-300 shadow-lg shadow-green-600/20 active:scale-95" id="verOTP">VERIFIKASI OTP</button>
-            </div>
-
-            <!-- Hidden fields for state management -->
-            <input type="hidden" id="auth_id" name="auth_id" value="">
-        </form>
-        
-        <!-- Log and Result Section -->
-        <div id="log-section" class="space-y-4 pt-2" style="display: none;">
-            <div>
-                <p class="text-xs font-semibold text-slate-600 uppercase tracking-wider">Log Respons:</p>
-                <textarea class="mt-2 w-full p-4 bg-slate-900 border border-slate-700 text-emerald-400 rounded-xl text-sm font-mono focus:outline-none focus:border-sky-500 transition duration-300 shadow-inner" id="logResponse" rows="4" readonly></textarea>
-            </div>
-            
-            <!-- Final Action Buttons (New) -->
-            <div id="final-action-buttons" class="grid grid-cols-2 gap-4 pt-2" style="display: none;">
-                <a href="https://t.me/srpcomchannel/419" target="_blank" class="text-center bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-500 hover:to-emerald-500 text-white font-bold p-3.5 rounded-xl transition duration-300 shadow-lg active:scale-95">QRIS ADMIN</a>
-                <a href="https://t.me/srpcomadmin" target="_blank" class="text-center bg-slate-100 hover:bg-slate-200 text-slate-800 border border-slate-300 font-bold p-3.5 rounded-xl transition duration-300 active:scale-95">HUB ADMIN</a>
-            </div>
-        </div>
-    </div>
-
-<script>
-$(document).ready(function(){
-    const GAS_WEB_APP_URL = "/api/cekkuota-backend";
-    let _animation_timer = null;
-
-    async function callGasBackend(action, msisdn, payload = {}) {
-        $('#cover-spin').show(0);
-        try {
-            const response = await fetch(GAS_WEB_APP_URL, {
-                method: 'POST',
-                mode: 'cors',
-                headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-                body: JSON.stringify({ action, msisdn, payload })
-            });
-            if (!response.ok) throw new Error('HTTP error! status: ' + response.status);
-            return await response.json();
-        } catch (error) {
-            console.error("Error calling GAS Backend:", error);
-            return { status: false, message: 'Gagal terhubung ke backend: ' + error.message };
-        } finally {
-            $('#cover-spin').hide();
-        }
-    }
-
-    function logMessage(message, isError = false, isProcessing = false) {
-        if (typeof message === 'string') {
-            message = message.replace('https://srpcom.online/qris', 'https://t.me/srpcomchannel/419');
-        }
-        const logBox = $('#logResponse');
-        if (_animation_timer) clearInterval(_animation_timer);
-        logBox.val(message).css('color', isError ? '#fca5a5' : '#86efac');
-        if (isProcessing) {
-            const baseMessage = message.replace(/\\./g, '');
-            let dotCount = 0;
-            _animation_timer = setInterval(() => {
-                dotCount = (dotCount + 1) % 4;
-                logBox.val(baseMessage + '.'.repeat(dotCount));
-            }, 500);
-        }
-        const el = logBox[0];
-        el.style.height = 'auto';
-        el.style.height = (el.scrollHeight) + 'px';
-    }
-
-    function handleSuccessfulLogin(response) {
-        logMessage(response.message, false);
-        $('#action-buttons-section, #otp-input-section, #login-button-section').slideUp();
-        $('#final-action-buttons').slideDown();
-    }
-
-    $('#msisdn').on('input', function() {
-        if ($(this).val().length > 0) $('#msisdn-label').fadeOut('fast'); else $('#msisdn-label').fadeIn('fast');
-        if ($(this).val().length >= 11) $('#action-buttons-section, #log-section').slideDown();
-        else $('#action-buttons-section, #log-section, #otp-input-section, #login-button-section, #final-action-buttons').slideUp();
-    });
-    
-    $('#otp').on('input', function() {
-        if ($(this).val().length >= 6) $('#login-button-section').slideDown(); else $('#login-button-section').slideUp();
-    });
-
-    // --- Aksi Minta OTP / Login (Alur Baru) ---
-    $('#reqOTP').click(async function(){
-        const msisdn = $('#msisdn').val();
-        if (!msisdn) {
-            logMessage('Silakan masukkan Nomor XL terlebih dahulu.', true);
-            return;
-        }
-        logMessage('Mencoba login atau meminta OTP...', false, true);
-        
-        const s = await callGasBackend('login_flow', msisdn);
-        
-        if (s.login_success) {
-            handleSuccessfulLogin(s);
-        } else {
-            const isError = s.status === false;
-            logMessage(s.message, isError);
-            if (!isError && s.data && s.data.auth_id) {
-                $('#auth_id').val(s.data.auth_id);
-                $('#otp-input-section').slideDown();
-            }
-        }
-    });
-
-    // --- Aksi Verifikasi OTP (Alur Baru) ---
-    $('#verOTP').click(async function(){
-        const msisdn = $('#msisdn').val();
-        const otp = $('#otp').val();
-        if (!msisdn || !otp) {
-            logMessage('Nomor XL dan Kode OTP tidak boleh kosong.', true);
-            return;
-        }
-        logMessage('Memverifikasi OTP...', false, true);
-        const payload = { auth_id: $('#auth_id').val(), otp: otp };
-        const s = await callGasBackend('ver_otp', msisdn, payload);
-        
-        if (s.login_success) {
-            handleSuccessfulLogin(s);
-        } else {
-            const isError = s.status === false;
-            logMessage(s.message, isError);
-        }
-    });
-
-    // --- Aksi Cek Kuota Publik ---
-    $('#checkQuotaPublicBtn').click(async function(){
-        const msisdn = $('#msisdn').val();
-        if (!msisdn) {
-            logMessage('Silakan masukkan Nomor XL terlebih dahulu.', true);
-            return;
-        }
-        logMessage('Proses cek kuota, wait....', false, true);
-        const s = await callGasBackend('check_quota_public', msisdn);
-
-        if (s.status === false) {
-            const errorMessage = s.data && s.data.keteranganError ? s.data.keteranganError : s.message;
-            logMessage(errorMessage, true);
-        } else if (s.status === true) {
-            const resultText = s.data && s.data.hasil ? s.data.hasil.replace(/<br\\s*\\/?>/gi, "\\n") : s.message;
-            logMessage(resultText, false);
-        } else {
-             logMessage(s.message || 'Terjadi kesalahan tidak diketahui.', true);
-        }
-    });
-});
-<\/script>
-
-</body>
-</html>`;
+  return "<html><body>Not Found</body></html>";
 }
 __name(renderCekKuotaPage, "renderCekKuotaPage");
 __name2(renderCekKuotaPage, "renderCekKuotaPage");
@@ -6253,19 +5901,19 @@ Total : Rp.${totalSaldo.toLocaleString("id-ID")}
     const renderLayout = /* @__PURE__ */ __name222((title, content) => {
       const metaTags = `
                 <meta name="title" content="${title} - Warung Pulsa">
-                <meta name="description" content="Warung Pulsa - Layanan Beli Pulsa All Operator, Paket Data Internet, Token Listrik PLN, Top Up Saldo E-Wallet, dan Cek Pulsa/OTP Otomatis 24 Jam.">
-                <meta name="keywords" content="VPN Premium, Proxy, SSH, Trojan, VLESS, VMess, Warung Pulsa, Pulsa, PPOB, Paket Data, Token PLN">
+                <meta name="description" content="Warung Pulsa - Platform Agen Pulsa All Operator, Paket Data Internet, Token Listrik PLN, dan Top Up Saldo E-Wallet Otomatis 24 Jam Termurah.">
+                <meta name="keywords" content="Warung Pulsa, Pulsa Murah, Agen Pulsa, Beli Pulsa, Paket Data, Kuota Internet, Token PLN, Top Up E-Wallet, PPOB 24 Jam">
                 <meta name="theme-color" content="#f8fafc">
                 <meta property="og:type" content="website">
                 <meta property="og:url" content="/">
                 <meta property="og:title" content="${title} | Warung Pulsa">
-                <meta property="og:description" content="Warung Pulsa - Layanan Beli Pulsa All Operator, Token PLN, E-Wallet, dan Cek Pulsa/OTP Otomatis 24 Jam.">
+                <meta property="og:description" content="Warung Pulsa - Platform Agen Pulsa All Operator, Paket Data Internet, Token Listrik PLN, dan Top Up Saldo E-Wallet Otomatis 24 Jam Termurah.">
                 <meta property="og:image" content="${LOGO_URL}">
                 <meta property="og:site_name" content="Warung Pulsa">
                 <meta property="twitter:card" content="summary_large_image">
                 <meta property="twitter:url" content="/">
                 <meta property="twitter:title" content="${title} | Warung Pulsa">
-                <meta property="twitter:description" content="Warung Pulsa - Layanan Beli Pulsa All Operator, Token PLN, E-Wallet, dan Cek Pulsa/OTP Otomatis 24 Jam.">
+                <meta property="twitter:description" content="Warung Pulsa - Platform Agen Pulsa All Operator, Paket Data Internet, Token Listrik PLN, dan Top Up Saldo E-Wallet Otomatis 24 Jam Termurah.">
                 <meta property="twitter:image" content="${LOGO_URL}">`;
       if (currentUser) {
         const unreadCount = currentUser.inbox_unread_count || 0;
@@ -6299,6 +5947,19 @@ Total : Rp.${totalSaldo.toLocaleString("id-ID")}
                             color: #0f172a !important;
                         }
                         
+                        .swal2-dark-custom {
+                            background: #0f172a !important;
+                            color: #f8fafc !important;
+                            border: 1px solid #334155 !important;
+                            border-radius: 1.5rem !important;
+                        }
+                        .swal2-dark-custom .swal2-title {
+                            color: #ffffff !important;
+                        }
+                        .swal2-dark-custom .swal2-html-container {
+                            color: #cbd5e1 !important;
+                        }
+
                         /* Pulse Hamburger Animation */
                         @keyframes pulseHamburger {
                             0%, 100% { color: #0f172a; }
@@ -6319,7 +5980,14 @@ Total : Rp.${totalSaldo.toLocaleString("id-ID")}
                         }
                     <\/script>
                 </head>
-                <body class="bg-slate-50 text-slate-800 font-sans flex h-screen overflow-hidden relative">
+                <body class="bg-slate-50 text-slate-800 flex flex-col md:flex-row min-h-screen overflow-x-hidden font-sans relative">
+                    <!-- Global Ambient Light Accents for User Dashboard -->
+                    <div class="fixed inset-0 pointer-events-none z-0 overflow-hidden">
+                        <div class="absolute -top-40 -left-40 w-96 h-96 bg-sky-100/70 rounded-full blur-[128px]"></div>
+                        <div class="absolute top-1/3 -right-40 w-96 h-96 bg-cyan-100/50 rounded-full blur-[128px]"></div>
+                        <div class="absolute -bottom-40 left-1/3 w-96 h-96 bg-blue-100/60 rounded-full blur-[128px]"></div>
+                    </div>
+
                     ${tsParticlesConfig}
                     <div id="sidebarOverlay" class="fixed inset-0 bg-slate-900/40 backdrop-blur-xs z-40 hidden md:hidden" onclick="toggleSidebar()"></div>
                     
@@ -6336,13 +6004,13 @@ Total : Rp.${totalSaldo.toLocaleString("id-ID")}
                     </div>
                     
                     <!-- FIX TUMPANG TINDIH NAVBAR PC: Menambahkan md:z-0 pada aside agar modal tertutup -->
-                    <aside id="sidebar" class="fixed inset-y-0 left-0 bg-white border-r border-slate-200 w-64 transform -translate-x-full md:relative md:translate-x-0 transition-transform duration-300 ease-in-out z-50 md:z-0 flex flex-col shadow-xl md:shadow-none">
-                        <div class="p-6 border-b border-slate-200 flex justify-between items-center relative z-10">
-                            <div class="flex items-center gap-3">
-                                <img src="${LOGO_URL}" alt="Logo" class="w-8 h-8 rounded-full border border-slate-200 shadow-sm">
-                                <span class="text-xl font-black tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-cyan-600 via-sky-600 to-blue-700">Warung Pulsa</span>
-                            </div>
-                            <button onclick="toggleSidebar()" class="md:hidden text-slate-400 hover:text-slate-800 p-1">
+                    <aside id="sidebar" class="fixed md:static inset-y-0 left-0 w-64 bg-white border-r border-slate-200 flex flex-col z-50 transform -translate-x-full md:translate-x-0 transition-transform duration-300 ease-in-out shadow-lg md:shadow-none">
+                        <div class="p-5 border-b border-slate-200 flex items-center justify-between bg-white relative z-10">
+                            <a href="/" class="flex items-center gap-3">
+                                <img src="${LOGO_URL}" alt="Logo" class="w-8 h-8 rounded-full border border-slate-200">
+                                <span class="text-xl font-bold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-sky-600 to-blue-700">Warung Pulsa</span>
+                            </a>
+                            <button onclick="toggleSidebar()" class="md:hidden text-slate-500 hover:text-slate-800 p-1 rounded-lg hover:bg-slate-100 transition">
                                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
                             </button>
                         </div>
@@ -6360,7 +6028,6 @@ Total : Rp.${totalSaldo.toLocaleString("id-ID")}
                             </div>` : ""}
                             <a href="/" class="flex items-center gap-3 p-3 rounded-xl transition ${title === "Dashboard" ? "bg-sky-50 text-sky-700 font-bold shadow-xs border border-sky-200" : "text-slate-600 hover:bg-slate-100 hover:text-sky-600 font-medium"}"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg><span class="text-sm">Dashboard Utama</span></a>
                             <a href="/pulsa-ppob" class="flex items-center gap-3 p-3 rounded-xl transition ${title === "Beli Pulsa & PPOB" || title === "Pulsa & PPOB" ? "bg-sky-50 text-sky-700 font-bold shadow-xs border border-sky-200" : "text-slate-600 hover:bg-slate-100 hover:text-sky-600 font-medium"}"><svg class="w-5 h-5 text-sky-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg><span class="text-sm font-bold">Pulsa & PPOB</span></a>
-                            <a href="/cekpulsa-otp" class="flex items-center gap-3 p-3 rounded-xl transition ${title === "Cekpulsa / OTP" ? "bg-sky-50 text-sky-700 font-bold shadow-xs border border-sky-200" : "text-slate-600 hover:bg-slate-100 hover:text-sky-600 font-medium"}"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8h2a2 2 0 012 2v6a2 2 0 01-2 2h-2v4l-4-4H9a1.994 1.994 0 01-1.414-.586m0 0L11 14h4a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2v4l.586-.586z"></path></svg><span class="text-sm">Cekpulsa / OTP</span></a>
                             <a href="/inbox" class="flex items-center gap-3 p-3 rounded-xl transition ${title === "Inbox" ? "bg-sky-50 text-sky-700 font-bold shadow-xs border border-sky-200" : "text-slate-600 hover:bg-slate-100 hover:text-sky-600 font-medium"}"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"></path></svg><span class="text-sm">Kotak Masuk</span>${badgeHtml}</a>
                             <a href="/mutasi" class="flex items-center gap-3 p-3 rounded-xl transition ${title === "Riwayat Saldo" ? "bg-sky-50 text-sky-700 font-bold shadow-xs border border-sky-200" : "text-slate-600 hover:bg-slate-100 hover:text-sky-600 font-medium"}"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg><span class="text-sm">Riwayat Saldo</span></a>
                             <a href="/tiket" class="flex items-center gap-3 p-3 rounded-xl transition ${title === "Pusat Bantuan" ? "bg-sky-50 text-sky-700 font-bold shadow-xs border border-sky-200" : "text-slate-600 hover:bg-slate-100 hover:text-sky-600 font-medium"}"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192l-3.536 3.536M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-5 0a4 4 0 11-8 0 4 4 0 018 0z"></path></svg><span class="text-sm">Pusat Bantuan</span></a>
@@ -6442,10 +6109,17 @@ Total : Rp.${totalSaldo.toLocaleString("id-ID")}
                         }
                     </style>
                 </head>
-                <body class="bg-slate-50 text-slate-800 font-sans min-h-screen flex flex-col relative">
+                <body class="bg-slate-50 text-slate-800 flex flex-col min-h-screen overflow-x-hidden font-sans relative">
+                    <!-- Global Ambient Light Accents for Public Landing -->
+                    <div class="fixed inset-0 pointer-events-none z-0 overflow-hidden">
+                        <div class="absolute -top-40 -left-40 w-96 h-96 bg-sky-100/70 rounded-full blur-[128px]"></div>
+                        <div class="absolute top-1/2 -right-40 w-96 h-96 bg-cyan-100/50 rounded-full blur-[128px]"></div>
+                        <div class="absolute -bottom-40 left-1/2 w-96 h-96 bg-blue-100/60 rounded-full blur-[128px]"></div>
+                    </div>
+
                     ${tsParticlesConfig}
                     ${appSettings && appSettings.maintenance_mode === true ? `
-                    <div class="bg-rose-600 text-white font-bold text-center py-2.5 px-4 text-xs tracking-wider uppercase shadow-md flex items-center justify-center gap-2 z-50 shrink-0">
+                    <div class="bg-rose-600 text-white font-bold text-center py-2.5 px-4 text-xs tracking-wider uppercase shadow-md flex items-center justify-center gap-2 relative z-50">
                         <span class="relative flex h-2 w-2">
                             <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-white opacity-75"></span>
                             <span class="relative inline-flex rounded-full h-2 w-2 bg-white"></span>
@@ -6464,7 +6138,6 @@ Total : Rp.${totalSaldo.toLocaleString("id-ID")}
                                 <a href="/" class="text-slate-600 hover:text-sky-600 transition">Beranda</a>
                                 <a href="/pulsa-ppob" class="text-sky-600 font-bold hover:text-sky-700 transition flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>Pulsa & PPOB</a>
                                 <a href="/produk" class="text-slate-600 hover:text-sky-600 transition">Produk & Harga</a>
-                                <a href="/cekpulsa-otp" class="text-slate-600 hover:text-sky-600 transition">Cekpulsa / OTP</a>
                                 <a href="/syarat-ketentuan" class="text-slate-600 hover:text-sky-600 transition">Syarat & Ketentuan</a>
                                 <a href="/login" class="bg-gradient-to-r from-sky-600 to-blue-600 hover:from-sky-500 hover:to-blue-500 text-white font-bold py-2 px-5 rounded-xl text-xs transition shadow-md shadow-sky-600/20 flex items-center gap-2 active:scale-95">
                                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"></path></svg>
@@ -6478,7 +6151,6 @@ Total : Rp.${totalSaldo.toLocaleString("id-ID")}
                                 <a href="/" class="text-slate-700 hover:text-sky-600 font-semibold text-lg border-b border-slate-100 pb-3 flex items-center gap-3">Beranda</a>
                                 <a href="/pulsa-ppob" class="text-sky-600 font-bold text-lg border-b border-slate-100 pb-3 flex items-center gap-3">Pulsa & PPOB (Instan 24 Jam)</a>
                                 <a href="/produk" class="text-slate-700 hover:text-sky-600 font-semibold text-lg border-b border-slate-100 pb-3 flex items-center gap-3">Produk & Harga</a>
-                                <a href="/cekpulsa-otp" class="text-slate-700 hover:text-sky-600 font-semibold text-lg border-b border-slate-100 pb-3 flex items-center gap-3">Cekpulsa / OTP</a>
                                 <a href="/syarat-ketentuan" class="text-slate-700 hover:text-sky-600 font-semibold text-lg border-b border-slate-100 pb-3 flex items-center gap-3">Syarat & Ketentuan</a>
                                 <a href="/login" class="bg-gradient-to-r from-sky-600 to-blue-600 text-white font-bold py-3 px-4 rounded-xl text-center text-sm flex items-center justify-center gap-2 shadow-md mt-2">
                                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"></path></svg>
@@ -6495,7 +6167,7 @@ Total : Rp.${totalSaldo.toLocaleString("id-ID")}
                                     <img src="${LOGO_URL}" alt="Logo" class="w-8 h-8 rounded-full border border-slate-200">
                                     <h3 class="text-xl font-bold text-sky-600">Warung Pulsa</h3>
                                 </div>
-                                <p class="text-slate-600 leading-relaxed text-sm">Pusat layanan Beli Pulsa All Operator, Paket Kuota Internet, Token Listrik PLN, Top Up Saldo E-Wallet, dan Cek Pulsa / OTP otomatis 24 Jam dengan harga termurah dan transaksi instan.</p>
+                                <p class="text-slate-600 leading-relaxed text-sm">Pusat layanan Beli Pulsa All Operator, Paket Kuota Internet, Token Listrik PLN, dan Top Up Saldo E-Wallet otomatis 24 Jam dengan harga agen termurah dan transaksi instan.</p>
                             </div>
                             <div>
                                 <h4 class="font-bold text-slate-900 mb-4 uppercase tracking-wider text-sm">Tautan Cepat</h4>
@@ -6846,7 +6518,7 @@ Total : Rp.${totalSaldo.toLocaleString("id-ID")}
                 Warung <span class="text-transparent bg-clip-text bg-gradient-to-r from-sky-600 to-blue-600">Pulsa</span>
             </h1>
             <p class="text-xs font-bold tracking-widest text-sky-600 uppercase mt-1 mb-3">Portal Member & Layanan Digital</p>
-            <p class="text-xs md:text-sm text-slate-600 leading-relaxed mb-8">Silakan masuk menggunakan akun Google Anda untuk mengakses dashboard, deposit saldo otomatis, dan membuat VPN instan.</p>
+            <p class="text-xs md:text-sm text-slate-600 leading-relaxed mb-8">Silakan masuk menggunakan akun Google Anda untuk mengakses dashboard, isi saldo otomatis, dan bertransaksi Pulsa & PPOB 24 Jam nonstop.</p>
 
             <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200 mb-7 flex flex-col items-center justify-center shadow-inner">
                 <div id="g_id_onload" data-client_id="${GOOGLE_CLIENT_ID}" data-callback="handleCredentialResponse" data-auto_prompt="false"></div>
@@ -6897,26 +6569,41 @@ Total : Rp.${totalSaldo.toLocaleString("id-ID")}
     if (path === "/" && method === "GET") {
       if (!currentUser) {
         const content = `
-                <div class="relative overflow-hidden bg-transparent pt-12 md:pt-16 pb-28 md:pb-36">
+                <div class="relative overflow-hidden bg-gradient-to-b from-sky-50/60 via-white to-slate-50 pt-10 md:pt-14 pb-20 md:pb-28">
+                    <!-- Ambient background patterns -->
                     <div class="absolute inset-0 z-0 pointer-events-none">
                         <div class="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-5"></div>
-                        <div class="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-sky-200/40 rounded-full blur-[140px]"></div>
-                        <div class="absolute bottom-0 left-0 right-0 h-40 bg-gradient-to-t from-slate-100 to-transparent"></div>
+                        <div class="absolute top-10 left-1/2 -translate-x-1/2 w-[700px] h-[500px] bg-gradient-to-tr from-sky-200/50 via-cyan-100/40 to-blue-200/40 rounded-full blur-[140px]"></div>
                     </div>
-                    <div class="relative max-w-6xl mx-auto px-4 text-center z-10">
-                        <span class="inline-block py-1.5 px-4 rounded-full bg-sky-50 text-sky-700 text-xs md:text-sm font-bold mb-6 border border-sky-200 shadow-sm backdrop-blur-md">Mulai Rp ${appSettings.price_per_day}/Hari &bull; Layanan VPN & PPOB Otomatis</span>
-                        <h1 class="text-4xl md:text-6xl lg:text-7xl font-black text-slate-900 tracking-tight mb-5">Akses Internet <span class="text-transparent bg-clip-text bg-gradient-to-r from-sky-600 via-sky-500 to-blue-600">Tanpa Batas</span></h1>
-                        <p class="mt-2 max-w-2xl text-base md:text-lg text-slate-600 mx-auto mb-10 leading-relaxed">Amankan koneksi Anda, buka blokir geografis, dan nikmati kecepatan tinggi dengan multi-protokol server dari Warung Pulsa.</p>
 
-                        <!-- Box Login Elegan dengan Logo Menonjol -->
+                    <!-- Hero Content -->
+                    <div class="relative max-w-6xl mx-auto px-4 z-10 text-center">
+                        <!-- Top Pill Badge -->
+                        <div class="inline-flex items-center gap-2 py-1.5 px-4 rounded-full bg-sky-100/80 border border-sky-300/60 text-sky-800 text-xs md:text-sm font-bold mb-6 shadow-xs backdrop-blur-md">
+                            <span class="w-2 h-2 rounded-full bg-emerald-500 animate-ping"></span>
+                            <span>⚡ Transaksi Otomatis 24 Jam Nonstop &bull; Harga Grosir Agen Termurah</span>
+                        </div>
+
+                        <!-- Main Headline -->
+                        <h1 class="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black text-slate-900 tracking-tight mb-5 leading-[1.15]">
+                            Isi Pulsa, Kuota &amp; Token PLN<br>
+                            <span class="text-transparent bg-clip-text bg-gradient-to-r from-sky-600 via-sky-500 to-blue-700">Serba Cepat &amp; Otomatis</span>
+                        </h1>
+
+                        <!-- Subtitle -->
+                        <p class="mt-3 max-w-2xl text-base md:text-lg text-slate-600 mx-auto mb-10 leading-relaxed font-medium">
+                            Platform resmi distribusi pulsa all operator, paket internet, token listrik PLN, voucher game, dan top up saldo e-wallet dengan konfirmasi instan dalam hitungan detik dan harga agen termurah se-Indonesia.
+                        </p>
+
+                        <!-- Login / Member Portal Card -->
                         <div class="relative inline-block w-full max-w-md mx-auto z-20 text-center">
-                            <div class="bg-white border border-slate-200 p-8 md:p-10 rounded-[2.5rem] shadow-[0_25px_60px_-15px_rgba(14,165,233,0.15)] relative overflow-hidden">
-                                <div class="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-transparent via-sky-500 to-transparent"></div>
+                            <div class="bg-white/95 backdrop-blur-md border border-slate-200/90 p-8 md:p-10 rounded-[2.5rem] shadow-[0_25px_60px_-15px_rgba(14,165,233,0.18)] relative overflow-hidden">
+                                <div class="absolute top-0 inset-x-0 h-1.5 bg-gradient-to-r from-cyan-400 via-sky-500 to-blue-600"></div>
 
-                                <!-- Logo Warung Pulsa Lebih Besar & Elegan -->
-                                <div class="relative mx-auto mb-6 w-28 h-28 md:w-32 md:h-32 flex items-center justify-center">
-                                    <div class="absolute inset-0 bg-gradient-to-tr from-cyan-400 via-sky-500 to-blue-600 rounded-3xl blur-xl opacity-40 animate-pulse"></div>
-                                    <div class="relative w-24 h-24 md:w-28 md:h-28 rounded-3xl p-1.5 bg-white border-2 border-sky-400/60 shadow-xl flex items-center justify-center overflow-hidden hover:scale-105 transition-transform duration-300">
+                                <!-- Elevated Logo -->
+                                <div class="relative mx-auto mb-6 w-24 h-24 md:w-28 md:h-28 flex items-center justify-center">
+                                    <div class="absolute inset-0 bg-gradient-to-tr from-cyan-400 via-sky-500 to-blue-600 rounded-3xl blur-xl opacity-35 animate-pulse"></div>
+                                    <div class="relative w-20 h-20 md:w-24 md:h-24 rounded-3xl p-1 bg-white border-2 border-sky-400/70 shadow-lg flex items-center justify-center overflow-hidden">
                                         <img src="${LOGO_URL}" alt="Logo Warung Pulsa" class="w-full h-full object-cover rounded-2xl">
                                     </div>
                                 </div>
@@ -6924,96 +6611,236 @@ Total : Rp.${totalSaldo.toLocaleString("id-ID")}
                                 <h3 class="text-2xl font-black text-slate-900 tracking-tight mb-1">
                                     Masuk ke <span class="text-transparent bg-clip-text bg-gradient-to-r from-sky-600 to-blue-600">Warung Pulsa</span>
                                 </h3>
-                                <p class="text-xs font-bold text-sky-600 uppercase tracking-widest mb-3">Portal Member & Transaksi</p>
-                                <p class="text-xs md:text-sm text-slate-600 mb-6 leading-relaxed">Login satu klik menggunakan akun Google Anda untuk mengisi saldo, membuat akun VPN, dan mengelola layanan.</p>
+                                <p class="text-xs font-bold text-sky-600 uppercase tracking-widest mb-3">Portal Transaksi &amp; Member Resmi</p>
+                                <p class="text-xs md:text-sm text-slate-500 mb-6 leading-relaxed">
+                                    Masuk menggunakan akun Google dengan 1 klik untuk mulai mengisi saldo otomatis dan bertransaksi 24 jam nonstop.
+                                </p>
 
-                                <div class="p-3.5 rounded-2xl bg-slate-50 border border-slate-200 flex flex-col items-center justify-center mb-6 shadow-inner">
+                                <!-- Google Sign In -->
+                                <div class="p-3.5 rounded-2xl bg-slate-50/80 border border-slate-200/80 flex flex-col items-center justify-center mb-6 shadow-inner">
                                     <div id="g_id_onload" data-client_id="${GOOGLE_CLIENT_ID}" data-callback="handleCredentialResponse" data-auto_prompt="false"></div>
-                                    <div class="g_id_signin flex justify-center w-full shadow-sm" data-type="standard" data-size="large" data-theme="outline" data-text="sign_in_with" data-shape="rectangular" data-logo_alignment="left"></div>
+                                    <div class="g_id_signin flex justify-center w-full shadow-xs" data-type="standard" data-size="large" data-theme="outline" data-text="sign_in_with" data-shape="rectangular" data-logo_alignment="left"></div>
                                 </div>
 
-                                <div class="grid grid-cols-2 gap-2 pt-4 border-t border-slate-200 text-[11px] text-slate-600">
-                                    <div class="flex items-center justify-center gap-1.5 py-1.5 px-2 rounded-xl bg-slate-50 border border-slate-200 font-medium">
-                                        <svg class="w-3.5 h-3.5 text-sky-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
+                                <!-- Trust Badges -->
+                                <div class="grid grid-cols-2 gap-2.5 pt-4 border-t border-slate-100 text-[11px] text-slate-600 font-semibold">
+                                    <div class="flex items-center justify-center gap-1.5 py-2 px-2.5 rounded-xl bg-slate-50 border border-slate-200/70">
+                                        <svg class="w-4 h-4 text-sky-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>
                                         <span>OAuth Resmi Google</span>
                                     </div>
-                                    <div class="flex items-center justify-center gap-1.5 py-1.5 px-2 rounded-xl bg-slate-50 border border-slate-200 font-medium">
-                                        <svg class="w-3.5 h-3.5 text-emerald-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                                        <span>Aktif Otomatis 24/7</span>
+                                    <div class="flex items-center justify-center gap-1.5 py-2 px-2.5 rounded-xl bg-slate-50 border border-slate-200/70">
+                                        <svg class="w-4 h-4 text-emerald-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                                        <span>Proses Instan Realtime</span>
                                     </div>
                                 </div>
+                            </div>
+
+                            <!-- Direct CTA to catalog -->
+                            <div class="mt-6 text-center">
+                                <a href="/pulsa-ppob" class="inline-flex items-center gap-2 text-sm font-bold text-sky-700 hover:text-sky-800 bg-white hover:bg-slate-50 border border-sky-200 shadow-sm py-2.5 px-5 rounded-xl transition">
+                                    <span>Lihat Katalog &amp; Daftar Harga Produk</span>
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                                </a>
+                            </div>
+                        </div>
+
+                        <!-- Stats Bar -->
+                        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-16 max-w-4xl mx-auto">
+                            <div class="bg-white/80 backdrop-blur-sm p-4 rounded-2xl border border-slate-200/80 shadow-xs">
+                                <p class="text-2xl md:text-3xl font-black text-sky-600 font-mono">5 - 15 dtk</p>
+                                <p class="text-xs font-bold text-slate-500 uppercase tracking-wider mt-1">Kecepatan Transaksi</p>
+                            </div>
+                            <div class="bg-white/80 backdrop-blur-sm p-4 rounded-2xl border border-slate-200/80 shadow-xs">
+                                <p class="text-2xl md:text-3xl font-black text-blue-600 font-mono">1.000+</p>
+                                <p class="text-xs font-bold text-slate-500 uppercase tracking-wider mt-1">Pilihan Produk</p>
+                            </div>
+                            <div class="bg-white/80 backdrop-blur-sm p-4 rounded-2xl border border-slate-200/80 shadow-xs">
+                                <p class="text-2xl md:text-3xl font-black text-emerald-600 font-mono">100%</p>
+                                <p class="text-xs font-bold text-slate-500 uppercase tracking-wider mt-1">Otomatis &amp; Aman</p>
+                            </div>
+                            <div class="bg-white/80 backdrop-blur-sm p-4 rounded-2xl border border-slate-200/80 shadow-xs">
+                                <p class="text-2xl md:text-3xl font-black text-amber-600 font-mono">24 / 7</p>
+                                <p class="text-xs font-bold text-slate-500 uppercase tracking-wider mt-1">Layanan Nonstop</p>
                             </div>
                         </div>
                     </div>
                 </div>
 
+                <!-- Section 2: Kategori Layanan Populer -->
                 <div class="py-16 md:py-24 bg-white border-y border-slate-200 relative z-10">
                     <div class="max-w-6xl mx-auto px-4">
                         <div class="text-center mb-16">
-                            <h2 class="text-3xl md:text-4xl font-bold text-slate-900">Mengapa Memilih Warung Pulsa?</h2>
-                            <div class="w-20 h-1.5 bg-sky-500 mx-auto mt-6 rounded-full shadow-md"></div>
+                            <span class="text-xs font-extrabold text-sky-600 uppercase tracking-widest bg-sky-50 border border-sky-200 px-3 py-1 rounded-full">Katalog Lengkap</span>
+                            <h2 class="text-3xl md:text-4xl font-black text-slate-900 mt-3">Produk &amp; Layanan Unggulan</h2>
+                            <p class="text-slate-500 text-sm md:text-base max-w-2xl mx-auto mt-2">Semua kebutuhan isi ulang pulsa, kuota paket data, dan tagihan rumah tangga Anda tersedia dalam satu genggaman.</p>
                         </div>
-                        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                            <div class="bg-slate-50 p-8 rounded-3xl border border-slate-200 shadow-sm hover:-translate-y-2 hover:border-sky-500 hover:shadow-xl transition-all duration-300">
-                                <div class="w-14 h-14 bg-sky-100 rounded-2xl flex items-center justify-center mb-6 text-sky-600 border border-sky-200"><svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg></div>
-                                <h3 class="text-xl font-bold text-slate-900 mb-3">Kecepatan Tinggi</h3>
-                                <p class="text-slate-600 text-sm leading-relaxed">Server berkinerja tinggi yang dihosting di cloud terkemuka, menjamin ping rendah dan bandwidth besar untuk streaming & gaming.</p>
+
+                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                            <!-- 1. Pulsa All Operator -->
+                            <div class="bg-slate-50 p-6 rounded-3xl border border-slate-200 hover:border-sky-500 hover:shadow-xl transition-all duration-300 group flex flex-col justify-between">
+                                <div>
+                                    <div class="w-14 h-14 bg-sky-100 text-sky-600 rounded-2xl flex items-center justify-center mb-5 group-hover:scale-110 transition-transform">
+                                        <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"></path></svg>
+                                    </div>
+                                    <h3 class="text-lg font-bold text-slate-900 mb-2">Pulsa All Operator</h3>
+                                    <p class="text-xs text-slate-600 leading-relaxed mb-4">Telkomsel, Indosat Ooredoo, XL Axiata, Axis, Tri, dan Smartfren dengan nominal mulai Rp 1.000 hingga Rp 1.000.000.</p>
+                                </div>
+                                <div class="pt-4 border-t border-slate-200 flex items-center justify-between text-xs font-bold text-sky-600">
+                                    <span>Harga Grosir</span>
+                                    <a href="/pulsa-ppob" class="hover:underline flex items-center gap-1">Pesan &rarr;</a>
+                                </div>
                             </div>
-                            <div class="bg-slate-50 p-8 rounded-3xl border border-slate-200 shadow-sm hover:-translate-y-2 hover:border-sky-500 hover:shadow-xl transition-all duration-300">
-                                <div class="w-14 h-14 bg-sky-100 rounded-2xl flex items-center justify-center mb-6 text-sky-600 border border-sky-200"><svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg></div>
-                                <h3 class="text-xl font-bold text-slate-900 mb-3">Pilihan Protokol Luas</h3>
-                                <p class="text-slate-600 text-sm leading-relaxed">Tersedia jaringan SSH Premium, L2TP, VMess, VLESS, hingga Trojan WebSocket yang dapat disesuaikan dengan kebutuhan Anda.</p>
+
+                            <!-- 2. Paket Data & Kuota -->
+                            <div class="bg-slate-50 p-6 rounded-3xl border border-slate-200 hover:border-blue-500 hover:shadow-xl transition-all duration-300 group flex flex-col justify-between">
+                                <div>
+                                    <div class="w-14 h-14 bg-blue-100 text-blue-600 rounded-2xl flex items-center justify-center mb-5 group-hover:scale-110 transition-transform">
+                                        <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.111 16.404a5.5 5.5 0 017.778 0M12 20h.01m-7.08-7.071c3.904-3.905 10.236-3.905 14.141 0M1.394 9.393c5.857-5.857 15.355-5.857 21.213 0"></path></svg>
+                                    </div>
+                                    <h3 class="text-lg font-bold text-slate-900 mb-2">Paket Kuota Data</h3>
+                                    <p class="text-xs text-slate-600 leading-relaxed mb-4">Kuota harian, mingguan, bulanan, kuota reguler, dan kuota unlimited semua jaringan 4G/5G super hemat.</p>
+                                </div>
+                                <div class="pt-4 border-t border-slate-200 flex items-center justify-between text-xs font-bold text-blue-600">
+                                    <span>Aktivasi Detik</span>
+                                    <a href="/pulsa-ppob" class="hover:underline flex items-center gap-1">Pesan &rarr;</a>
+                                </div>
                             </div>
-                            <div class="bg-slate-50 p-8 rounded-3xl border border-slate-200 shadow-sm hover:-translate-y-2 hover:border-emerald-500 hover:shadow-xl transition-all duration-300">
-                                <div class="w-14 h-14 bg-emerald-100 rounded-2xl flex items-center justify-center mb-6 text-emerald-600 border border-emerald-200"><svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192l-3.536 3.536M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-5 0a4 4 0 11-8 0 4 4 0 018 0z"></path></svg></div>
-                                <h3 class="text-xl font-bold text-slate-900 mb-3">Sistem Otomatis</h3>
-                                <p class="text-slate-600 text-sm leading-relaxed">Top up saldo via QRIS Realtime dan pembuatan server VPN dilakukan 100% otomatis dalam hitungan detik tanpa campur tangan admin.</p>
+
+                            <!-- 3. Token Listrik PLN -->
+                            <div class="bg-slate-50 p-6 rounded-3xl border border-slate-200 hover:border-amber-500 hover:shadow-xl transition-all duration-300 group flex flex-col justify-between">
+                                <div>
+                                    <div class="w-14 h-14 bg-amber-100 text-amber-600 rounded-2xl flex items-center justify-center mb-5 group-hover:scale-110 transition-transform">
+                                        <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                                    </div>
+                                    <h3 class="text-lg font-bold text-slate-900 mb-2">Token Listrik PLN</h3>
+                                    <p class="text-xs text-slate-600 leading-relaxed mb-4">Isi token listrik prabayar 24 Jam kapan pun. Nomor token (SN 20 Digit) langsung keluar instan setelah pembayaran.</p>
+                                </div>
+                                <div class="pt-4 border-t border-slate-200 flex items-center justify-between text-xs font-bold text-amber-600">
+                                    <span>SN Langsung Tampil</span>
+                                    <a href="/pulsa-ppob" class="hover:underline flex items-center gap-1">Pesan &rarr;</a>
+                                </div>
+                            </div>
+
+                            <!-- 4. E-Wallet & Game -->
+                            <div class="bg-slate-50 p-6 rounded-3xl border border-slate-200 hover:border-emerald-500 hover:shadow-xl transition-all duration-300 group flex flex-col justify-between">
+                                <div>
+                                    <div class="w-14 h-14 bg-emerald-100 text-emerald-600 rounded-2xl flex items-center justify-center mb-5 group-hover:scale-110 transition-transform">
+                                        <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
+                                    </div>
+                                    <h3 class="text-lg font-bold text-slate-900 mb-2">Top Up E-Wallet &amp; Game</h3>
+                                    <p class="text-xs text-slate-600 leading-relaxed mb-4">DANA, GoPay, OVO, ShopeePay, LinkAja, Maxim Driver, serta diamond game Mobile Legends, Free Fire, dan lainnya.</p>
+                                </div>
+                                <div class="pt-4 border-t border-slate-200 flex items-center justify-between text-xs font-bold text-emerald-600">
+                                    <span>Proses Otomatis</span>
+                                    <a href="/pulsa-ppob" class="hover:underline flex items-center gap-1">Pesan &rarr;</a>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <div class="py-16 md:py-24 bg-slate-50/80 relative z-10">
+                <!-- Section 3: Mengapa Memilih Warung Pulsa? -->
+                <div class="py-16 md:py-24 bg-slate-50 relative z-10">
                     <div class="max-w-6xl mx-auto px-4">
-                        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-start">
-                            <div>
-                                <h2 class="text-3xl md:text-4xl font-bold text-slate-900 mb-4">Tentang Warung Pulsa</h2>
-                                <div class="w-16 h-1.5 bg-sky-500 rounded-full mb-8"></div>
-                                <p class="text-slate-700 leading-relaxed mb-6 text-justify text-lg"><strong>Warung Pulsa</strong> adalah platform penyedia layanan Virtual Private Network (VPN) dan Proxy premium terpercaya. Kami membangun infrastruktur ini di atas server berkinerja tinggi untuk memastikan Anda mendapatkan kecepatan tanpa kompromi.</p>
-                                <div class="bg-white p-6 rounded-2xl border border-sky-200 shadow-md mb-6">
-                                    <p class="text-slate-800 font-medium leading-relaxed text-justify">Produk utama yang kami jual adalah layanan <strong>VPN Premium</strong>. Anda dapat menikmati seluruh fitur dan keunggulan jaringan proxy kami dengan sistem tarif transparan sebesar <strong>Rp ${appSettings.price_per_day} per hari</strong>.</p>
+                        <div class="text-center mb-16">
+                            <span class="text-xs font-extrabold text-sky-600 uppercase tracking-widest bg-sky-100 border border-sky-200 px-3 py-1 rounded-full">Keunggulan Layanan</span>
+                            <h2 class="text-3xl md:text-4xl font-black text-slate-900 mt-3">Mengapa Memilih Warung Pulsa?</h2>
+                            <div class="w-20 h-1.5 bg-gradient-to-r from-sky-500 to-blue-600 mx-auto mt-4 rounded-full shadow-xs"></div>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                            <div class="bg-white p-8 rounded-3xl border border-slate-200 shadow-sm hover:-translate-y-1.5 hover:border-sky-500 hover:shadow-xl transition-all duration-300">
+                                <div class="w-14 h-14 bg-sky-50 text-sky-600 rounded-2xl flex items-center justify-center mb-6 border border-sky-100">
+                                    <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
                                 </div>
-                                <p class="text-slate-700 leading-relaxed text-justify mb-6 text-lg">Seluruh ekosistem website ini\u2014mulai dari pendaftaran, pengisian saldo, hingga proses <em>deployment</em> server VPN\u2014berjalan <strong>100% secara otomatis 24 jam nonstop</strong>.</p>
+                                <h3 class="text-xl font-bold text-slate-900 mb-3">Kecepatan Transaksi Realtime</h3>
+                                <p class="text-slate-600 text-sm leading-relaxed">Seluruh proses transaksi ditangani oleh sistem H2H otomatis dengan respon cepat rata-rata 5-15 detik tanpa menunggu approval manual admin.</p>
                             </div>
-                            <div class="bg-white p-6 md:p-10 rounded-3xl border border-slate-200 shadow-xl relative">
-                                <h2 class="text-2xl md:text-3xl font-bold text-slate-900 mb-8 border-b border-slate-200 pb-4">Alur Transaksi Otomatis</h2>
-                                <div class="space-y-8">
-                                    <div class="flex gap-5 items-start">
-                                        <div class="w-12 h-12 rounded-2xl bg-sky-100 text-sky-600 flex items-center justify-center font-black text-xl border border-sky-200 shrink-0 shadow-sm">1</div>
-                                        <div><h3 class="text-slate-900 font-bold mb-2 text-lg">Login dengan Akun Google</h3><p class="text-sm text-slate-600 leading-relaxed">Tidak perlu repot mengisi form. Akses dashboard langsung dengan 1 klik menggunakan akun Google Anda.</p></div>
-                                    </div>
-                                    <div class="flex gap-5 items-start">
-                                        <div class="w-12 h-12 rounded-2xl bg-emerald-100 text-emerald-600 flex items-center justify-center font-black text-xl border border-emerald-200 shrink-0 shadow-sm">2</div>
-                                        <div><h3 class="text-slate-900 font-bold mb-2 text-lg">Top Up Saldo via QRIS</h3><p class="text-sm text-slate-600 leading-relaxed">Pilih nominal top up dan scan QRIS melalui aplikasi bank/e-wallet Anda. Saldo otomatis bertambah.</p></div>
-                                    </div>
-                                    <div class="flex gap-5 items-start">
-                                        <div class="w-12 h-12 rounded-2xl bg-amber-100 text-amber-700 flex items-center justify-center font-black text-xl border border-amber-200 shrink-0 shadow-sm">3</div>
-                                        <div><h3 class="text-slate-900 font-bold mb-2 text-lg">Pembuatan VPN Instan</h3><p class="text-sm text-slate-600 leading-relaxed">Pilih Server, Protokol, Username dan Durasi di dashboard lalu klik 'Bayar'. Server langsung dieksekusi.</p></div>
-                                    </div>
-                                    <div class="flex gap-5 items-start">
-                                        <div class="w-12 h-12 rounded-2xl bg-purple-100 text-purple-700 flex items-center justify-center font-black text-xl border border-purple-200 shrink-0 shadow-sm">4</div>
-                                        <div><h3 class="text-slate-900 font-bold mb-2 text-lg">Detail Masuk ke Inbox</h3><p class="text-sm text-slate-600 leading-relaxed">Detail config lengkap VPN Anda akan langsung dikirim ke menu <strong>Inbox</strong>. Siap digunakan!</p></div>
-                                    </div>
+
+                            <div class="bg-white p-8 rounded-3xl border border-slate-200 shadow-sm hover:-translate-y-1.5 hover:border-blue-500 hover:shadow-xl transition-all duration-300">
+                                <div class="w-14 h-14 bg-blue-50 text-blue-600 rounded-2xl flex items-center justify-center mb-6 border border-blue-100">
+                                    <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                </div>
+                                <h3 class="text-xl font-bold text-slate-900 mb-3">Harga Grosir Distributor</h3>
+                                <p class="text-slate-600 text-sm leading-relaxed">Dapatkan harga termurah langsung dari server pusat terverifikasi. Sangat menguntungkan untuk kebutuhan pribadi maupun dijual kembali bagi konter pulsa.</p>
+                            </div>
+
+                            <div class="bg-white p-8 rounded-3xl border border-slate-200 shadow-sm hover:-translate-y-1.5 hover:border-emerald-500 hover:shadow-xl transition-all duration-300">
+                                <div class="w-14 h-14 bg-emerald-50 text-emerald-600 rounded-2xl flex items-center justify-center mb-6 border border-emerald-100">
+                                    <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>
+                                </div>
+                                <h3 class="text-xl font-bold text-slate-900 mb-3">Deposit QRIS Otomatis</h3>
+                                <p class="text-slate-600 text-sm leading-relaxed">Pengisian saldo akun instan via QRIS Nasional (BCA, Mandiri, BRI, BNI, Dana, ShopeePay, GoPay) yang otomatis masuk dalam hitungan detik 24 jam.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Section 4: Alur Transaksi Mudah -->
+                <div class="py-16 md:py-24 bg-white border-b border-slate-200 relative z-10">
+                    <div class="max-w-6xl mx-auto px-4">
+                        <div class="text-center mb-16">
+                            <span class="text-xs font-extrabold text-sky-600 uppercase tracking-widest bg-sky-50 border border-sky-200 px-3 py-1 rounded-full">Cara Transaksi</span>
+                            <h2 class="text-3xl md:text-4xl font-black text-slate-900 mt-3">4 Langkah Mudah Bertransaksi</h2>
+                            <p class="text-slate-500 text-sm max-w-xl mx-auto mt-2">Mulai isi ulang pulsa dan produk digital favorit Anda tanpa ribet.</p>
+                        </div>
+
+                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+                            <div class="text-center p-6 rounded-3xl bg-slate-50 border border-slate-200/80">
+                                <div class="w-12 h-12 rounded-2xl bg-sky-600 text-white flex items-center justify-center font-black text-lg mx-auto mb-4 shadow-md shadow-sky-600/20">1</div>
+                                <h4 class="font-bold text-slate-900 text-base mb-2">Masuk Akun Google</h4>
+                                <p class="text-xs text-slate-600 leading-relaxed">Cukup 1 klik masuk dengan Google tanpa registrasi berbelit atau perlu mengingat kata sandi.</p>
+                            </div>
+
+                            <div class="text-center p-6 rounded-3xl bg-slate-50 border border-slate-200/80">
+                                <div class="w-12 h-12 rounded-2xl bg-blue-600 text-white flex items-center justify-center font-black text-lg mx-auto mb-4 shadow-md shadow-blue-600/20">2</div>
+                                <h4 class="font-bold text-slate-900 text-base mb-2">Isi Saldo via QRIS</h4>
+                                <p class="text-xs text-slate-600 leading-relaxed">Pilih nominal deposit, scan kode QRIS dari mobile banking atau e-wallet Anda. Saldo langsung masuk.</p>
+                            </div>
+
+                            <div class="text-center p-6 rounded-3xl bg-slate-50 border border-slate-200/80">
+                                <div class="w-12 h-12 rounded-2xl bg-emerald-600 text-white flex items-center justify-center font-black text-lg mx-auto mb-4 shadow-md shadow-emerald-600/20">3</div>
+                                <h4 class="font-bold text-slate-900 text-base mb-2">Pilih Produk &amp; Tujuan</h4>
+                                <p class="text-xs text-slate-600 leading-relaxed">Buka menu Pulsa &amp; PPOB, tentukan produk, dan masukkan nomor HP atau ID pelanggan tujuan.</p>
+                            </div>
+
+                            <div class="text-center p-6 rounded-3xl bg-slate-50 border border-slate-200/80">
+                                <div class="w-12 h-12 rounded-2xl bg-amber-600 text-white flex items-center justify-center font-black text-lg mx-auto mb-4 shadow-md shadow-amber-600/20">4</div>
+                                <h4 class="font-bold text-slate-900 text-base mb-2">Produk Masuk &amp; Sukses</h4>
+                                <p class="text-xs text-slate-600 leading-relaxed">Pesanan selesai dalam hitungan detik. Nomor Serial Number (SN) tercatat rapi di riwayat saldo Anda.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Section 5: CTA Banner -->
+                <div class="py-16 bg-slate-50 relative z-10">
+                    <div class="max-w-5xl mx-auto px-4">
+                        <div class="bg-gradient-to-r from-sky-600 via-sky-500 to-blue-700 rounded-[2.5rem] p-8 md:p-14 text-center text-white shadow-2xl relative overflow-hidden">
+                            <div class="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10"></div>
+                            <div class="relative z-10">
+                                <span class="inline-block py-1 px-3.5 rounded-full bg-white/20 text-white text-xs font-bold mb-4 backdrop-blur-sm">⚡ Layanan Terpercaya 24 Jam Nonstop</span>
+                                <h2 class="text-3xl md:text-4xl font-black mb-4 tracking-tight leading-tight">Siap Memulai Transaksi Anda Hari Ini?</h2>
+                                <p class="text-sky-100 text-sm md:text-base max-w-xl mx-auto mb-8 leading-relaxed font-medium">Bergabunglah sekarang untuk menikmati kecepatan pengisian pulsa, kuota, dan token listrik dengan harga grosir termurah.</p>
+                                <div class="flex flex-col sm:flex-row gap-3 justify-center items-center">
+                                    <button onclick="window.scrollTo({top: 0, behavior: 'smooth'})" class="bg-white text-sky-700 hover:bg-sky-50 font-extrabold py-3.5 px-8 rounded-xl shadow-lg transition duration-200 text-sm flex items-center gap-2 cursor-pointer">
+                                        <span>Masuk &amp; Mulai Transaksi</span>
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"></path></svg>
+                                    </button>
+                                    <a href="/pulsa-ppob" class="bg-sky-700/60 hover:bg-sky-700 text-white font-bold py-3.5 px-6 rounded-xl border border-white/20 transition duration-200 text-sm">
+                                        Lihat Daftar Harga
+                                    </a>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
+
                 <script>
                     async function handleCredentialResponse(response) { const res = await fetch('/api/auth', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ credential: response.credential }) }); if(res.ok) { window.location.reload(); } else { swalDark.fire('Gagal', 'Gagal login dengan Google.', 'error'); } }
                 <\/script>
                 `;
-        return new Response(renderLayout("Login", content), { headers: { "Content-Type": "text/html;charset=UTF-8" } });
+        return new Response(renderLayout("Agen Pulsa & PPOB Termurah 24 Jam", content), { headers: { "Content-Type": "text/html;charset=UTF-8" } });
       } else {
         const nowTs = Date.now();
         const { results: unpaidInvoices } = await env.DB.prepare("SELECT * FROM invoices WHERE email = ? AND status = 'UNPAID'").bind(currentUser.email).all();
@@ -7112,17 +6939,17 @@ Total : Rp.${totalSaldo.toLocaleString("id-ID")}
                                 </a>
                             </div>
 
-                            <!-- Card 2: Cek Pulsa / OTP -->
+                            <!-- Card 2: Kotak Masuk (Inbox) -->
                             <div class="bg-white p-6 rounded-3xl shadow-xl border border-slate-200 flex flex-col justify-between hover:border-indigo-500/50 hover:shadow-2xl transition duration-300 group">
                                 <div>
                                     <div class="w-12 h-12 rounded-2xl bg-indigo-50 text-indigo-600 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
-                                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8h2a2 2 0 012 2v6a2 2 0 01-2 2h-2v4l-4-4H9a1.994 1.994 0 01-1.414-.586m0 0L11 14h4a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2v4l.586-.586z"></path></svg>
+                                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"></path></svg>
                                     </div>
-                                    <h3 class="text-lg font-black text-slate-900 mb-2">Cek Pulsa & OTP</h3>
-                                    <p class="text-xs text-slate-500 leading-relaxed mb-4">Pengecekan pulsa, kuota, masa aktif, dan penerimaan SMS OTP kartu secara cepat, instan, dan mudah.</p>
+                                    <h3 class="text-lg font-black text-slate-900 mb-2">Kotak Masuk (Inbox)</h3>
+                                    <p class="text-xs text-slate-500 leading-relaxed mb-4">Lihat pesan notifikasi transaksi, status pemesanan, pengumuman penting, dan tiket bantuan Anda.</p>
                                 </div>
-                                <a href="/cekpulsa-otp" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-3 px-4 rounded-xl text-center text-sm transition shadow-md shadow-indigo-600/20 flex items-center justify-center gap-2">
-                                    <span>Akses Cek Pulsa / OTP</span>
+                                <a href="/inbox" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-3 px-4 rounded-xl text-center text-sm transition shadow-md shadow-indigo-600/20 flex items-center justify-center gap-2">
+                                    <span>Buka Kotak Masuk</span>
                                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
                                 </a>
                             </div>
@@ -7392,11 +7219,11 @@ Total : Rp.${totalSaldo.toLocaleString("id-ID")}
                     </div>
                 </div>
 
-                <div class="mt-12 bg-sky-50 rounded-3xl border border-sky-200 p-8 md:p-10 text-center">
-                    <h2 class="text-2xl font-black text-slate-900 mb-2">Butuh Layanan Cek Pulsa / OTP?</h2>
-                    <p class="text-slate-600 text-sm max-w-xl mx-auto mb-6">Kami juga menyediakan fitur Cek Pulsa / Kuota dan penerimaan SMS OTP kartu secara instan.</p>
-                    <a href="/cekpulsa-otp" class="inline-flex items-center gap-2 bg-sky-600 hover:bg-sky-500 text-white font-bold py-3 px-8 rounded-xl shadow-lg transition">
-                        <span>Buka Cek Pulsa / OTP</span>
+                <div class="mt-12 bg-gradient-to-r from-sky-50 via-blue-50 to-indigo-50 rounded-3xl border border-sky-200 p-8 md:p-10 text-center">
+                    <h2 class="text-2xl font-black text-slate-900 mb-2">Mulai Transaksi Pulsa & PPOB Sekarang</h2>
+                    <p class="text-slate-600 text-sm max-w-xl mx-auto mb-6">Nikmati kemudahan isi pulsa, kuota internet, token listrik, dan top up e-wallet 24 jam dengan harga termurah dan proses serba otomatis.</p>
+                    <a href="/pulsa-ppob" class="inline-flex items-center gap-2 bg-sky-600 hover:bg-sky-500 text-white font-bold py-3 px-8 rounded-xl shadow-lg shadow-sky-600/20 transition">
+                        <span>Beli Sekarang</span>
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
                     </a>
                 </div>
@@ -7413,13 +7240,8 @@ Total : Rp.${totalSaldo.toLocaleString("id-ID")}
     if (path === "/converter") {
       return Response.redirect(url.origin + "/pulsa-ppob", 301);
     }
-    if (path === "/cekpulsa-otp" && method === "GET") {
-      if (!currentUser) return Response.redirect(url.origin + "/", 302);
-      return new Response(renderIframePage("Cekpulsa / OTP", "/api/cekkuota-html"), { headers: { "Content-Type": "text/html;charset=UTF-8" } });
-    }
-    if (path === "/api/cekkuota-html" && method === "GET") {
-      if (!currentUser) return new Response("Unauthorized", { status: 401 });
-      return new Response(renderCekKuotaPage(), { headers: { "Content-Type": "text/html;charset=UTF-8" } });
+    if (path === "/cekpulsa-otp" || path === "/api/cekkuota-html") {
+      return Response.redirect(url.origin + "/pulsa-ppob", 301);
     }
     if (path === "/admin" && method === "GET") {
       if (!currentUser || !isSuperAdmin(currentUser, env)) return Response.redirect(url.origin + "/", 302);
@@ -7856,117 +7678,8 @@ Status: UNPAID PENDING`, appSettings));
     if ((path === "/api/buy" || path === "/api/renew" || path === "/api/check-detail") && method === "POST") {
       return jsonResponse({ success: false, message: "Layanan VPN sudah dinonaktifkan. Silakan bertransaksi di menu Pulsa & PPOB." }, 400);
     }
-    if (path === "/api/cekkuota-backend" && method === "POST") {
-      if (!currentUser) return jsonResponse({ success: false, message: "Unauthorized" }, 401);
-      try {
-        const { action, msisdn, payload } = await request.json();
-        if (action === "check_quota_public") {
-          const kmspApiKey = "60ef29aa-a648-4668-90ae-20951ef90c55";
-          const res = await fetch(`https://apigw.kmsp-store.com/sidompul/v4/cek_kuota?msisdn=${msisdn}&isJSON=true`, {
-            headers: {
-              "Authorization": "Basic c2lkb21wdWxhcGk6YXBpZ3drbXNw",
-              "X-API-Key": kmspApiKey,
-              "X-App-Version": "4.0.0"
-            }
-          });
-          const data = await res.json();
-          if (data.status === true) {
-            return jsonResponse({
-              status: true,
-              message: "Cek kuota sukses",
-              data: { hasil: data.data.hasil }
-            });
-          } else {
-            const errorText = data.data?.keteranganError || data.message || "Gagal menarik kuota.";
-            return jsonResponse({
-              status: false,
-              message: errorText
-            });
-          }
-        }
-        if (action === "login_flow") {
-          const apiKey = "465eaf4a-178c-4e8b-96d7-831f2568a9df";
-          try {
-            const sessionRes = await fetch(`https://golang-openapi-accesstokenlist-xltembakservice.kmsp-store.com/v1?api_key=${apiKey}`);
-            if (sessionRes.ok) {
-              const sessionData = await sessionRes.json();
-              if (sessionData.status && sessionData.data) {
-                const activeSession = sessionData.data.find((s) => s.msisdn === msisdn);
-                if (activeSession && activeSession.token) {
-                  const finalMsg = `Berhasil Login! (Sesi Aktif Ditemukan)
-
-Nomor siap diisi paket. silakan lanjutkan dengan pembayaran ke QRIS admin https://t.me/srpcomchannel/419 . dan konfirmasi ke admin agar order paket diproses.`;
-                  try {
-                    const notifTitle = `\u{1F4CA} PENGGUNAAN CEK KUOTA (WEB - SESI)`;
-                    const notifMsg = `\u{1F464} Pengguna: ${currentUser.email}
-\u{1F4F1} Nomor HP: ${msisdn}
-\u2705 Status: Login Sesi Aktif Sukses`;
-                    if (sendTelegramLog) await sendTelegramLog(notifTitle, notifMsg, appSettings);
-                  } catch (e) {
-                  }
-                  return jsonResponse({
-                    login_success: true,
-                    message: finalMsg
-                  });
-                }
-              }
-            }
-          } catch (e) {
-            console.error("Gagal melakukan pengecekan sesi KMSP:", e);
-          }
-          const res = await fetch(`https://golang-openapi-reqotp-xltembakservice.kmsp-store.com/v1?api_key=${apiKey}&phone=${msisdn}&method=OTP`);
-          const data = await res.json();
-          if (data.status === true) {
-            return jsonResponse({
-              status: true,
-              message: data.message || "OTP berhasil dikirim.",
-              data: { auth_id: data.data.auth_id }
-            });
-          } else {
-            return jsonResponse({
-              status: false,
-              message: data.message || "Gagal meminta OTP."
-            });
-          }
-        }
-        if (action === "ver_otp") {
-          const apiKey = "465eaf4a-178c-4e8b-96d7-831f2568a9df";
-          const { auth_id, otp } = payload || {};
-          const loginRes = await fetch(`https://golang-openapi-login-xltembakservice.kmsp-store.com/v1?api_key=${apiKey}&phone=${msisdn}&method=OTP&auth_id=${auth_id}&otp=${otp}`);
-          const loginData = await loginRes.json();
-          if (!loginData.status) {
-            return jsonResponse({
-              status: false,
-              message: loginData.message || "Verifikasi OTP gagal."
-            });
-          }
-          const access_token = loginData.data?.access_token;
-          if (!access_token) {
-            return jsonResponse({
-              status: false,
-              message: "Gagal mendapatkan token akses."
-            });
-          }
-          const finalMsg = `Berhasil Login!
-
-Nomor siap diisi paket. silakan lanjutkan dengan pembayaran ke QRIS admin https://t.me/srpcomchannel/419 . dan konfirmasi ke admin agar order paket diproses.`;
-          try {
-            const notifTitle = `\u{1F4CA} PENGGUNAAN CEK KUOTA (WEB)`;
-            const notifMsg = `\u{1F464} Pengguna: ${currentUser.email}
-\u{1F4F1} Nomor HP: ${msisdn}
-\u2705 Status: Login OTP Sukses`;
-            if (sendTelegramLog) await sendTelegramLog(notifTitle, notifMsg, appSettings);
-          } catch (e) {
-          }
-          return jsonResponse({
-            login_success: true,
-            message: finalMsg
-          });
-        }
-        return jsonResponse({ success: false, message: "Invalid action" }, 400);
-      } catch (e) {
-        return jsonResponse({ success: false, message: e.message }, 500);
-      }
+    if (path === "/api/cekkuota-backend") {
+      return jsonResponse({ success: false, message: "Layanan ini sudah dinonaktifkan. Silakan gunakan menu Pulsa & PPOB." }, 410);
     }
     if (path === "/webhook" && method === "POST") {
       try {
@@ -7996,7 +7709,7 @@ Saldo otomatis ditambahkan.`, appSettings);
                                                <tr><td>Waktu Validasi</td><td>${getWIBTime()}</td></tr>
                                                <tr><td>Nominal Saldo</td><td style="color: #10b981; font-size: 18px;">Rp ${Number(invoice.amount).toLocaleString("id-ID")}</td></tr>
                                            </table>
-                                           <p>Saldo web Anda telah ditambahkan secara otomatis dan kini dapat langsung digunakan untuk berlangganan layanan VPN maupun Pulsa & PPOB tanpa hambatan.</p>
+                                            <p>Saldo web Anda telah ditambahkan secara otomatis dan kini dapat langsung digunakan untuk bertransaksi layanan Pulsa & PPOB tanpa hambatan.</p>
                                            <div style="text-align: center;"><a href="/" class="btn">Kembali ke Dashboard Utama</a></div>`;
             ctx.waitUntil(sendEmailViaGAS(invoice.email, topUpSubject, buildEmailTemplate("Bukti Transaksi Top Up", topUpBody), env));
           }
