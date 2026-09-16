@@ -112,3 +112,49 @@ CREATE INDEX IF NOT EXISTS idx_invoices_ref ON invoices(ref);
 CREATE INDEX IF NOT EXISTS idx_transactions_email ON transactions(email);
 CREATE INDEX IF NOT EXISTS idx_tickets_email ON tickets(email);
 CREATE INDEX IF NOT EXISTS idx_ticket_replies_ticket_id ON ticket_replies(ticket_id);
+
+-- ==========================================================
+-- Tabel PPOB & Toko Gorontalo
+-- ==========================================================
+CREATE TABLE IF NOT EXISTS ppob_products (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    provider_id INTEGER,
+    provider_name TEXT,
+    product_code TEXT UNIQUE,
+    product_name TEXT,
+    description TEXT,
+    product_type TEXT,
+    category TEXT,
+    brand TEXT,
+    cost_price INTEGER,
+    markup_type TEXT DEFAULT 'fixed',
+    markup_value INTEGER DEFAULT 750,
+    selling_price INTEGER,
+    is_active INTEGER DEFAULT 1,
+    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS ppob_transactions (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    reqid TEXT UNIQUE,
+    email TEXT,
+    product_code TEXT,
+    product_name TEXT,
+    customer_no TEXT,
+    cost_price INTEGER,
+    selling_price INTEGER,
+    status TEXT DEFAULT 'pending',
+    sn TEXT DEFAULT '',
+    info TEXT DEFAULT '',
+    detail TEXT DEFAULT '',
+    raw_response TEXT DEFAULT '',
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE INDEX IF NOT EXISTS idx_ppob_products_code ON ppob_products(product_code);
+CREATE INDEX IF NOT EXISTS idx_ppob_products_category ON ppob_products(category);
+CREATE INDEX IF NOT EXISTS idx_ppob_products_brand ON ppob_products(brand);
+CREATE INDEX IF NOT EXISTS idx_ppob_transactions_reqid ON ppob_transactions(reqid);
+CREATE INDEX IF NOT EXISTS idx_ppob_transactions_email ON ppob_transactions(email);
+

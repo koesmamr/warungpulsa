@@ -8,6 +8,7 @@ var __defProp22 = Object.defineProperty;
 var __name22 = /* @__PURE__ */ __name2((target, value) => __defProp22(target, "name", { value, configurable: true }), "__name");
 var __defProp222 = Object.defineProperty;
 var __name222 = /* @__PURE__ */ __name22((target, value) => __defProp222(target, "name", { value, configurable: true }), "__name");
+const { handleTokoGorontaloRoutes, renderPPOBContent, renderTokoGorontaloAdminModal } = require('./services/tokogorontalo_routes.js');
 var cachedAppSettings = null;
 var cachedAppSettingsTime = 0;
 var CACHE_TTL = 3e5;
@@ -947,6 +948,10 @@ async function renderAdminDashboard(env, currentUser, appSettings) {
             <button onclick="openGlobalDeleteModal()" class="bg-sky-600 hover:bg-sky-500 text-white font-bold py-3.5 px-6 rounded-xl shadow-lg transition flex items-center gap-3">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
                 Global Delete
+            </button>
+            <button onclick="openTokoGorontaloModal()" class="bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-3.5 px-6 rounded-xl shadow-lg transition flex items-center gap-3 cursor-pointer">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                Toko Gorontalo (PPOB)
             </button>
             <button onclick="openMonitorModal()" class="bg-sky-600 hover:bg-sky-500 text-white font-bold py-3.5 px-6 rounded-xl shadow-lg transition flex items-center gap-3">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
@@ -4010,6 +4015,7 @@ async function renderAdminDashboard(env, currentUser, appSettings) {
             } catch (e) { swalDark.fire('Error', 'Gagal membaca file.', 'error'); btn.innerText = 'Upload'; btn.disabled = false; }
         }
     <\/script>
+    ${renderTokoGorontaloAdminModal()}
     `;
 }
 __name(renderAdminDashboard, "renderAdminDashboard");
@@ -9111,6 +9117,7 @@ Total : Rp.${totalSaldo.toLocaleString("id-ID")}
                                 </a>
                             </div>` : ""}
                             <a href="/" class="flex items-center gap-3 p-3 rounded-xl transition ${title === "Dashboard" ? "bg-sky-50 text-sky-700 font-bold shadow-xs border border-sky-200" : "text-slate-600 hover:bg-slate-100 hover:text-sky-600 font-medium"}"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg><span class="text-sm">Dashboard Utama</span></a>
+                            <a href="/pulsa-ppob" class="flex items-center gap-3 p-3 rounded-xl transition ${title === "Beli Pulsa & PPOB" || title === "Pulsa & PPOB" ? "bg-sky-50 text-sky-700 font-bold shadow-xs border border-sky-200" : "text-slate-600 hover:bg-slate-100 hover:text-sky-600 font-medium"}"><svg class="w-5 h-5 text-sky-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg><span class="text-sm font-bold">Pulsa & PPOB</span></a>
                             <a href="/vpn-saya" class="flex items-center gap-3 p-3 rounded-xl transition ${title === "VPN Saya" ? "bg-sky-50 text-sky-700 font-bold shadow-xs border border-sky-200" : "text-slate-600 hover:bg-slate-100 hover:text-sky-600 font-medium"}"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14M5 12a2 2 0 01-2-2V6a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v4a2 2 0 01-2 2M5 12a2 2 0 00-2 2v4a2 2 0 002 2h14a2 2 0 002-2v-4a2 2 0 00-2-2m-2-4h.01M17 16h.01"></path></svg><span class="text-sm">VPN Saya</span></a>
                             <a href="/paket-data" class="flex items-center gap-3 p-3 rounded-xl transition ${title === "Paket Data XL" ? "bg-sky-50 text-sky-700 font-bold shadow-xs border border-sky-200" : "text-slate-600 hover:bg-slate-100 hover:text-sky-600 font-medium"}"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"></path></svg><span class="text-sm">Paket Data XL</span></a>
                             <a href="/lisensi" class="flex items-center gap-3 p-3 rounded-xl transition ${title === "Lisensi Script" ? "bg-sky-50 text-sky-700 font-bold shadow-xs border border-sky-200" : "text-slate-600 hover:bg-slate-100 hover:text-sky-600 font-medium"}"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg><span class="text-sm">Lisensi Script</span></a>
@@ -9217,6 +9224,7 @@ Total : Rp.${totalSaldo.toLocaleString("id-ID")}
                             </a>
                             <div class="hidden md:flex gap-7 items-center text-sm font-semibold">
                                 <a href="/" class="text-slate-600 hover:text-sky-600 transition">Beranda</a>
+                                <a href="/pulsa-ppob" class="text-sky-600 font-bold hover:text-sky-700 transition flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>Pulsa & PPOB</a>
                                 <a href="/produk" class="text-slate-600 hover:text-sky-600 transition">Produk & Harga</a>
                                 <a href="/paket-data" class="text-slate-600 hover:text-sky-600 transition">Paket Data XL</a>
                                 <a href="/cekpulsa-otp" class="text-slate-600 hover:text-sky-600 transition">Cekpulsa / OTP</a>
@@ -9232,6 +9240,7 @@ Total : Rp.${totalSaldo.toLocaleString("id-ID")}
                         <div id="mobileNav" class="hidden md:hidden bg-white border-t border-slate-200 absolute w-full left-0 top-[73px] shadow-2xl">
                             <div class="flex flex-col p-4 space-y-4">
                                 <a href="/" class="text-slate-700 hover:text-sky-600 font-semibold text-lg border-b border-slate-100 pb-3 flex items-center gap-3">Beranda</a>
+                                <a href="/pulsa-ppob" class="text-sky-600 font-bold text-lg border-b border-slate-100 pb-3 flex items-center gap-3">Pulsa & PPOB (Instan 24 Jam)</a>
                                 <a href="/produk" class="text-slate-700 hover:text-sky-600 font-semibold text-lg border-b border-slate-100 pb-3 flex items-center gap-3">Produk & Harga</a>
                                 <a href="/paket-data" class="text-slate-700 hover:text-sky-600 font-semibold text-lg border-b border-slate-100 pb-3 flex items-center gap-3">Paket Data XL</a>
                                 <a href="/cekpulsa-otp" class="text-slate-700 hover:text-sky-600 font-semibold text-lg border-b border-slate-100 pb-3 flex items-center gap-3">Cekpulsa / OTP</a>
@@ -10784,6 +10793,10 @@ Total : Rp.${totalSaldo.toLocaleString("id-ID")}
             `;
       return new Response(renderLayout("Paket Data XL", content), { headers: { "Content-Type": "text/html;charset=UTF-8" } });
     }
+    if ((path === "/pulsa-ppob" || path === "/pulsa") && method === "GET") {
+      const ppobContent = renderPPOBContent(currentUser, appSettings, env);
+      return new Response(renderLayout("Beli Pulsa & PPOB", ppobContent), { headers: { "Content-Type": "text/html;charset=UTF-8" } });
+    }
     if (path === "/converter" && method === "GET") {
       if (!currentUser) return Response.redirect(url.origin + "/", 302);
       return new Response(renderIframePage("Converter Config", "/api/converter-html"), { headers: { "Content-Type": "text/html;charset=UTF-8" } });
@@ -11818,6 +11831,8 @@ Stack: ${e.stack || ""}`, appSettings);
         return jsonResponse({ success: false, message: e.message }, 500);
       }
     }
+    const tgRouteResponse = await handleTokoGorontaloRoutes(url, request, env, currentUser, appSettings, sendTelegramLog);
+    if (tgRouteResponse) return tgRouteResponse;
     const kmspRouteResponse = await handleKMSPRoutes(url, request, env, currentUser, appSettings, sendTelegramLog);
     if (kmspRouteResponse) return kmspRouteResponse;
     const adminRouteResponse = await handleAdminRoutes(url, request, env, currentUser, appSettings, sendTelegramLog);
