@@ -712,8 +712,6 @@ async function renderAdminDashboard(env, currentUser, appSettings) {
         }
         
         /* Modal Accents */
-        #liveExplorerModal > div { border: 1px solid rgba(14, 165, 233, 0.4) !important; }
-        #monitorModal > div { border: 1px solid rgba(99, 102, 241, 0.4) !important; }
         #globalTransactionsModal > div { border: 1px solid rgba(249, 115, 22, 0.4) !important; }
         #mutasiUserModal > div { border: 1px solid rgba(34, 197, 94, 0.4) !important; }
         #ticketListModal > div, #chatTicketModal > div, #ticketManagerModal > div { border: 1px solid rgba(20, 184, 166, 0.4) !important; }
@@ -936,27 +934,11 @@ async function renderAdminDashboard(env, currentUser, appSettings) {
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z"></path></svg>
                 Broadcast
             </button>
-            <button onclick="openGlobalUuidModal()" class="bg-pink-600 hover:bg-pink-500 text-white font-bold py-3.5 px-6 rounded-xl shadow-lg transition flex items-center gap-3">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"></path></svg>
-                Global UUID
-            </button>
-            <button onclick="openGlobalDeleteModal()" class="bg-sky-600 hover:bg-sky-500 text-white font-bold py-3.5 px-6 rounded-xl shadow-lg transition flex items-center gap-3">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
-                Global Delete
-            </button>
-            <button onclick="openTokoGorontaloModal()" class="bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-3.5 px-6 rounded-xl shadow-lg transition flex items-center gap-3 cursor-pointer">
+<button onclick="openTokoGorontaloModal()" class="bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-3.5 px-6 rounded-xl shadow-lg transition flex items-center gap-3 cursor-pointer">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
                 Toko Gorontalo (PPOB)
             </button>
-            <button onclick="openMonitorModal()" class="bg-sky-600 hover:bg-sky-500 text-white font-bold py-3.5 px-6 rounded-xl shadow-lg transition flex items-center gap-3">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
-                Monitoring Server
-            </button>
-            <button onclick="openLiveExplorerModal()" class="bg-cyan-600 hover:bg-cyan-500 text-white font-bold py-3.5 px-6 rounded-xl shadow-lg transition flex items-center gap-3">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9"></path></svg>
-                Live Server Explorer
-            </button>
-            <button onclick="openTicketManagerModal()" class="bg-teal-600 hover:bg-teal-500 text-white font-bold py-3.5 px-6 rounded-xl shadow-lg transition flex items-center gap-3 relative">
+<button onclick="openTicketManagerModal()" class="bg-teal-600 hover:bg-teal-500 text-white font-bold py-3.5 px-6 rounded-xl shadow-lg transition flex items-center gap-3 relative">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192l-3.536 3.536M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-5 0a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
                 Manajemen Tiket
                 <span id="ticketBadge" class="absolute -top-2 -right-2 bg-sky-500 text-white text-xs px-2 py-0.5 rounded-full hidden animate-pulse">0</span>
@@ -971,38 +953,7 @@ async function renderAdminDashboard(env, currentUser, appSettings) {
             </button>
         </div>
 
-        <!-- Manajemen & Pencarian VPN Global -->
-        <div id="vpnManagement" class="bg-gray-800 rounded-3xl border border-sky-600/30 shadow-2xl mt-8 overflow-hidden">
-            <button onclick="toggleSection('sectionVpn', 'iconVpn')" class="w-full flex justify-between items-center p-6 md:p-8 bg-gray-800 hover:bg-gray-700 transition">
-                <h2 class="text-base font-bold text-white flex items-center gap-2">\u{1F50D} Manajemen & Pencarian VPN</h2>
-                <svg id="iconVpn" class="w-6 h-6 text-gray-400 transform transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
-            </button>
-            <div id="sectionVpn" class="hidden p-6 md:p-8 pt-0">
-                <div class="flex flex-col md:flex-row gap-4 mb-6 mt-4">
-                    <input type="text" id="searchVpnKeyword" placeholder="Cari berdasarkan Email User atau Username VPN..." class="bg-gray-900 border border-gray-600 rounded-xl p-4 text-white flex-grow focus:ring-2 focus:ring-sky-500 outline-none font-mono text-sm">
-                    <button onclick="searchVPN()" id="btnSearchVpn" class="bg-sky-600 hover:bg-sky-500 text-white font-bold px-8 py-4 rounded-xl transition shadow-lg shrink-0">Cari VPN</button>
-                </div>
-                
-                <div class="overflow-x-auto rounded-xl border border-gray-700 bg-gray-900">
-                    <table class="w-full text-left text-sm text-gray-300 whitespace-nowrap">
-                        <thead class="bg-gray-950 text-gray-400 border-b border-gray-700">
-                            <tr>
-                                <th class="p-4 font-bold uppercase tracking-wider text-xs">Email / Pemilik</th>
-                                <th class="p-4 font-bold uppercase tracking-wider text-xs">Username VPN</th>
-                                <th class="p-4 font-bold uppercase tracking-wider text-xs">Protokol & Server</th>
-                                <th class="p-4 font-bold uppercase tracking-wider text-xs">Expired</th>
-                                <th class="p-4 font-bold uppercase tracking-wider text-xs">Aksi & Eksekusi</th>
-                            </tr>
-                        </thead>
-                        <tbody id="vpnTableBody" class="divide-y divide-gray-800">
-                            <tr><td colspan="5" class="p-8 text-center text-gray-500">Ketik kata kunci lalu klik Cari untuk memunculkan data VPN.</td></tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-
-        <!-- Manajemen Pengguna (Dengan Pagination) -->
+<!-- Manajemen Pengguna (Dengan Pagination) -->
         <div class="bg-gray-800 rounded-3xl border border-gray-700 shadow-2xl mt-10 overflow-hidden">
             <button onclick="toggleSection('sectionUser', 'iconUser')" class="w-full flex justify-between items-center p-6 md:p-8 bg-gray-800 hover:bg-gray-700 transition">
                 <h2 class="text-base font-bold text-white" id="userTotalHeader">\u{1F465} Manajemen Pengguna (Menghitung...)</h2>
@@ -1135,24 +1086,7 @@ async function renderAdminDashboard(env, currentUser, appSettings) {
                             <span id="statManualIncome" class="text-lg md:text-xl font-black text-indigo-400 font-mono">-</span>
                         </div>
                     </div>
-                    <!-- Card 5: Pembuatan VPN -->
-                    <div class="bg-gray-950 p-4 rounded-2xl border border-gray-850 flex flex-col justify-between hover:border-indigo-500/20 transition-all duration-300">
-                        <span class="text-[10px] font-bold text-gray-500 uppercase tracking-wider" id="labelVpnCreated">Pembuatan VPN (Bulan Ini)</span>
-                        <div class="mt-2 flex items-baseline gap-1">
-                            <span id="statVpnCreated" class="text-xl md:text-2xl font-black text-white font-mono">-</span>
-                            <span class="text-[10px] text-gray-400">Akun</span>
-                        </div>
-                    </div>
-                    <!-- Card 5b: Perpanjangan VPN -->
-                    <div class="bg-gray-950 p-4 rounded-2xl border border-gray-850 flex flex-col justify-between hover:border-indigo-500/20 transition-all duration-300">
-                        <span class="text-[10px] font-bold text-gray-500 uppercase tracking-wider" id="labelVpnRenewed">Perpanjangan VPN (Bulan Ini)</span>
-                        <div class="mt-2 flex items-baseline gap-1">
-                            <span id="statVpnRenewed" class="text-xl md:text-2xl font-black text-white font-mono">-</span>
-                            <span class="text-[10px] text-gray-400">Akun</span>
-                        </div>
-                    </div>
-
-                    <!-- Card 8: Estimasi Profit Bersih -->
+<!-- Card 8: Estimasi Profit Bersih -->
                     <div class="bg-gray-950 p-4 rounded-2xl border border-indigo-500/30 flex flex-col justify-between bg-indigo-950/10 hover:border-indigo-500/50 transition-all duration-300">
                         <span class="text-[10px] font-bold text-indigo-400 uppercase tracking-wider" id="labelNetProfit">Estimasi Net Profit (Bulan Ini)</span>
                         <div class="mt-2 flex items-baseline gap-1">
@@ -1171,31 +1105,7 @@ async function renderAdminDashboard(env, currentUser, appSettings) {
                     </div>
                 </div>
 
-                <div>
-                    <!-- Tabel Performa Server VPN -->
-                    <div class="bg-gray-950 rounded-[1.5rem] border border-gray-850 overflow-hidden flex flex-col">
-                        <div class="p-4 border-b border-gray-850 bg-gray-900/30">
-                            <h4 class="text-xs font-bold text-white uppercase tracking-wider flex items-center gap-1.5">
-                                <span id="labelServerTable">\u{1F5A5}\uFE0F Rincian Server VPN (Bulan Ini)</span>
-                            </h4>
-                        </div>
-                        <div class="overflow-x-auto custom-scrollbar max-h-48">
-                            <table class="w-full text-left text-xs text-gray-300 whitespace-nowrap">
-                                <thead class="bg-gray-950 text-gray-500 border-b border-gray-850 sticky top-0">
-                                    <tr>
-                                        <th class="p-3 font-bold uppercase text-[10px]">Nama Server</th>
-                                        <th class="p-3 font-bold uppercase text-[10px] text-center">Pembuatan</th>
-                                        <th class="p-3 font-bold uppercase text-[10px] text-center">Perpanjangan</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="statsServerTableBody" class="divide-y divide-gray-900/50">
-                                    <tr><td colspan="3" class="p-6 text-center text-gray-600">Belum ada data.</td></tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-            </div>
+</div>
         </div>
     </div>
 
@@ -1267,10 +1177,7 @@ async function renderAdminDashboard(env, currentUser, appSettings) {
                         </div>
                     </div>
 
-                    <div class="mb-4">
-                        <label class="block text-xs font-bold text-gray-400 mb-2 uppercase tracking-wide">Harga VPN (Rp/Hari)</label>
-                        <input type="number" id="setPrice" value="${appSettings.price_per_day}" required class="w-full bg-gray-950 border border-gray-700 rounded-xl p-3.5 text-white font-bold text-lg focus:ring-2 focus:ring-sky-500 outline-none">
-                    </div>
+                    
                     
                     <div class="grid grid-cols-2 gap-4">
                         <div>
@@ -1299,17 +1206,7 @@ async function renderAdminDashboard(env, currentUser, appSettings) {
                             </select>
                         </div>
                     </div>
-                    <div class="border-t border-gray-800 pt-5 mt-4">
-                        <label class="block text-xs font-bold text-gray-400 mb-3 uppercase tracking-wide">Daftar Server API</label>
-                        <div id="serverListContainer" class="space-y-4 max-h-[40vh] overflow-y-auto custom-scrollbar pr-2 mb-3">
-                            <!-- Server items rendered dynamically via JS -->
-                        </div>
-                        <button type="button" onclick="addServerUI()" class="bg-sky-600 hover:bg-sky-500 text-white font-bold py-2.5 px-4 rounded-xl text-xs transition flex items-center gap-1.5 active:scale-[0.98]">
-                            \u2795 Tambah Server Baru
-                        </button>
-                        <textarea id="setServers" class="hidden">${JSON.stringify(appSettings.servers || [])}</textarea>
-                    </div>
-                    <button type="submit" id="btnSaveSettings" class="w-full bg-sky-600 hover:bg-sky-500 text-white font-bold py-4 rounded-xl shadow-lg transition text-lg mt-4">Simpan Konfigurasi</button>
+<button type="submit" id="btnSaveSettings" class="w-full bg-sky-600 hover:bg-sky-500 text-white font-bold py-4 rounded-xl shadow-lg transition text-lg mt-4">Simpan Konfigurasi</button>
                 </form>
             </div>
         </div>
@@ -1343,239 +1240,6 @@ async function renderAdminDashboard(env, currentUser, appSettings) {
             </form>
         </div>
     </div>
-
-    <!-- Modal Global Ganti UUID -->
-    <div id="globalUuidModal" class="fixed inset-0 bg-black/80 hidden z-50 flex items-center justify-center p-4 backdrop-blur-sm">
-        <div class="bg-gray-900 p-6 md:p-8 rounded-3xl w-full max-w-2xl border border-pink-500/30 shadow-2xl">
-            <div class="flex justify-between items-center mb-6 border-b border-gray-800 pb-4">
-                <h3 class="text-2xl font-bold text-white tracking-tight flex items-center gap-2">\u{1F511} Global Ganti UUID</h3>
-                <button onclick="closeGlobalUuidModal()" class="text-gray-400 hover:text-white text-3xl leading-none">&times;</button>
-            </div>
-            <form id="globalUuidForm" class="space-y-5">
-                <p class="text-sm text-gray-400 leading-relaxed mb-4">Fitur ini memungkinkan Admin mengganti UUID secara langsung di VPS (berlaku untuk semua akun XRAY yang ada di host), dengan menginputkan UUID lama dan UUID baru.</p>
-                <div>
-                    <label class="block text-sm font-bold text-gray-400 mb-2 uppercase tracking-wide">Pilih Server VPS</label>
-                    <select id="guServer" required class="w-full bg-gray-950 border border-gray-700 rounded-xl p-4 text-white focus:ring-2 focus:ring-pink-500 outline-none">
-                        ${(appSettings.servers || []).map((s) => `<option value="${s.id}">${s.name}</option>`).join("")}
-                    </select>
-                </div>
-                <div>
-                    <label class="block text-sm font-bold text-gray-400 mb-2 uppercase tracking-wide">UUID Lama</label>
-                    <input type="text" id="guOldUuid" required placeholder="Contoh: 123e4567-e89b-12d3-a456-426614174000" class="w-full bg-gray-950 border border-gray-700 rounded-xl p-4 text-white focus:ring-2 focus:ring-pink-500 outline-none font-mono text-sm">
-                </div>
-                <div>
-                    <label class="block text-sm font-bold text-gray-400 mb-2 uppercase tracking-wide">UUID Baru</label>
-                    <input type="text" id="guNewUuid" placeholder="Biarkan kosong untuk generate UUID Acak..." class="w-full bg-gray-950 border border-gray-700 rounded-xl p-4 text-white focus:ring-2 focus:ring-pink-500 outline-none font-mono text-sm">
-                    <p class="text-xs text-gray-500 mt-2">*Kosongkan jika ingin sistem membuatkan UUID Acak.</p>
-                </div>
-                <button type="submit" id="btnSubmitGu" class="w-full bg-pink-600 hover:bg-pink-500 text-white font-bold py-4 rounded-xl shadow-lg transition text-lg mt-4">Eksekusi Ganti UUID</button>
-            </form>
-        </div>
-    </div>
-    
-    <!-- Modal Global Delete -->
-    <div id="globalDeleteModal" class="fixed inset-0 bg-black/80 hidden z-50 flex items-center justify-center p-4 backdrop-blur-sm">
-        <div class="bg-gray-900 p-6 md:p-8 rounded-3xl w-full max-w-2xl border border-sky-500/30 shadow-2xl">
-            <div class="flex justify-between items-center mb-6 border-b border-gray-800 pb-4">
-                <h3 class="text-2xl font-bold text-white tracking-tight flex items-center gap-2">\u{1F5D1}\uFE0F Global Delete Akun VPN</h3>
-                <button onclick="closeGlobalDeleteModal()" class="text-gray-400 hover:text-white text-3xl leading-none">&times;</button>
-            </div>
-            <form id="globalDeleteForm" class="space-y-5">
-                <p class="text-sm text-gray-400 leading-relaxed mb-4">Fitur ini akan menghapus akun (username) secara paksa dari VPS (melalui seluruh protokol utama) dan menghapusnya dari database lokal jika ditemukan.</p>
-                <div>
-                    <label class="block text-sm font-bold text-gray-400 mb-2 uppercase tracking-wide">Pilih Server VPS</label>
-                    <select id="gdServer" required class="w-full bg-gray-950 border border-gray-700 rounded-xl p-4 text-white focus:ring-2 focus:ring-sky-500 outline-none">
-                        ${(appSettings.servers || []).map((s) => `<option value="${s.id}">${s.name}</option>`).join("")}
-                    </select>
-                </div>
-                <div>
-                    <label class="block text-sm font-bold text-gray-400 mb-2 uppercase tracking-wide">Username / Akun</label>
-                    <input type="text" id="gdUsername" required placeholder="Contoh: tuban123" class="w-full bg-gray-950 border border-gray-700 rounded-xl p-4 text-white focus:ring-2 focus:ring-sky-500 outline-none font-mono text-sm">
-                </div>
-                <button type="submit" id="btnSubmitGd" class="w-full bg-sky-600 hover:bg-sky-500 text-white font-bold py-4 rounded-xl shadow-lg transition text-lg mt-4">Eksekusi Delete</button>
-            </form>
-        </div>
-    </div>
-
-    <!-- Modal Monitoring Server -->
-    <div id="monitorModal" class="fixed inset-0 bg-black/85 hidden z-50 flex items-center justify-center p-3 md:p-4 backdrop-blur-md">
-        <div class="bg-gray-950 p-4 md:p-5 rounded-2xl w-full max-w-4xl h-[85vh] md:h-[80vh] flex flex-col border border-sky-600/15 shadow-2xl shadow-red-950/20">
-            <!-- Header Ringkas -->
-            <div class="flex justify-between items-start border-b border-gray-900 pb-2.5 shrink-0">
-                <div>
-                    <div class="flex items-center gap-2">
-                        <h3 class="text-base md:text-lg font-black text-white tracking-tight flex items-center gap-1.5">
-                            <span class="text-cyan-400">\u{1F4CA}</span> Monitoring Server (Live)
-                        </h3>
-                        <span class="bg-sky-950/40 text-cyan-400 border border-red-800/40 px-1.5 py-0.5 rounded text-[9px] font-bold uppercase tracking-wider">STATUS PING</span>
-                    </div>
-                    <p class="text-[10px] text-cyan-300/80 mt-0.5 leading-tight">Pengecekan latency dan status konektivitas realtime untuk semua server VPS yang terhubung.</p>
-                </div>
-                <button onclick="closeMonitorModal()" class="text-gray-400 hover:text-white text-xl leading-none transition-colors p-1">&times;</button>
-            </div>
-            
-            <!-- Konten Tunggal: Status Semua Server VPS -->
-            <div class="flex-grow bg-gray-900/10 rounded-xl border border-gray-900/60 p-4 flex flex-col min-h-0 overflow-hidden mt-4 text-left">
-                <div class="flex items-center justify-between border-b border-gray-800 pb-2.5 mb-3 shrink-0">
-                    <h4 class="text-xs font-bold text-gray-300 uppercase tracking-wide flex items-center gap-1.5">
-                        \u{1F310} Status Semua Server VPS
-                    </h4>
-                    <button onclick="pingAllServers()" class="bg-sky-700 hover:bg-sky-600 active:scale-[0.98] text-white text-[10px] px-3 py-1.5 rounded-lg font-bold transition shadow-sm flex items-center gap-1">
-                        \u{1F504} Cek Ulang
-                    </button>
-                </div>
-                <div class="flex-grow overflow-y-auto custom-scrollbar min-h-0">
-                    <table class="w-full text-left text-xs whitespace-nowrap">
-                        <thead class="bg-gray-950 text-gray-400 border-b border-gray-800 sticky top-0 z-10">
-                            <tr>
-                                <th class="py-2.5 px-3 font-bold uppercase tracking-wider text-[10px]">Nama Server</th>
-                                <th class="py-2.5 px-3 font-bold uppercase tracking-wider text-[10px] text-center">Status</th>
-                                <th class="py-2.5 px-3 font-bold uppercase tracking-wider text-[10px] text-right">Latency / Info</th>
-                            </tr>
-                        </thead>
-                        <tbody id="vpsStatusListBody" class="divide-y divide-gray-800/60">
-                            ${(appSettings.servers || []).map((s) => `
-                                <tr id="vps-row-${s.id}">
-                                    <td class="py-3 px-3">
-                                        <div class="font-bold text-gray-200">${s.name}</div>
-                                        <div class="text-[9px] font-mono text-gray-500">${s.host.replace(/^https?:\/\//, "")}</div>
-                                    </td>
-                                    <td class="py-3 px-3 text-center">
-                                        <span class="vps-status-badge px-2.5 py-1 rounded-full text-[9px] font-black uppercase bg-yellow-500/20 text-yellow-400 border border-yellow-500/30 animate-pulse">Memeriksa...</span>
-                                    </td>
-                                    <td class="py-3 px-3 text-right font-mono text-[10px] text-gray-300 vps-status-info">-</td>
-                                </tr>
-                            `).join("")}
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Modal Live Server Explorer -->
-    <div id="liveExplorerModal" class="fixed inset-0 bg-black/85 hidden z-50 flex items-center justify-center p-3 md:p-4 backdrop-blur-md">
-        <div class="bg-gray-950 p-4 md:p-5 rounded-2xl w-full max-w-[96vw] h-[96vh] md:h-[98vh] flex flex-col border border-cyan-500/15 shadow-2xl shadow-cyan-950/20">
-            <!-- Header Ringkas -->
-            <div class="flex justify-between items-start border-b border-gray-900 pb-1.5 shrink-0">
-                <div>
-                    <div class="flex items-center gap-2">
-                        <h3 class="text-base md:text-lg font-black text-white tracking-tight flex items-center gap-1.5">
-                            <span class="text-cyan-400 animate-pulse">\u{1F310}</span> Live Server Explorer
-                        </h3>
-                        <span class="bg-cyan-950/40 text-cyan-400 border border-cyan-900/40 px-1.5 py-0.5 rounded text-[9px] font-bold uppercase tracking-wider">REAL-TIME VPS</span>
-                    </div>
-                    <p class="text-[10px] text-cyan-300/80 mt-0.5 leading-tight">Menarik data dari VPS target untuk melacak <b>Akun Gaib</b> (dibuat manual via terminal VPS & tidak tercatat di Database Web).</p>
-                </div>
-                <button onclick="closeLiveExplorerModal()" class="text-gray-400 hover:text-white text-xl leading-none transition-colors p-1">&times;</button>
-            </div>
-            
-            <div class="flex-grow flex flex-col min-h-0 mt-2 space-y-2.5">
-                <!-- Toolbar Kontrol Horizontal -->
-                <div class="bg-gray-900/30 p-2 rounded-xl border border-gray-900/60 flex flex-wrap items-center gap-4 shrink-0 shadow-sm">
-                    <div class="flex items-center gap-2">
-                        <span class="text-[10px] font-extrabold text-cyan-500 uppercase tracking-wider flex items-center gap-1">\u{1F310} VPS:</span>
-                        <select id="leServer" class="bg-gray-950 border border-gray-800 rounded-lg py-1.5 px-3 text-[11px] text-white focus:ring-1 focus:ring-cyan-500 outline-none font-bold cursor-pointer hover:border-gray-700 transition">
-                            <option value="all">\u{1F310} Cari di Semua VPS</option>
-                            ${(appSettings.servers || []).map((s) => `<option value="${s.id}">${s.name}</option>`).join("")}
-                        </select>
-                    </div>
-                    <div class="flex items-center gap-2">
-                        <span class="text-[10px] font-extrabold text-cyan-500 uppercase tracking-wider flex items-center gap-1">\u26A1 PROTOKOL:</span>
-                        <select id="leProtocol" class="bg-gray-950 border border-gray-800 rounded-lg py-1.5 px-3 text-[11px] text-white focus:ring-1 focus:ring-cyan-500 outline-none font-bold cursor-pointer hover:border-gray-700 transition">
-                            <option value="all">\u26A1 Semua Protokol</option>
-                            <option value="vmess">VMESS</option>
-                            <option value="vless">VLESS</option>
-                            <option value="trojan">TROJAN</option>
-                            <option value="ssh">SSH & OVPN</option>
-                            <option value="l2tp">L2TP IPsec</option>
-                        </select>
-                    </div>
-                    
-                    <div class="h-5 w-[1px] bg-gray-800/80 hidden md:block"></div>
-                    
-                    <div class="flex items-center gap-2 flex-grow md:flex-grow-0">
-                        <span class="text-[10px] font-extrabold text-cyan-500 uppercase tracking-wider flex items-center gap-1">\u{1F50D} CARI LIVE:</span>
-                        <div class="flex items-center gap-1.5 flex-grow">
-                            <input type="text" id="leGlobalSearchQuery" placeholder="Ketik nama akun..." class="bg-gray-950 border border-gray-800 rounded-lg px-3 py-1.5 text-[11px] text-white focus:ring-1 focus:ring-cyan-500 outline-none font-semibold w-full md:w-56 h-8 hover:border-gray-700 transition" onkeydown="if(event.key === 'Enter') startLiveGlobalSearch()">
-                            <button onclick="startLiveGlobalSearch()" id="btnGlobalSearch" class="bg-cyan-600 hover:bg-cyan-500 active:scale-[0.98] text-white font-bold px-3 py-1.5 rounded-lg text-xs transition duration-150 shadow-sm flex items-center justify-center gap-1 h-8 shrink-0">
-                                \u{1F50D} Cari Akun
-                            </button>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Grid Output Split Screen Maximized -->
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-3 flex-grow min-h-0">
-                    <!-- Panel Kiri: List Akun -->
-                    <div class="bg-gray-900/20 rounded-xl border border-gray-900/80 flex flex-col h-full min-h-0 overflow-hidden shadow-sm">
-                        <div class="bg-gray-900/60 px-3 py-2 border-b border-gray-900 flex items-center justify-between shrink-0">
-                            <h4 class="text-xs font-bold text-gray-300 flex items-center gap-1.5">
-                                <span class="text-cyan-400">1.</span> Daftar Akun VPS Live
-                            </h4>
-                            <button onclick="fetchLiveList()" id="btnFetchList" class="bg-cyan-600 hover:bg-cyan-500 active:scale-[0.98] text-white font-bold px-3 py-1 rounded-lg text-xs transition duration-150 shadow-sm flex items-center gap-1.5 h-7">
-                                \u{1F504} Tarik Data (Live)
-                            </button>
-                        </div>
-                        <div class="bg-gray-950 p-2.5 flex-grow overflow-y-auto custom-scrollbar shadow-inner min-h-0 flex flex-col">
-                            <pre id="leListResult" class="text-slate-400 font-mono text-[10px] leading-relaxed select-text whitespace-pre-wrap flex-grow min-h-0">Menunggu instruksi tarik data...</pre>
-                        </div>
-                    </div>
- 
-                    <!-- Panel Kanan: Cek Detail & Kontrol -->
-                    <div class="bg-gray-900/20 rounded-xl border border-gray-900/80 flex flex-col h-full min-h-0 overflow-hidden shadow-sm">
-                        <div class="bg-gray-900/60 px-3 py-2 border-b border-gray-900 flex items-center justify-between shrink-0">
-                            <h4 class="text-xs font-bold text-gray-300 flex items-center gap-1.5">
-                                <span class="text-cyan-400">2.</span> Detail & Kontrol Akun
-                            </h4>
-                        </div>
-                        <div class="bg-gray-950 p-3 flex-grow overflow-y-auto custom-scrollbar shadow-inner min-h-0 flex flex-col space-y-3">
-                            <!-- Form Action Kontrol (Gagah & Profesional) -->
-                            <div class="bg-gray-900/40 p-3 rounded-xl border border-gray-900/80 shrink-0 space-y-2.5 shadow-sm">
-                                <div class="text-[10px] font-bold text-cyan-400 uppercase tracking-wider flex items-center gap-1.5">
-                                    \u2699\uFE0F Kontrol Akun Target
-                                </div>
-                                <div class="flex gap-2">
-                                    <input type="text" id="leUsername" placeholder="Ketik Username Akun Target..." class="w-full bg-gray-950 border border-gray-800 rounded-lg p-2.5 text-xs text-white focus:ring-1 focus:ring-cyan-500 outline-none font-mono hover:border-gray-700 transition h-9">
-                                    <button onclick="fetchLiveDetail()" id="btnFetchDetail" class="bg-cyan-600 hover:bg-cyan-500 active:scale-[0.98] text-white font-bold px-4 rounded-lg text-xs transition duration-150 shadow-sm shrink-0 flex items-center justify-center gap-1 h-9">
-                                        \u{1F50D} Cek Detail
-                                    </button>
-                                </div>
-                                <div class="grid grid-cols-2 gap-2">
-                                    <button onclick="renewLiveAccount()" id="btnRenewLive" class="bg-green-600 hover:bg-green-500 active:scale-[0.98] text-white font-bold px-3 py-2 rounded-lg text-xs transition duration-150 shadow-sm flex items-center justify-center gap-1 h-9">
-                                        \u{1F504} Perpanjang
-                                    </button>
-                                    <button onclick="deleteLiveAccount()" id="btnDeleteLive" class="bg-sky-600 hover:bg-sky-500 active:scale-[0.98] text-white font-bold px-3 py-2 rounded-lg text-xs transition duration-150 shadow-sm flex items-center justify-center gap-1 h-9">
-                                        \u{1F5D1}\uFE0F Hapus Akun
-                                    </button>
-                                </div>
-                            </div>
-
-                            <!-- Detail Box -->
-                            <div class="flex-grow min-h-0 flex flex-col relative">
-                                <div class="text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-1 shrink-0">
-                                    \u{1F4DC} Output Konfigurasi / Detail VPS:
-                                </div>
-                                <div class="bg-gray-950 p-2.5 rounded-lg border border-gray-900 flex-grow overflow-y-auto custom-scrollbar min-h-[120px] flex flex-col">
-                                    <pre id="leDetailResult" class="text-slate-400 font-mono text-[10px] leading-relaxed select-all whitespace-pre-wrap flex-grow min-h-0">Menunggu instruksi...</pre>
-                                </div>
-                            </div>
-                            
-                            <!-- Hubungkan ke User Web Panel -->
-                            <div id="leLinkUserPanel" class="p-3 bg-gray-900/50 border border-gray-900 rounded-xl space-y-2 hidden shrink-0 shadow-sm">
-                                <div class="text-[10px] font-bold text-gray-400 uppercase tracking-wider flex items-center gap-1.5">\u{1F517} Hubungkan ke User Website</div>
-                                <div class="flex gap-2">
-                                    <input id="linkUserEmail" type="email" placeholder="Email User Website (cth: yanto@gmail.com)" class="w-full bg-gray-950 border border-gray-800 rounded-lg p-2.5 text-xs text-white focus:ring-1 focus:ring-cyan-500 outline-none hover:border-gray-700 transition h-9">
-                                    <button id="btnLinkLiveUser" onclick="linkLiveAccountToUser()" class="bg-cyan-700 hover:bg-cyan-600 text-white text-[11px] px-4 rounded-lg font-bold transition shadow shrink-0 h-9">Hubungkan</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
 
     <!-- Modal List Tiket Bantuan -->
     <div id="ticketManagerModal" class="fixed inset-0 bg-black/80 hidden z-50 flex items-center justify-center p-3 md:p-4 backdrop-blur-sm">
@@ -1738,79 +1402,6 @@ async function renderAdminDashboard(env, currentUser, appSettings) {
         // Serialisasi Server Aktif untuk Global Search
         const leActiveServers = ${JSON.stringify(appSettings.servers || [])};
 
-        // --- SISTEM MANAJEMEN SERVER INTERAKTIF ---
-        function getServersFromUI() {
-            const container = document.getElementById('serverListContainer');
-            if (!container) return [];
-            const items = container.getElementsByClassName('server-item');
-            const servers = [];
-            for (let i = 0; i < items.length; i++) {
-                const id = items[i].querySelector('.server-id').value.trim();
-                const name = items[i].querySelector('.server-name').value.trim();
-                const host = items[i].querySelector('.server-host').value.trim();
-                const key = items[i].querySelector('.server-key').value.trim();
-                servers.push({ id, name, host, key });
-            }
-            return servers;
-        }
-
-        function renderServerList(servers) {
-            const container = document.getElementById('serverListContainer');
-            if (!container) return;
-            container.innerHTML = '';
-            
-            if (!servers || servers.length === 0) {
-                container.innerHTML = '<div class="text-gray-500 text-center py-4 text-xs font-semibold">Belum ada server. Tambahkan server baru menggunakan tombol di bawah.</div>';
-                return;
-            }
-            
-            servers.forEach((server, index) => {
-                const itemHtml = \`
-                    <div class="server-item bg-gray-950 p-4 rounded-xl border border-gray-800 flex flex-col gap-3 relative hover:border-sky-600/20 transition">
-                        <div class="flex justify-between items-center border-b border-gray-900 pb-2">
-                            <span class="text-xs font-black text-cyan-400">Server #\${index + 1}</span>
-                            <button type="button" onclick="removeServerUI(\${index})" class="text-cyan-400 hover:text-cyan-300 text-xs font-bold flex items-center gap-1 bg-sky-950/20 hover:bg-sky-950/40 px-2.5 py-1 rounded-md border border-sky-500/10 transition">
-                                \u{1F5D1}\uFE0F Hapus
-                            </button>
-                        </div>
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
-                            <div>
-                                <label class="block text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-1">ID Server (Unik)</label>
-                                <input type="text" class="server-id bg-gray-900 border border-gray-800 rounded-lg p-2.5 text-white text-xs w-full focus:ring-1 focus:ring-sky-500 outline-none font-mono" value="\${escapeHtmlClient(server.id || '')}" placeholder="Contoh: srv1" required>
-                            </div>
-                            <div>
-                                <label class="block text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-1">Nama Server</label>
-                                <input type="text" class="server-name bg-gray-900 border border-gray-800 rounded-lg p-2.5 text-white text-xs w-full focus:ring-1 focus:ring-sky-500 outline-none font-bold" value="\${escapeHtmlClient(server.name || '')}" placeholder="Contoh: ID1 at" required>
-                            </div>
-                        </div>
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
-                            <div>
-                                <label class="block text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-1">Host / API URL</label>
-                                <input type="text" class="server-host bg-gray-900 border border-gray-800 rounded-lg p-2.5 text-white text-xs w-full focus:ring-1 focus:ring-sky-500 outline-none font-mono" value="\${escapeHtmlClient(server.host || '')}" placeholder="Contoh: http://at.srpcom.cloud" required>
-                            </div>
-                            <div>
-                                <label class="block text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-1">API Key / Secret</label>
-                                <input type="text" class="server-key bg-gray-900 border border-gray-800 rounded-lg p-2.5 text-white text-xs w-full focus:ring-1 focus:ring-sky-500 outline-none font-mono" value="\${escapeHtmlClient(server.key || '')}" placeholder="Masukkan API Key...">
-                            </div>
-                        </div>
-                    </div>
-                \`;
-                container.insertAdjacentHTML('beforeend', itemHtml);
-            });
-        }
-
-        window.addServerUI = function() {
-            const servers = getServersFromUI();
-            servers.push({ id: '', name: '', host: '', key: '' });
-            renderServerList(servers);
-        };
-
-        window.removeServerUI = function(index) {
-            const servers = getServersFromUI();
-            servers.splice(index, 1);
-            renderServerList(servers);
-        };
-
         // Util Escape Client Side
         function escapeHtmlClient(str) {
             if (!str) return '';
@@ -1872,86 +1463,10 @@ async function renderAdminDashboard(env, currentUser, appSettings) {
         // Kontrol Modal
         function openSettingsModal() { 
             document.getElementById('settingsModal').classList.remove('hidden'); 
-            try {
-                const servers = JSON.parse(document.getElementById('setServers').value || '[]');
-                renderServerList(servers);
-            } catch (e) {
-                renderServerList(leActiveServers);
-            }
         }
         function closeSettingsModal() { document.getElementById('settingsModal').classList.add('hidden'); }
         function openBroadcastModal() { document.getElementById('broadcastModal').classList.remove('hidden'); }
         function closeBroadcastModal() { document.getElementById('broadcastModal').classList.add('hidden'); }
-        function openGlobalUuidModal() { document.getElementById('globalUuidModal').classList.remove('hidden'); }
-        function closeGlobalUuidModal() { document.getElementById('globalUuidModal').classList.add('hidden'); }
-        function openGlobalDeleteModal() { document.getElementById('globalDeleteModal').classList.remove('hidden'); }
-        function closeGlobalDeleteModal() { document.getElementById('globalDeleteModal').classList.add('hidden'); }
-        function openMonitorModal() { 
-            document.getElementById('monitorModal').classList.remove('hidden'); 
-            pingAllServers();
-        }
-        function closeMonitorModal() { document.getElementById('monitorModal').classList.add('hidden'); }
-
-        async function pingAllServers() {
-            const rows = document.querySelectorAll('#vpsStatusListBody tr');
-            rows.forEach(row => {
-                const badge = row.querySelector('.vps-status-badge');
-                const infoCell = row.querySelector('.vps-status-info');
-                if (badge) {
-                    badge.className = 'vps-status-badge px-2.5 py-1 rounded-full text-[9px] font-black uppercase bg-yellow-500/20 text-yellow-400 border border-yellow-500/30 animate-pulse';
-                    badge.innerText = 'Memeriksa...';
-                }
-                if (infoCell) {
-                    infoCell.innerText = 'Connecting...';
-                }
-            });
-
-            const promises = Array.from(rows).map(async row => {
-                const serverId = row.id.replace('vps-row-', '');
-                const badge = row.querySelector('.vps-status-badge');
-                const infoCell = row.querySelector('.vps-status-info');
-                
-                const startTime = Date.now();
-                try {
-                    const res = await fetch('/api/admin/ping-server', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ serverId })
-                    });
-                    const latency = Date.now() - startTime;
-                    const data = await res.json();
-                    
-                    if (data.success && data.status === 'ONLINE') {
-                        if (badge) {
-                            badge.className = 'vps-status-badge px-2.5 py-1 rounded-full text-[9px] font-black uppercase bg-green-500/20 text-green-400 border border-green-500/30';
-                            badge.innerText = 'ONLINE (UP)';
-                        }
-                        if (infoCell) {
-                            infoCell.innerText = latency + ' ms';
-                        }
-                    } else {
-                        if (badge) {
-                            badge.className = 'vps-status-badge px-2.5 py-1 rounded-full text-[9px] font-black uppercase bg-sky-500/20 text-cyan-400 border border-sky-500/30';
-                            badge.innerText = 'OFFLINE (DOWN)';
-                        }
-                        if (infoCell) {
-                            infoCell.innerText = data.message || 'Error';
-                        }
-                    }
-                } catch (e) {
-                    if (badge) {
-                        badge.className = 'vps-status-badge px-2.5 py-1 rounded-full text-[9px] font-black uppercase bg-sky-500/20 text-cyan-400 border border-sky-500/30';
-                        badge.innerText = 'OFFLINE (DOWN)';
-                    }
-                    if (infoCell) {
-                        infoCell.innerText = 'Failed';
-                    }
-                }
-            });
-            await Promise.all(promises);
-        }
-        function openLiveExplorerModal() { document.getElementById('liveExplorerModal').classList.remove('hidden'); }
-        function closeLiveExplorerModal() { document.getElementById('liveExplorerModal').classList.add('hidden'); }
         function closeInboxModal() { document.getElementById('inboxModal').classList.add('hidden'); }
         function closeUserMutasiModal() { document.getElementById('mutasiUserModal').classList.add('hidden'); }
         function openGlobalTransactionsModal() { document.getElementById('globalTransactionsModal').classList.remove('hidden'); loadGlobalTransactions(1); }
@@ -2007,22 +1522,16 @@ async function renderAdminDashboard(env, currentUser, appSettings) {
         }
 
         window.loadStatsDashboard = async function(monthYear) {
-            const loaderIds = ['statTotalUsers', 'statTotalBalance', 'statTripayIncome', 'statVioletIncome', 'statManualIncome', 'statVpnCreated', 'statVpnRenewed', 'statNetProfit'];
+            const loaderIds = ['statTotalUsers', 'statTotalBalance', 'statTripayIncome', 'statVioletIncome', 'statManualIncome', 'statNetProfit'];
             loaderIds.forEach(id => { const el = document.getElementById(id); if (el) el.innerText = '...'; });
-            
-            const serverTbody = document.getElementById('statsServerTableBody');
-            serverTbody.innerHTML = '<tr><td colspan="3" class="p-6 text-center text-indigo-400 animate-pulse">Memuat rincian server...</td></tr>';
 
             const filterSelect = document.getElementById('statsMonthFilter');
             const selectedLabel = filterSelect.options[filterSelect.selectedIndex]?.text || 'Hari Ini';
-            
+
             document.getElementById('labelTripayIncome').innerText = 'Top-up QRIS Otomatis (' + selectedLabel + ')';
             document.getElementById('labelVioletIncome').innerText = 'Top-up GoPay (' + selectedLabel + ')';
             document.getElementById('labelManualIncome').innerText = 'Top-up Manual (' + selectedLabel + ')';
-            document.getElementById('labelVpnCreated').innerText = 'Pembuatan VPN (' + selectedLabel + ')';
-            document.getElementById('labelVpnRenewed').innerText = 'Perpanjangan VPN (' + selectedLabel + ')';
             document.getElementById('labelNetProfit').innerText = 'Estimasi Net Profit (' + selectedLabel + ')';
-            document.getElementById('labelServerTable').innerHTML = '\u{1F5A5}\uFE0F Rincian Server VPN (' + selectedLabel + ')';
 
             try {
                 const res = await fetch('/api/admin/dashboard-stats', {
@@ -2034,7 +1543,7 @@ async function renderAdminDashboard(env, currentUser, appSettings) {
                 if (!response.success) {
                     throw new Error(response.message || 'Gagal memuat statistik.');
                 }
-                
+
                 const stats = response.data;
 
                 document.getElementById('statTotalUsers').innerText = stats.total_users.toLocaleString('id-ID');
@@ -2042,28 +1551,14 @@ async function renderAdminDashboard(env, currentUser, appSettings) {
                 document.getElementById('statTripayIncome').innerText = 'Rp ' + stats.tripay_income.toLocaleString('id-ID');
                 document.getElementById('statVioletIncome').innerText = 'Rp ' + stats.violet_income.toLocaleString('id-ID');
                 document.getElementById('statManualIncome').innerText = 'Rp ' + stats.manual_income.toLocaleString('id-ID');
-                document.getElementById('statVpnCreated').innerText = stats.vpn_created.toLocaleString('id-ID');
-                document.getElementById('statVpnRenewed').innerText = stats.vpn_renewed.toLocaleString('id-ID');
                 document.getElementById('statNetProfit').innerText = 'Rp ' + stats.net_profit.toLocaleString('id-ID');
-
-                if (stats.servers && stats.servers.length > 0) {
-                    serverTbody.innerHTML = stats.servers.map(srv => 
-                        '<tr class="hover:bg-gray-800/20 transition">' +
-                            '<td class="p-3 font-medium text-white">' + escapeHtmlClient(srv.name) + '</td>' +
-                            '<td class="p-3 font-mono font-bold text-center text-indigo-400">' + srv.created.toLocaleString('id-ID') + '</td>' +
-                            '<td class="p-3 font-mono font-bold text-center text-yellow-500">' + srv.renewed.toLocaleString('id-ID') + '</td>' +
-                        '</tr>'
-                    ).join('');
-                } else {
-                    serverTbody.innerHTML = '<tr><td colspan="3" class="p-6 text-center text-gray-500 font-bold">Tidak ada aktivitas VPN.</td></tr>';
-                }
 
                 renderStatsDailyChart(stats.daily_chart);
 
             } catch (e) {
                 console.error("Dashboard Stats Error:", e);
                 loaderIds.forEach(id => { const el = document.getElementById(id); if (el) el.innerText = 'Error'; });
-                serverTbody.innerHTML = '<tr><td colspan="3" class="p-6 text-center text-sky-400">Error memuat data.</td></tr>';
+                
             }
         }
 
@@ -2464,7 +1959,7 @@ async function renderAdminDashboard(env, currentUser, appSettings) {
                                     <button onclick="actionUser('\${u.email}', 'add_balance')" class="bg-sky-600 hover:bg-sky-500 text-white text-xs font-bold px-3 py-1.5 rounded-lg transition shadow">\xB1 Saldo</button>
                                     <button onclick="actionUser('\${u.email}', 'toggle_block')" class="bg-\${u.is_blocked === 1 ? 'green' : 'red'}-600 hover:bg-\${u.is_blocked === 1 ? 'green' : 'red'}-500 text-white text-xs font-bold px-3 py-1.5 rounded-lg transition shadow">\${u.is_blocked === 1 ? 'Unblock' : 'Block'}</button>
                                     <button onclick="viewInbox('\${u.email}')" class="bg-gray-700 hover:bg-gray-600 text-white text-xs font-bold px-3 py-1.5 rounded-lg transition border border-gray-600 shadow">Inbox</button>
-                                    <button onclick="searchVPN('\${u.email}')" class="bg-sky-600 hover:bg-sky-500 text-white text-xs font-bold px-3 py-1.5 rounded-lg transition shadow">Lihat VPN</button>
+                                    
                                 </td>
                             </tr>
                         \`).join('');
@@ -2499,26 +1994,6 @@ async function renderAdminDashboard(env, currentUser, appSettings) {
         // Fitur Settings
         document.getElementById('settingsForm').addEventListener('submit', async(e) => {
             e.preventDefault();
-            
-            // Sync interactive UI to hidden input and parse servers array
-            let servers = [];
-            try {
-                servers = getServersFromUI();
-                const ids = servers.map(s => s.id);
-                if (ids.some(id => !id)) {
-                    swalDark.fire('Error', 'ID Server tidak boleh kosong!', 'error');
-                    return;
-                }
-                if (new Set(ids).size !== ids.length) {
-                    swalDark.fire('Error', 'ID Server harus unik (tidak boleh ada duplikat)!', 'error');
-                    return;
-                }
-                document.getElementById('setServers').value = JSON.stringify(servers);
-            } catch (err) {
-                swalDark.fire('Error', 'Gagal memproses daftar server!', 'error');
-                return;
-            }
-
             const btn = document.getElementById('btnSaveSettings');
             btn.disabled = true; btn.innerText = 'Menyimpan...';
             try {
@@ -2533,20 +2008,16 @@ async function renderAdminDashboard(env, currentUser, appSettings) {
                     gopay_qris_static: document.getElementById('setGopayQrisStatic') ? document.getElementById('setGopayQrisStatic').value.trim() : '',
                     ai_chat_active: document.getElementById('setAiActive').value === 'true',
                     ai_provider: document.getElementById('setAiProvider').value,
-                    price_per_day: parseInt(document.getElementById('setPrice').value),
-                    script_price_per_day: document.getElementById('setLicPrice') ? parseInt(document.getElementById('setLicPrice').value) : 0,
-                    kmsp_markup: document.getElementById('setMarkup') ? parseInt(document.getElementById('setMarkup').value) : 0,
                     telegram_bot_token: document.getElementById('setTgToken').value,
                     telegram_channel_id: document.getElementById('setTgChatId').value,
                     auto_backup_frequency: parseInt(document.getElementById('setBackupFreq').value),
-                    maintenance_mode: document.getElementById('setMaintenance').value === 'true',
-                    servers: servers
+                    maintenance_mode: document.getElementById('setMaintenance').value === 'true'
                 };
-                
+
                 const res = await fetch('/api/admin/settings', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(payload) });
-                if((await res.json()).success) { 
-                    await swalDark.fire('Berhasil', 'Konfigurasi Sistem diupdate!', 'success'); 
-                    window.location.reload(); 
+                if((await res.json()).success) {
+                    await swalDark.fire('Berhasil', 'Konfigurasi Sistem diupdate!', 'success');
+                    window.location.reload();
                 }
             } catch(e) { swalDark.fire('Error', 'Terjadi kesalahan saat menyimpan konfigurasi!', 'error'); }
             btn.disabled = false; btn.innerText = 'Simpan Konfigurasi';
@@ -2568,761 +2039,6 @@ async function renderAdminDashboard(env, currentUser, appSettings) {
             } catch(err) { swalDark.fire('Error', 'Kesalahan sistem', 'error'); }
             btn.innerText = 'Kirim Pesan Sekarang'; btn.disabled = false;
         });
-
-        // Fitur Global Ganti UUID
-        document.getElementById('globalUuidForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const btn = document.getElementById('btnSubmitGu');
-            const serverId = document.getElementById('guServer').value;
-            const oldUuid = document.getElementById('guOldUuid').value.trim();
-            let newUuid = document.getElementById('guNewUuid').value.trim();
-            
-            if (!newUuid) {
-                newUuid = crypto.randomUUID();
-            }
-
-            btn.innerText = 'Mengeksekusi...'; btn.disabled = true;
-            try {
-                const payload = { serverId, oldUuid, newUuid };
-                const res = await fetch('/api/admin/global-change-uuid', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
-                const data = await res.json();
-                
-                if (data.success) { 
-                    await swalDark.fire({
-                        title: 'Sukses Ganti UUID',
-                        html: \`<p class="mb-3 text-sm text-gray-300">Proses ganti UUID untuk akun di VPS berhasil dieksekusi.</p><div class="bg-gray-950 p-4 rounded-xl overflow-x-auto text-left border border-gray-800 shadow-inner"><pre class="text-green-400 font-mono text-[11px] leading-relaxed whitespace-pre-wrap select-text">\${data.resultText}</pre></div>\`,
-                        icon: 'success',
-                        width: '600px'
-                    });
-                    document.getElementById('globalUuidForm').reset();
-                    closeGlobalUuidModal();
-                } else {
-                    swalDark.fire('Server API Error', data.message, 'error');
-                }
-            } catch(err) { 
-                swalDark.fire('Error', 'Kesalahan sistem saat menghubungi backend.', 'error'); 
-            }
-            btn.innerText = 'Eksekusi Ganti UUID'; btn.disabled = false;
-        });
-        
-        // Fitur Global Delete VPN
-        document.getElementById('globalDeleteForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const btn = document.getElementById('btnSubmitGd');
-            const serverId = document.getElementById('gdServer').value;
-            const username = document.getElementById('gdUsername').value.trim();
-            
-            const conf = await swalDark.fire({ title: 'Yakin Hapus Global?', text: 'Akun ' + username + ' akan dihapus dari VPS dan Database secara permanen.', icon: 'warning', showCancelButton: true });
-            if (!conf.isConfirmed) return;
-
-            btn.innerText = 'Mengeksekusi...'; btn.disabled = true;
-            try {
-                const payload = { serverId, username };
-                const res = await fetch('/api/admin/global-delete-vpn', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
-                const data = await res.json();
-                
-                if (data.success) { 
-                    await swalDark.fire({
-                        title: 'Eksekusi Selesai',
-                        html: \`<p class="mb-3 text-sm text-gray-300">Proses hapus akun berhasil dieksekusi di background VPS dan Database.</p><div class="bg-gray-950 p-4 rounded-xl overflow-x-auto text-left border border-gray-800 shadow-inner"><pre class="text-green-400 font-mono text-[11px] leading-relaxed whitespace-pre-wrap select-text">\${data.resultText}</pre></div>\`,
-                        icon: 'success',
-                        width: '600px'
-                    });
-                    document.getElementById('globalDeleteForm').reset();
-                    closeGlobalDeleteModal();
-                    // Coba perbarui pencarian tabel VPN jika kata kunci sama
-                    const currentSearch = document.getElementById('searchVpnKeyword').value.trim();
-                    if (currentSearch) searchVPN(currentSearch);
-                } else {
-                    swalDark.fire('Error', data.message, 'error');
-                }
-            } catch(err) { 
-                swalDark.fire('Error', 'Kesalahan sistem saat menghubungi backend.', 'error'); 
-            }
-            btn.innerText = 'Eksekusi Delete'; btn.disabled = false;
-        });
-
-        // Fitur Live Server Explorer
-        // Fungsi asinkron untuk detail akun yang bisa dipanggil dari link dynamic HTML
-        async function checkAccountDetail(username, protocol) {
-            document.getElementById('leUsername').value = username;
-            if (protocol) {
-                document.getElementById('leProtocol').value = protocol.toLowerCase();
-            }
-            await fetchLiveDetail();
-        }
-
-        async function fetchLiveList() {
-            const btn = document.getElementById('btnFetchList');
-            const resultBox = document.getElementById('leListResult');
-            const serverId = document.getElementById('leServer').value;
-            const protocol = document.getElementById('leProtocol').value;
-
-            const oldText = btn.innerHTML;
-            btn.innerHTML = '\u26A1 Menarik Data...'; btn.disabled = true;
-            
-            // Build tasks
-            const serversToScan = serverId === 'all' 
-                ? leActiveServers 
-                : leActiveServers.filter(s => s.id === serverId);
-            const protocolsToScan = protocol === 'all' 
-                ? ['vmess', 'vless', 'trojan', 'ssh', 'l2tp'] 
-                : [protocol];
-                
-            const tasks = [];
-            for (const s of serversToScan) {
-                for (const p of protocolsToScan) {
-                    tasks.push({ server: s, protocol: p });
-                }
-            }
-            
-            if (tasks.length === 0) {
-                resultBox.innerHTML = '<span class="text-cyan-400 font-semibold">Error: Tidak ada server atau protokol yang terpilih.</span>';
-                btn.innerHTML = oldText; btn.disabled = false;
-                return;
-            }
-
-            resultBox.innerHTML = \`
-                <div class="space-y-2.5 flex-grow flex flex-col min-h-0 text-slate-300">
-                    <div class="bg-gray-900/40 p-2 rounded-xl border border-gray-900 text-[10px] space-y-1.5 shrink-0">
-                        <div class="flex items-center justify-between">
-                            <span class="font-bold text-cyan-400 flex items-center gap-1.5">
-                                <span class="relative flex h-1.5 w-1.5">
-                                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-cyan-400 opacity-75"></span>
-                                    <span class="relative inline-flex rounded-full h-1.5 w-1.5 bg-cyan-500"></span>
-                                </span>
-                                SCANNING VPS REAL-TIME
-                            </span>
-                            <span id="leListProgressText" class="font-mono text-[9px] text-gray-400">Menghubungi VPS... 0/\${tasks.length} (0%)</span>
-                        </div>
-                        <div class="w-full bg-gray-950 rounded-full h-1 overflow-hidden border border-gray-900/60">
-                            <div id="leListProgressBar" class="bg-cyan-500 h-full w-0 transition-all duration-300"></div>
-                        </div>
-                    </div>
-                    
-                    <div class="border border-gray-900 rounded-xl bg-gray-950 overflow-hidden flex flex-col flex-grow min-h-0">
-                        <div class="bg-gray-900/30 px-3 py-1.5 border-b border-gray-900/80 flex justify-between items-center text-[10px] text-gray-400 shrink-0 font-bold">
-                            <span>DAFTAR AKUN VPS LIVE</span>
-                            <span id="leListTotalMatch" class="text-cyan-400">Menemukan: 0 akun</span>
-                        </div>
-                        <div class="overflow-y-auto flex-grow custom-scrollbar min-h-0">
-                            <table class="w-full text-left border-collapse">
-                                <thead class="bg-gray-900/60 text-gray-300 border-b border-gray-900/65 sticky top-0 z-10 backdrop-blur-sm">
-                                    <tr>
-                                        <th class="py-2 px-3 text-[10px] font-bold uppercase tracking-wider">Server</th>
-                                        <th class="py-2 px-3 text-[10px] font-bold uppercase tracking-wider text-center">Proto</th>
-                                        <th class="py-2 px-3 text-[10px] font-bold uppercase tracking-wider">Username</th>
-                                        <th class="py-2 px-3 text-[10px] font-bold uppercase tracking-wider">Masa Aktif</th>
-                                        <th class="py-2 px-3 text-[10px] font-bold uppercase tracking-wider text-center">Aksi</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="leListResultsBody" class="divide-y divide-gray-900/40 text-[11px]">
-                                    <tr id="leListPlaceholderRow">
-                                        <td colspan="5" class="py-8 px-3 text-center text-gray-500 text-xs animate-pulse">
-                                            Scanning server... Mohon tunggu.
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-            \`;
-            
-            const progressText = document.getElementById('leListProgressText');
-            const progressBar = document.getElementById('leListProgressBar');
-            const resultsBody = document.getElementById('leListResultsBody');
-            const totalMatchText = document.getElementById('leListTotalMatch');
-            
-            let completed = 0;
-            let allAccounts = [];
-            
-            async function scanOne(task) {
-                const { server, protocol } = task;
-                try {
-                    const res = await fetch('/api/admin/live-explorer/list', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ serverId: server.id, protocol })
-                    });
-                    if (!res.ok) throw new Error();
-                    const data = await res.json();
-                    if (data.success) {
-                        const parsed = parseAccountsFromHtml(data.resultText, server.id, server.name, protocol);
-                        if (parsed.length > 0) {
-                            allAccounts = allAccounts.concat(parsed);
-                        } else if (data.resultText.trim() && !data.resultText.includes('class=')) {
-                            allAccounts.push({
-                                username: 'Raw Output (Click to view)',
-                                expiry: '-',
-                                serverId: server.id,
-                                serverName: server.name,
-                                protocol: protocol,
-                                isRaw: true,
-                                rawText: data.resultText
-                            });
-                        }
-                    }
-                } catch(e) {} finally {
-                    completed++;
-                    const percent = Math.round((completed / tasks.length) * 100);
-                    progressBar.style.width = percent + '%';
-                    progressText.innerText = \`Scanning: \${completed}/\${tasks.length} (\${percent}%)\`;
-                }
-            }
-            
-            await Promise.all(tasks.map(t => scanOne(t)));
-            
-            const placeholder = document.getElementById('leListPlaceholderRow');
-            if (placeholder) placeholder.remove();
-            
-            if (allAccounts.length === 0) {
-                resultsBody.innerHTML = \`
-                    <tr>
-                        <td colspan="5" class="py-8 px-3 text-center text-gray-500">
-                            Tidak ada akun ditemukan di server target.
-                        </td>
-                    </tr>
-                \`;
-                totalMatchText.innerText = 'Menemukan: 0 akun';
-            } else {
-                totalMatchText.innerText = \`Menemukan: \${allAccounts.length} akun\`;
-                allAccounts.sort((a, b) => a.username.localeCompare(b.username));
-                
-                allAccounts.forEach(acc => {
-                    const tr = document.createElement('tr');
-                    tr.className = 'hover:bg-gray-900/30 border-b border-gray-900/20 transition last:border-0';
-                    
-                    let userDisplay = '';
-                    if (acc.isRaw) {
-                        userDisplay = \`<span onclick="showRawOutput('\${escapeHtmlClient(acc.rawText)}')" class="text-yellow-500 hover:underline cursor-pointer font-mono font-semibold">\${escapeHtmlClient(acc.username)}</span>\`;
-                    } else {
-                        userDisplay = \`<span onclick="checkAccountDetailGlobal('\${escapeHtmlClient(acc.username)}', '\${acc.protocol}', '\${acc.serverId}')" class="text-cyan-400 hover:text-cyan-300 font-mono font-semibold cursor-pointer hover:underline select-all">\${escapeHtmlClient(acc.username)}</span>\`;
-                    }
-                    
-                    let expiryBadgeClass = 'text-gray-400';
-                    const expLower = acc.expiry.toLowerCase();
-                    if (expLower.includes('aktif') || expLower.includes('days') || expLower.includes('hari') || expLower.includes('lifetime')) {
-                        expiryBadgeClass = 'text-green-400 bg-green-500/10 border border-green-500/20 px-1.5 py-0.5 rounded text-[10px] font-bold';
-                    } else if (expLower.includes('expired') || expLower.includes('mati') || expLower.includes('telah habis')) {
-                        expiryBadgeClass = 'text-cyan-400 bg-sky-500/10 border border-sky-500/20 px-1.5 py-0.5 rounded text-[10px] font-bold';
-                    }
-                    
-                    tr.innerHTML = \`
-                        <td class="py-2 px-3 font-semibold text-slate-300 max-w-[120px] truncate">\${escapeHtmlClient(acc.serverName)}</td>
-                        <td class="py-2 px-3 text-center">
-                            <span class="px-1.5 py-0.5 rounded text-[9px] font-extrabold uppercase border \${getProtocolBadgeStyle(acc.protocol)}">\${acc.protocol}</span>
-                        </td>
-                        <td class="py-2 px-3">\${userDisplay}</td>
-                        <td class="py-2 px-3 font-mono text-[10px]"><span class="\${expiryBadgeClass}">\${escapeHtmlClient(acc.expiry)}</span></td>
-                        <td class="py-2 px-3 text-center">
-                            <div class="inline-flex gap-1.5">
-                                <button onclick="checkAccountDetailGlobal('\${escapeHtmlClient(acc.username)}', '\${acc.protocol}', '\${acc.serverId}')" class="bg-cyan-600/20 hover:bg-cyan-600/40 text-cyan-400 p-1 rounded transition text-[10px] flex items-center justify-center w-6 h-6 border border-cyan-500/10" title="Cek Detail">\u{1F50D}</button>
-                                <button onclick="renewAccountDirect('\${escapeHtmlClient(acc.username)}', '\${acc.protocol}', '\${acc.serverId}')" class="bg-green-600/20 hover:bg-green-600/40 text-green-400 p-1 rounded transition text-[10px] flex items-center justify-center w-6 h-6 border border-green-500/10" title="Perpanjang">\u{1F504}</button>
-                                <button onclick="deleteAccountDirect('\${escapeHtmlClient(acc.username)}', '\${acc.protocol}', '\${acc.serverId}')" class="bg-sky-600/20 hover:bg-sky-600/40 text-cyan-400 p-1 rounded transition text-[10px] flex items-center justify-center w-6 h-6 border border-sky-500/10" title="Hapus">\u{1F5D1}\uFE0F</button>
-                            </div>
-                        </td>
-                    \`;
-                    resultsBody.appendChild(tr);
-                });
-            }
-            
-            btn.innerHTML = oldText; btn.disabled = false;
-        }
-
-        async function fetchLiveDetail() {
-            const btn = document.getElementById('btnFetchDetail');
-            const resultBox = document.getElementById('leDetailResult');
-            const serverId = document.getElementById('leServer').value;
-            const protocol = document.getElementById('leProtocol').value;
-            const username = document.getElementById('leUsername').value.trim();
-
-            if (!username) return swalDark.fire('Perhatian', 'Kolom Username tidak boleh kosong!', 'warning');
-            
-            if (serverId === 'all') {
-                return swalDark.fire('Perhatian', 'Pilih salah satu VPS spesifik terlebih dahulu untuk melihat detail config!', 'warning');
-            }
-            if (protocol === 'all') {
-                return swalDark.fire('Perhatian', 'Pilih salah satu Protokol spesifik terlebih dahulu untuk melihat detail config!', 'warning');
-            }
-
-            btn.innerText = 'Cek...'; btn.disabled = true;
-            resultBox.innerHTML = '<span class="text-yellow-400 animate-pulse">Menghubungi VPS...</span>';
-
-            try {
-                const res = await fetch('/api/admin/live-explorer/detail', {
-                    method: 'POST', headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ serverId, protocol, username })
-                });
-                const data = await res.json();
-                if (data.success) {
-                    if (data.resultText.trim().startsWith('<') || data.resultText.includes('class=')) {
-                        resultBox.innerHTML = data.resultText;
-                    } else {
-                        resultBox.innerHTML = '<pre class="text-green-400 font-mono text-[11px] leading-relaxed whitespace-pre-wrap select-all">' + escapeHtmlClient(data.resultText) + '</pre>';
-                    }
-                    document.getElementById('leLinkUserPanel').classList.remove('hidden');
-                } else {
-                    resultBox.innerHTML = '<span class="text-cyan-400">Error: ' + escapeHtmlClient(data.message) + '</span>';
-                    document.getElementById('leLinkUserPanel').classList.add('hidden');
-                }
-            } catch(e) {
-                resultBox.innerHTML = '<span class="text-cyan-400">Koneksi Error.</span>';
-                document.getElementById('leLinkUserPanel').classList.add('hidden');
-            }
-            btn.innerText = 'Cek Detail'; btn.disabled = false;
-        }
-
-        async function linkLiveAccountToUser() {
-            const serverId = document.getElementById('leServer').value;
-            const protocol = document.getElementById('leProtocol').value;
-            const username = document.getElementById('leUsername').value.trim();
-            const email = document.getElementById('linkUserEmail').value.trim();
-
-            if (!username) return swalDark.fire('Perhatian', 'Username VPN tidak ditemukan!', 'warning');
-            if (!email) return swalDark.fire('Perhatian', 'Kolom Email User tidak boleh kosong!', 'warning');
-            
-            if (serverId === 'all') {
-                return swalDark.fire('Perhatian', 'Pilih salah satu VPS spesifik terlebih dahulu!', 'warning');
-            }
-            if (protocol === 'all') {
-                return swalDark.fire('Perhatian', 'Pilih salah satu Protokol spesifik terlebih dahulu!', 'warning');
-            }
-
-            const btn = document.getElementById('btnLinkLiveUser');
-            const oldText = btn.innerText;
-            btn.innerText = 'Menghubungkan...'; btn.disabled = true;
-
-            try {
-                const res = await fetch('/api/admin/live-explorer/link-user', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ serverId, protocol, username, email })
-                });
-                const data = await res.json();
-                if (data.success) {
-                    await swalDark.fire('Berhasil', data.message || 'Akun berhasil dihubungkan ke user website!', 'success');
-                    document.getElementById('linkUserEmail').value = '';
-                } else {
-                    await swalDark.fire('Gagal', data.message || 'Terjadi kesalahan.', 'error');
-                }
-            } catch(e) {
-                await swalDark.fire('Gagal', 'Terjadi kesalahan koneksi.', 'error');
-            } finally {
-                btn.innerText = oldText; btn.disabled = false;
-            }
-        }
-
-        async function deleteLiveAccount() {
-            const serverId = document.getElementById('leServer').value;
-            const serverSelect = document.getElementById('leServer');
-            const serverName = serverSelect.options[serverSelect.selectedIndex].text;
-            const protocol = document.getElementById('leProtocol').value;
-            const username = document.getElementById('leUsername').value.trim();
-
-            if (!username) {
-                return swalDark.fire('Perhatian', 'Kolom Username tidak boleh kosong!', 'warning');
-            }
-            
-            if (serverId === 'all') {
-                return swalDark.fire('Perhatian', 'Pilih salah satu VPS spesifik terlebih dahulu!', 'warning');
-            }
-            if (protocol === 'all') {
-                return swalDark.fire('Perhatian', 'Pilih salah satu Protokol spesifik terlebih dahulu!', 'warning');
-            }
-
-            const confirmResult = await swalDark.fire({
-                title: 'Hapus Akun?',
-                text: \`Apakah Anda yakin ingin menghapus akun "\${username}" di server "\${serverName}" (\${protocol.toUpperCase()}) secara permanen dari database dan VPS?\`,
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonText: 'Ya, Hapus!',
-                cancelButtonText: 'Batal',
-                confirmButtonColor: '#ef4444'
-            });
-
-            if (!confirmResult.isConfirmed) return;
-
-            const btn = document.getElementById('btnDeleteLive');
-            const oldText = btn.innerText;
-            btn.innerText = 'Menghapus...';
-            btn.disabled = true;
-
-            try {
-                const res = await fetch('/api/admin/live-explorer/delete', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ serverId, protocol, username })
-                });
-                const data = await res.json();
-                if (data.success) {
-                    await swalDark.fire('Berhasil', 'Akun "' + username + '" berhasil dihapus.', 'success');
-                    document.getElementById('leUsername').value = '';
-                    document.getElementById('leDetailResult').innerHTML = 'Menunggu instruksi...';
-                    document.getElementById('leLinkUserPanel').classList.add('hidden');
-                    await fetchLiveList();
-                } else {
-                    await swalDark.fire('Gagal', data.message || 'Terjadi kesalahan saat menghapus.', 'error');
-                }
-            } catch (e) {
-                await swalDark.fire('Error', 'Koneksi ke API Server gagal.', 'error');
-            } finally {
-                btn.innerText = oldText;
-                btn.disabled = false;
-            }
-        }
-
-        async function renewLiveAccount() {
-            const serverId = document.getElementById('leServer').value;
-            const serverSelect = document.getElementById('leServer');
-            const serverName = serverSelect.options[serverSelect.selectedIndex].text;
-            const protocol = document.getElementById('leProtocol').value;
-            const username = document.getElementById('leUsername').value.trim();
-
-            if (!username) {
-                return swalDark.fire('Perhatian', 'Kolom Username tidak boleh kosong!', 'warning');
-            }
-            
-            if (serverId === 'all') {
-                return swalDark.fire('Perhatian', 'Pilih salah satu VPS spesifik terlebih dahulu!', 'warning');
-            }
-            if (protocol === 'all') {
-                return swalDark.fire('Perhatian', 'Pilih salah satu Protokol spesifik terlebih dahulu!', 'warning');
-            }
-
-            const { value: days } = await swalDark.fire({
-                title: 'Perpanjang Akun Live',
-                text: \`Masukkan jumlah hari tambahan untuk akun "\${username}" di server "\${serverName}" (\${protocol.toUpperCase()}):\`,
-                input: 'number',
-                inputPlaceholder: 'Jumlah Hari (contoh: 30)',
-                inputValue: '30',
-                showCancelButton: true,
-                confirmButtonText: 'Perpanjang Sekarang',
-                cancelButtonText: 'Batal',
-                confirmButtonColor: '#22c55e',
-                inputValidator: (value) => {
-                    if (!value || isNaN(parseInt(value)) || parseInt(value) <= 0) {
-                        return 'Masukkan jumlah hari yang valid (minimal 1 hari)!';
-                    }
-                }
-            });
-
-            if (!days) return;
-
-            const btn = document.getElementById('btnRenewLive');
-            const oldText = btn.innerText;
-            btn.innerText = 'Memproses...';
-            btn.disabled = true;
-
-            try {
-                const res = await fetch('/api/admin/live-explorer/renew', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ serverId, protocol, username, duration: parseInt(days) })
-                });
-                const data = await res.json();
-                if (data.success) {
-                    await swalDark.fire('Berhasil', \`Akun "\${username}" berhasil diperpanjang sebanyak \${days} Hari.<br><br><pre class="text-green-400 font-mono text-[10px] whitespace-pre-wrap text-left bg-gray-950 p-2 rounded">\${data.resultText || ''}</pre>\`, 'success');
-                    await fetchLiveDetail();
-                } else {
-                    await swalDark.fire('Gagal', data.message || 'Terjadi kesalahan saat memperpanjang.', 'error');
-                }
-            } catch (e) {
-                await swalDark.fire('Error', 'Koneksi ke API Server gagal.', 'error');
-            } finally {
-                btn.innerText = oldText;
-                btn.disabled = false;
-            }
-        }
-
-        async function checkAccountDetailGlobal(username, protocol, serverId) {
-            if (serverId) {
-                document.getElementById('leServer').value = serverId;
-            }
-            if (protocol) {
-                document.getElementById('leProtocol').value = protocol.toLowerCase();
-            }
-            document.getElementById('leUsername').value = username;
-            await fetchLiveDetail();
-        }
-
-        function parseAccountsFromHtml(htmlText, serverId, serverName, protocol) {
-            const parser = new DOMParser();
-            const doc = parser.parseFromString(htmlText, 'text/html');
-            const spans = doc.querySelectorAll('span[onclick^="checkAccountDetail"]');
-            const accounts = [];
-            
-            spans.forEach(span => {
-                const username = span.textContent.trim();
-                const card = span.closest('.rounded-xl') || span.parentElement;
-                const expSpan = card ? card.querySelector('.font-mono') : null;
-                const expText = expSpan ? expSpan.textContent.trim() : 'Lifetime';
-                
-                let actualProtocol = protocol;
-                const onclickAttr = span.getAttribute('onclick') || '';
-                const protoMatch = onclickAttr.match(/checkAccountDetail([^,]+,s*'([^']+)')/);
-                if (protoMatch && protoMatch[1]) {
-                    actualProtocol = protoMatch[1].toLowerCase();
-                }
-                
-                accounts.push({
-                    username,
-                    expiry: expText,
-                    serverId,
-                    serverName,
-                    protocol: actualProtocol
-                });
-            });
-            
-            return accounts;
-        }
-
-        async function renewAccountDirect(username, protocol, serverId) {
-            document.getElementById('leServer').value = serverId;
-            document.getElementById('leProtocol').value = protocol;
-            document.getElementById('leUsername').value = username;
-            await renewLiveAccount();
-        }
-
-        async function deleteAccountDirect(username, protocol, serverId) {
-            document.getElementById('leServer').value = serverId;
-            document.getElementById('leProtocol').value = protocol;
-            document.getElementById('leUsername').value = username;
-            await deleteLiveAccount();
-        }
-
-        function showRawOutput(text) {
-            swalDark.fire({
-                title: 'Raw Output VPS',
-                html: \`<pre class="text-slate-300 font-mono text-[10px] leading-tight select-text text-left whitespace-pre-wrap bg-gray-950 p-2.5 rounded border border-gray-900/80 max-h-[60vh] overflow-y-auto custom-scrollbar">\${escapeHtmlClient(text)}</pre>\`,
-                width: '600px',
-                confirmButtonColor: '#06b6d4',
-                confirmButtonText: 'Tutup'
-            });
-        }
-
-        async function startLiveGlobalSearch() {
-            const query = document.getElementById('leGlobalSearchQuery').value.trim();
-            if (!query) {
-                return swalDark.fire('Perhatian', 'Masukkan kata kunci pencarian terlebih dahulu!', 'warning');
-            }
-
-            const btn = document.getElementById('btnGlobalSearch');
-            const resultBox = document.getElementById('leListResult');
-            
-            const oldBtnText = btn.innerHTML;
-            btn.innerHTML = '\u26A1 Mencari...';
-            btn.disabled = true;
-
-            resultBox.innerHTML = \`
-                <div class="space-y-2 select-text text-slate-300">
-                    <div class="bg-gray-900/40 p-2 rounded border border-gray-800/80 text-[10px] space-y-1.5 shrink-0">
-                        <div class="flex items-center justify-between">
-                            <span class="font-bold text-cyan-400 flex items-center gap-1.5">
-                                <span class="relative flex h-1.5 w-1.5">
-                                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-cyan-400 opacity-75"></span>
-                                    <span class="relative inline-flex rounded-full h-1.5 w-1.5 bg-cyan-500"></span>
-                                </span>
-                                SCANNING VPS REAL-TIME
-                            </span>
-                            <span id="leSearchProgressText" class="font-mono text-[9px] text-gray-400">Menghubungi VPS... 0%</span>
-                        </div>
-                        <div class="w-full bg-gray-950 rounded-full h-1 overflow-hidden border border-gray-900/60">
-                            <div id="leSearchProgressBar" class="bg-cyan-500 h-full w-0 transition-all duration-300"></div>
-                        </div>
-                        <div id="leSearchProgressLogs" class="max-h-[70px] overflow-y-auto text-[9.5px] font-mono text-gray-500 leading-tight space-y-0.5 custom-scrollbar border-t border-gray-900/30 pt-1.5">
-                            <div class="text-cyan-500/80">Memulai pencarian kata kunci "\${escapeHtmlClient(query)}"...</div>
-                        </div>
-                    </div>
-
-                    <!-- Hasil Pencarian -->
-                    <div class="border border-gray-900/60 rounded bg-gray-950 overflow-hidden flex flex-col flex-grow min-h-0">
-                        <div class="bg-gray-900/30 px-2 py-1 border-b border-gray-900/60 flex justify-between items-center text-[10px] text-gray-400 shrink-0 font-bold">
-                            <span>HASIL PENCARIAN GLOBAL</span>
-                            <span id="leSearchTotalMatch" class="text-cyan-400">Menemukan: 0 akun</span>
-                        </div>
-                        <div class="overflow-y-auto max-h-[50vh] custom-scrollbar">
-                            <table class="w-full text-left border-collapse">
-                                <thead class="bg-gray-900/60 text-gray-300 border-b border-gray-800/80 sticky top-0 z-10 backdrop-blur-sm">
-                                    <tr>
-                                        <th class="py-3.5 px-4 text-[11px] font-bold uppercase tracking-wider w-1/4">Server</th>
-                                        <th class="py-3.5 px-4 text-[11px] font-bold uppercase tracking-wider w-24 text-center">Protocol</th>
-                                        <th class="py-3.5 px-4 text-[11px] font-bold uppercase tracking-wider">Username</th>
-                                        <th class="py-3.5 px-4 text-[11px] font-bold uppercase tracking-wider w-1/3">Masa Aktif</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="leGlobalSearchResultsBody" class="divide-y divide-gray-900/50 text-[13px]">
-                                    <tr id="leSearchPlaceholderRow">
-                                        <td colspan="4" class="py-12 px-4 text-center text-gray-400 text-xs animate-pulse">
-                                            <i class="fas fa-spinner fa-spin mr-2"></i>Scanning server... Mohon tunggu.
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-            \`;
-
-            const progressText = document.getElementById('leSearchProgressText');
-            const progressBar = document.getElementById('leSearchProgressBar');
-            const progressLogs = document.getElementById('leSearchProgressLogs');
-            const resultsBody = document.getElementById('leGlobalSearchResultsBody');
-            const totalMatchText = document.getElementById('leSearchTotalMatch');
-
-            function addLog(message, type = 'info') {
-                const div = document.createElement('div');
-                if (type === 'success') div.className = 'text-green-400';
-                else if (type === 'error') div.className = 'text-cyan-400';
-                else if (type === 'warn') div.className = 'text-yellow-500';
-                else div.className = 'text-gray-400';
-                
-                div.innerHTML = \`[\${new Date().toLocaleTimeString('id-ID')}] \${message}\`;
-                progressLogs.appendChild(div);
-                progressLogs.scrollTop = progressLogs.scrollHeight;
-            }
-
-            const servers = typeof leActiveServers !== 'undefined' ? leActiveServers : [];
-            const protocols = ['vmess', 'vless', 'trojan', 'ssh', 'l2tp'];
-            
-            if (servers.length === 0) {
-                addLog('Error: Tidak ada server yang terkonfigurasi.', 'error');
-                resultsBody.innerHTML = '<tr><td colspan="4" class="p-4 text-center text-cyan-400">Tidak ada server terkonfigurasi.</td></tr>';
-                btn.innerHTML = oldBtnText;
-                btn.disabled = false;
-                return;
-            }
-
-            const tasks = [];
-            for (const s of servers) {
-                for (const p of protocols) {
-                    tasks.push({ server: s, protocol: p });
-                }
-            }
-
-            let completedTasks = 0;
-            let totalMatched = 0;
-
-            const totalTasks = tasks.length;
-            progressText.innerText = \`Menghubungi VPS... 0/\${totalTasks} (0%)\`;
-
-            async function executeTask(task) {
-                const { server, protocol } = task;
-                const taskLabel = \`\${server.name} [\${protocol.toUpperCase()}]\`;
-                
-                try {
-                    const res = await fetch('/api/admin/live-explorer/list', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ serverId: server.id, protocol })
-                    });
-                    
-                    if (!res.ok) throw new Error(\`HTTP \${res.status}\`);
-                    
-                    const data = await res.json();
-                    if (data.success) {
-                        const parser = new DOMParser();
-                        const doc = parser.parseFromString(data.resultText, 'text/html');
-                        const spans = doc.querySelectorAll('span[onclick^="checkAccountDetail"]');
-                        
-                        let matchInTask = 0;
-                        spans.forEach(span => {
-                            const username = span.textContent.trim();
-                            if (username.toLowerCase().includes(query.toLowerCase())) {
-                                const card = span.closest('.rounded-xl');
-                                const expSpan = card ? card.querySelector('.font-mono') : null;
-                                const expText = expSpan ? expSpan.textContent.trim() : 'Lifetime';
-                                const badgeClass = expSpan ? expSpan.className : '';
-                                
-                                const placeholder = document.getElementById('leSearchPlaceholderRow');
-                                if (placeholder) placeholder.remove();
-                                
-                                const tr = document.createElement('tr');
-                                tr.className = 'hover:bg-gray-900/30 border-b border-gray-900/20 transition last:border-0';
-                                
-                                // Ganti text-[11px] pada badgeClass asal dengan text-[12px] agar lebih besar dan jelas
-                                let finalBadgeClass = badgeClass.replace('text-[11px]', 'text-[12px]');
-                                if (!finalBadgeClass.includes('text-')) {
-                                    finalBadgeClass += ' text-[12px]';
-                                }
-                                
-                                tr.innerHTML = \`
-                                    <td class="py-3.5 px-4 font-semibold text-slate-200 max-w-[150px] truncate">\${escapeHtmlClient(server.name)}</td>
-                                    <td class="py-3.5 px-4 text-center">
-                                        <span class="px-2 py-0.5 rounded text-[10px] font-bold uppercase border \${getProtocolBadgeStyle(protocol)}">\${protocol}</span>
-                                    </td>
-                                    <td class="py-3.5 px-4">
-                                        <span onclick="checkAccountDetailGlobal('\${escapeHtmlClient(username)}', '\${protocol}', '\${server.id}')" 
-                                              class="text-cyan-400 hover:text-cyan-300 font-mono font-semibold cursor-pointer transition hover:underline select-all">\${escapeHtmlClient(username)}</span>
-                                    </td>
-                                    <td class="py-3.5 px-4 font-mono">
-                                        <span class="\${finalBadgeClass}">\${escapeHtmlClient(expText)}</span>
-                                    </td>
-                                \`;
-                                resultsBody.appendChild(tr);
-                                matchInTask++;
-                                totalMatched++;
-                            }
-                        });
-                        
-                        if (matchInTask > 0) {
-                            addLog(\`\u2705 \${taskLabel}: Ditemukan \${matchInTask} akun\`, 'success');
-                            totalMatchText.innerText = \`Menemukan: \${totalMatched} akun\`;
-                        } else {
-                            addLog(\`\u2022 \${taskLabel}: Selesai (Tidak ada kecocokan)\`, 'info');
-                        }
-                    } else {
-                        addLog(\`\u26A0\uFE0F \${taskLabel}: \${data.message || 'Gagal menarik data'}\`, 'warn');
-                    }
-                } catch (err) {
-                    addLog(\`\u274C \${taskLabel} Error: \${err.message}\`, 'error');
-                } finally {
-                    completedTasks++;
-                    const percent = Math.round((completedTasks / totalTasks) * 100);
-                    progressText.innerText = \`Scanning: \${completedTasks}/\${totalTasks} (\${percent}%)\`;
-                    progressBar.style.width = \`\${percent}%\`;
-                }
-            }
-
-            const concurrencyLimit = 5;
-            const pool = [];
-            
-            for (let i = 0; i < tasks.length; i++) {
-                if (pool.length >= concurrencyLimit) {
-                    await Promise.race(pool);
-                }
-                const p = executeTask(tasks[i]).then(() => {
-                    pool.splice(pool.indexOf(p), 1);
-                });
-                pool.push(p);
-            }
-            await Promise.all(pool);
-
-            addLog(\`\u{1F389} Pemindaian selesai! Total menemukan \${totalMatched} akun.\`, 'success');
-            btn.innerHTML = oldBtnText;
-            btn.disabled = false;
-
-            if (totalMatched === 0) {
-                resultsBody.innerHTML = \`
-                    <tr>
-                        <td colspan="4" class="p-8 text-center text-gray-500 text-[10px]">
-                            \u274C Tidak ditemukan akun dengan kata kunci "\${escapeHtmlClient(query)}" di semua VPS.
-                        </td>
-                    </tr>
-                \`;
-            }
-        }
-
-        function getProtocolBadgeStyle(protocol) {
-            switch(protocol) {
-                case 'vmess': return 'bg-yellow-500/10 text-yellow-400 border-yellow-500/20';
-                case 'vless': return 'bg-cyan-500/10 text-cyan-400 border-cyan-500/20';
-                case 'trojan': return 'bg-orange-500/10 text-orange-400 border-orange-500/20';
-                case 'ssh': return 'bg-green-500/10 text-green-400 border-green-500/20';
-                case 'l2tp': return 'bg-purple-500/10 text-purple-400 border-purple-500/20';
-                default: return 'bg-gray-500/10 text-gray-400 border-gray-500/20';
-            }
-        }
 
         async function actionUser(email, action) {
             let value = 0;
@@ -3440,142 +2156,6 @@ async function renderAdminDashboard(env, currentUser, appSettings) {
                 }
             } catch (e) {
                 tbody.innerHTML = '<tr><td colspan="4" class="p-8 text-center text-sky-400">Error koneksi internet.</td></tr>';
-            }
-        }
-
-        // ==========================================
-        // PENCARIAN & MANAJEMEN VPN
-        // ==========================================
-        async function searchVPN(forceKeyword = null) {
-            const inputEl = document.getElementById('searchVpnKeyword');
-            if (forceKeyword) {
-                inputEl.value = forceKeyword;
-                document.getElementById('vpnManagement').scrollIntoView({ behavior: 'smooth' });
-                // Membuka otomatis form pencarian jika sedang tertutup (hidden)
-                document.getElementById('sectionVpn').classList.remove('hidden');
-                document.getElementById('iconVpn').classList.add('rotate-180');
-            }
-            
-            const keyword = inputEl.value.trim();
-            const btn = document.getElementById('btnSearchVpn');
-            const tbody = document.getElementById('vpnTableBody');
-            
-            if (!keyword) return swalDark.fire('Perhatian', 'Ketikkan email atau username VPN untuk mencari.', 'warning');
-
-            btn.innerText = 'Mencari...'; btn.disabled = true;
-            tbody.innerHTML = '<tr><td colspan="5" class="p-8 text-center text-cyan-400 animate-pulse">Sedang mencari data...</td></tr>';
-
-            try {
-                const res = await fetch('/api/admin/vpn-search', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ keyword }) });
-                const data = await res.json();
-                
-                if (data.success) {
-                    if (data.data.length === 0) {
-                        tbody.innerHTML = '<tr><td colspan="5" class="p-8 text-center text-gray-500">Tidak ada data VPN yang cocok dengan pencarian.</td></tr>';
-                    } else {
-                        tbody.innerHTML = data.data.map(v => {
-                            // Validasi Protokol untuk memunculkan atau menyembunyikan Tombol Ganti UUID
-                            const isXray = v.protocol.toLowerCase().includes('trojan') || v.protocol.toLowerCase().includes('vmess') || v.protocol.toLowerCase().includes('vless');
-                            const btnChangeUuid = isXray ? \`<button onclick="actionVPN('\${v.id}', 'change_uuid')" class="bg-pink-700 hover:bg-pink-600 text-white text-[10px] px-2.5 py-1.5 rounded uppercase font-bold transition shadow" title="Ganti UUID (Acak/Kustom)">Ganti UUID</button>\` : '';
-
-                            return \`
-                                <tr class="border-b border-gray-800 hover:bg-gray-800/50 transition">
-                                    <td class="p-4 text-xs font-mono text-gray-400">\${v.email}</td>
-                                    <td class="p-4 font-bold text-cyan-400 font-mono">\${v.username}</td>
-                                    <td class="p-4 text-xs"><span class="block text-gray-300 font-bold">\${v.protocol}</span><span class="text-gray-500">\${v.server}</span></td>
-                                    <td class="p-4 text-xs font-mono text-yellow-400">\${v.exp}</td>
-                                    <td class="p-4 flex gap-2 flex-wrap">
-                                        <button onclick="actionVPN('\${v.id}', 'detail')" class="bg-gray-700 hover:bg-gray-600 text-white text-[10px] px-2.5 py-1.5 rounded uppercase font-bold transition shadow">Detail</button>
-                                        <button onclick="actionVPN('\${v.id}', 'renew')" class="bg-sky-700 hover:bg-sky-600 text-white text-[10px] px-2.5 py-1.5 rounded uppercase font-bold transition shadow">Perpanjang</button>
-                                        \${btnChangeUuid}
-                                        <button onclick="actionVPN('\${v.id}', 'lock')" class="bg-yellow-700 hover:bg-yellow-600 text-white text-[10px] px-2.5 py-1.5 rounded uppercase font-bold transition shadow">Lock</button>
-                                        <button onclick="actionVPN('\${v.id}', 'unlock')" class="bg-green-700 hover:bg-green-600 text-white text-[10px] px-2.5 py-1.5 rounded uppercase font-bold transition shadow">Unlock</button>
-                                        <button onclick="actionVPN('\${v.id}', 'delete')" class="bg-sky-700 hover:bg-sky-600 text-white text-[10px] px-2.5 py-1.5 rounded uppercase font-bold transition shadow">Hapus</button>
-                                    </td>
-                                </tr>
-                            \`;
-                        }).join('');
-                    }
-                } else {
-                    tbody.innerHTML = '<tr><td colspan="5" class="p-8 text-center text-sky-400">Gagal mengambil data.</td></tr>';
-                }
-            } catch(e) {
-                tbody.innerHTML = '<tr><td colspan="5" class="p-8 text-center text-sky-400">Koneksi Error.</td></tr>';
-            }
-            btn.innerText = 'Cari VPN'; btn.disabled = false;
-        }
-
-        async function actionVPN(vpnId, actionType) {
-            let confirmText = '';
-            let extraData = null;
-
-            if (actionType === 'delete') confirmText = "Anda yakin ingin MENGHAPUS VPN ini dari Server VPS dan Database? Aksi ini permanen!";
-            else if (actionType === 'lock') confirmText = "Lock/Suspend akun ini di VPS?";
-            else if (actionType === 'unlock') confirmText = "Unlock/Unsuspend akun ini di VPS?";
-            
-            if (actionType === 'renew') {
-                const { value: days, isDismissed } = await swalDark.fire({
-                    title: 'Perpanjang VPN',
-                    input: 'number',
-                    inputLabel: 'Masukkan jumlah hari perpanjangan:',
-                    inputValue: '30',
-                    showCancelButton: true,
-                    inputValidator: (value) => {
-                        if (!value || isNaN(value) || parseInt(value) <= 0) return 'Masukkan jumlah hari yang valid!';
-                    }
-                });
-                if (isDismissed) return;
-                extraData = parseInt(days);
-            } else if (actionType === 'change_uuid') {
-                const { value: customUuid, isDismissed } = await swalDark.fire({
-                    title: 'Ganti UUID Akun',
-                    input: 'text',
-                    inputLabel: 'Masukkan UUID Baru (KOSONGKAN untuk Acak Otomatis):',
-                    inputPlaceholder: 'Contoh: 123e4567-e89b-12d3-a456-426614174000',
-                    showCancelButton: true
-                });
-                if (isDismissed) return;
-                extraData = customUuid ? customUuid.trim() : 'random';
-            } else if (actionType !== 'detail') {
-                const conf = await swalDark.fire({ title: 'Konfirmasi Eksekusi', text: confirmText, icon: 'warning', showCancelButton: true });
-                if (!conf.isConfirmed) return;
-            }
-
-            swalDark.fire({ title: 'Memproses ke VPS...', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
-
-            try {
-                const res = await fetch('/api/admin/vpn-action', {
-                    method: 'POST', headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify({ vpnId, action: actionType, extraData })
-                });
-                const data = await res.json();
-                
-                if (data.success) {
-                    if (actionType === 'detail') {
-                        swalDark.fire({
-                            title: 'Detail Config VPS',
-                            html: \`<div class="bg-gray-950 p-4 rounded-xl overflow-x-auto text-left border border-gray-800 shadow-inner"><pre class="text-green-400 font-mono text-[11px] leading-relaxed whitespace-pre-wrap select-text">\${data.resultText}</pre></div>\`,
-                            width: '600px'
-                        });
-                    } else if (actionType === 'change_uuid') {
-                        await swalDark.fire({
-                            title: 'UUID Berhasil Diganti!',
-                            html: \`Config baru telah dikirim ke Inbox User.\\n\\n<div class="bg-gray-950 p-4 rounded-xl mt-3 overflow-x-auto text-left border border-gray-800 shadow-inner"><pre class="text-green-400 font-mono text-[11px] leading-relaxed whitespace-pre-wrap select-text">\${data.resultText}</pre></div>\`,
-                            icon: 'success',
-                            width: '600px'
-                        });
-                    } else {
-                        await swalDark.fire('Berhasil!', \`Aksi \${actionType.toUpperCase()} sukses dieksekusi.\\n\\nRespons:\\n\${data.resultText}\`, 'success');
-                        
-                        if (actionType === 'delete' || actionType === 'renew') {
-                            searchVPN(document.getElementById('searchVpnKeyword').value);
-                        }
-                    }
-                } else {
-                    swalDark.fire('Server API Error', data.message, 'error');
-                }
-            } catch(e) {
-                swalDark.fire('Koneksi Error', 'Gagal menyambung ke server.', 'error');
             }
         }
 
@@ -7594,19 +6174,19 @@ Total : Rp.${totalSaldo.toLocaleString("id-ID")}
     const renderLayout = /* @__PURE__ */ __name222((title, content) => {
       const metaTags = `
                 <meta name="title" content="${title} - Warung Pulsa">
-                <meta name="description" content="Warung Pulsa melayani pembuatan Proxy & VPN Premium (SSH, VMess, VLESS, Trojan) dan Pulsa & PPOB Otomatis 24 Jam dengan layanan terbaik.">
+                <meta name="description" content="Warung Pulsa - Layanan Beli Pulsa All Operator, Paket Data Internet, Token Listrik PLN, Top Up Saldo E-Wallet, dan Cek Pulsa/OTP Otomatis 24 Jam.">
                 <meta name="keywords" content="VPN Premium, Proxy, SSH, Trojan, VLESS, VMess, Warung Pulsa, Pulsa, PPOB, Paket Data, Token PLN">
                 <meta name="theme-color" content="#f8fafc">
                 <meta property="og:type" content="website">
                 <meta property="og:url" content="/">
                 <meta property="og:title" content="${title} | Warung Pulsa">
-                <meta property="og:description" content="Layanan Proxy & VPN Premium serta Pulsa & PPOB Otomatis 24 Jam. Nikmati transaksi cepat, aman, dan tanpa batas!">
+                <meta property="og:description" content="Warung Pulsa - Layanan Beli Pulsa All Operator, Token PLN, E-Wallet, dan Cek Pulsa/OTP Otomatis 24 Jam.">
                 <meta property="og:image" content="${LOGO_URL}">
                 <meta property="og:site_name" content="Warung Pulsa">
                 <meta property="twitter:card" content="summary_large_image">
                 <meta property="twitter:url" content="/">
                 <meta property="twitter:title" content="${title} | Warung Pulsa">
-                <meta property="twitter:description" content="Layanan Proxy & VPN Premium serta Pulsa & PPOB Otomatis 24 Jam. Nikmati transaksi cepat, aman, dan tanpa batas!">
+                <meta property="twitter:description" content="Warung Pulsa - Layanan Beli Pulsa All Operator, Token PLN, E-Wallet, dan Cek Pulsa/OTP Otomatis 24 Jam.">
                 <meta property="twitter:image" content="${LOGO_URL}">`;
       if (currentUser) {
         const unreadCount = currentUser.inbox_unread_count || 0;
@@ -7836,7 +6416,7 @@ Total : Rp.${totalSaldo.toLocaleString("id-ID")}
                                     <img src="${LOGO_URL}" alt="Logo" class="w-8 h-8 rounded-full border border-slate-200">
                                     <h3 class="text-xl font-bold text-sky-600">Warung Pulsa</h3>
                                 </div>
-                                <p class="text-slate-600 leading-relaxed text-sm">Solusi utama untuk privasi dan kebebasan internet Anda. Kami menyediakan layanan Proxy & VPN Premium berbasis Server Khusus dengan koneksi kecepatan tinggi, stabil, dan aman.</p>
+                                <p class="text-slate-600 leading-relaxed text-sm">Pusat layanan Beli Pulsa All Operator, Paket Kuota Internet, Token Listrik PLN, Top Up Saldo E-Wallet, dan Cek Pulsa / OTP otomatis 24 Jam dengan harga termurah dan transaksi instan.</p>
                             </div>
                             <div>
                                 <h4 class="font-bold text-slate-900 mb-4 uppercase tracking-wider text-sm">Tautan Cepat</h4>
@@ -8368,7 +6948,7 @@ Total : Rp.${totalSaldo.toLocaleString("id-ID")}
         }
         currentUser.unpaid_invoices = validUnpaid;
         const formatRupiah = /* @__PURE__ */ __name222((angka) => new Intl.NumberFormat("id-ID", { style: "currency", currency: "IDR" }).format(angka), "formatRupiah");
-        const serverOptions = appSettings.servers.map((s) => `<option value="${s.id}">${s.name}</option>`).join("");
+        
         const isQrisManualOn = appSettings.payment_qris_manual === true;
         const isShopeePayOn = appSettings.payment_shopeepay !== false;
         const isGoPayOn = appSettings.payment_gopay !== false;
@@ -8402,7 +6982,7 @@ Total : Rp.${totalSaldo.toLocaleString("id-ID")}
                 <div class="max-w-4xl mx-auto px-4 md:px-8 py-8">
                     <div class="mb-8 hidden md:block text-center relative z-10">
                         <h1 class="text-3xl font-black text-slate-900 mb-2 tracking-tight">Dashboard Utama</h1>
-                        <p class="text-slate-500 text-sm">Kelola isi saldo dompet dan buat akun VPN baru Anda.</p>
+                        <p class="text-slate-500 text-sm">Kelola saldo dompet, transaksi Pulsa & PPOB, dan layanan digital Anda.</p>
                     </div>
 
                     ${pendingBannerHtml}
@@ -8437,72 +7017,71 @@ Total : Rp.${totalSaldo.toLocaleString("id-ID")}
                             </div>
                         </div>
 
-                        <div class="bg-white p-6 md:p-8 rounded-3xl shadow-xl border border-slate-200 relative z-20">
-                            <h2 class="text-xl md:text-2xl font-black text-slate-900 mb-6 flex items-center gap-2">\u2795 Buat Akun VPN Baru</h2>
-                            <div class="space-y-5 mb-8">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 relative z-20">
+                            <!-- Card 1: Pulsa & PPOB -->
+                            <div class="bg-white p-6 rounded-3xl shadow-xl border border-slate-200 flex flex-col justify-between hover:border-sky-500/50 hover:shadow-2xl transition duration-300 group">
                                 <div>
-                                    <label class="block text-xs text-slate-600 mb-2 font-bold tracking-wide uppercase">USERNAME VPN (HURUF & ANGKA)</label>
-                                    <input type="text" id="vpnUsername" placeholder="Contoh: jagoan123" required pattern="[a-zA-Z0-9]+" class="w-full bg-slate-50 border border-slate-300 rounded-xl p-3.5 text-slate-900 focus:bg-white focus:ring-2 focus:ring-sky-500 outline-none transition placeholder-slate-400 relative z-20">
+                                    <div class="w-12 h-12 rounded-2xl bg-sky-50 text-sky-600 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                                    </div>
+                                    <h3 class="text-lg font-black text-slate-900 mb-2">Beli Pulsa & PPOB</h3>
+                                    <p class="text-xs text-slate-500 leading-relaxed mb-4">Pulsa All Operator, Kuota Data Internet, Token Listrik PLN, Top Up E-Wallet, dan Voucher Game termurah 24 Jam nonstop.</p>
                                 </div>
+                                <a href="/pulsa-ppob" class="w-full bg-sky-600 hover:bg-sky-500 text-white font-bold py-3 px-4 rounded-xl text-center text-sm transition shadow-md shadow-sky-600/20 flex items-center justify-center gap-2">
+                                    <span>Buka Toko Pulsa & PPOB</span>
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                                </a>
+                            </div>
+
+                            <!-- Card 2: Cek Pulsa / OTP -->
+                            <div class="bg-white p-6 rounded-3xl shadow-xl border border-slate-200 flex flex-col justify-between hover:border-indigo-500/50 hover:shadow-2xl transition duration-300 group">
                                 <div>
-                                    <label class="block text-xs text-slate-600 mb-2 font-bold tracking-wide uppercase">PILIH SERVER TUJUAN</label>
-                                    <select id="vpnServer" class="w-full bg-slate-50 border border-slate-300 rounded-xl p-3.5 text-slate-900 focus:bg-white focus:ring-2 focus:ring-sky-500 outline-none relative z-20">
-                                        ${serverOptions}
-                                    </select>
-                                </div>
-                                <div class="grid grid-cols-2 gap-4 relative z-20">
-                                    <div>
-                                        <label class="block text-xs text-slate-600 mb-2 font-bold tracking-wide uppercase">PROTOKOL</label>
-                                        <select id="vpnProtocol" class="w-full bg-slate-50 border border-slate-300 rounded-xl p-3.5 text-slate-900 focus:bg-white focus:ring-2 focus:ring-sky-500 outline-none">
-                                            <option value="trojanws">Trojan WS</option>
-                                            <option value="vmessws">VMess WS</option>
-                                            <option value="vlessws">VLESS WS</option>
-                                            <option value="ssh">SSH/OVPN</option>
-                                            <option value="l2tp">L2TP</option>
-                                        </select>
+                                    <div class="w-12 h-12 rounded-2xl bg-indigo-50 text-indigo-600 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8h2a2 2 0 012 2v6a2 2 0 01-2 2h-2v4l-4-4H9a1.994 1.994 0 01-1.414-.586m0 0L11 14h4a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2v4l.586-.586z"></path></svg>
                                     </div>
-                                    <div>
-                                        <label class="block text-xs text-slate-600 mb-2 font-bold tracking-wide uppercase">DURASI</label>
-                                        <select id="vpnDuration" onchange="updatePrice()" class="w-full bg-slate-50 border border-slate-300 rounded-xl p-3.5 text-slate-900 focus:bg-white focus:ring-2 focus:ring-sky-500 outline-none">
-                                            <option value="10">10 Hari</option>
-                                            <option value="20">20 Hari</option>
-                                            <option value="30" selected>30 Hari</option>
-                                            <option value="60">60 Hari</option>
-                                            <option value="90">90 Hari</option>
-                                            <option value="trial">TRIAL (1 Jam)</option>
-                                        </select>
-                                    </div>
+                                    <h3 class="text-lg font-black text-slate-900 mb-2">Cek Pulsa & OTP</h3>
+                                    <p class="text-xs text-slate-500 leading-relaxed mb-4">Pengecekan pulsa, kuota, masa aktif, dan penerimaan SMS OTP kartu secara cepat, instan, dan mudah.</p>
                                 </div>
+                                <a href="/cekpulsa-otp" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-3 px-4 rounded-xl text-center text-sm transition shadow-md shadow-indigo-600/20 flex items-center justify-center gap-2">
+                                    <span>Akses Cek Pulsa / OTP</span>
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                                </a>
                             </div>
-                            
-                            <div class="flex justify-between items-center mb-6 bg-slate-50 p-5 rounded-2xl border border-slate-200">
-                                <span class="text-sm text-slate-600 font-medium">Total Harga:</span>
-                                <span class="text-3xl font-black text-sky-600 tracking-tight" id="totalPriceDisplay">Rp ${(appSettings.price_per_day * 30).toLocaleString("id-ID")}</span>
+
+                            <!-- Card 3: Riwayat Mutasi Saldo -->
+                            <div class="bg-white p-6 rounded-3xl shadow-xl border border-slate-200 flex flex-col justify-between hover:border-emerald-500/50 hover:shadow-2xl transition duration-300 group">
+                                <div>
+                                    <div class="w-12 h-12 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                                    </div>
+                                    <h3 class="text-lg font-black text-slate-900 mb-2">Riwayat Saldo</h3>
+                                    <p class="text-xs text-slate-500 leading-relaxed mb-4">Pantau setiap mutasi kredit dan debit, riwayat top up, serta pemakaian saldo akun Anda secara transparan.</p>
+                                </div>
+                                <a href="/mutasi" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-3 px-4 rounded-xl text-center text-sm transition shadow-md shadow-emerald-600/20 flex items-center justify-center gap-2">
+                                    <span>Lihat Riwayat Mutasi</span>
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                                </a>
                             </div>
-                            <button onclick="buyVPN()" id="btnBuy" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-black py-4 px-4 rounded-xl shadow-lg shadow-emerald-600/20 transition transform hover:-translate-y-0.5 text-lg relative z-20">BAYAR & BUAT AKUN</button>
+
+                            <!-- Card 4: Kotak Masuk & Bantuan -->
+                            <div class="bg-white p-6 rounded-3xl shadow-xl border border-slate-200 flex flex-col justify-between hover:border-teal-500/50 hover:shadow-2xl transition duration-300 group">
+                                <div>
+                                    <div class="w-12 h-12 rounded-2xl bg-teal-50 text-teal-600 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192l-3.536 3.536M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-5 0a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
+                                    </div>
+                                    <h3 class="text-lg font-black text-slate-900 mb-2">Pusat Bantuan & CS</h3>
+                                    <p class="text-xs text-slate-500 leading-relaxed mb-4">Butuh bantuan transaksi atau ada kendala? Buka tiket bantuan atau hubungi Customer Service kami langsung.</p>
+                                </div>
+                                <a href="/tiket" class="w-full bg-teal-600 hover:bg-teal-500 text-white font-bold py-3 px-4 rounded-xl text-center text-sm transition shadow-md shadow-teal-600/20 flex items-center justify-center gap-2">
+                                    <span>Buka Tiket Bantuan</span>
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                                </a>
+                            </div>
                         </div>
                     </div>
                 </div>
 
                 <script>
-                    const pricePerDay = ${appSettings.price_per_day};
-                    const USER_EMAIL = "${currentUser.email}";
-                    
-                    function updatePrice() {
-                        const val = document.getElementById('vpnDuration').value;
-                        const userInput = document.getElementById('vpnUsername');
-                        if (val === 'trial') {
-                            document.getElementById('totalPriceDisplay').innerText = 'GRATIS';
-                            userInput.value = ''; userInput.disabled = true; userInput.placeholder = 'Auto-generate oleh Server';
-                            userInput.classList.add('opacity-50', 'cursor-not-allowed');
-                        } else {
-                            const days = parseInt(val);
-                            document.getElementById('totalPriceDisplay').innerText = 'Rp ' + (days * pricePerDay).toLocaleString('id-ID');
-                            userInput.disabled = false; userInput.placeholder = 'Contoh: jagoan123';
-                            userInput.classList.remove('opacity-50', 'cursor-not-allowed');
-                        }
-                    }
-
                     function playSuccessChime() {
                         try {
                             const AudioCtx = window.AudioContext || window.webkitAudioContext;
@@ -8682,50 +7261,6 @@ Total : Rp.${totalSaldo.toLocaleString("id-ID")}
                         } catch(e) { swalDark.fire('Error', 'Gagal menghubungi server.', 'error'); }
                         btn.innerText = 'Top Up'; btn.disabled = false;
                     }
-
-                    async function buyVPN() {
-                        const val = document.getElementById('vpnDuration').value;
-                        let confirmMsg = ''; let total = 0;
-                        let vpnUsername = document.getElementById('vpnUsername').value.trim();
-                        
-                        if (val !== 'trial') {
-                            if (!vpnUsername || /[^a-zA-Z0-9]/.test(vpnUsername)) {
-                                return swalDark.fire('Invalid Input', 'Username tidak boleh kosong dan HANYA boleh berisi huruf dan angka (tanpa spasi/simbol)!', 'warning');
-                            }
-                            total = parseInt(val) * pricePerDay;
-                            confirmMsg = 'Saldo Anda akan dipotong sebesar Rp ' + total.toLocaleString('id-ID') + ' untuk pembuatan server ini. Lanjutkan?';
-                        } else {
-                            confirmMsg = 'Anda akan membuat akun TRIAL (Gratis) dengan durasi 1 Jam. Lanjutkan?';
-                        }
-
-                        const confirmResult = await swalDark.fire({
-                            title: 'Konfirmasi Pembelian', text: confirmMsg, icon: 'question',
-                            showCancelButton: true, confirmButtonText: 'Ya, buat akun', cancelButtonText: 'Batal'
-                        });
-
-                        if(!confirmResult.isConfirmed) return;
-                        
-                        const btn = document.getElementById('btnBuy');
-                        btn.innerText = 'proses create akun...wait...'; btn.disabled = true;
-                        const overlay = document.getElementById('loadingOverlay');
-                        if (overlay) overlay.classList.remove('hidden');
-
-                        try {
-                            const res = await fetch('/api/buy', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ serverId: document.getElementById('vpnServer').value, protocol: document.getElementById('vpnProtocol').value, duration: val, customUsername: vpnUsername }) });
-                            const data = await res.json();
-                            if (overlay) overlay.classList.add('hidden');
-                            if(data.success) {
-                                await swalDark.fire('Berhasil!', '\u{1F389} Server berhasil dibuat! Silakan cek menu INBOX Anda untuk melihat konfigurasi.', 'success');
-                                window.location.reload();
-                            } else {
-                                swalDark.fire('Gagal', data.message, 'error');
-                            }
-                        } catch(e) {
-                            if (overlay) overlay.classList.add('hidden');
-                            swalDark.fire('Error', 'Terjadi kesalahan saat memproses pesanan.', 'error');
-                        }
-                        btn.innerText = 'BAYAR & BUAT AKUN'; btn.disabled = false;
-                    }
                 <\/script>
                 `;
         return new Response(renderLayout("Dashboard", content), { headers: { "Content-Type": "text/html;charset=UTF-8" } });
@@ -8735,42 +7270,56 @@ Total : Rp.${totalSaldo.toLocaleString("id-ID")}
       const content = `
             <div class="max-w-5xl mx-auto px-4 md:px-8 py-12 md:py-16 relative z-10">
                 <div class="text-center mb-12 md:mb-16">
-                    <h1 class="text-4xl md:text-5xl font-black text-slate-900 mb-4 tracking-tight">Produk & Harga</h1>
-                    <p class="text-lg md:text-xl text-slate-600 max-w-2xl mx-auto">Kami menyediakan tarif flat dan transparan. Satu harga untuk akses semua protokol dan jaringan proxy terbaik kami.</p>
+                    <h1 class="text-4xl md:text-5xl font-black text-slate-900 mb-4 tracking-tight">Layanan & Produk Digital</h1>
+                    <p class="text-lg md:text-xl text-slate-600 max-w-2xl mx-auto">Warung Pulsa menghadirkan produk digital terlengkap, harga termurah, dan pemrosesan otomatis 24 jam nonstop.</p>
                     <div class="w-24 h-1.5 bg-sky-500 mx-auto mt-6 rounded-full shadow-md"></div>
                 </div>
 
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-10 lg:gap-16 items-center">
-                    <div class="bg-white rounded-[2rem] border border-slate-200 shadow-xl overflow-hidden relative transform transition hover:-translate-y-2">
-                        <div class="absolute top-0 right-0 bg-amber-500 text-white font-bold text-xs px-5 py-1.5 rounded-bl-xl uppercase tracking-wider shadow-sm">Tarif Flat</div>
-                        <div class="p-8 md:p-10 border-b border-slate-200 text-center">
-                            <h2 class="text-2xl font-bold text-slate-900 mb-2">VPN & Proxy All-in-One</h2>
-                            <p class="text-slate-500 text-sm mb-6">Hitungan murni berdasarkan pemakaian hari</p>
-                            <div class="flex justify-center items-baseline gap-1">
-                                <span class="text-3xl font-bold text-sky-600">Rp</span>
-                                <span class="text-6xl font-black text-slate-900">${appSettings.price_per_day}</span>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <!-- Card 1: Pulsa & Paket Data -->
+                    <div class="bg-white rounded-3xl border border-slate-200 shadow-xl p-8 flex flex-col justify-between hover:-translate-y-1.5 transition-transform duration-300">
+                        <div>
+                            <div class="w-14 h-14 rounded-2xl bg-sky-50 text-sky-600 flex items-center justify-center mb-6">
+                                <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"></path></svg>
                             </div>
-                            <p class="text-slate-500 text-sm mt-2">/ Hari</p>
+                            <h3 class="text-xl font-bold text-slate-900 mb-3">Pulsa & Paket Data</h3>
+                            <p class="text-sm text-slate-600 leading-relaxed mb-6">Isi ulang pulsa reguler, pulsa transfer, dan paket kuota internet untuk seluruh operator Indonesia (Telkomsel, Indosat, XL, AXIS, Tri, Smartfren).</p>
                         </div>
-                        <div class="p-8 md:p-10 bg-slate-50">
-                            <ul class="space-y-4 mb-8">
-                                <li class="flex items-center gap-3"><svg class="w-5 h-5 text-emerald-600 shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg> <span class="text-slate-700 text-sm md:text-base font-medium">Bebas Pilih Server</span></li>
-                                <li class="flex items-center gap-3"><svg class="w-5 h-5 text-emerald-600 shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg> <span class="text-slate-700 text-sm md:text-base font-medium">Bebas Pilih Protokol (SSH/VMess/Vless/Trojan)</span></li>
-                                <li class="flex items-center gap-3"><svg class="w-5 h-5 text-emerald-600 shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg> <span class="text-slate-700 text-sm md:text-base font-medium">Limit 2 Device / IP Bersamaan</span></li>
-                                <li class="flex items-center gap-3"><svg class="w-5 h-5 text-emerald-600 shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg> <span class="text-slate-700 text-sm md:text-base font-medium">Aktivasi Otomatis via API</span></li>
-                            </ul>
-                            <a href="/" class="block w-full bg-sky-600 hover:bg-sky-500 text-white text-center font-bold py-4 px-4 rounded-xl transition shadow-lg shadow-sky-600/30 relative z-20">BUAT SEKARANG (Dashboard)</a>
-                        </div>
+                        <a href="/pulsa-ppob" class="block w-full bg-sky-600 hover:bg-sky-500 text-white text-center font-bold py-3 px-4 rounded-xl text-sm transition shadow-md">Beli Pulsa & Data</a>
                     </div>
-                    <div>
-                        <h3 class="text-2xl md:text-3xl font-bold text-slate-900 mb-6">Pilihan Durasi Bebas</h3>
-                        <p class="text-slate-600 leading-relaxed mb-8 text-base">Sistem kami memungkinkan Anda mengatur durasi pemakaian (10, 20, 30, 60, hingga 90 hari) sesuai kebutuhan dompet Anda. Saldo akan otomatis terpotong proporsional.</p>
-                        <div class="space-y-5">
-                            <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex justify-between items-center relative z-20"><span class="text-slate-800 font-bold text-lg">10 Hari</span><span class="text-sky-600 font-mono font-bold text-lg">Rp ${(appSettings.price_per_day * 10).toLocaleString("id-ID")}</span></div>
-                            <div class="bg-white p-5 rounded-2xl border-2 border-sky-500 shadow-lg shadow-sky-500/10 flex justify-between items-center transform scale-105 my-6 relative z-20"><span class="text-slate-900 font-black text-lg md:text-xl">30 Hari (Rekomendasi)</span><span class="text-amber-600 font-black text-xl font-mono">Rp ${(appSettings.price_per_day * 30).toLocaleString("id-ID")}</span></div>
-                            <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex justify-between items-center relative z-20"><span class="text-slate-800 font-bold text-lg">90 Hari</span><span class="text-sky-600 font-mono font-bold text-lg">Rp ${(appSettings.price_per_day * 90).toLocaleString("id-ID")}</span></div>
+
+                    <!-- Card 2: Token Listrik PLN & Tagihan -->
+                    <div class="bg-white rounded-3xl border border-slate-200 shadow-xl p-8 flex flex-col justify-between hover:-translate-y-1.5 transition-transform duration-300">
+                        <div>
+                            <div class="w-14 h-14 rounded-2xl bg-amber-50 text-amber-600 flex items-center justify-center mb-6">
+                                <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                            </div>
+                            <h3 class="text-xl font-bold text-slate-900 mb-3">Token Listrik PLN</h3>
+                            <p class="text-sm text-slate-600 leading-relaxed mb-6">Beli token listrik prabayar instan langsung masuk 24 jam dengan nomor token SN tercatat otomatis di history transaksi akun Anda.</p>
                         </div>
+                        <a href="/pulsa-ppob" class="block w-full bg-amber-600 hover:bg-amber-500 text-white text-center font-bold py-3 px-4 rounded-xl text-sm transition shadow-md">Beli Token PLN</a>
                     </div>
+
+                    <!-- Card 3: E-Wallet & Voucher Game -->
+                    <div class="bg-white rounded-3xl border border-slate-200 shadow-xl p-8 flex flex-col justify-between hover:-translate-y-1.5 transition-transform duration-300">
+                        <div>
+                            <div class="w-14 h-14 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center mb-6">
+                                <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
+                            </div>
+                            <h3 class="text-xl font-bold text-slate-900 mb-3">E-Wallet & Voucher Game</h3>
+                            <p class="text-sm text-slate-600 leading-relaxed mb-6">Top up saldo DANA, GoPay, OVO, ShopeePay, LinkAja, Maxim Driver, serta voucher game populer Mobile Legends, Free Fire, dan lainnya.</p>
+                        </div>
+                        <a href="/pulsa-ppob" class="block w-full bg-emerald-600 hover:bg-emerald-500 text-white text-center font-bold py-3 px-4 rounded-xl text-sm transition shadow-md">Top Up E-Wallet</a>
+                    </div>
+                </div>
+
+                <div class="mt-12 bg-sky-50 rounded-3xl border border-sky-200 p-8 md:p-10 text-center">
+                    <h2 class="text-2xl font-black text-slate-900 mb-2">Butuh Layanan Cek Pulsa / OTP?</h2>
+                    <p class="text-slate-600 text-sm max-w-xl mx-auto mb-6">Kami juga menyediakan fitur Cek Pulsa / Kuota dan penerimaan SMS OTP kartu secara instan.</p>
+                    <a href="/cekpulsa-otp" class="inline-flex items-center gap-2 bg-sky-600 hover:bg-sky-500 text-white font-bold py-3 px-8 rounded-xl shadow-lg transition">
+                        <span>Buka Cek Pulsa / OTP</span>
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                    </a>
                 </div>
             </div>`;
       return new Response(renderLayout("Produk & Harga", content), { headers: { "Content-Type": "text/html;charset=UTF-8" } });
@@ -9214,232 +7763,8 @@ Status: UNPAID PENDING`, appSettings));
         return jsonResponse({ success: false, message: e.message }, 500);
       }
     }
-    if (path === "/api/buy" && method === "POST") {
-      if (!currentUser) return jsonResponse({ success: false, message: "Unauthorized" }, 401);
-      try {
-        const { serverId, protocol, duration, customUsername } = await request.json();
-        const isTrial = duration === "trial";
-        const days = isTrial ? 0 : parseInt(duration);
-        if (!isTrial && ![10, 20, 30, 60, 90].includes(days)) throw new Error("Durasi tidak valid.");
-        if (isTrial && !isSuperAdmin(currentUser, env)) {
-          const todayDateStr = getWIBDateOnly();
-          const trialCount = await env.DB.prepare("SELECT COUNT(*) as count FROM vpns WHERE email = ? AND exp = '1 Jam' AND date LIKE ?").bind(currentUser.email, `${todayDateStr}%`).first("count");
-          if (trialCount >= 3) return jsonResponse({ success: false, message: "Batas Klaim Tercapai! Anda maksimal hanya dapat membuat 3 akun TRIAL dalam sehari." }, 400);
-        }
-        const targetServer = appSettings.servers.find((s) => s.id === serverId);
-        if (!targetServer) return jsonResponse({ success: false, message: "Server tidak ditemukan." }, 400);
-        let username = customUsername ? customUsername.replace(/[^a-zA-Z0-9]/g, "").toLowerCase() : `wp${Math.floor(1e3 + Math.random() * 9e3)}`;
-        if (username.length === 0) username = `wp${Math.floor(1e3 + Math.random() * 9e3)}`;
-        if (username.length > 15) username = username.substring(0, 15);
-        const password = crypto.randomUUID().split("-")[0];
-        const price = isTrial ? 0 : days * appSettings.price_per_day;
-        if (price > 0) {
-          const deductBalance = await env.DB.prepare("UPDATE users SET balance = balance - ? WHERE email = ? AND balance >= ?").bind(price, currentUser.email, price).run();
-          if (deductBalance.meta.changes === 0) return jsonResponse({ success: false, message: "Saldo tidak mencukupi." }, 400);
-          await catatMutasi(env, currentUser.email, "OUT", price, `Pembuatan VPN Baru (${protocol.toUpperCase()}) - Akun: ${username} | Server: ${targetServer.name}`);
-        }
-        try {
-          const vpnMap = {
-            "ssh": { ep: isTrial ? "/srpcom/trial-ssh" : "/srpcom/add-ssh", pl: isTrial ? { exp: "1", limit_ip: "2" } : { user: username, password, exp: String(days), limit_ip: "2" } },
-            "vlessws": { ep: isTrial ? "/srpcom/trial-vlessws" : "/srpcom/add-vlessws", pl: isTrial ? { exp: "1", limit_ip: "2" } : { user: username, exp: String(days), limit_quota: "0", limit_ip: "2" } },
-            "trojanws": { ep: isTrial ? "/srpcom/trial-trojanws" : "/srpcom/add-trojanws", pl: isTrial ? { exp: "1", limit_ip: "2" } : { user: username, exp: String(days), limit_quota: "0", limit_ip: "2" } },
-            "vmessws": { ep: isTrial ? "/srpcom/trial-vmessws" : "/srpcom/add-vmessws", pl: isTrial ? { exp: "1", limit_ip: "2" } : { user: username, exp: String(days), limit_quota: "0", limit_ip: "2" } },
-            "l2tp": { ep: "/srpcom/add-l2tp", pl: isTrial ? { user: `trial${Math.floor(1e3 + Math.random() * 9e3)}`, password, exp: "1" } : { user: username, password, exp: String(days) } }
-          };
-          if (!vpnMap[protocol]) throw new Error("Protokol tidak didukung");
-          let apiEndpoint = vpnMap[protocol].ep;
-          let payload = vpnMap[protocol].pl;
-          if (isTrial && protocol === "l2tp") username = payload.user;
-          const controller = new AbortController();
-          const timeoutId = setTimeout(() => controller.abort(), 15e3);
-          let vpsRes;
-          try {
-            const vpsReq = await fetch(targetServer.host + apiEndpoint, {
-              method: "POST",
-              headers: { "Content-Type": "application/json", "x-api-key": targetServer.key },
-              body: JSON.stringify(payload),
-              signal: controller.signal
-            });
-            clearTimeout(timeoutId);
-            if (!vpsReq.ok) throw new Error(`Koneksi VPS Gagal (${vpsReq.status}).`);
-            vpsRes = await vpsReq.json();
-          } catch (fetchErr) {
-            clearTimeout(timeoutId);
-            if (fetchErr.name === "AbortError") {
-              throw new Error("Koneksi VPS Timeout (>15 detik). Pembuatan VPN dibatalkan.");
-            }
-            throw fetchErr;
-          }
-          let configText = vpsRes.detail?.stdout || vpsRes.stdout || "";
-          if (!configText) throw new Error("Detail config kosong dari VPS.");
-          if (configText.toLowerCase().includes("already exist") || configText.toLowerCase().includes("choose another name")) {
-            throw new Error(`Username '${username}' sudah terpakai.`);
-          }
-          let actualUsername = username;
-          if (isTrial && protocol !== "l2tp") {
-            const match = configText.match(/Username\s*:\s*([^\s<]+)/i) || configText.match(/User\s*:\s*([^\s<]+)/i) || configText.match(/Account\s*:\s*([^\s<]+)/i);
-            actualUsername = match ? match[1] : `Trial-${Math.floor(1e3 + Math.random() * 9e3)}`;
-          }
-          const now = getWIBTime();
-          const titleInbox = `[${protocol.toUpperCase()}] Pesanan Server ${isTrial ? "TRIAL " : ""}Sukses!`;
-          const bodyMsg = `Halo! Ini adalah detail konfigurasi server VPN Anda:<br><br><div class="bg-gray-950 p-4 rounded-lg overflow-x-auto custom-scrollbar border border-gray-800"><pre class="text-green-400 font-mono text-[11px] leading-relaxed select-all whitespace-pre-wrap">${configText}</pre></div>`;
-          await env.DB.prepare("INSERT INTO vpns (email, server, protocol, username, date, exp) VALUES (?, ?, ?, ?, ?, ?)").bind(currentUser.email, targetServer.name, protocol.toUpperCase(), actualUsername, now, isTrial ? "1 Jam" : days + " Hari").run();
-          await env.DB.prepare("INSERT INTO inbox (email, title, message, date, read) VALUES (?, ?, ?, ?, 0)").bind(currentUser.email, titleInbox, bodyMsg, now).run();
-          ctx.waitUntil(sendTelegramLog(`\u{1F680} ${titleInbox}`, `User: ${currentUser.email}
-Username VPN: ${actualUsername}
-Server: ${targetServer.name}
-Durasi: ${isTrial ? "TRIAL (1 Jam)" : days + " Hari"}
- 
-Detail:
-${configText}`, appSettings));
-          const emailSubject = `Pesanan VPN Server ${isTrial ? "TRIAL " : ""}Berhasil Dibuat`;
-          const emailBody = `<p>Terima kasih atas pesanan Anda. Sistem kami telah berhasil membangun jaringan server <b>${protocol.toUpperCase()}</b> Anda.</p>
-                                       <table class="info-table">
-                                           <tr><td>Username Akun</td><td>${actualUsername}</td></tr>
-                                           <tr><td>Protokol Jaringan</td><td>${protocol.toUpperCase()}</td></tr>
-                                           <tr><td>Lokasi Server</td><td>${targetServer.name}</td></tr>
-                                           <tr><td>Masa Aktif</td><td>${isTrial ? "1 Jam (Mode Trial)" : days + " Hari"}</td></tr>
-                                           <tr><td>Waktu Pembuatan</td><td>${now}</td></tr>
-                                       </table>
-                                       <p>Berikut ini adalah data konfigurasi lengkap Anda yang sudah terenkripsi dan siap disalin ke dalam aplikasi VPN Client pilihan Anda:</p>
-                                       <div class="config-box">${configText}</div>
-                                       <p>Jaga kerahasiaan konfigurasi ini dan gunakan secara bertanggung jawab sesuai Kebijakan Layanan kami.</p>`;
-          ctx.waitUntil(sendEmailViaGAS(currentUser.email, emailSubject, buildEmailTemplate("Pesanan VPN Dikonfirmasi", emailBody), env));
-          return jsonResponse({ success: true });
-        } catch (err) {
-          if (price > 0) {
-            await env.DB.prepare("UPDATE users SET balance = balance + ? WHERE email = ?").bind(price, currentUser.email).run();
-            await catatMutasi(env, currentUser.email, "IN", price, `Refund Pembelian VPN Gagal (${protocol.toUpperCase()})`);
-          }
-          throw err;
-        }
-      } catch (e) {
-        return jsonResponse({ success: false, message: e.message }, 500);
-      }
-    }
-    if (path === "/api/renew" && method === "POST") {
-      if (!currentUser) return jsonResponse({ success: false, message: "Unauthorized" }, 401);
-      try {
-        const { vpnId, duration } = await request.json();
-        const days = parseInt(duration);
-        const vpnRecord = await env.DB.prepare("SELECT * FROM vpns WHERE id = ? AND email = ?").bind(vpnId, currentUser.email).first();
-        if (!vpnRecord) throw new Error("Data VPN tidak ditemukan.");
-        const price = days * appSettings.price_per_day;
-        const deductBalance = await env.DB.prepare("UPDATE users SET balance = balance - ? WHERE email = ? AND balance >= ?").bind(price, currentUser.email, price).run();
-        if (deductBalance.meta.changes === 0) return jsonResponse({ success: false, message: "Saldo tidak mencukupi." }, 400);
-        await catatMutasi(env, currentUser.email, "OUT", price, `Perpanjang VPN (${vpnRecord.username}) - ${days} Hari`);
-        try {
-          const targetServer = appSettings.servers.find((s) => s.name === vpnRecord.server);
-          if (!targetServer) throw new Error("Server tidak ditemukan.");
-          let apiEndpoint = "";
-          let protocolStr = vpnRecord.protocol.toLowerCase();
-          if (protocolStr.includes("ssh")) apiEndpoint = "/srpcom/renew-ssh";
-          else if (protocolStr.includes("vless")) apiEndpoint = "/srpcom/renew-vlessws";
-          else if (protocolStr.includes("vmess")) apiEndpoint = "/srpcom/renew-vmessws";
-          else if (protocolStr.includes("trojan")) apiEndpoint = "/srpcom/renew-trojanws";
-          else if (protocolStr.includes("l2tp")) apiEndpoint = "/srpcom/renew-l2tp";
-          else throw new Error("Protokol tidak support.");
-          const controller = new AbortController();
-          const timeoutId = setTimeout(() => controller.abort(), 15e3);
-          let vpsRes;
-          try {
-            const vpsReq = await fetch(targetServer.host + apiEndpoint, {
-              method: "POST",
-              headers: { "Content-Type": "application/json", "x-api-key": targetServer.key },
-              body: JSON.stringify({ user: vpnRecord.username, exp: String(days) }),
-              signal: controller.signal
-            });
-            clearTimeout(timeoutId);
-            if (!vpsReq.ok) throw new Error(`API Gagal (${vpsReq.status}).`);
-            vpsRes = await vpsReq.json();
-          } catch (fetchErr) {
-            clearTimeout(timeoutId);
-            if (fetchErr.name === "AbortError") {
-              throw new Error("Koneksi VPS Timeout (>15 detik). Perpanjangan VPN dibatalkan.");
-            }
-            throw fetchErr;
-          }
-          let configText = vpsRes.detail?.stdout || vpsRes.stdout || "";
-          if (configText.toLowerCase().includes("not found") || configText.toLowerCase().includes("tidak ditemukan")) {
-            throw new Error(`Akun '${vpnRecord.username}' tidak ditemukan di VPS.`);
-          }
-          const now = getWIBTime();
-          await env.DB.prepare("UPDATE vpns SET exp = ? WHERE id = ?").bind(vpnRecord.exp + ` (+${days} Hari)`, vpnRecord.id).run();
-          await env.DB.prepare("INSERT INTO inbox (email, title, message, date, read) VALUES (?, ?, ?, ?, 0)").bind(currentUser.email, `[RENEW] Perpanjangan Berhasil!`, `Masa aktif akun VPN <b>${vpnRecord.username}</b> berhasil ditambah ${days} Hari.`, now).run();
-          ctx.waitUntil(sendTelegramLog(`\u{1F504} [RENEW] PERPANJANGAN BERHASIL`, `User: ${currentUser.email}
-Username VPN: ${vpnRecord.username}
-Server: ${vpnRecord.server}
-Ditambah: ${days} Hari`, appSettings));
-          const renewSubject = `Perpanjangan VPN ${vpnRecord.username} Berhasil`;
-          const renewBody = `<p>Halo, ini adalah notifikasi otomatis bahwa perpanjangan masa aktif VPN Anda telah berhasil diproses.</p>
-                                       <table class="info-table">
-                                           <tr><td>Username VPN</td><td>${vpnRecord.username}</td></tr>
-                                           <tr><td>Server Host</td><td>${vpnRecord.server}</td></tr>
-                                           <tr><td>Tambahan Masa Aktif</td><td>${days} Hari</td></tr>
-                                           <tr><td>Waktu Perpanjang</td><td>${now}</td></tr>
-                                       </table>
-                                       <p>Terima kasih telah mempercayakan koneksi internet dan privasi Anda kepada layanan Warung Pulsa.</p>`;
-          ctx.waitUntil(sendEmailViaGAS(currentUser.email, renewSubject, buildEmailTemplate("Perpanjangan Berhasil", renewBody), env));
-          return jsonResponse({ success: true });
-        } catch (err) {
-          await env.DB.prepare("UPDATE users SET balance = balance + ? WHERE email = ?").bind(price, currentUser.email).run();
-          await catatMutasi(env, currentUser.email, "IN", price, `Refund Perpanjangan VPN Gagal (${vpnRecord.username})`);
-          throw err;
-        }
-      } catch (e) {
-        return jsonResponse({ success: false, message: e.message }, 500);
-      }
-    }
-    if (path === "/api/check-detail" && method === "POST") {
-      if (!currentUser) return jsonResponse({ success: false, message: "Unauthorized" }, 401);
-      try {
-        const { vpnId } = await request.json();
-        const vpnRecord = await env.DB.prepare("SELECT * FROM vpns WHERE id = ? AND email = ?").bind(vpnId, currentUser.email).first();
-        if (!vpnRecord) throw new Error("Data VPN tidak ditemukan.");
-        const targetServer = appSettings.servers.find((s) => s.name === vpnRecord.server);
-        let detailConfigText = "";
-        if (targetServer) {
-          let protocolStr = vpnRecord.protocol.toLowerCase();
-          let endpoint = protocolStr.includes("vless") ? "/srpcom/detail-vlessws" : protocolStr.includes("trojan") ? "/srpcom/detail-trojanws" : protocolStr.includes("vmess") ? "/srpcom/detail-vmessws" : "";
-          if (endpoint) {
-            try {
-              let req = await fetch(targetServer.host + endpoint, {
-                method: "POST",
-                headers: { "Content-Type": "application/json", "x-api-key": targetServer.key },
-                body: JSON.stringify({ user: vpnRecord.username })
-              });
-              if (req.ok) {
-                let res = await req.json();
-                detailConfigText = res.detail?.stdout || res.stdout || "";
-              }
-            } catch (e) {
-            }
-          }
-        }
-        if (!detailConfigText) {
-          const inboxRecord = await env.DB.prepare("SELECT message FROM inbox WHERE email = ? AND message LIKE ? ORDER BY id DESC LIMIT 1").bind(currentUser.email, `%${vpnRecord.username}%`).first();
-          if (inboxRecord) {
-            const matches = [...inboxRecord.message.matchAll(/<pre[^>]*>([\s\S]*?)<\/pre>/g)];
-            detailConfigText = matches.length > 0 ? matches[matches.length - 1][1] : inboxRecord.message.replace(/<[^>]*>?/gm, "").trim();
-            detailConfigText = `=================================
-INFORMASI ${vpnRecord.protocol.toUpperCase()}
-=================================
-
-Username : ${vpnRecord.username}
-Server   : ${vpnRecord.server}
-Expired  : ${vpnRecord.exp}
-
-*Catatan: Data ditarik dari Database.
-
-` + detailConfigText;
-          } else {
-            throw new Error("Gagal mengambil data detail.");
-          }
-        }
-        return jsonResponse({ success: true, detail: detailConfigText });
-      } catch (e) {
-        return jsonResponse({ success: false, message: e.message }, 500);
-      }
+    if ((path === "/api/buy" || path === "/api/renew" || path === "/api/check-detail") && method === "POST") {
+      return jsonResponse({ success: false, message: "Layanan VPN sudah dinonaktifkan. Silakan bertransaksi di menu Pulsa & PPOB." }, 400);
     }
     if (path === "/api/cekkuota-backend" && method === "POST") {
       if (!currentUser) return jsonResponse({ success: false, message: "Unauthorized" }, 401);
