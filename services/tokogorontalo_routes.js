@@ -172,6 +172,21 @@ async function handleTokoGorontaloRoutes(url, request, env, currentUser, appSett
     rawDb.exec('ALTER TABLE ppob_transactions ADD COLUMN is_refunded INTEGER DEFAULT 0;');
   } catch (e) {}
 
+  try {
+    rawDb.exec(`
+      CREATE TABLE IF NOT EXISTS user_contacts (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        email TEXT NOT NULL,
+        label TEXT NOT NULL,
+        customer_no TEXT NOT NULL,
+        category TEXT DEFAULT 'all',
+        created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+        updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
+      );
+      CREATE INDEX IF NOT EXISTS idx_user_contacts_email ON user_contacts(email);
+    `);
+  } catch (e) {}
+
   // ================================================================
   // 1. WEBHOOK / CALLBACK HANDLER DARI TOKO GORONTALO
   // ================================================================
@@ -304,6 +319,124 @@ async function handleTokoGorontaloRoutes(url, request, env, currentUser, appSett
     try {
       const products = rawDb.prepare(sql).all(...params);
       return jsonResponse({ success: true, count: products.length, brand, category, products });
+    } catch (e) {
+      return jsonResponse({ success: false, message: e.message }, 500);
+    }
+  }
+
+  // ================================================================
+  // 5. BUKU KONTAK / NOMOR FAVORIT (QUICK RE-ORDER)
+  // ================================================================
+  if (path === '/api/contacts') {
+    if (!currentUser) {
+      return jsonResponse({ success: false, message: 'Silakan login terlebih dahulu.' }, 401);
+    }
+
+    if (method === 'GET') {
+      try {
+        const category = (url.searchParams.get('category') || '').trim().toLowerCase();
+        let contacts;
+        if (category && category !== 'all') {
+          contacts = rawDb.prepare(`
+            SELECT id, label, customer_no, category, created_at, updated_at
+            FROM user_contacts
+            WHERE email = ? AND (category = ? OR category = 'all')
+            ORDER BY id DESC
+          `).all(currentUser.email, category);
+        } else {
+          contacts = rawDb.prepare(`
+            SELECT id, label, customer_no, category, created_at, updated_at
+            FROM user_contacts
+            WHERE email = ?
+            ORDER BY id DESC
+          `).all(currentUser.email);
+        }
+        return jsonResponse({ success: true, count: contacts.length, contacts });
+      } catch (e) {
+        return jsonResponse({ success: false, message: e.message }, 500);
+      }
+    }
+
+    if (method === 'POST') {
+      try {
+        const body = await request.json();
+        let { label, customer_no, category } = body;
+
+        customer_no = (customer_no || '').toString().trim();
+        if (!customer_no) {
+          return jsonResponse({ success: false, message: 'Nomor atau ID pelanggan wajib diisi.' }, 400);
+        }
+
+        label = (label || '').toString().trim() || customer_no;
+        if (label.length > 60) label = label.substring(0, 60);
+
+        category = (category || 'all').toString().trim().toLowerCase();
+        const validCats = ['pulsa', 'data', 'pln', 'ewallet', 'game', 'all'];
+        if (!validCats.includes(category)) category = 'all';
+
+        // Cek apakah nomor sudah tersimpan untuk user ini
+        const existing = rawDb.prepare('SELECT id FROM user_contacts WHERE email = ? AND customer_no = ?').get(currentUser.email, customer_no);
+
+        if (existing) {
+          rawDb.prepare(`
+            UPDATE user_contacts
+            SET label = ?, category = ?, updated_at = CURRENT_TIMESTAMP
+            WHERE id = ? AND email = ?
+          `).run(label, category, existing.id, currentUser.email);
+          return jsonResponse({ success: true, message: 'Kontak berhasil diperbarui.', id: existing.id });
+        } else {
+          const info = rawDb.prepare(`
+            INSERT INTO user_contacts (email, label, customer_no, category)
+            VALUES (?, ?, ?, ?)
+          `).run(currentUser.email, label, customer_no, category);
+          return jsonResponse({ success: true, message: 'Kontak berhasil disimpan.', id: info.lastInsertRowid });
+        }
+      } catch (e) {
+        return jsonResponse({ success: false, message: e.message }, 500);
+      }
+    }
+
+    if (method === 'DELETE') {
+      try {
+        let id = url.searchParams.get('id');
+        if (!id) {
+          try {
+            const body = await request.json();
+            id = body.id;
+          } catch(e) {}
+        }
+
+        if (!id) {
+          return jsonResponse({ success: false, message: 'ID kontak wajib disertakan.' }, 400);
+        }
+
+        const res = rawDb.prepare('DELETE FROM user_contacts WHERE id = ? AND email = ?').run(id, currentUser.email);
+        if (res.changes > 0) {
+          return jsonResponse({ success: true, message: 'Kontak berhasil dihapus.' });
+        } else {
+          return jsonResponse({ success: false, message: 'Kontak tidak ditemukan atau Anda tidak memiliki akses.' }, 404);
+        }
+      } catch (e) {
+        return jsonResponse({ success: false, message: e.message }, 500);
+      }
+    }
+  }
+
+  if (path.startsWith('/api/contacts/') && method === 'DELETE') {
+    if (!currentUser) {
+      return jsonResponse({ success: false, message: 'Silakan login terlebih dahulu.' }, 401);
+    }
+    const id = path.split('/')[3];
+    if (!id) {
+      return jsonResponse({ success: false, message: 'ID kontak wajib disertakan.' }, 400);
+    }
+    try {
+      const res = rawDb.prepare('DELETE FROM user_contacts WHERE id = ? AND email = ?').run(id, currentUser.email);
+      if (res.changes > 0) {
+        return jsonResponse({ success: true, message: 'Kontak berhasil dihapus.' });
+      } else {
+        return jsonResponse({ success: false, message: 'Kontak tidak ditemukan.' }, 404);
+      }
     } catch (e) {
       return jsonResponse({ success: false, message: e.message }, 500);
     }
@@ -830,11 +963,31 @@ function renderPPOBContent(currentUser, appSettings, env) {
 
       <!-- Main Interaction Form -->
       <div class="bg-white rounded-3xl border border-slate-200 p-6 md:p-8 shadow-sm mb-8">
-          <!-- Input Nomor HP / ID Pelanggan -->
+          <!-- Input Nomor HP / ID Pelanggan & Quick Re-Order Favorites -->
           <div class="mb-6">
-              <label id="input-label" class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">
-                  Nomor Handphone Tujuan
-              </label>
+              <div class="flex items-center justify-between mb-2">
+                  <label id="input-label" class="block text-xs font-bold text-slate-500 uppercase tracking-wider">
+                      Nomor Handphone Tujuan
+                  </label>
+                  ${currentUser ? `
+                  <div class="flex items-center gap-2">
+                      <button type="button" onclick="openContactBookModal()" class="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold text-sky-700 bg-sky-50 hover:bg-sky-100 rounded-xl border border-sky-200 transition cursor-pointer shadow-2xs">
+                          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>
+                          <span>Buku Kontak</span>
+                      </button>
+                      <button type="button" onclick="quickSaveCurrentContact()" class="inline-flex items-center gap-1 px-2.5 py-1.5 text-xs font-bold text-amber-700 bg-amber-50 hover:bg-amber-100 rounded-xl border border-amber-200 transition cursor-pointer shadow-2xs" title="Simpan nomor ini ke Favorit">
+                          <span>⭐</span>
+                          <span>Simpan</span>
+                      </button>
+                  </div>
+                  ` : `
+                  <a href="/login" class="text-xs text-slate-400 hover:text-sky-600 transition flex items-center gap-1">
+                      <span>📖</span>
+                      <span>Login untuk simpan nomor favorit</span>
+                  </a>
+                  `}
+              </div>
+
               <div class="relative">
                   <input type="tel" id="customerNoInput" oninput="handlePhoneInput(this.value)" placeholder="Contoh: 081234567890"
                          class="w-full bg-slate-50 border-2 border-slate-200 rounded-2xl py-4 pl-4 pr-36 text-lg font-mono font-bold text-slate-800 focus:bg-white focus:border-sky-500 focus:outline-none transition">
@@ -844,6 +997,23 @@ function renderPPOBContent(currentUser, appSettings, env) {
                       <span id="operatorName" class="text-xs font-black text-slate-800 uppercase tracking-wider">TELKOMSEL</span>
                   </div>
               </div>
+
+              <!-- Quick Re-Order Favorite Chips Container -->
+              ${currentUser ? `
+              <div id="favoriteChipsWrapper" class="mt-2.5">
+                  <div class="flex items-center justify-between text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1.5">
+                      <span class="flex items-center gap-1.5">
+                          <svg class="w-3 h-3 text-amber-500" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path></svg>
+                          <span>Nomor Favorit (Quick Re-Order):</span>
+                      </span>
+                      <button type="button" onclick="openContactBookModal()" class="text-[10px] text-sky-600 hover:underline cursor-pointer lowercase">kelola buku kontak &raquo;</button>
+                  </div>
+                  <div id="favoriteChipsContainer" class="flex flex-wrap items-center gap-2">
+                      <span class="text-xs text-slate-400 italic">Memuat kontak favorit...</span>
+                  </div>
+              </div>
+              ` : ''}
+
               <p id="helperText" class="text-xs text-slate-400 mt-2">Ketik 4 digit nomor HP untuk otomatis mendeteksi operator (Telkomsel, Indosat, XL, Axis, Tri, Smartfren, By.U).</p>
           </div>
 
@@ -900,6 +1070,101 @@ function renderPPOBContent(currentUser, appSettings, env) {
       </div>
   </div>
 
+  <!-- MODAL BUKU KONTAK & NOMOR FAVORIT -->
+  <div id="contactBookModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-xs hidden z-[100] flex items-center justify-center p-4 md:p-6 overflow-y-auto" onclick="if(event.target === this) closeContactBookModal()">
+      <div class="bg-white rounded-3xl border border-slate-200 w-full max-w-2xl overflow-hidden shadow-2xl flex flex-col max-h-[90vh]">
+          <!-- Modal Header -->
+          <div class="p-6 border-b border-slate-200 flex justify-between items-center bg-slate-50/80">
+              <div class="flex items-center gap-3">
+                  <div class="w-10 h-10 rounded-2xl bg-amber-500 text-white flex items-center justify-center shadow-md shadow-amber-500/30 text-lg">
+                      📖
+                  </div>
+                  <div>
+                      <h3 class="text-xl font-black text-slate-900 tracking-tight">Buku Kontak & Nomor Favorit</h3>
+                      <p class="text-xs text-slate-500">Pilih nomor yang tersimpan untuk langsung mengisi transaksi 1-klik</p>
+                  </div>
+              </div>
+              <button onclick="closeContactBookModal()" class="text-slate-400 hover:text-slate-800 p-2 rounded-xl hover:bg-slate-100 transition cursor-pointer">
+                  <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+              </button>
+          </div>
+
+          <!-- Modal Body -->
+          <div class="p-6 overflow-y-auto space-y-5 flex-1">
+              <!-- Search & Filter Tab Row -->
+              <div>
+                  <div class="relative mb-3">
+                      <input type="text" id="contactSearchInput" oninput="filterModalContacts(this.value)" placeholder="Cari nama kontak atau nomor..."
+                             class="w-full bg-slate-50 border border-slate-200 rounded-xl py-2.5 pl-10 pr-4 text-sm text-slate-800 focus:bg-white focus:border-sky-500 focus:outline-none transition">
+                      <svg class="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                  </div>
+
+                  <!-- Category filter pills in modal -->
+                  <div class="flex flex-wrap gap-1.5" id="modalCategoryPills">
+                      <button type="button" onclick="setModalContactCategory('all')" class="modal-cat-pill active px-3 py-1 rounded-lg text-xs font-bold transition cursor-pointer bg-sky-600 text-white" data-cat="all">Semua</button>
+                      <button type="button" onclick="setModalContactCategory('pulsa')" class="modal-cat-pill px-3 py-1 rounded-lg text-xs font-bold transition cursor-pointer bg-slate-100 text-slate-600 hover:bg-slate-200" data-cat="pulsa">📱 Pulsa/Data</button>
+                      <button type="button" onclick="setModalContactCategory('pln')" class="modal-cat-pill px-3 py-1 rounded-lg text-xs font-bold transition cursor-pointer bg-slate-100 text-slate-600 hover:bg-slate-200" data-cat="pln">⚡ PLN</button>
+                      <button type="button" onclick="setModalContactCategory('ewallet')" class="modal-cat-pill px-3 py-1 rounded-lg text-xs font-bold transition cursor-pointer bg-slate-100 text-slate-600 hover:bg-slate-200" data-cat="ewallet">💳 E-Wallet</button>
+                      <button type="button" onclick="setModalContactCategory('game')" class="modal-cat-pill px-3 py-1 rounded-lg text-xs font-bold transition cursor-pointer bg-slate-100 text-slate-600 hover:bg-slate-200" data-cat="game">🎮 Game</button>
+                  </div>
+              </div>
+
+              <!-- Contact List -->
+              <div id="modalContactsList" class="space-y-2 max-h-64 overflow-y-auto pr-1">
+                  <!-- Rendered dynamically -->
+              </div>
+
+              <!-- Form Tambah Kontak Baru -->
+              <div class="border-t border-slate-200 pt-4">
+                  <div class="flex items-center justify-between mb-3 cursor-pointer" onclick="toggleAddContactForm()">
+                      <span class="text-xs font-bold text-slate-700 uppercase tracking-wider flex items-center gap-1.5">
+                          <span>➕</span> Tambah Kontak Baru
+                      </span>
+                      <span id="toggleAddIcon" class="text-xs text-sky-600 font-bold">Buka Form &darr;</span>
+                  </div>
+
+                  <form id="addContactForm" onsubmit="saveNewContactFromModal(event)" class="hidden space-y-3 bg-slate-50 p-4 rounded-2xl border border-slate-200">
+                      <div>
+                          <label class="block text-[11px] font-bold text-slate-500 uppercase mb-1">Nama / Label Kontak</label>
+                          <input type="text" id="newContactLabel" required placeholder="Contoh: Meteran Rumah / Ibu / Kantor"
+                                 class="w-full bg-white border border-slate-200 rounded-xl px-3 py-2 text-sm text-slate-800 focus:border-sky-500 focus:outline-none">
+                      </div>
+                      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                          <div>
+                              <label class="block text-[11px] font-bold text-slate-500 uppercase mb-1">Nomor HP / ID Pelanggan</label>
+                              <input type="text" id="newContactNumber" required placeholder="Contoh: 08123456789 atau 141234..."
+                                     class="w-full bg-white border border-slate-200 rounded-xl px-3 py-2 text-sm font-mono text-slate-800 focus:border-sky-500 focus:outline-none">
+                          </div>
+                          <div>
+                              <label class="block text-[11px] font-bold text-slate-500 uppercase mb-1">Kategori</label>
+                              <select id="newContactCategory" class="w-full bg-white border border-slate-200 rounded-xl px-3 py-2 text-sm text-slate-800 focus:border-sky-500 focus:outline-none">
+                                  <option value="pulsa">📱 Pulsa & Paket Data</option>
+                                  <option value="pln">⚡ Token PLN</option>
+                                  <option value="ewallet">💳 E-Wallet</option>
+                                  <option value="game">🎮 Voucher Game</option>
+                                  <option value="all">🌐 Semua Kategori</option>
+                              </select>
+                          </div>
+                      </div>
+                      <div class="text-right pt-1">
+                          <button type="submit" class="bg-sky-600 hover:bg-sky-500 text-white font-bold text-xs px-4 py-2 rounded-xl transition shadow-xs cursor-pointer">
+                              Simpan Kontak
+                          </button>
+                      </div>
+                  </form>
+              </div>
+          </div>
+
+          <!-- Modal Footer -->
+          <div class="p-4 border-t border-slate-200 bg-slate-50/60 flex justify-between items-center text-xs text-slate-500">
+              <span id="contactCountStatus">0 kontak tersimpan</span>
+              <button onclick="closeContactBookModal()" class="px-4 py-2 font-bold text-slate-600 hover:bg-slate-200 rounded-xl transition cursor-pointer">
+                  Tutup
+              </button>
+          </div>
+      </div>
+  </div>
+
   <style>
       .cat-btn.active {
           border-color: #0284c7 !important;
@@ -915,9 +1180,28 @@ function renderPPOBContent(currentUser, appSettings, env) {
           border-color: #cbd5e1;
           background-color: #f8fafc;
       }
+      .modal-cat-pill.active {
+          background-color: #0284c7 !important;
+          color: #ffffff !important;
+      }
   </style>
 
   <script>
+      function escapeHtmlClient(str) {
+          if (!str) return '';
+          return String(str)
+              .replace(/&/g, '&amp;')
+              .replace(/</g, '&lt;')
+              .replace(/>/g, '&gt;')
+              .replace(/"/g, '&quot;')
+              .replace(/'/g, '&#039;');
+      }
+
+      const isUserLoggedIn = ${currentUser ? 'true' : 'false'};
+      let userContacts = [];
+      let modalActiveCategory = 'all';
+      let modalSearchQuery = '';
+
       let currentCategory = 'pulsa';
       let currentBrand = '';
       let detectedBrand = '';
@@ -985,6 +1269,7 @@ function renderPPOBContent(currentUser, appSettings, env) {
               brandContainer.classList.add('hidden');
               handlePhoneInput(input.value);
           }
+          renderFavoriteChips();
       }
 
       function renderBrandPills(brands) {
@@ -1357,6 +1642,410 @@ function renderPPOBContent(currentUser, appSettings, env) {
           }
       }
 
+      // ================================================================
+      // BUKU KONTAK & NOMOR FAVORIT (QUICK RE-ORDER) CLIENT LOGIC
+      // ================================================================
+      async function loadUserContacts() {
+          if (!isUserLoggedIn) return;
+          try {
+              const res = await fetch('/api/contacts');
+              const data = await res.json();
+              if (data.success && Array.isArray(data.contacts)) {
+                  userContacts = data.contacts;
+                  renderFavoriteChips();
+                  renderModalContacts();
+              }
+          } catch(e) {
+              console.warn('[Contacts Load Error]:', e.message);
+          }
+      }
+
+      function getCategoryIcon(cat) {
+          switch((cat || '').toLowerCase()) {
+              case 'pln': return '⚡';
+              case 'ewallet': return '💳';
+              case 'game': return '🎮';
+              case 'pulsa':
+              case 'data': return '📱';
+              default: return '⭐';
+          }
+      }
+
+      function getCategoryBadgeLabel(cat) {
+          switch((cat || '').toLowerCase()) {
+              case 'pln': return 'PLN';
+              case 'pulsa': return 'PULSA';
+              case 'data': return 'DATA';
+              case 'ewallet': return 'E-WALLET';
+              case 'game': return 'GAME';
+              default: return 'SEMUA';
+          }
+      }
+
+      function renderFavoriteChips() {
+          const container = document.getElementById('favoriteChipsContainer');
+          if (!container) return;
+
+          if (!isUserLoggedIn) {
+              container.innerHTML = '';
+              return;
+          }
+
+          let matched = userContacts.filter(c => {
+              if (!c.category || c.category === 'all') return true;
+              if (currentCategory === 'pln') return c.category === 'pln';
+              if (currentCategory === 'pulsa' || currentCategory === 'data') return c.category === 'pulsa' || c.category === 'data';
+              if (currentCategory === 'ewallet') return c.category === 'ewallet';
+              if (currentCategory === 'game') return c.category === 'game';
+              return true;
+          });
+
+          if (matched.length === 0) {
+              container.innerHTML = \`
+                  <div class="flex items-center gap-1.5 text-xs text-slate-400 py-0.5">
+                      <span>Belum ada nomor favorit di kategori ini. Ketik nomor lalu klik <button type="button" onclick="quickSaveCurrentContact()" class="text-amber-600 font-bold hover:underline cursor-pointer">⭐ Simpan</button> untuk transaksi cepat 1-klik.</span>
+                  </div>
+              \`;
+              return;
+          }
+
+          const displayChips = matched.slice(0, 8);
+          let html = displayChips.map(c => {
+              const icon = getCategoryIcon(c.category);
+              return \`
+                  <button type="button" onclick="selectContact('\${escapeHtmlClient(c.customer_no)}')"
+                          class="group inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold bg-white hover:bg-sky-50 hover:text-sky-700 hover:border-sky-300 border border-slate-200 transition cursor-pointer shadow-2xs">
+                      <span class="text-xs">\${icon}</span>
+                      <span class="font-bold text-slate-800 group-hover:text-sky-700">\${escapeHtmlClient(c.label)}</span>
+                      <span class="text-slate-400 font-mono text-[11px]">(\${escapeHtmlClient(c.customer_no)})</span>
+                  </button>
+              \`;
+          }).join('');
+
+          if (matched.length > 8) {
+              html += \`
+                  <button type="button" onclick="openContactBookModal()" class="text-xs font-bold text-sky-600 hover:text-sky-800 px-2 py-1 cursor-pointer">
+                      +\${matched.length - 8} lainnya &raquo;
+                  </button>
+              \`;
+          }
+
+          container.innerHTML = html;
+      }
+
+      function selectContact(customerNo) {
+          const input = document.getElementById('customerNoInput');
+          if (!input) return;
+          input.value = customerNo;
+          closeContactBookModal();
+          input.focus();
+
+          input.classList.add('ring-4', 'ring-sky-200', 'border-sky-500');
+          setTimeout(() => {
+              input.classList.remove('ring-4', 'ring-sky-200');
+          }, 600);
+
+          if (currentCategory === 'pln' || currentCategory === 'ewallet' || currentCategory === 'game') {
+              fetchProducts();
+          } else {
+              handlePhoneInput(customerNo);
+          }
+      }
+
+      async function quickSaveCurrentContact() {
+          if (!isUserLoggedIn) {
+              swalDark.fire({
+                  title: 'Login Diperlukan',
+                  text: 'Silakan login terlebih dahulu untuk menyimpan nomor ke daftar favorit Anda.',
+                  icon: 'info',
+                  showCancelButton: true,
+                  confirmButtonText: 'Masuk / Login',
+                  cancelButtonText: 'Nanti',
+                  confirmButtonColor: '#0284c7'
+              }).then(res => {
+                  if (res.isConfirmed) window.location.href = '/login';
+              });
+              return;
+          }
+
+          const input = document.getElementById('customerNoInput');
+          const customerNo = input ? input.value.trim() : '';
+          if (!customerNo) {
+              swalDark.fire('Perhatian', 'Ketik atau masukkan nomor HP / ID Pelanggan terlebih dahulu di kotak input.', 'warning');
+              if (input) input.focus();
+              return;
+          }
+
+          let defaultLabel = '';
+          if (currentCategory === 'pln') defaultLabel = 'Meteran Rumah';
+          else if (currentCategory === 'pulsa' || currentCategory === 'data') defaultLabel = 'Nomor Pribadi';
+
+          const { value: label } = await swalDark.fire({
+              title: '⭐ Simpan ke Favorit',
+              text: 'Simpan nomor ' + customerNo + ' agar bisa diisi ulang dengan 1-klik di masa depan.',
+              input: 'text',
+              inputLabel: 'Nama / Label Kontak:',
+              inputPlaceholder: 'Contoh: Meteran Rumah, Ibu, Ayah, Kantor',
+              inputValue: defaultLabel,
+              showCancelButton: true,
+              confirmButtonText: 'Simpan Kontak',
+              cancelButtonText: 'Batal',
+              confirmButtonColor: '#0284c7',
+              inputValidator: (val) => {
+                  if (!val || !val.trim()) {
+                      return 'Label / nama kontak tidak boleh kosong!';
+                  }
+              }
+          });
+
+          if (label) {
+              try {
+                  const res = await fetch('/api/contacts', {
+                      method: 'POST',
+                      headers: { 'Content-Type': 'application/json' },
+                      body: JSON.stringify({
+                          label: label.trim(),
+                          customer_no: customerNo,
+                          category: currentCategory || 'all'
+                      })
+                  });
+                  const data = await res.json();
+                  if (data.success) {
+                      swalDark.fire({
+                          title: 'Berhasil Disimpan!',
+                          text: 'Nomor ' + customerNo + ' (' + label + ') berhasil ditambahkan ke Buku Kontak Favorit Anda.',
+                          icon: 'success',
+                          timer: 2000,
+                          showConfirmButton: false
+                      });
+                      await loadUserContacts();
+                  } else {
+                      swalDark.fire('Gagal Menyimpan', data.message || 'Terjadi kesalahan saat menyimpan kontak.', 'error');
+                  }
+              } catch(e) {
+                  swalDark.fire('Error', 'Kesalahan jaringan: ' + e.message, 'error');
+              }
+          }
+      }
+
+      function openContactBookModal() {
+          if (!isUserLoggedIn) {
+              swalDark.fire({
+                  title: 'Login Diperlukan',
+                  text: 'Silakan login terlebih dahulu untuk mengakses Buku Kontak Favorit.',
+                  icon: 'info',
+                  showCancelButton: true,
+                  confirmButtonText: 'Masuk / Login',
+                  cancelButtonText: 'Batal',
+                  confirmButtonColor: '#0284c7'
+              }).then(res => {
+                  if (res.isConfirmed) window.location.href = '/login';
+              });
+              return;
+          }
+
+          const modal = document.getElementById('contactBookModal');
+          if (!modal) return;
+
+          const currentInputVal = document.getElementById('customerNoInput') ? document.getElementById('customerNoInput').value.trim() : '';
+          const newNumInput = document.getElementById('newContactNumber');
+          if (newNumInput && currentInputVal && !newNumInput.value) {
+              newNumInput.value = currentInputVal;
+          }
+
+          const catSelect = document.getElementById('newContactCategory');
+          if (catSelect && currentCategory) {
+              catSelect.value = currentCategory;
+          }
+
+          renderModalContacts();
+          modal.classList.remove('hidden');
+      }
+
+      function closeContactBookModal() {
+          const modal = document.getElementById('contactBookModal');
+          if (modal) modal.classList.add('hidden');
+      }
+
+      function setModalContactCategory(cat) {
+          modalActiveCategory = cat;
+          document.querySelectorAll('.modal-cat-pill').forEach(btn => {
+              if (btn.getAttribute('data-cat') === cat) {
+                  btn.classList.remove('bg-slate-100', 'text-slate-600', 'hover:bg-slate-200');
+                  btn.classList.add('bg-sky-600', 'text-white');
+              } else {
+                  btn.classList.remove('bg-sky-600', 'text-white');
+                  btn.classList.add('bg-slate-100', 'text-slate-600', 'hover:bg-slate-200');
+              }
+          });
+          renderModalContacts();
+      }
+
+      function filterModalContacts(val) {
+          modalSearchQuery = (val || '').trim().toLowerCase();
+          renderModalContacts();
+      }
+
+      function renderModalContacts() {
+          const listContainer = document.getElementById('modalContactsList');
+          const countStatus = document.getElementById('contactCountStatus');
+          if (!listContainer) return;
+
+          let filtered = userContacts.filter(c => {
+              if (modalActiveCategory !== 'all') {
+                  if (modalActiveCategory === 'pulsa') {
+                      if (c.category !== 'pulsa' && c.category !== 'data' && c.category !== 'all') return false;
+                  } else if (c.category !== modalActiveCategory && c.category !== 'all') {
+                      return false;
+                  }
+              }
+              if (modalSearchQuery) {
+                  const l = (c.label || '').toLowerCase();
+                  const n = (c.customer_no || '').toLowerCase();
+                  return l.includes(modalSearchQuery) || n.includes(modalSearchQuery);
+              }
+              return true;
+          });
+
+          if (countStatus) {
+              countStatus.innerText = \`\${userContacts.length} total kontak tersimpan (\${filtered.length} ditampilkan)\`;
+          }
+
+          if (filtered.length === 0) {
+              listContainer.innerHTML = \`
+                  <div class="text-center py-8 px-4 rounded-2xl border-2 border-dashed border-slate-200 bg-slate-50">
+                      <p class="text-slate-500 font-bold text-sm mb-1">Tidak ada kontak ditemukan</p>
+                      <p class="text-slate-400 text-xs">Gunakan formulir di bawah untuk menambahkan nomor favorit baru.</p>
+                  </div>
+              \`;
+              return;
+          }
+
+          listContainer.innerHTML = filtered.map(c => {
+              const icon = getCategoryIcon(c.category);
+              const catBadgeLabel = getCategoryBadgeLabel(c.category);
+              return \`
+                  <div class="flex items-center justify-between p-3.5 rounded-2xl border border-slate-200 hover:border-sky-300 hover:bg-sky-50/40 transition group bg-white shadow-2xs">
+                      <div class="flex items-center gap-3 min-w-0">
+                          <div class="w-10 h-10 rounded-xl bg-slate-100 group-hover:bg-sky-100 text-slate-600 group-hover:text-sky-700 flex items-center justify-center text-base shrink-0 transition">
+                              \${icon}
+                          </div>
+                          <div class="min-w-0">
+                              <div class="flex items-center gap-2">
+                                  <span class="font-extrabold text-slate-900 text-sm truncate">\${escapeHtmlClient(c.label)}</span>
+                                  <span class="px-1.5 py-0.5 rounded text-[10px] font-black uppercase tracking-wider bg-slate-100 text-slate-600 shrink-0">
+                                      \${catBadgeLabel}
+                                  </span>
+                              </div>
+                              <div class="font-mono text-xs text-sky-600 font-bold mt-0.5 tracking-tight truncate">
+                                  \${escapeHtmlClient(c.customer_no)}
+                              </div>
+                          </div>
+                      </div>
+                      <div class="flex items-center gap-2 shrink-0 ml-3">
+                          <button type="button" onclick="selectContact('\${escapeHtmlClient(c.customer_no)}')"
+                                  class="px-3 py-1.5 bg-sky-600 hover:bg-sky-500 text-white font-bold text-xs rounded-xl transition shadow-2xs cursor-pointer">
+                              Gunakan
+                          </button>
+                          <button type="button" onclick="deleteContact(\${c.id}, '\${escapeHtmlClient(c.label)}')"
+                                  class="p-1.5 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-xl transition cursor-pointer" title="Hapus kontak">
+                              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                          </button>
+                      </div>
+                  </div>
+              \`;
+          }).join('');
+      }
+
+      async function deleteContact(id, label) {
+          const confirm = await swalDark.fire({
+              title: 'Hapus Kontak?',
+              html: \`Apakah Anda yakin ingin menghapus kontak <b>\${escapeHtmlClient(label)}</b> dari daftar favorit?\`,
+              icon: 'warning',
+              showCancelButton: true,
+              confirmButtonText: 'Ya, Hapus',
+              cancelButtonText: 'Batal',
+              confirmButtonColor: '#ef4444'
+          });
+
+          if (confirm.isConfirmed) {
+              try {
+                  const res = await fetch('/api/contacts?id=' + id, { method: 'DELETE' });
+                  const data = await res.json();
+                  if (data.success) {
+                      swalDark.fire({
+                          title: 'Dihapus',
+                          text: 'Kontak berhasil dihapus.',
+                          icon: 'success',
+                          timer: 1500,
+                          showConfirmButton: false
+                      });
+                      await loadUserContacts();
+                  } else {
+                      swalDark.fire('Gagal', data.message || 'Gagal menghapus kontak.', 'error');
+                  }
+              } catch(e) {
+                  swalDark.fire('Error', 'Kesalahan jaringan: ' + e.message, 'error');
+              }
+          }
+      }
+
+      function toggleAddContactForm(forceState) {
+          const form = document.getElementById('addContactForm');
+          const icon = document.getElementById('toggleAddIcon');
+          if (!form) return;
+          const shouldOpen = forceState !== undefined ? forceState : form.classList.contains('hidden');
+          if (shouldOpen) {
+              form.classList.remove('hidden');
+              if (icon) icon.innerHTML = 'Tutup Form &uarr;';
+          } else {
+              form.classList.add('hidden');
+              if (icon) icon.innerHTML = 'Buka Form &darr;';
+          }
+      }
+
+      async function saveNewContactFromModal(e) {
+          e.preventDefault();
+          const labelInput = document.getElementById('newContactLabel');
+          const numInput = document.getElementById('newContactNumber');
+          const catSelect = document.getElementById('newContactCategory');
+
+          const label = labelInput ? labelInput.value.trim() : '';
+          const customer_no = numInput ? numInput.value.trim() : '';
+          const category = catSelect ? catSelect.value : 'all';
+
+          if (!customer_no) {
+              swalDark.fire('Perhatian', 'Nomor / ID pelanggan wajib diisi.', 'warning');
+              return;
+          }
+
+          try {
+              const res = await fetch('/api/contacts', {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify({ label: label || customer_no, customer_no, category })
+              });
+              const data = await res.json();
+              if (data.success) {
+                  if (labelInput) labelInput.value = '';
+                  if (numInput) numInput.value = '';
+                  toggleAddContactForm(false);
+                  swalDark.fire({
+                      title: 'Kontak Ditambahkan',
+                      text: 'Kontak baru berhasil disimpan ke buku favorit.',
+                      icon: 'success',
+                      timer: 1500,
+                      showConfirmButton: false
+                  });
+                  await loadUserContacts();
+              } else {
+                  swalDark.fire('Gagal', data.message || 'Gagal menyimpan kontak.', 'error');
+              }
+          } catch(e) {
+              swalDark.fire('Error', 'Kesalahan jaringan: ' + e.message, 'error');
+          }
+      }
+
       // Initial run & Hash router for F5 / Refresh
       function getValidCategoryFromHash() {
           const hashCat = (window.location.hash || '').replace('#', '').toLowerCase();
@@ -1368,6 +2057,9 @@ function renderPPOBContent(currentUser, appSettings, env) {
           if (isTrxLocked()) {
               startTrxLockCountdown();
           }
+          if (isUserLoggedIn) {
+              loadUserContacts();
+          }
           selectCategory(getValidCategoryFromHash());
       });
 
@@ -1375,6 +2067,15 @@ function renderPPOBContent(currentUser, appSettings, env) {
           const targetCat = getValidCategoryFromHash();
           if (targetCat !== currentCategory) {
               selectCategory(targetCat);
+          }
+      });
+
+      window.addEventListener('keydown', (e) => {
+          if (e.key === 'Escape') {
+              const modal = document.getElementById('contactBookModal');
+              if (modal && !modal.classList.contains('hidden')) {
+                  closeContactBookModal();
+              }
           }
       });
   </script>

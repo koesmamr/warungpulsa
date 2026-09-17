@@ -159,3 +159,14 @@ CREATE INDEX IF NOT EXISTS idx_ppob_products_brand ON ppob_products(brand);
 CREATE INDEX IF NOT EXISTS idx_ppob_transactions_reqid ON ppob_transactions(reqid);
 CREATE INDEX IF NOT EXISTS idx_ppob_transactions_email ON ppob_transactions(email);
 
+CREATE TABLE IF NOT EXISTS user_contacts (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    email TEXT NOT NULL,
+    label TEXT NOT NULL,
+    customer_no TEXT NOT NULL,
+    category TEXT DEFAULT 'all',
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE INDEX IF NOT EXISTS idx_user_contacts_email ON user_contacts(email);
