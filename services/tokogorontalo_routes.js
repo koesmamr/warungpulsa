@@ -18,17 +18,51 @@ function escapeHtml(str) {
   }[tag]));
 }
 
-function isFailureStatus(statusStr) {
-  if (!statusStr) return false;
-  const s = String(statusStr).toLowerCase().trim();
-  return ['failed', 'gagal', 'error', 'batal', 'rejected', 'declined', 'refund', 'cancel'].includes(s) ||
-         s.includes('gagal') || s.includes('dibatalkan') || s.includes('ditolak');
+function isFailureStatus(val) {
+  if (val === null || val === undefined) return false;
+  if (val === false || val === 0 || val === '0' || val === 2 || val === '2') return true;
+  const s = String(val).toLowerCase().trim();
+  if (['failed', 'gagal', 'error', 'batal', 'rejected', 'declined', 'refund', 'cancel', 'r', 'false'].includes(s)) {
+    return true;
+  }
+  return s.includes('gagal') ||
+         s.includes('fail') ||
+         s.includes('batal') ||
+         s.includes('tolak') ||
+         s.includes('reject') ||
+         s.includes('salah') ||
+         s.includes('tidak ditemukan') ||
+         s.includes('tidak terdaftar') ||
+         s.includes('tidak valid') ||
+         s.includes('invalid') ||
+         s.includes('gangguan') ||
+         s.includes('cut off') ||
+         s.includes('tutup') ||
+         s.includes('expired') ||
+         s.includes('kadaluarsa') ||
+         s.includes('hangus') ||
+         s.includes('kurang') ||
+         s.includes('timeout') ||
+         s.includes('down');
 }
 
-function isSuccessStatus(statusStr) {
-  if (!statusStr) return false;
-  const s = String(statusStr).toLowerCase().trim();
-  return ['success', 'sukses', 'berhasil'].includes(s) || s.includes('sukses') || s.includes('berhasil');
+function isSuccessStatus(val) {
+  if (val === null || val === undefined) return false;
+  if (val === true || val === 1 || val === '1') return true;
+  const s = String(val).toLowerCase().trim();
+  if (['success', 'sukses', 'berhasil', '00', 'true'].includes(s)) return true;
+  return s.includes('sukses') || s.includes('berhasil') || s.includes('success');
+}
+
+function isProviderFailure(status, info, detail, rc, success) {
+  if (success === false) return true;
+  if (rc !== undefined && rc !== null) {
+    const rcStr = String(rc).trim().toLowerCase();
+    if (rcStr !== '00' && rcStr !== '0' && rcStr !== 'pending' && rcStr !== 'processing' && rcStr !== '') {
+      return true;
+    }
+  }
+  return isFailureStatus(status) || isFailureStatus(info) || isFailureStatus(detail);
 }
 
 /**
@@ -79,13 +113,13 @@ async function executeAutoRefund(rawDb, order, failureReason, source = 'webhook'
       return false; // Race condition caught
     }
 
-    // 2. Kembalikan saldo pengguna seketika itu juga (100% Instan)
-    rawDb.prepare('UPDATE users SET balance = balance + ? WHERE email = ?').run(refundAmount, current.email);
+    // 2. Kembalikan saldo pengguna seketika itu juga (100% Instan) - Case-insensitive email
+    rawDb.prepare('UPDATE users SET balance = balance + ? WHERE LOWER(email) = LOWER(?)').run(refundAmount, current.email);
 
     // 3. Catat ke mutasi transaksi akun (tipe 'IN')
     rawDb.prepare(`
       INSERT INTO transactions (email, type, amount, description, balance, created_at)
-      VALUES (?, 'IN', ?, ?, (SELECT balance FROM users WHERE email = ?), ?)
+      VALUES (?, 'IN', ?, ?, (SELECT balance FROM users WHERE LOWER(email) = LOWER(?)), ?)
     `).run(
       current.email,
       refundAmount,
@@ -163,6 +197,142 @@ async function executeAutoRefund(rawDb, order, failureReason, source = 'webhook'
   return { refunded: false, reason: 'duplicate_or_rolled_back' };
 }
 
+/**
+ * Auto-Reconcile PPOB Transactions:
+ * 1. Memeriksa setiap transaksi yang berstatus 'failed' / 'gagal' tetapi belum di-refund (is_refunded = 0),
+ *    dan seketika mengembalikan saldo ke akun pengguna.
+ * 2. Memeriksa transaksi berstatus 'pending' yang dibuat dalam 48 jam terakhir,
+ *    melakukan live check ke server provider (Toko Gorontalo).
+ *    Jika di server provider berstatus gagal -> OTOMATIS REFUND 100% INSTAN.
+ *    Jika di server provider berstatus sukses -> update SN / Token PLN dan notifikasi Inbox.
+ */
+async function autoReconcilePPOBTransactions(rawDb, service, sendTelegramLog = null, appSettings = null, targetEmail = null) {
+  let reconciledCount = 0;
+
+  try {
+    // 1. Tangani transaksi yang statusnya sudah 'failed' / 'gagal' tetapi is_refunded masih 0
+    let failedSql = `
+      SELECT * FROM ppob_transactions
+      WHERE (
+        status IN ('failed', 'gagal', 'error', 'batal', 'rejected', 'declined', 'refund', 'cancel')
+        OR status LIKE '%gagal%'
+        OR status LIKE '%fail%'
+        OR status LIKE '%batal%'
+        OR status LIKE '%reject%'
+      ) AND (is_refunded = 0 OR is_refunded IS NULL)
+    `;
+    const failedParams = [];
+    if (targetEmail) {
+      failedSql += ' AND LOWER(email) = LOWER(?)';
+      failedParams.push(targetEmail);
+    }
+    failedSql += ' ORDER BY id DESC LIMIT 25';
+
+    const unrefundedFailed = rawDb.prepare(failedSql).all(...failedParams);
+    for (const tx of unrefundedFailed) {
+      console.log(`[Auto-Reconcile] Menemukan transaksi gagal belum di-refund: Ref ${tx.reqid} (${tx.email})`);
+      const refResult = await executeAutoRefund(
+        rawDb,
+        tx,
+        tx.info || 'Auto-refund transaksi berstatus gagal pada server provider',
+        'reconcile_unrefunded',
+        sendTelegramLog,
+        appSettings
+      );
+      if (refResult.refunded) reconciledCount++;
+    }
+
+    // 2. Tangani transaksi yang masih berstatus 'pending' dalam 48 jam terakhir
+    if (service && typeof service.checkStatusToday === 'function') {
+      let pendingSql = `
+        SELECT * FROM ppob_transactions
+        WHERE (status = 'pending' OR status IS NULL OR status = '')
+          AND (is_refunded = 0 OR is_refunded IS NULL)
+          AND created_at >= datetime('now', '-2 days')
+      `;
+      const pendingParams = [];
+      if (targetEmail) {
+        pendingSql += ' AND LOWER(email) = LOWER(?)';
+        pendingParams.push(targetEmail);
+      }
+      pendingSql += ' ORDER BY id DESC LIMIT 15';
+
+      const pendingOrders = rawDb.prepare(pendingSql).all(...pendingParams);
+      for (const tx of pendingOrders) {
+        try {
+          const live = await service.checkStatusToday({ reqid: tx.reqid, tujuan: tx.customer_no });
+          if (live && (live.status !== undefined || live.info)) {
+            const liveStatus = String(live.status || '').toLowerCase().trim();
+            const infoText = String(live.info || live.message || live.pesan || '').trim();
+            const detailText = String(live.detail || '').trim();
+
+            let sn = tx.sn || '';
+            if (detailText) {
+              const parsed = service.parseDetail(detailText);
+              if (parsed.sn) sn = parsed.sn;
+            }
+
+            if (isFailureStatus(liveStatus) || isFailureStatus(infoText) || isFailureStatus(detailText)) {
+              // Status Gagal pada server provider -> SEKETIKA AUTO-REFUND 100%
+              console.log(`[Auto-Reconcile GAGAL] Live check order ${tx.reqid} gagal: ${infoText || liveStatus}`);
+              const refResult = await executeAutoRefund(
+                rawDb,
+                tx,
+                infoText || detailText || 'Transaksi dinyatakan gagal oleh server provider',
+                'reconcile_live_check',
+                sendTelegramLog,
+                appSettings
+              );
+              if (refResult.refunded) reconciledCount++;
+            } else if (isSuccessStatus(liveStatus)) {
+              // Status Sukses pada server provider -> UPDATE & NOTIFIKASI
+              console.log(`[Auto-Reconcile SUKSES] Live check order ${tx.reqid} sukses. SN: ${sn}`);
+              rawDb.prepare(`
+                UPDATE ppob_transactions
+                SET status = 'success',
+                    sn = COALESCE(NULLIF(?, ''), sn),
+                    info = COALESCE(NULLIF(?, ''), info),
+                    detail = COALESCE(NULLIF(?, ''), detail),
+                    updated_at = CURRENT_TIMESTAMP
+                WHERE reqid = ?
+              `).run(sn, infoText, detailText, tx.reqid);
+
+              const nowWIB = new Date().toLocaleString('id-ID', { timeZone: 'Asia/Jakarta' }) + ' WIB';
+              rawDb.prepare(`
+                INSERT INTO inbox (email, title, message, date, read)
+                VALUES (?, ?, ?, ?, 0)
+              `).run(
+                tx.email,
+                `Pembelian ${tx.product_name} Berhasil!`,
+                `Nomor Tujuan: <b>${tx.customer_no}</b><br>SN / Token: <b style="color: #0284c7; font-size: 15px;">${sn || '-'}</b><br>Waktu: ${nowWIB}`,
+                nowWIB
+              );
+            }
+          }
+        } catch (err) {
+          // Gagal live check satu order, lanjutkan yang lain
+        }
+      }
+    }
+  } catch (globalErr) {
+    console.warn('[Auto-Reconcile Error]:', globalErr.message);
+  }
+
+  return reconciledCount;
+}
+
+// Background auto-reconciliation timer setiap 30 detik
+if (typeof setInterval !== 'undefined') {
+  setInterval(async () => {
+    try {
+      const db = require('../db.js');
+      if (db && db.rawDb) {
+        await autoReconcilePPOBTransactions(db.rawDb, service);
+      }
+    } catch (e) {}
+  }, 30000);
+}
+
 async function handleTokoGorontaloRoutes(url, request, env, currentUser, appSettings, sendTelegramLog) {
   const path = url.pathname;
   const method = request.method;
@@ -187,40 +357,92 @@ async function handleTokoGorontaloRoutes(url, request, env, currentUser, appSett
     `);
   } catch (e) {}
 
+  if (currentUser && currentUser.email) {
+    // Jalankan auto-reconcile non-blocking untuk currentUser
+    // Segera me-refund saldo jika ada transaksi gagal sebelumnya yang belum di-refund
+    setTimeout(() => {
+      autoReconcilePPOBTransactions(rawDb, service, sendTelegramLog, appSettings, currentUser.email).catch(() => {});
+    }, 5);
+  }
+
   // ================================================================
   // 1. WEBHOOK / CALLBACK HANDLER DARI TOKO GORONTALO
   // ================================================================
-  if (path === '/api/webhook/tokogorontalo' && method === 'POST') {
+  if (path === '/api/webhook/tokogorontalo') {
     try {
-      const payload = await request.json();
+      let payload = {};
+
+      if (method === 'POST') {
+        const contentType = (request.headers.get('content-type') || '').toLowerCase();
+        if (contentType.includes('application/json')) {
+          try {
+            payload = await request.json();
+          } catch (e) {
+            const raw = await request.text();
+            try { payload = JSON.parse(raw); } catch {
+              payload = Object.fromEntries(new URLSearchParams(raw));
+            }
+          }
+        } else if (contentType.includes('application/x-www-form-urlencoded') || contentType.includes('multipart/form-data')) {
+          try {
+            const fd = await request.formData();
+            for (const [k, v] of fd.entries()) payload[k] = v;
+          } catch (e) {
+            const raw = await request.text();
+            payload = Object.fromEntries(new URLSearchParams(raw));
+          }
+        } else {
+          try {
+            const raw = await request.text();
+            try { payload = JSON.parse(raw); } catch {
+              payload = Object.fromEntries(new URLSearchParams(raw));
+            }
+          } catch (e) {}
+        }
+      } else if (method === 'GET') {
+        for (const [k, v] of url.searchParams.entries()) {
+          payload[k] = v;
+        }
+      }
+
       console.log('[Webhook TokoGorontalo] Received payload:', JSON.stringify(payload));
 
-      const { reqid, status, kode, tujuan, harga, saldo, info, detail } = payload;
+      const reqid = payload.reqid || payload.trxid || payload.idtrx || payload.refid || payload.reff || payload.orderid || url.searchParams.get('reqid') || url.searchParams.get('trxid');
       if (!reqid) {
         return jsonResponse({ status: 'ignored', message: 'No reqid provided' });
       }
 
+      const rawStatus = payload.status !== undefined ? payload.status : (payload.rc !== undefined ? payload.rc : (payload.st || payload.hasil));
+      const normalizedStatus = String(rawStatus !== undefined && rawStatus !== null ? rawStatus : '').toLowerCase().trim();
+      const info = payload.info || payload.pesan || payload.message || payload.keterangan || payload.note || '';
+      const detail = payload.detail || payload.sn || payload.token || '';
+
       // Cari transaksi di database
-      const existing = rawDb.prepare('SELECT * FROM ppob_transactions WHERE reqid = ?').get(reqid);
+      let existing = rawDb.prepare('SELECT * FROM ppob_transactions WHERE reqid = ?').get(reqid);
+      if (!existing) {
+        existing = rawDb.prepare('SELECT * FROM ppob_transactions WHERE LOWER(reqid) = LOWER(?)').get(reqid);
+      }
       if (!existing) {
         console.warn(`[Webhook TokoGorontalo] Order not found for reqid: ${reqid}`);
         return jsonResponse({ status: 'ok', message: 'Order not found, logged' });
       }
 
-      const normalizedStatus = String(status || '').toLowerCase().trim();
       let sn = existing.sn || '';
       if (detail) {
         const parsed = service.parseDetail(detail);
         if (parsed.sn) sn = parsed.sn;
       }
 
+      const isFailed = isProviderFailure(normalizedStatus, info, detail, payload.rc, payload.success);
+      const isSuccess = isSuccessStatus(normalizedStatus) || (payload.rc === '00');
+
       // Update data transaksi dari webhook
       rawDb.prepare(`
         UPDATE ppob_transactions
         SET status = CASE 
               WHEN status = 'failed' THEN 'failed'
-              WHEN ? IN ('success', 'sukses', 'berhasil') THEN 'success'
-              WHEN ? IN ('failed', 'gagal', 'error', 'batal', 'rejected', 'declined', 'refund', 'cancel') THEN 'failed'
+              WHEN ? = 1 THEN 'success'
+              WHEN ? = 1 THEN 'failed'
               ELSE COALESCE(NULLIF(?, ''), status)
             END,
             sn = COALESCE(NULLIF(?, ''), sn),
@@ -230,18 +452,18 @@ async function handleTokoGorontaloRoutes(url, request, env, currentUser, appSett
             updated_at = CURRENT_TIMESTAMP
         WHERE reqid = ?
       `).run(
-        normalizedStatus,
-        normalizedStatus,
+        isSuccess ? 1 : 0,
+        isFailed ? 1 : 0,
         normalizedStatus,
         sn,
         info || '',
         detail || '',
         JSON.stringify(payload),
-        reqid
+        existing.reqid
       );
 
       // 1. Handle SUCCESS
-      if (isSuccessStatus(normalizedStatus) && !isSuccessStatus(existing.status)) {
+      if (isSuccess && !isSuccessStatus(existing.status)) {
         const titleMsg = `Pembelian ${existing.product_name} Berhasil!`;
         const bodyMsg = `Nomor Tujuan: <b>${existing.customer_no}</b><br>SN / Token: <b style="color: #0284c7; font-size: 15px;">${sn || '-'}</b><br>Waktu: ${new Date().toLocaleString('id-ID', { timeZone: 'Asia/Jakarta' })} WIB`;
         
@@ -253,15 +475,16 @@ async function handleTokoGorontaloRoutes(url, request, env, currentUser, appSett
         if (sendTelegramLog) {
           await sendTelegramLog(
             '⚡ PPOB TRANSAKSI BERHASIL',
-            `Produk: <b>${existing.product_name}</b>\nTujuan: <code>${existing.customer_no}</code>\nSN: <code>${sn}</code>\nUser: ${existing.email}\nRef: ${reqid}`,
+            `Produk: <b>${existing.product_name}</b>\nTujuan: <code>${existing.customer_no}</code>\nSN: <code>${sn}</code>\nUser: ${existing.email}\nRef: ${existing.reqid}`,
             appSettings
           );
         }
       }
 
       // 2. Handle FAILED -> Auto-Refund Instan Seketika itu Juga Tanpa Menunggu Admin
-      if (isFailureStatus(normalizedStatus) || isFailureStatus(info) || isFailureStatus(detail)) {
+      if (isFailed) {
         const failureReason = info || detail || 'Ditolak / Gagal dari server provider';
+        console.log(`[Webhook TokoGorontalo] Order ${existing.reqid} gagal (${failureReason}). Mengeksekusi auto-refund...`);
         await executeAutoRefund(rawDb, existing, failureReason, 'webhook', sendTelegramLog, appSettings);
       }
 
@@ -459,24 +682,24 @@ async function handleTokoGorontaloRoutes(url, request, env, currentUser, appSett
         return jsonResponse({ success: false, message: 'Produk tidak ditemukan atau sedang tidak aktif.' }, 404);
       }
 
-      // Proteksi Anti Double-Click / Idempotency (30 Detik)
-      // Mencegah saldo terpotong ganda jika user menekan tombol berulang kali saat koneksi lambat
+      // Proteksi Anti Double-Click / Idempotency
+      // Mencegah saldo terpotong ganda jika user menekan tombol berulang kali untuk nomor dan produk yang sama saat masih pending
       const recentTx = rawDb.prepare(`
-        SELECT reqid, product_code, customer_no, created_at,
+        SELECT reqid, product_code, customer_no, created_at, status, is_refunded,
           CAST((strftime('%s', 'now') - strftime('%s', created_at)) AS INTEGER) as elapsed_sec
         FROM ppob_transactions
-        WHERE email = ?
+        WHERE email = ? AND product_code = ? AND customer_no = ? AND status = 'pending' AND (is_refunded = 0 OR is_refunded IS NULL)
         ORDER BY id DESC
         LIMIT 1
-      `).get(currentUser.email);
+      `).get(currentUser.email, product_code, customer_no);
 
-      if (recentTx && recentTx.elapsed_sec !== null && recentTx.elapsed_sec < 30) {
-        const remaining = Math.max(1, 30 - Math.max(0, recentTx.elapsed_sec));
+      if (recentTx && recentTx.elapsed_sec !== null && recentTx.elapsed_sec < 15) {
+        const remaining = Math.max(1, 15 - Math.max(0, recentTx.elapsed_sec));
         return jsonResponse({
           success: false,
           locked: true,
           remaining_seconds: remaining,
-          message: `Proteksi Anti Double-Click: Anda baru saja mengirim pesanan. Mohon tunggu ${remaining} detik sebelum transaksi baru untuk mencegah saldo terpotong ganda.`
+          message: `Proteksi Anti Double-Click: Pesanan untuk nomor ${customer_no} sedang dalam antrian pemrosesan. Mohon tunggu ${remaining} detik.`
         }, 429);
       }
 
@@ -534,29 +757,68 @@ async function handleTokoGorontaloRoutes(url, request, env, currentUser, appSett
       const isEwallet = product.category === 'ewallet';
       const isOpen = product.product_type === 'open';
       const jenistrx = (isEwallet || isOpen) ? 2 : 1;
-      const apiResult = await service.createTransaction({
-        reqid,
-        kodeproduk: product.product_code,
-        tujuan: customer_no,
-        jenistrx,
-        nominaltrx: isOpen ? product.cost_price : undefined,
-        urlcallback: webhookUrl
-      });
+
+      let apiResult;
+      try {
+        apiResult = await service.createTransaction({
+          reqid,
+          kodeproduk: product.product_code,
+          tujuan: customer_no,
+          jenistrx,
+          nominaltrx: isOpen ? product.cost_price : undefined,
+          urlcallback: webhookUrl
+        });
+      } catch (apiErr) {
+        console.error('[PPOB CreateTransaction Exception]:', apiErr);
+        // CRITICAL FIX: Provider network/timeout/exception -> Langsung Auto-Refund Seketika!
+        await executeAutoRefund(
+          rawDb,
+          {
+            reqid,
+            email: currentUser.email,
+            selling_price: price,
+            product_name: product.product_name,
+            customer_no
+          },
+          'Gagal menghubungi server provider: ' + (apiErr.message || 'Koneksi terputus'),
+          'api_exception',
+          sendTelegramLog,
+          appSettings
+        );
+
+        return jsonResponse({
+          success: true,
+          reqid,
+          status: 'failed',
+          refunded: true,
+          product_name: product.product_name,
+          customer_no,
+          price,
+          sn: '',
+          message: 'Transaksi gagal menghubungi server provider. Saldo Anda telah otomatis dikembalikan (Refund 100% Instan).'
+        });
+      }
 
       console.log(`[PPOB Order Result] reqid: ${reqid} ->`, JSON.stringify(apiResult));
 
       let finalStatus = 'pending';
       let sn = '';
-      let infoMsg = apiResult.info || 'Transaksi sedang diproses oleh sistem provider.';
+      let infoMsg = apiResult.info || apiResult.message || apiResult.pesan || 'Transaksi sedang diproses oleh sistem provider.';
+      let detailMsg = apiResult.detail || '';
 
-      if (isSuccessStatus(apiResult.status)) {
+      const rawApiStatus = apiResult.status !== undefined ? apiResult.status : (apiResult.rc !== undefined ? apiResult.rc : '');
+      const isImmediateFailed = isProviderFailure(rawApiStatus, infoMsg, detailMsg, apiResult.rc, apiResult.success);
+
+      if (isSuccessStatus(rawApiStatus) || apiResult.rc === '00') {
         finalStatus = 'success';
-        if (apiResult.detail) {
-          const parsed = service.parseDetail(apiResult.detail);
-          sn = parsed.sn;
+        if (detailMsg) {
+          const parsed = service.parseDetail(detailMsg);
+          if (parsed.sn) sn = parsed.sn;
         }
-      } else if (isFailureStatus(apiResult.status)) {
+      } else if (isImmediateFailed) {
         finalStatus = 'failed';
+        infoMsg = infoMsg || detailMsg || 'Transaksi ditolak oleh server provider';
+        console.log(`[PPOB Order Immediate Failed] Ref: ${reqid}. Melakukan auto-refund instan...`);
         await executeAutoRefund(
           rawDb,
           {
@@ -571,6 +833,49 @@ async function handleTokoGorontaloRoutes(url, request, env, currentUser, appSett
           sendTelegramLog,
           appSettings
         );
+      } else {
+        // Status masih pending. Lakukan quick check setelah jeda 1.5 detik
+        // Khusus untuk transaksi seperti Token PLN atau nomor salah, provider umumnya mengembalikan status gagal dalam 1-2 detik
+        try {
+          await new Promise(resolve => setTimeout(resolve, 1500));
+          const quickCheck = await service.checkStatusToday({ reqid, tujuan: customer_no });
+          if (quickCheck) {
+            const qcStatus = quickCheck.status !== undefined ? quickCheck.status : (quickCheck.rc !== undefined ? quickCheck.rc : '');
+            const qcInfo = quickCheck.info || quickCheck.message || quickCheck.pesan || '';
+            const qcDetail = quickCheck.detail || '';
+
+            if (isProviderFailure(qcStatus, qcInfo, qcDetail, quickCheck.rc, quickCheck.success)) {
+              finalStatus = 'failed';
+              infoMsg = qcInfo || qcDetail || 'Transaksi dinyatakan gagal oleh server provider';
+              detailMsg = qcDetail;
+              console.log(`[PPOB Order Quick Check GAGAL] Ref: ${reqid}. Melakukan auto-refund instan...`);
+              await executeAutoRefund(
+                rawDb,
+                {
+                  reqid,
+                  email: currentUser.email,
+                  selling_price: price,
+                  product_name: product.product_name,
+                  customer_no
+                },
+                infoMsg,
+                'quick_check_order',
+                sendTelegramLog,
+                appSettings
+              );
+            } else if (isSuccessStatus(qcStatus) || quickCheck.rc === '00') {
+              finalStatus = 'success';
+              if (qcDetail) {
+                const parsed = service.parseDetail(qcDetail);
+                if (parsed.sn) sn = parsed.sn;
+              }
+              if (qcInfo) infoMsg = qcInfo;
+              detailMsg = qcDetail;
+            }
+          }
+        } catch (qcErr) {
+          console.warn('[Quick Check Error]:', qcErr.message);
+        }
       }
 
       // Update transaksi di DB
@@ -587,7 +892,7 @@ async function handleTokoGorontaloRoutes(url, request, env, currentUser, appSett
         finalStatus,
         sn,
         infoMsg,
-        apiResult.detail || '',
+        detailMsg || JSON.stringify(apiResult),
         JSON.stringify(apiResult),
         reqid
       );
@@ -605,6 +910,7 @@ async function handleTokoGorontaloRoutes(url, request, env, currentUser, appSett
         success: true,
         reqid,
         status: finalStatus,
+        refunded: finalStatus === 'failed',
         product_name: product.product_name,
         customer_no,
         price,
@@ -622,39 +928,50 @@ async function handleTokoGorontaloRoutes(url, request, env, currentUser, appSett
     const reqid = url.searchParams.get('reqid') || '';
     if (!reqid) return jsonResponse({ success: false, message: 'Parameter reqid wajib diisi' }, 400);
 
-    const order = rawDb.prepare('SELECT * FROM ppob_transactions WHERE reqid = ?').get(reqid);
+    let order = rawDb.prepare('SELECT * FROM ppob_transactions WHERE reqid = ?').get(reqid);
+    if (!order) {
+      order = rawDb.prepare('SELECT * FROM ppob_transactions WHERE LOWER(reqid) = LOWER(?)').get(reqid);
+    }
     if (!order) return jsonResponse({ success: false, message: 'Pesanan tidak ditemukan' }, 404);
 
-    // Jika masih pending, coba cek status ke Toko Gorontalo secara live
-    if (order.status === 'pending') {
+    // 1. Jika transaksi di DB sudah berstatus gagal tetapi belum di-refund -> Langsung auto-refund!
+    if ((isFailureStatus(order.status) || isFailureStatus(order.info)) && (order.is_refunded === 0 || !order.is_refunded)) {
+      console.log(`[Order-Status] Auto-refund transaksi gagal belum di-refund: Ref ${order.reqid}`);
+      await executeAutoRefund(rawDb, order, order.info || 'Transaksi dinyatakan gagal pada server provider', 'order_status_check', sendTelegramLog, appSettings);
+      order = rawDb.prepare('SELECT * FROM ppob_transactions WHERE reqid = ?').get(order.reqid);
+    }
+
+    // 2. Jika masih pending, coba cek status ke server Toko Gorontalo secara live
+    if (order.status === 'pending' || !order.status) {
       try {
-        const liveStatus = await service.checkStatusToday({ reqid: order.reqid, tujuan: order.customer_no });
-        if (liveStatus && liveStatus.status) {
-          const newStatus = String(liveStatus.status).toLowerCase();
-          let sn = order.sn;
-          if (liveStatus.detail) {
-            const parsed = service.parseDetail(liveStatus.detail);
+        const live = await service.checkStatusToday({ reqid: order.reqid, tujuan: order.customer_no });
+        if (live) {
+          const liveStatus = live.status !== undefined ? live.status : (live.rc !== undefined ? live.rc : '');
+          const infoText = live.info || live.message || live.pesan || '';
+          const detailText = live.detail || '';
+
+          let sn = order.sn || '';
+          if (detailText) {
+            const parsed = service.parseDetail(detailText);
             if (parsed.sn) sn = parsed.sn;
           }
 
-          rawDb.prepare(`
-            UPDATE ppob_transactions
-            SET status = CASE WHEN is_refunded = 1 THEN 'failed' ELSE ? END,
-                sn = COALESCE(NULLIF(?, ''), sn),
-                info = COALESCE(NULLIF(?, ''), info),
-                detail = COALESCE(NULLIF(?, ''), detail),
-                updated_at = CURRENT_TIMESTAMP
-            WHERE reqid = ?
-          `).run(newStatus, sn, liveStatus.info || order.info, liveStatus.detail || order.detail, reqid);
-
-          order.status = newStatus;
-          order.sn = sn;
-          order.info = liveStatus.info || order.info;
-
-          // Auto-refund instan jika provider melaporkan status gagal saat live check
-          if (isFailureStatus(newStatus) || isFailureStatus(liveStatus.info)) {
-            await executeAutoRefund(rawDb, order, liveStatus.info || 'Gagal dari server provider', 'live_check', sendTelegramLog, appSettings);
-            order.status = 'failed';
+          if (isProviderFailure(liveStatus, infoText, detailText, live.rc, live.success)) {
+            // Auto-refund instan jika provider melaporkan status gagal saat live check
+            console.log(`[Order-Status Live Check GAGAL] Ref: ${order.reqid}. Melakukan auto-refund instan...`);
+            await executeAutoRefund(rawDb, order, infoText || detailText || 'Gagal dari server provider', 'live_check', sendTelegramLog, appSettings);
+            order = rawDb.prepare('SELECT * FROM ppob_transactions WHERE reqid = ?').get(order.reqid);
+          } else if (isSuccessStatus(liveStatus) || live.rc === '00') {
+            rawDb.prepare(`
+              UPDATE ppob_transactions
+              SET status = 'success',
+                  sn = COALESCE(NULLIF(?, ''), sn),
+                  info = COALESCE(NULLIF(?, ''), info),
+                  detail = COALESCE(NULLIF(?, ''), detail),
+                  updated_at = CURRENT_TIMESTAMP
+              WHERE reqid = ?
+            `).run(sn, infoText, detailText, order.reqid);
+            order = rawDb.prepare('SELECT * FROM ppob_transactions WHERE reqid = ?').get(order.reqid);
           }
         }
       } catch (err) {
@@ -1581,14 +1898,42 @@ function renderPPOBContent(currentUser, appSettings, env) {
               }
 
               if (data.success) {
-                  const isSuccess = data.status === 'success';
-                  const isFailed = data.status === 'failed';
-                  const snText = data.sn ? \`<div class="bg-emerald-50 border border-emerald-200 p-3 rounded-xl mt-3 text-center"><p class="text-xs text-emerald-600 font-medium mb-1">Serial Number (SN) / Token:</p><p class="font-mono font-black text-emerald-800 text-base select-all">\${data.sn}</p></div>\` : '';
+                  let finalData = data;
+                  if (data.status === 'pending' && data.reqid) {
+                      // Tampilkan indikator polling status live ke server provider
+                      document.getElementById('loadingOverlay').classList.remove('hidden');
+                      const loadingP = document.querySelector('#loadingOverlay p');
+                      const originalText = loadingP ? loadingP.innerText : 'Memproses transaksi...';
+                      if (loadingP) loadingP.innerText = 'Memverifikasi status ke server provider (PLN/H2H)...';
+
+                      for (let poll = 1; poll <= 4; poll++) {
+                          await new Promise(r => setTimeout(r, 2000));
+                          try {
+                              const stRes = await fetch('/api/ppob/order-status?reqid=' + encodeURIComponent(data.reqid));
+                              const stJson = await stRes.json();
+                              if (stJson.success && stJson.order && stJson.order.status !== 'pending') {
+                                  finalData = {
+                                      ...data,
+                                      status: stJson.order.status,
+                                      sn: stJson.order.sn,
+                                      message: stJson.order.info || data.message
+                                  };
+                                  break;
+                              }
+                          } catch (pErr) {}
+                      }
+                      if (loadingP) loadingP.innerText = originalText;
+                      document.getElementById('loadingOverlay').classList.add('hidden');
+                  }
+
+                  const isSuccess = finalData.status === 'success';
+                  const isFailed = finalData.status === 'failed';
+                  const snText = finalData.sn ? \`<div class="bg-emerald-50 border border-emerald-200 p-3 rounded-xl mt-3 text-center"><p class="text-xs text-emerald-600 font-medium mb-1">Serial Number (SN) / Token:</p><p class="font-mono font-black text-emerald-800 text-base select-all">\${finalData.sn}</p></div>\` : '';
 
                   let modalTitle = 'Pesanan Diproses!';
                   let modalIcon = 'info';
                   let statusColorClass = 'text-sky-600';
-                  let statusDesc = 'Pesanan Anda telah diterima oleh sistem.';
+                  let statusDesc = 'Pesanan Anda telah diterima oleh sistem provider.';
 
                   if (isSuccess) {
                       modalTitle = 'Transaksi Berhasil!';
@@ -1599,7 +1944,7 @@ function renderPPOBContent(currentUser, appSettings, env) {
                       modalTitle = 'Transaksi Gagal / Ditolak';
                       modalIcon = 'error';
                       statusColorClass = 'text-rose-600';
-                      statusDesc = 'Transaksi ditolak oleh server provider dan <b class="text-emerald-600">saldo Anda telah otomatis dikembalikan (Refund)</b>.';
+                      statusDesc = 'Transaksi ditolak oleh server provider dan <b class="text-emerald-600">saldo Anda telah otomatis dikembalikan (Refund 100% Instan)</b> ke akun Anda.';
                   }
 
                   await swalDark.fire({
@@ -1608,17 +1953,17 @@ function renderPPOBContent(currentUser, appSettings, env) {
                           <div class="text-left space-y-3 text-sm">
                               <p class="text-xs text-slate-600 leading-relaxed">\${statusDesc}</p>
                               <div class="bg-slate-50 p-3.5 rounded-xl border border-slate-200 text-xs space-y-1.5 font-medium">
-                                  <div class="flex justify-between"><b>Ref ID:</b> <span class="font-mono">\${data.reqid}</span></div>
-                                  <div class="flex justify-between"><b>Produk:</b> <span>\${escapeHtmlClient(data.product_name)}</span></div>
-                                  <div class="flex justify-between"><b>Tujuan:</b> <span class="font-mono">\${escapeHtmlClient(data.customer_no)}</span></div>
+                                  <div class="flex justify-between"><b>Ref ID:</b> <span class="font-mono">\${finalData.reqid}</span></div>
+                                  <div class="flex justify-between"><b>Produk:</b> <span>\${escapeHtmlClient(finalData.product_name)}</span></div>
+                                  <div class="flex justify-between"><b>Tujuan:</b> <span class="font-mono">\${escapeHtmlClient(finalData.customer_no)}</span></div>
                                   <div class="flex justify-between items-center pt-1 border-t border-slate-200">
                                       <b>Status:</b>
-                                      <span class="font-bold uppercase px-2 py-0.5 rounded text-[11px] \${isSuccess ? 'bg-emerald-100 text-emerald-700' : (isFailed ? 'bg-rose-100 text-rose-700' : 'bg-sky-100 text-sky-700')}">\${data.status}</span>
+                                      <span class="font-bold uppercase px-2 py-0.5 rounded text-[11px] \${isSuccess ? 'bg-emerald-100 text-emerald-700' : (isFailed ? 'bg-rose-100 text-rose-700' : 'bg-sky-100 text-sky-700')}">\${finalData.status}</span>
                                   </div>
-                                  \${data.message ? \`
+                                  \${finalData.message ? \`
                                   <div class="mt-2 p-2.5 rounded-xl bg-rose-50 border border-rose-200 text-rose-800 text-xs leading-relaxed">
-                                      <b>Pesan Provider:</b> \${escapeHtmlClient(data.message)}
-                                      \${data.message.includes('device anda tidak terdaftar') ? '<br><span class="text-[11px] text-slate-600 mt-1 block"><b>Solusi:</b> Daftarkan IP Server VPS Anda ke Admin / CS Toko Gorontalo agar di-whitelist.</span>' : ''}
+                                      <b>Pesan Provider:</b> \${escapeHtmlClient(finalData.message)}
+                                      \${finalData.message.includes('device anda tidak terdaftar') ? '<br><span class="text-[11px] text-slate-600 mt-1 block"><b>Solusi:</b> Daftarkan IP Server VPS Anda ke Admin / CS Toko Gorontalo agar di-whitelist.</span>' : ''}
                                   </div>
                                   \` : ''}
                               </div>

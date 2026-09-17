@@ -31,10 +31,10 @@ async function getAppSettings(env) {
   const defaultSettings = {
     price_per_day: 233,
     kmsp_markup: 3e3,
-    telegram_bot_token: (env && env.TELEGRAM_BOT_TOKEN) || "8045282726:AAE2UuF0tpLlxN1rVRJoJLP6vCUQLDZ0cx8",
-    telegram_channel_id: (env && env.TELEGRAM_CHANNEL_ID) || "@srpcomgroup",
-    telegram_admin_id: (env && env.TELEGRAM_ADMIN_ID) || "5666536947",
-    telegram_group_thread_id: (env && env.TELEGRAM_GROUP_THREAD_ID) || "16083",
+    telegram_bot_token: (env && env.TELEGRAM_BOT_TOKEN) || "",
+    telegram_channel_id: (env && env.TELEGRAM_CHANNEL_ID) || "",
+    telegram_admin_id: (env && env.TELEGRAM_ADMIN_ID) || "",
+    telegram_group_thread_id: (env && env.TELEGRAM_GROUP_THREAD_ID) || "",
     auto_backup_frequency: 24,
     maintenance_mode: false,
     payment_tripay: false,
@@ -54,7 +54,7 @@ async function getAppSettings(env) {
       const parsed = JSON.parse(row);
       cachedAppSettings = Object.assign({}, defaultSettings, parsed);
       for (const k of Object.keys(defaultSettings)) {
-        if (cachedAppSettings[k] === "" || cachedAppSettings[k] === undefined || cachedAppSettings[k] === null) {
+        if (cachedAppSettings[k] === undefined || cachedAppSettings[k] === null) {
           cachedAppSettings[k] = defaultSettings[k];
         }
       }
@@ -147,22 +147,38 @@ __name2(jsonResponse, "jsonResponse");
 __name22(jsonResponse, "jsonResponse");
 __name222(jsonResponse, "jsonResponse");
 async function sendTelegramLog(statusHeader, bodyMsg, appSettings) {
-  const botToken = appSettings.telegram_bot_token;
-  const chatId = appSettings.telegram_channel_id;
-  if (!botToken || !chatId) return;
-  const finalMessage = `<b>${statusHeader}</b>
+  if (!appSettings) return;
+  const botToken = String(appSettings.telegram_bot_token || '').trim();
+  const rawChatId = String(appSettings.telegram_channel_id || '').trim();
+  if (!botToken || !rawChatId) return;
 
-${bodyMsg}
+  // Normalisasi Chat ID jika user menginput format ID supergroup tanpa awalan -100
+  // Contoh: "-5011866503" atau "5011866503" pada supergroup/channel bot API membutuhkan "-1005011866503"
+  const candidateIds = [rawChatId];
+  if (/^-\d{9,12}$/.test(rawChatId) && !rawChatId.startsWith('-100')) {
+    candidateIds.push('-100' + rawChatId.substring(1));
+  } else if (/^\d{9,12}$/.test(rawChatId)) {
+    candidateIds.push('-100' + rawChatId);
+  }
 
-\u{1F552} ${getWIBTime()}`;
-  try {
-    await fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ chat_id: chatId, text: finalMessage, parse_mode: "HTML" })
-    });
-  } catch (e) {
-    console.error("TG Error", e);
+  const finalMessage = `<b>${statusHeader}</b>\n\n${bodyMsg}\n\n🕒 ${getWIBTime()}`;
+
+  for (const targetChatId of candidateIds) {
+    try {
+      const res = await fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ chat_id: targetChatId, text: finalMessage, parse_mode: "HTML" })
+      });
+      const data = await res.json();
+      if (data && data.ok) {
+        return; // Berhasil terkirim!
+      } else {
+        console.warn(`[Telegram Log Notice] Pengiriman ke chat_id "${targetChatId}" gagal:`, data ? data.description : 'Unknown error');
+      }
+    } catch (e) {
+      console.error("[Telegram Log Error]:", e.message);
+    }
   }
 }
 __name(sendTelegramLog, "sendTelegramLog");
