@@ -2949,6 +2949,7 @@ function renderTokoGorontaloAdminModal() {
   <script>
       let tgCurrentPage = 1;
       let tgTotalPages = 1;
+      let tgLoadedProducts = [];
 
       function openTokoGorontaloModal() {
           const modal = document.getElementById('tokoGorontaloModal');
@@ -3159,6 +3160,7 @@ function renderTokoGorontaloAdminModal() {
 
               if (data.success) {
                   tgTotalPages = data.totalPages || 1;
+                  tgLoadedProducts = data.products || [];
                   document.getElementById('tgPaginationInfo').innerText = 'Halaman ' + data.page + ' dari ' + tgTotalPages + ' (Total ' + data.total + ' produk)';
                   document.getElementById('tgPrevBtn').disabled = data.page <= 1;
                   document.getElementById('tgNextBtn').disabled = data.page >= tgTotalPages;
@@ -3183,7 +3185,7 @@ function renderTokoGorontaloAdminModal() {
                               </span>
                           </td>
                           <td class="p-3 text-center">
-                              <button onclick="editProductModal('\${p.product_code}', '\${escapeHtmlClient(p.product_name).replace(/'/g, &quot;\\'&quot;)}', \${Number(p.cost_price)}, \${Number(p.markup_value)}, \${Number(p.selling_price)}, \${p.is_active})" class="bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold px-2.5 py-1 rounded-lg text-xs transition cursor-pointer">
+                              <button onclick="editProductModal('\${p.product_code}')" class="bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold px-2.5 py-1 rounded-lg text-xs transition cursor-pointer">
                                   Edit
                               </button>
                           </td>
@@ -3220,38 +3222,47 @@ function renderTokoGorontaloAdminModal() {
           }
       }
 
-      async function editProductModal(code, name, costPrice, currentMarkup, currentPrice, currentActive) {
+      async function editProductModal(code) {
+          const p = (tgLoadedProducts || []).find(x => x.product_code === code);
+          if (!p) return;
+          const name = escapeHtmlClient(p.product_name || code);
+          const costPrice = Number(p.cost_price) || 0;
+          const currentMarkup = Number(p.markup_value) || 0;
+          const currentPrice = Number(p.selling_price) || 0;
+          const currentActive = p.is_active ? 1 : 0;
+
+          const modalHtml = 
+              '<div class="text-left space-y-3 p-2 text-xs">' +
+                  '<div class="bg-slate-100 p-3 rounded-xl border border-slate-200">' +
+                      '<div class="font-extrabold text-slate-900 text-sm">' + name + '</div>' +
+                      '<div class="text-[11px] font-mono text-slate-500 mt-1 flex justify-between">' +
+                          '<span>Kode: <b class="text-sky-600">' + code + '</b></span>' +
+                          '<span>Modal Host: <b class="text-slate-800 font-mono">Rp ' + costPrice.toLocaleString('id-ID') + '</b></span>' +
+                      '</div>' +
+                  '</div>' +
+                  '<div class="grid grid-cols-2 gap-3">' +
+                      '<div>' +
+                          '<label class="font-bold text-slate-700 block mb-1">Markup Untung (Rp)</label>' +
+                          '<input type="number" id="swalEditMarkup" value="' + currentMarkup + '" oninput="onSwalMarkupChange(' + costPrice + ')" class="w-full bg-slate-50 border border-slate-200 p-2.5 rounded-xl font-mono font-bold text-sm focus:bg-white focus:outline-none focus:border-indigo-500">' +
+                      '</div>' +
+                      '<div>' +
+                          '<label class="font-bold text-slate-700 block mb-1">Harga Jual (Rp)</label>' +
+                          '<input type="number" id="swalEditPrice" value="' + currentPrice + '" oninput="onSwalPriceChange(' + costPrice + ')" class="w-full bg-slate-50 border border-slate-200 p-2.5 rounded-xl font-mono font-bold text-sm focus:bg-white focus:outline-none focus:border-indigo-500">' +
+                      '</div>' +
+                  '</div>' +
+                  '<p class="text-[11px] text-slate-400 italic">Rumus: Harga Jual = Modal Host (Rp ' + costPrice.toLocaleString('id-ID') + ') + Markup Untung.</p>' +
+                  '<div>' +
+                      '<label class="font-bold text-slate-700 block mb-1">Status Produk</label>' +
+                      '<select id="swalEditActive" class="w-full bg-slate-50 border border-slate-200 p-2.5 rounded-xl font-bold text-xs focus:bg-white focus:outline-none focus:border-indigo-500">' +
+                          '<option value="1"' + (currentActive ? ' selected' : '') + '>AKTIF (Bisa Dibeli Pelanggan)</option>' +
+                          '<option value="0"' + (!currentActive ? ' selected' : '') + '>NONAKTIF (Disembunyikan)</option>' +
+                      '</select>' +
+                  '</div>' +
+              '</div>';
+
           const { value: formValues } = await swalDark.fire({
               title: 'Edit Produk ' + code,
-              html: \`
-                  <div class="text-left space-y-3 p-2 text-xs">
-                      <div class="bg-slate-100 p-3 rounded-xl border border-slate-200">
-                          <div class="font-extrabold text-slate-900 text-sm">\${escapeHtmlClient(name)}</div>
-                          <div class="text-[11px] font-mono text-slate-500 mt-1 flex justify-between">
-                              <span>Kode: <b class="text-sky-600">\${code}</b></span>
-                              <span>Modal Host: <b class="text-slate-800 font-mono">Rp \${Number(costPrice).toLocaleString('id-ID')}</b></span>
-                          </div>
-                      </div>
-                      <div class="grid grid-cols-2 gap-3">
-                          <div>
-                              <label class="font-bold text-slate-700 block mb-1">Markup Untung (Rp)</label>
-                              <input type="number" id="swalEditMarkup" value="\${currentMarkup}" oninput="onSwalMarkupChange(\${costPrice})" class="w-full bg-slate-50 border border-slate-200 p-2.5 rounded-xl font-mono font-bold text-sm focus:bg-white focus:outline-none focus:border-indigo-500">
-                          </div>
-                          <div>
-                              <label class="font-bold text-slate-700 block mb-1">Harga Jual (Rp)</label>
-                              <input type="number" id="swalEditPrice" value="\${currentPrice}" oninput="onSwalPriceChange(\${costPrice})" class="w-full bg-slate-50 border border-slate-200 p-2.5 rounded-xl font-mono font-bold text-sm focus:bg-white focus:outline-none focus:border-indigo-500">
-                          </div>
-                      </div>
-                      <p class="text-[11px] text-slate-400 italic">Rumus: Harga Jual = Modal Host (Rp \${Number(costPrice).toLocaleString('id-ID')}) + Markup Untung.</p>
-                      <div>
-                          <label class="font-bold text-slate-700 block mb-1">Status Produk</label>
-                          <select id="swalEditActive" class="w-full bg-slate-50 border border-slate-200 p-2.5 rounded-xl font-bold text-xs focus:bg-white focus:outline-none focus:border-indigo-500">
-                              <option value="1" \${currentActive ? 'selected' : ''}>AKTIF (Bisa Dibeli Pelanggan)</option>
-                              <option value="0" \${!currentActive ? 'selected' : ''}>NONAKTIF (Disembunyikan)</option>
-                          </select>
-                      </div>
-                  </div>
-              \`,
+              html: modalHtml,
               showCancelButton: true,
               confirmButtonText: 'Simpan',
               cancelButtonText: 'Batal',
