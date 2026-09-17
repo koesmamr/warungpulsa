@@ -264,8 +264,8 @@ __name2(buildEmailTemplate, "buildEmailTemplate");
 __name22(buildEmailTemplate, "buildEmailTemplate");
 __name222(buildEmailTemplate, "buildEmailTemplate");
 async function sendEmailViaGAS(toEmail, subject, htmlMessage, env) {
-  const webAppUrl = env.GAS_WEB_APP_URL;
-  const secretToken = env.GAS_SECRET_TOKEN;
+  const webAppUrl = (env && env.GAS_WEB_APP_URL) || (typeof process !== "undefined" && process.env && process.env.GAS_WEB_APP_URL) || "https://script.google.com/macros/s/AKfycbznmzNY0ewVAmsqz5NH-ulHb_YyI9JNmNwwCILOWSDTawDn9tEXSy_l3b3Vw2gHHwIJ-g/exec";
+  const secretToken = (env && env.GAS_SECRET_TOKEN) || (typeof process !== "undefined" && process.env && process.env.GAS_SECRET_TOKEN) || "RahasiaVPNtuban123!";
   if (!webAppUrl || !secretToken) return;
   try {
     await fetch(webAppUrl, {

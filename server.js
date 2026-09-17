@@ -11,6 +11,8 @@ const env = {
   DB: db,
   ADMIN_EMAIL: process.env.ADMIN_EMAIL || 'syamsul18782@gmail.com',
   BACKUP_PASSWORD: process.env.BACKUP_PASSWORD || 'Suruan646@Suruan',
+  GAS_WEB_APP_URL: process.env.GAS_WEB_APP_URL || 'https://script.google.com/macros/s/AKfycbznmzNY0ewVAmsqz5NH-ulHb_YyI9JNmNwwCILOWSDTawDn9tEXSy_l3b3Vw2gHHwIJ-g/exec',
+  GAS_SECRET_TOKEN: process.env.GAS_SECRET_TOKEN || 'RahasiaVPNtuban123!',
   AI: {
     run: async (model, opts) => {
       console.warn('[AI] Cloudflare Workers AI tidak aktif di VPS. Mengalihkan ke Gemini API.');
