@@ -1318,12 +1318,22 @@ async function handleTokoGorontaloRoutes(url, request, env, currentUser, appSett
       const activeCount = rawDb.prepare('SELECT COUNT(*) as count FROM ppob_products WHERE is_active = 1').get().count;
       const orderCount = rawDb.prepare('SELECT COUNT(*) as count FROM ppob_transactions').get().count;
       
+      const settingRow = rawDb.prepare('SELECT value FROM settings WHERE key = ?').get('tokogorontalo_default_markup');
+      let defaultMarkup = 750;
+      if (settingRow && settingRow.value) {
+        defaultMarkup = parseInt(settingRow.value) || 750;
+      } else {
+        const modeRow = rawDb.prepare('SELECT markup_value FROM ppob_products WHERE markup_value > 0 GROUP BY markup_value ORDER BY COUNT(*) DESC LIMIT 1').get();
+        if (modeRow && modeRow.markup_value !== undefined) defaultMarkup = modeRow.markup_value;
+      }
+
       return jsonResponse({
         success: true,
         balance: balanceInfo,
         productCount,
         activeCount,
         orderCount,
+        defaultMarkup,
         config: {
           userid: service.userid,
           baseUrl: service.baseUrl
@@ -1341,10 +1351,20 @@ async function handleTokoGorontaloRoutes(url, request, env, currentUser, appSett
         } catch {}
 
         const result = await service.syncProducts(rawDb, markup);
+
+        // Simpan default markup ke settings
+        try {
+          rawDb.prepare(`
+            INSERT INTO settings (key, value) VALUES ('tokogorontalo_default_markup', ?)
+            ON CONFLICT(key) DO UPDATE SET value = excluded.value
+          `).run(String(markup));
+        } catch {}
+
         return jsonResponse({
           success: true,
           count: result.count,
           total: result.total,
+          defaultMarkup: markup,
           message: `Berhasil mensinkronkan ${result.count} produk dari Toko Gorontalo (Markup: +Rp ${markup.toLocaleString('id-ID')}).`
         });
       } catch (e) {
@@ -1437,10 +1457,22 @@ async function handleTokoGorontaloRoutes(url, request, env, currentUser, appSett
       }
 
       const info = rawDb.prepare(sql).run(...params);
+
+      // Simpan ke settings sebagai default markup jika diterapkan secara global
+      if (!category && !brand) {
+        try {
+          rawDb.prepare(`
+            INSERT INTO settings (key, value) VALUES ('tokogorontalo_default_markup', ?)
+            ON CONFLICT(key) DO UPDATE SET value = excluded.value
+          `).run(String(markup));
+        } catch {}
+      }
+
       return jsonResponse({
         success: true,
         changes: info.changes,
-        message: `Berhasil memperbarui markup +Rp ${markup.toLocaleString('id-ID')} pada ${info.changes} produk.`
+        defaultMarkup: markup,
+        message: `Berhasil menyimpan dan menerapkan markup +Rp ${markup.toLocaleString('id-ID')} pada ${info.changes} produk.`
       });
     }
 
@@ -2827,17 +2859,21 @@ function renderTokoGorontaloAdminModal() {
               <!-- Action Bar: Sync & Markup -->
               <div class="p-5 rounded-2xl border border-slate-200 bg-slate-50 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
                   <div>
-                      <h4 class="font-extrabold text-slate-900 text-sm mb-1">Sinkronisasi Katalog & Harga Modal</h4>
-                      <p class="text-xs text-slate-500">Tarik daftar harga terbaru (1.143 produk) dari Toko Gorontalo & tentukan markup keuntungan.</p>
+                      <h4 class="font-extrabold text-slate-900 text-sm mb-1">Pengaturan Markup & Sinkronisasi Katalog</h4>
+                      <p class="text-xs text-slate-500">Tentukan margin keuntungan (Markup) lalu klik <b>Simpan Markup</b>, atau tarik harga modal terbaru dari server provider.</p>
                   </div>
-                  <div class="flex items-center gap-3 w-full md:w-auto">
-                      <div class="flex items-center gap-2 bg-white px-3 py-2 rounded-xl border border-slate-200">
+                  <div class="flex items-center gap-2.5 w-full md:w-auto flex-wrap">
+                      <div class="flex items-center gap-2 bg-white px-3 py-2 rounded-xl border border-slate-200 shadow-2xs">
                           <span class="text-xs font-bold text-slate-500">Markup Rp</span>
-                          <input type="number" id="tgSyncMarkupInput" value="750" class="w-20 font-bold font-mono text-sm text-slate-800 focus:outline-none">
+                          <input type="number" id="tgSyncMarkupInput" value="750" class="w-24 font-bold font-mono text-sm text-slate-800 focus:outline-none" placeholder="750">
                       </div>
-                      <button onclick="runTokoGorontaloSync()" id="tgSyncBtn" class="bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-2.5 px-5 rounded-xl text-xs transition shadow-md flex items-center gap-2 shrink-0 cursor-pointer">
+                      <button onclick="applyGlobalMarkup()" id="tgSaveMarkupBtn" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-2.5 px-4 rounded-xl text-xs transition shadow-sm flex items-center gap-1.5 shrink-0 cursor-pointer" title="Simpan nilai markup ini dan terapkan langsung ke harga jual produk lokal">
+                          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                          Simpan Markup
+                      </button>
+                      <button onclick="runTokoGorontaloSync()" id="tgSyncBtn" class="bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-2.5 px-4 rounded-xl text-xs transition shadow-sm flex items-center gap-1.5 shrink-0 cursor-pointer" title="Tarik harga modal terbaru dari server Toko Gorontalo dan terapkan markup ini">
                           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
-                          Sinkronkan Sekarang
+                          Sinkronkan Dari Server
                       </button>
                   </div>
               </div>
@@ -3001,9 +3037,73 @@ function renderTokoGorontaloAdminModal() {
                   document.getElementById('tgMemberName').innerText = (data.balance.namamember || 'Member') + ' (' + data.balance.kodemember + ')';
                   document.getElementById('tgProductCount').innerText = data.productCount + ' Produk';
                   document.getElementById('tgOrderCount').innerText = data.orderCount + ' Transaksi';
+                  if (data.defaultMarkup !== undefined) {
+                      const input = document.getElementById('tgSyncMarkupInput');
+                      if (input) input.value = data.defaultMarkup;
+                  }
               }
           } catch(e) {
               console.error('Info error:', e);
+          }
+      }
+
+      async function applyGlobalMarkup() {
+          const markupInput = document.getElementById('tgSyncMarkupInput');
+          const markup = parseInt(markupInput.value) || 0;
+          const cat = document.getElementById('tgFilterCategory') ? document.getElementById('tgFilterCategory').value : '';
+          const brand = document.getElementById('tgFilterBrand') ? document.getElementById('tgFilterBrand').value : '';
+
+          let targetDesc = 'seluruh produk (1.143 produk)';
+          if (cat && brand) targetDesc = 'kategori ' + cat.toUpperCase() + ' brand ' + brand;
+          else if (cat) targetDesc = 'kategori ' + cat.toUpperCase();
+          else if (brand) targetDesc = 'brand ' + brand;
+
+          const confirm = await swalDark.fire({
+              title: 'Simpan & Terapkan Markup?',
+              html: 'Simpan dan terapkan nilai markup keuntungan <b>+Rp ' + markup.toLocaleString('id-ID') + '</b> ke <b>' + targetDesc + '</b>?<br><br><span class="text-xs text-slate-400">Harga Jual semua produk akan otomatis disesuaikan secara instan: <i>Harga Modal + Rp ' + markup.toLocaleString('id-ID') + '</i>.</span>',
+              icon: 'question',
+              showCancelButton: true,
+              confirmButtonText: 'Ya, Simpan & Terapkan',
+              cancelButtonText: 'Batal',
+              confirmButtonColor: '#059669'
+          });
+
+          if (!confirm.isConfirmed) return;
+
+          const btn = document.getElementById('tgSaveMarkupBtn');
+          btn.disabled = true;
+          btn.innerHTML = '<span class="animate-spin inline-block w-3.5 h-3.5 border-2 border-white border-t-transparent rounded-full"></span> Menyimpan...';
+
+          try {
+              const res = await fetch('/api/admin/tokogorontalo/bulk-markup', {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify({
+                      markup_value: markup,
+                      category: cat || undefined,
+                      brand: brand || undefined
+                  })
+              });
+              const data = await res.json();
+              btn.disabled = false;
+              btn.innerHTML = '<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> Simpan Markup';
+
+              if (data.success) {
+                  swalDark.fire({
+                      title: 'Markup Berhasil Disimpan!',
+                      text: data.message,
+                      icon: 'success',
+                      timer: 2500,
+                      showConfirmButton: false
+                  });
+                  loadAdminProducts(tgCurrentPage);
+              } else {
+                  swalDark.fire('Gagal', data.message || 'Gagal menyimpan markup.', 'error');
+              }
+          } catch(e) {
+              btn.disabled = false;
+              btn.innerHTML = '<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> Simpan Markup';
+              swalDark.fire('Error', 'Kesalahan jaringan: ' + e.message, 'error');
           }
       }
 
@@ -3083,7 +3183,7 @@ function renderTokoGorontaloAdminModal() {
                               </span>
                           </td>
                           <td class="p-3 text-center">
-                              <button onclick="editProductModal('\${p.product_code}', \${p.selling_price}, \${p.is_active})" class="bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold px-2.5 py-1 rounded-lg text-xs transition">
+                              <button onclick="editProductModal('\${p.product_code}', '\${escapeHtmlClient(p.product_name).replace(/'/g, &quot;\\'&quot;)}', \${Number(p.cost_price)}, \${Number(p.markup_value)}, \${Number(p.selling_price)}, \${p.is_active})" class="bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold px-2.5 py-1 rounded-lg text-xs transition cursor-pointer">
                                   Edit
                               </button>
                           </td>
@@ -3102,19 +3202,51 @@ function renderTokoGorontaloAdminModal() {
           }
       }
 
-      async function editProductModal(code, currentPrice, currentActive) {
+      function onSwalMarkupChange(costPrice) {
+          const mInput = document.getElementById('swalEditMarkup');
+          const pInput = document.getElementById('swalEditPrice');
+          if (mInput && pInput) {
+              const m = parseInt(mInput.value) || 0;
+              pInput.value = costPrice + m;
+          }
+      }
+
+      function onSwalPriceChange(costPrice) {
+          const mInput = document.getElementById('swalEditMarkup');
+          const pInput = document.getElementById('swalEditPrice');
+          if (mInput && pInput) {
+              const p = parseInt(pInput.value) || 0;
+              mInput.value = Math.max(0, p - costPrice);
+          }
+      }
+
+      async function editProductModal(code, name, costPrice, currentMarkup, currentPrice, currentActive) {
           const { value: formValues } = await swalDark.fire({
               title: 'Edit Produk ' + code,
               html: \`
                   <div class="text-left space-y-3 p-2 text-xs">
-                      <div>
-                          <label class="font-bold text-slate-700 block mb-1">Harga Jual (Rp)</label>
-                          <input type="number" id="swalEditPrice" value="\${currentPrice}" class="w-full bg-slate-50 border border-slate-200 p-2.5 rounded-xl font-mono font-bold text-sm">
+                      <div class="bg-slate-100 p-3 rounded-xl border border-slate-200">
+                          <div class="font-extrabold text-slate-900 text-sm">\${escapeHtmlClient(name)}</div>
+                          <div class="text-[11px] font-mono text-slate-500 mt-1 flex justify-between">
+                              <span>Kode: <b class="text-sky-600">\${code}</b></span>
+                              <span>Modal Host: <b class="text-slate-800 font-mono">Rp \${Number(costPrice).toLocaleString('id-ID')}</b></span>
+                          </div>
                       </div>
+                      <div class="grid grid-cols-2 gap-3">
+                          <div>
+                              <label class="font-bold text-slate-700 block mb-1">Markup Untung (Rp)</label>
+                              <input type="number" id="swalEditMarkup" value="\${currentMarkup}" oninput="onSwalMarkupChange(\${costPrice})" class="w-full bg-slate-50 border border-slate-200 p-2.5 rounded-xl font-mono font-bold text-sm focus:bg-white focus:outline-none focus:border-indigo-500">
+                          </div>
+                          <div>
+                              <label class="font-bold text-slate-700 block mb-1">Harga Jual (Rp)</label>
+                              <input type="number" id="swalEditPrice" value="\${currentPrice}" oninput="onSwalPriceChange(\${costPrice})" class="w-full bg-slate-50 border border-slate-200 p-2.5 rounded-xl font-mono font-bold text-sm focus:bg-white focus:outline-none focus:border-indigo-500">
+                          </div>
+                      </div>
+                      <p class="text-[11px] text-slate-400 italic">Rumus: Harga Jual = Modal Host (Rp \${Number(costPrice).toLocaleString('id-ID')}) + Markup Untung.</p>
                       <div>
                           <label class="font-bold text-slate-700 block mb-1">Status Produk</label>
-                          <select id="swalEditActive" class="w-full bg-slate-50 border border-slate-200 p-2.5 rounded-xl font-bold text-xs">
-                              <option value="1" \${currentActive ? 'selected' : ''}>AKTIF (Bisa Dibeli)</option>
+                          <select id="swalEditActive" class="w-full bg-slate-50 border border-slate-200 p-2.5 rounded-xl font-bold text-xs focus:bg-white focus:outline-none focus:border-indigo-500">
+                              <option value="1" \${currentActive ? 'selected' : ''}>AKTIF (Bisa Dibeli Pelanggan)</option>
                               <option value="0" \${!currentActive ? 'selected' : ''}>NONAKTIF (Disembunyikan)</option>
                           </select>
                       </div>
@@ -3123,9 +3255,11 @@ function renderTokoGorontaloAdminModal() {
               showCancelButton: true,
               confirmButtonText: 'Simpan',
               cancelButtonText: 'Batal',
+              confirmButtonColor: '#0284c7',
               preConfirm: () => {
                   return {
                       price: document.getElementById('swalEditPrice').value,
+                      markup: document.getElementById('swalEditMarkup').value,
                       active: document.getElementById('swalEditActive').value
                   };
               }
@@ -3139,6 +3273,7 @@ function renderTokoGorontaloAdminModal() {
                       body: JSON.stringify({
                           product_code: code,
                           selling_price: parseInt(formValues.price),
+                          markup_value: parseInt(formValues.markup),
                           is_active: parseInt(formValues.active)
                       })
                   });
