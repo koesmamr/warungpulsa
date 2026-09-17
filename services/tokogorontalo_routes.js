@@ -18,32 +18,49 @@ function escapeHtml(str) {
   }[tag]));
 }
 
-function isFailureStatus(val) {
-  if (val === null || val === undefined) return false;
-  if (val === false || val === 0 || val === '0' || val === 2 || val === '2') return true;
-  const s = String(val).toLowerCase().trim();
-  if (['failed', 'gagal', 'error', 'batal', 'rejected', 'declined', 'refund', 'cancel', 'r', 'false'].includes(s)) {
+/**
+ * Memeriksa apakah respon dari server provider menandakan transaksi MASIH PROSES / PENDING / SUSPECT.
+ * Sangat krusial untuk Token PLN dan sistem OtomaX/Tupo!
+ * Pesan seperti "Status transaksi tidak dapat terjemahkan hubungi admin" di OtomaX BUKAN GAGAL,
+ * melainkan switch provider belum selesai mem-parsing balasan supplier / masih menunggu balasan PLN Biller.
+ */
+function isPendingOrProcessing(status, info, detail, rc) {
+  const combined = ((status || '') + ' ' + (info || '') + ' ' + (detail || '') + ' ' + (rc || '')).toLowerCase();
+  
+  if (
+    combined.includes('tidak dapat terjemahkan') ||
+    combined.includes('belum terjemahkan') ||
+    combined.includes('terjemahkan') ||
+    combined.includes('sedang diproses') ||
+    combined.includes('dalam proses') ||
+    combined.includes('proses') ||
+    combined.includes('processing') ||
+    combined.includes('pending') ||
+    combined.includes('menunggu') ||
+    combined.includes('antrian') ||
+    combined.includes('antri') ||
+    combined.includes('suspect') ||
+    combined.includes('biller timeout') ||
+    combined.includes('silakan tunggu') ||
+    combined.includes('silahkan tunggu') ||
+    combined.includes('tunggu')
+  ) {
     return true;
   }
-  return s.includes('gagal') ||
-         s.includes('fail') ||
-         s.includes('batal') ||
-         s.includes('tolak') ||
-         s.includes('reject') ||
-         s.includes('salah') ||
-         s.includes('tidak ditemukan') ||
-         s.includes('tidak terdaftar') ||
-         s.includes('tidak valid') ||
-         s.includes('invalid') ||
-         s.includes('gangguan') ||
-         s.includes('cut off') ||
-         s.includes('tutup') ||
-         s.includes('expired') ||
-         s.includes('kadaluarsa') ||
-         s.includes('hangus') ||
-         s.includes('kurang') ||
-         s.includes('timeout') ||
-         s.includes('down');
+
+  if (rc !== undefined && rc !== null) {
+    const r = String(rc).trim().toLowerCase();
+    if (['03', '05', '06', '68', '99', 'pending', 'processing', 'process', 'in_process'].includes(r)) {
+      return true;
+    }
+  }
+
+  const st = String(status || '').trim().toLowerCase();
+  if (['pending', 'proses', 'processing', 'in_progress', 'queued', 'queue'].includes(st)) {
+    return true;
+  }
+
+  return false;
 }
 
 function isSuccessStatus(val) {
@@ -55,14 +72,60 @@ function isSuccessStatus(val) {
 }
 
 function isProviderFailure(status, info, detail, rc, success) {
-  if (success === false) return true;
-  if (rc !== undefined && rc !== null) {
+  // 1. JIKA TERINDIKASI PROSES / PENDING / SUSPECT / TERJEMAHKAN -> BUKAN GAGAL, JANGAN REFUND!
+  if (isPendingOrProcessing(status, info, detail, rc)) {
+    return false;
+  }
+
+  // 2. Jika sukses -> bukan kegagalan
+  if (isSuccessStatus(status) || isSuccessStatus(info) || rc === '00' || rc === '0') {
+    return false;
+  }
+
+  // 3. Cek kegagalan pasti / pesan penolakan definitif dari provider
+  const combined = ((status || '') + ' ' + (info || '') + ' ' + (detail || '')).toLowerCase();
+  const hasDefinitiveFailMessage = 
+    combined.includes('gagal') ||
+    combined.includes('fail') ||
+    combined.includes('batal') ||
+    combined.includes('tolak') ||
+    combined.includes('reject') ||
+    combined.includes('salah') ||
+    combined.includes('tidak ditemukan') ||
+    combined.includes('tidak terdaftar') ||
+    combined.includes('tidak valid') ||
+    combined.includes('invalid') ||
+    combined.includes('gangguan') ||
+    combined.includes('cut off') ||
+    combined.includes('tutup') ||
+    combined.includes('expired') ||
+    combined.includes('kadaluarsa') ||
+    combined.includes('hangus') ||
+    combined.includes('kurang') ||
+    combined.includes('saldo host tidak cukup') ||
+    combined.includes('saldo tidak mencukupi');
+
+  if (hasDefinitiveFailMessage) {
+    return true;
+  }
+
+  const st = String(status || '').toLowerCase().trim();
+  if (['failed', 'gagal', 'batal', 'rejected', 'declined', 'cancel'].includes(st)) {
+    return true;
+  }
+
+  if (rc !== undefined && rc !== null && String(rc).trim() !== '') {
     const rcStr = String(rc).trim().toLowerCase();
-    if (rcStr !== '00' && rcStr !== '0' && rcStr !== 'pending' && rcStr !== 'processing' && rcStr !== '') {
+    if (!['00', '0', 'pending', 'processing', ''].includes(rcStr)) {
       return true;
     }
   }
-  return isFailureStatus(status) || isFailureStatus(info) || isFailureStatus(detail);
+
+  if (success === false && !isPendingOrProcessing(status, info, detail, rc)) {
+    return true;
+  }
+
+  return false;
 }
 
 /**
@@ -935,7 +998,7 @@ async function handleTokoGorontaloRoutes(url, request, env, currentUser, appSett
     if (!order) return jsonResponse({ success: false, message: 'Pesanan tidak ditemukan' }, 404);
 
     // 1. Jika transaksi di DB sudah berstatus gagal tetapi belum di-refund -> Langsung auto-refund!
-    if ((isFailureStatus(order.status) || isFailureStatus(order.info)) && (order.is_refunded === 0 || !order.is_refunded)) {
+    if (isProviderFailure(order.status, order.info, order.detail) && (order.is_refunded === 0 || !order.is_refunded)) {
       console.log(`[Order-Status] Auto-refund transaksi gagal belum di-refund: Ref ${order.reqid}`);
       await executeAutoRefund(rawDb, order, order.info || 'Transaksi dinyatakan gagal pada server provider', 'order_status_check', sendTelegramLog, appSettings);
       order = rawDb.prepare('SELECT * FROM ppob_transactions WHERE reqid = ?').get(order.reqid);
@@ -955,13 +1018,16 @@ async function handleTokoGorontaloRoutes(url, request, env, currentUser, appSett
             const parsed = service.parseDetail(detailText);
             if (parsed.sn) sn = parsed.sn;
           }
+          if (!sn && live.bukti) {
+            sn = String(live.bukti).trim();
+          }
 
           if (isProviderFailure(liveStatus, infoText, detailText, live.rc, live.success)) {
-            // Auto-refund instan jika provider melaporkan status gagal saat live check
+            // Auto-refund instan HANYA jika provider melaporkan kegagalan pasti saat live check
             console.log(`[Order-Status Live Check GAGAL] Ref: ${order.reqid}. Melakukan auto-refund instan...`);
             await executeAutoRefund(rawDb, order, infoText || detailText || 'Gagal dari server provider', 'live_check', sendTelegramLog, appSettings);
             order = rawDb.prepare('SELECT * FROM ppob_transactions WHERE reqid = ?').get(order.reqid);
-          } else if (isSuccessStatus(liveStatus) || live.rc === '00') {
+          } else if (isSuccessStatus(liveStatus) || live.rc === '00' || (sn && sn.length >= 6)) {
             rawDb.prepare(`
               UPDATE ppob_transactions
               SET status = 'success',
@@ -972,6 +1038,19 @@ async function handleTokoGorontaloRoutes(url, request, env, currentUser, appSett
               WHERE reqid = ?
             `).run(sn, infoText, detailText, order.reqid);
             order = rawDb.prepare('SELECT * FROM ppob_transactions WHERE reqid = ?').get(order.reqid);
+
+            // Buat notifikasi Inbox sukses jika belum ada
+            try {
+              const existingInbox = rawDb.prepare('SELECT id FROM inbox WHERE message LIKE ?').get(`%${order.reqid}%`);
+              if (!existingInbox) {
+                const titleMsg = `Pembelian ${order.product_name} Berhasil!`;
+                const bodyMsg = `Nomor Tujuan: <b>${order.customer_no}</b><br>SN / Token: <b style="color: #0284c7; font-size: 15px;">${sn || '-'}</b><br>Waktu: ${new Date().toLocaleString('id-ID', { timeZone: 'Asia/Jakarta' })} WIB`;
+                rawDb.prepare(`
+                  INSERT INTO inbox (email, title, message, date, read)
+                  VALUES (?, ?, ?, ?, 0)
+                `).run(order.email, titleMsg, bodyMsg, new Date().toLocaleString('id-ID', { timeZone: 'Asia/Jakarta' }) + ' WIB');
+              }
+            } catch (eInbox) {}
           }
         }
       } catch (err) {
@@ -1906,8 +1985,8 @@ function renderPPOBContent(currentUser, appSettings, env) {
                       const originalText = loadingP ? loadingP.innerText : 'Memproses transaksi...';
                       if (loadingP) loadingP.innerText = 'Memverifikasi status ke server provider (PLN/H2H)...';
 
-                      for (let poll = 1; poll <= 4; poll++) {
-                          await new Promise(r => setTimeout(r, 2000));
+                      for (let poll = 1; poll <= 8; poll++) {
+                          await new Promise(r => setTimeout(r, 2500));
                           try {
                               const stRes = await fetch('/api/ppob/order-status?reqid=' + encodeURIComponent(data.reqid));
                               const stJson = await stRes.json();
