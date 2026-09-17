@@ -58,9 +58,28 @@ const server = serve({
   console.log('=================================================');
 });
 
+// Scheduler background otomatis untuk auto-backup Telegram & maintenance berkala di VPS
+const runScheduledTasks = async () => {
+  try {
+    const ctx = {
+      waitUntil: (promise) => Promise.resolve(promise).catch(err => console.error('[Background Task Error]:', err.message))
+    };
+    if (typeof appWorker.scheduled === 'function') {
+      await appWorker.scheduled({ scheduledTime: Date.now(), cron: '* * * * *' }, env, ctx);
+    }
+  } catch (err) {
+    console.error('[Background Scheduler Error]:', err.message);
+  }
+};
+
+// Jalankan 10 detik setelah startup, lalu rutin setiap 60 detik
+setTimeout(runScheduledTasks, 10000);
+const cronInterval = setInterval(runScheduledTasks, 60 * 1000);
+
 // Penanganan graceful shutdown
 process.on('SIGINT', () => {
   console.log('\nMenghentikan server Warung Pulsa...');
+  clearInterval(cronInterval);
   server.close(() => {
     console.log('Server berhasil dinonaktifkan.');
     process.exit(0);
@@ -69,6 +88,7 @@ process.on('SIGINT', () => {
 
 process.on('SIGTERM', () => {
   console.log('\nMenerima SIGTERM, menghentikan server...');
+  clearInterval(cronInterval);
   server.close(() => {
     process.exit(0);
   });

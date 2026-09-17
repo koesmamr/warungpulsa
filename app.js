@@ -655,7 +655,7 @@ __name22(handleKMSPRoutes, "handleKMSPRoutes");
 __name222(handleKMSPRoutes, "handleKMSPRoutes");
 async function renderAdminDashboard(env, currentUser, appSettings) {
   const kmspMarkup = appSettings.kmsp_markup !== void 0 ? appSettings.kmsp_markup : 3e3;
-  const backupFreq = appSettings.auto_backup_frequency !== void 0 ? appSettings.auto_backup_frequency : 24;
+  const backupFreq = appSettings.auto_backup_frequency !== void 0 ? parseInt(appSettings.auto_backup_frequency) : 24;
   const licPrice = appSettings.script_price_per_day || 500;
   const isQrisManualOn = appSettings.payment_qris_manual === true;
   const isShopeePayOn = appSettings.payment_shopeepay !== false;
@@ -1040,47 +1040,136 @@ async function renderAdminDashboard(env, currentUser, appSettings) {
             </div>
         </div>
 
-        <!-- Backup & Restore -->
-        <div class="bg-gray-800 rounded-3xl border border-sky-500/30 shadow-2xl mt-10 mb-8 overflow-hidden">
-            <button onclick="toggleSection('sectionBackup', 'iconBackup')" class="w-full flex justify-between items-center p-6 md:p-8 bg-gray-800 hover:bg-gray-700 transition">
-                <h2 class="text-base font-bold text-white">\u{1F4BE} Backup & Restore Database</h2>
-                <svg id="iconBackup" class="w-6 h-6 text-gray-400 transform transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+        <!-- Backup & Restore Database Section -->
+        <div class="bg-white rounded-3xl border border-slate-200 shadow-sm mt-10 mb-8 overflow-hidden">
+            <button onclick="toggleSection('sectionBackup', 'iconBackup')" class="w-full flex justify-between items-center p-6 md:p-8 bg-slate-50 hover:bg-slate-100/80 transition text-left cursor-pointer border-b border-slate-100">
+                <div class="flex items-center gap-3.5">
+                    <div class="w-10 h-10 rounded-2xl bg-sky-600 text-white flex items-center justify-center shadow-md shadow-sky-600/20 font-bold text-lg">
+                        \u{1F4BE}
+                    </div>
+                    <div>
+                        <h2 class="text-base md:text-lg font-extrabold text-slate-900 tracking-tight">Pusat Backup & Auto-Backup Database</h2>
+                        <p class="text-xs text-slate-500 font-normal mt-0.5">Cadangkan database, atur jadwal otomatis ke Telegram, atau pulihkan data sistem.</p>
+                    </div>
+                </div>
+                <div class="flex items-center gap-3">
+                    <span class="hidden sm:inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold ${backupFreq > 0 ? 'bg-emerald-50 text-emerald-700 border border-emerald-200' : 'bg-slate-100 text-slate-600 border border-slate-200'}">
+                        <span class="w-2 h-2 rounded-full ${backupFreq > 0 ? 'bg-emerald-500 animate-pulse' : 'bg-slate-400'}"></span>
+                        Auto-Backup: ${backupFreq > 0 ? (backupFreq === 1 ? '24x Sehari (Tiap 1 Jam)' : (backupFreq === 2 ? '12x Sehari (Tiap 2 Jam)' : (backupFreq === 4 ? '6x Sehari (Tiap 4 Jam)' : (backupFreq === 6 ? '4x Sehari (Tiap 6 Jam)' : (backupFreq === 12 ? '2x Sehari (Tiap 12 Jam)' : '1x Sehari (Tiap 24 Jam)'))))) : 'Nonaktif'}
+                    </span>
+                    <svg id="iconBackup" class="w-6 h-6 text-slate-400 transform transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                </div>
             </button>
-            <div id="sectionBackup" class="hidden p-6 md:p-8 pt-0">
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mt-4">
-                    <div class="bg-gray-900 p-6 rounded-2xl border border-gray-700 flex flex-col justify-between">
+
+            <div id="sectionBackup" class="hidden p-6 md:p-8 space-y-6">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    
+                    <!-- KARTU 1: Backup Manual -->
+                    <div class="bg-slate-50 p-5 rounded-2xl border border-slate-200 flex flex-col justify-between hover:border-slate-300 transition shadow-sm">
                         <div>
-                            <h3 class="font-bold text-cyan-400 mb-2 text-lg">Export Data (Backup)</h3>
-                            <p class="text-sm text-gray-400 mb-6 leading-relaxed">Unduh seluruh data ke format JSON, atau kirim file backup beserta laporan statistik lengkap ke Telegram.</p>
+                            <div class="flex items-center gap-2 mb-2">
+                                <span class="text-lg">\u{1F4E4}</span>
+                                <h3 class="font-extrabold text-slate-900 text-sm md:text-base">Ekspor Data (Manual)</h3>
+                            </div>
+                            <p class="text-xs text-slate-600 leading-relaxed mb-4">
+                                Unduh seluruh data SQLite ke file JSON, atau kirim langsung laporan rekap dan backup ke Telegram sekarang.
+                            </p>
                         </div>
-                        <div class="space-y-3 mt-auto">
-                            <button onclick="downloadBackup()" class="w-full bg-sky-600 hover:bg-sky-500 text-white font-bold py-3 rounded-xl transition shadow-lg text-sm md:text-base">\u2B07\uFE0F Download Backup.json</button>
-                            <button onclick="backupToTelegram()" id="btnBackupTg" class="w-full bg-sky-600 hover:bg-sky-500 text-white font-bold py-3 rounded-xl transition shadow-lg text-sm md:text-base flex items-center justify-center gap-2">
-                                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M11.944 0A12 12 0 000 12a12 12 0 0012 12 12 12 0 0012-12A12 12 0 0012 0a12 12 0 00-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 01.171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.892-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>
+                        <div class="space-y-2.5 mt-auto">
+                            <button onclick="downloadBackup()" class="w-full bg-white hover:bg-slate-100 text-slate-800 border border-slate-300 font-bold py-2.5 px-3 rounded-xl transition text-xs flex items-center justify-center gap-2 shadow-sm cursor-pointer">
+                                <svg class="w-4 h-4 text-sky-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+                                Download Backup.json
+                            </button>
+                            <button onclick="backupToTelegram()" id="btnBackupTg" class="w-full bg-sky-600 hover:bg-sky-500 active:scale-95 text-white font-bold py-2.5 px-3 rounded-xl transition text-xs flex items-center justify-center gap-2 shadow-md shadow-sky-600/20 cursor-pointer">
+                                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M11.944 0A12 12 0 000 12a12 12 0 0012 12 12 12 0 0012-12A12 12 0 0012 0a12 12 0 00-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 01.171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.892-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>
                                 Backup Sekarang ke Telegram
                             </button>
                         </div>
                     </div>
-                    <div class="bg-gray-900 p-6 rounded-2xl border border-gray-700">
-                        <h3 class="font-bold text-cyan-400 mb-2 text-lg">Import Data (Restore)</h3>
-                        <p class="text-sm text-gray-400 mb-6 leading-relaxed">Kembalikan data dari JSON. <strong class="text-sky-400">BAHAYA:</strong> Menghapus & menimpa data yang ada saat ini!</p>
-                        <div class="flex flex-col sm:flex-row gap-3">
-                            <input type="file" id="restoreFile" accept=".json" class="block w-full text-sm text-gray-400 file:mr-4 file:py-2.5 file:px-4 file:rounded-lg file:border-0 file:text-xs file:font-bold file:bg-gray-800 file:text-white hover:file:bg-gray-700 transition cursor-pointer bg-gray-950 rounded-xl p-1.5 border border-gray-800">
-                            <button onclick="restoreBackup()" id="btnRestore" class="bg-sky-600 hover:bg-sky-500 text-white font-bold px-6 py-2.5 rounded-xl transition text-sm shadow-lg shrink-0">Upload</button>
-                        </div>
-                    </div>
-                    <div class="bg-gray-900 p-6 rounded-2xl border border-gray-700 flex flex-col justify-between md:col-span-2">
+
+                    <!-- KARTU 2: Auto-Backup Terjadwal ke Telegram -->
+                    <div class="bg-slate-50 p-5 rounded-2xl border border-slate-200 flex flex-col justify-between hover:border-slate-300 transition shadow-sm">
                         <div>
-                            <h3 class="font-bold text-teal-400 mb-2 text-lg">\u{1F6E0}\uFE0F Inisialisasi & Optimasi Database</h3>
-                            <p class="text-sm text-gray-400 leading-relaxed mb-4">Membangun ulang struktur tabel, menambahkan kolom baru, serta mengoptimalkan skema database D1 secara manual. Lakukan ini saat pertama kali setup atau setelah melakukan pembaruan skrip untuk menjamin kecocokan database.</p>
+                            <div class="flex items-center justify-between mb-2">
+                                <div class="flex items-center gap-2">
+                                    <span class="text-lg">\u23F0</span>
+                                    <h3 class="font-extrabold text-slate-900 text-sm md:text-base">Auto-Backup Telegram</h3>
+                                </div>
+                                <span id="autoBackupBadge" class="text-[10px] font-extrabold px-2 py-0.5 rounded-full ${backupFreq > 0 ? 'bg-emerald-100 text-emerald-800' : 'bg-slate-200 text-slate-700'}">
+                                    ${backupFreq > 0 ? 'AKTIF' : 'OFF'}
+                                </span>
+                            </div>
+                            <p class="text-xs text-slate-600 leading-relaxed mb-3">
+                                File database dan rekap saldo akan otomatis dikirim ke Telegram sesuai frekuensi yang Anda tentukan:
+                            </p>
+                            <div class="space-y-2.5">
+                                <div>
+                                    <label class="block text-[11px] font-bold text-slate-700 mb-1">Frekuensi Pengiriman:</label>
+                                    <select id="autoBackupFrequencySelect" class="w-full bg-white border border-slate-300 rounded-xl p-2.5 text-xs text-slate-800 font-bold focus:border-sky-500 focus:outline-none">
+                                        <option value="1" ${backupFreq === 1 ? 'selected' : ''}>\u26A1 24 kali sehari (Setiap 1 Jam)</option>
+                                        <option value="2" ${backupFreq === 2 ? 'selected' : ''}>\u{1F504} 12 kali sehari (Setiap 2 Jam)</option>
+                                        <option value="4" ${backupFreq === 4 ? 'selected' : ''}>\u{1F504} 6 kali sehari (Setiap 4 Jam)</option>
+                                        <option value="6" ${backupFreq === 6 ? 'selected' : ''}>\u{1F504} 4 kali sehari (Setiap 6 Jam)</option>
+                                        <option value="12" ${backupFreq === 12 ? 'selected' : ''}>\u{1F504} 2 kali sehari (Setiap 12 Jam)</option>
+                                        <option value="24" ${backupFreq === 24 ? 'selected' : ''}>\u{1F4C5} 1 kali sehari (Setiap 24 Jam)</option>
+                                        <option value="0" ${backupFreq === 0 ? 'selected' : ''}>\u274C Nonaktif (Hanya Manual)</option>
+                                    </select>
+                                </div>
+                                <div class="p-2.5 bg-white rounded-xl border border-slate-200 text-[11px] text-slate-500 space-y-1">
+                                    <div class="flex justify-between">
+                                        <span>Status Bot:</span>
+                                        <b class="text-slate-800 font-mono">${appSettings.telegram_bot_token ? 'Tersedia \u2705' : 'Belum Diisi \u274C'}</b>
+                                    </div>
+                                    <div class="flex justify-between">
+                                        <span>Target ID:</span>
+                                        <b class="text-slate-800 font-mono truncate max-w-[130px]">${appSettings.telegram_channel_id || '-'}</b>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                        <div class="mt-auto">
-                            <button onclick="initDatabaseSchema()" id="btnInitDb" class="w-full bg-teal-600 hover:bg-teal-500 text-white font-bold py-3 rounded-xl transition shadow-lg text-sm md:text-base">\u2699\uFE0F Jalankan Inisialisasi Database</button>
+                        <div class="mt-4">
+                            <button onclick="saveAutoBackupSchedule()" id="btnSaveAutoBackup" class="w-full bg-emerald-600 hover:bg-emerald-500 active:scale-95 text-white font-bold py-2.5 px-3 rounded-xl transition text-xs flex items-center justify-center gap-2 shadow-md shadow-emerald-600/20 cursor-pointer">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                                Simpan Jadwal Auto-Backup
+                            </button>
+                        </div>
                     </div>
+
+                    <!-- KARTU 3: Impor / Restore Data -->
+                    <div class="bg-slate-50 p-5 rounded-2xl border border-slate-200 flex flex-col justify-between hover:border-slate-300 transition shadow-sm">
+                        <div>
+                            <div class="flex items-center gap-2 mb-2">
+                                <span class="text-lg">\u{1F4E5}</span>
+                                <h3 class="font-extrabold text-slate-900 text-sm md:text-base">Impor Data (Restore)</h3>
+                            </div>
+                            <p class="text-xs text-slate-600 leading-relaxed mb-2.5">
+                                Kembalikan seluruh isi database dari file cadangan JSON yang pernah diunduh.
+                            </p>
+                            <div class="p-2.5 bg-amber-50 border border-amber-200 rounded-xl mb-3 text-[11px] text-amber-800 leading-relaxed">
+                                \u26A0\uFE0F <b>PERINGATAN:</b> Data saat ini akan ditimpa dengan data dari file backup.
+                            </div>
+                        </div>
+                        <div class="space-y-2.5 mt-auto">
+                            <input type="file" id="restoreFile" accept=".json" class="block w-full text-xs text-slate-600 file:mr-2.5 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-[11px] file:font-bold file:bg-slate-200 file:text-slate-800 hover:file:bg-slate-300 transition cursor-pointer bg-white rounded-xl p-1.5 border border-slate-300">
+                            <button onclick="restoreBackup()" id="btnRestore" class="w-full bg-rose-600 hover:bg-rose-500 active:scale-95 text-white font-bold py-2.5 px-3 rounded-xl transition text-xs shadow-md shadow-rose-600/20 cursor-pointer">
+                                Pulihkan Database
+                            </button>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- Footer Informasi Status Database -->
+                <div class="pt-4 border-t border-slate-200 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs text-slate-500">
+                    <div class="flex items-center gap-2">
+                        <span>\u2139\uFE0F <b>Status Database:</b> Seluruh tabel & kolom SQLite otomatis diverifikasi via <code class="bg-slate-100 px-1 py-0.5 rounded text-slate-700 font-mono">schema.sql</code> setiap server restart. Inisialisasi manual umumnya tidak diperlukan lagi.</span>
+                    </div>
+                    <button onclick="initDatabaseSchema()" id="btnInitDb" class="text-slate-600 hover:text-sky-600 font-bold underline transition text-xs cursor-pointer shrink-0">
+                        Cek & Sinkron Skema Manual
+                    </button>
                 </div>
             </div>
         </div>
-    </div>
 
     <!-- Modal Dashboard Statistik -->
     <div id="statsDashboardModal" class="fixed inset-0 bg-black/80 hidden z-[100] flex items-center justify-center p-3 md:p-4 backdrop-blur-sm" onclick="if(event.target === this) closeStatsDashboardModal()">
@@ -1244,9 +1333,13 @@ async function renderAdminDashboard(env, currentUser, appSettings) {
                         <div class="col-span-2 md:col-span-1">
                             <label class="block text-xs font-bold text-gray-400 mb-2 uppercase tracking-wide">Frekuensi Auto Backup (Jam)</label>
                             <select id="setBackupFreq" class="w-full bg-gray-950 border border-gray-700 rounded-xl p-3.5 text-white text-sm focus:ring-2 focus:ring-green-500 outline-none font-bold">
-                                <option value="12" ${backupFreq === 12 ? "selected" : ""}>Tiap 12 Jam (2x Sehari)</option>
-                                <option value="24" ${backupFreq === 24 ? "selected" : ""}>Tiap 24 Jam (1x Sehari - Rekomendasi)</option>
-                                <option value="0" ${backupFreq === 0 ? "selected" : ""}>\u274C Matikan Auto Backup</option>
+                                <option value="1" ${backupFreq === 1 ? "selected" : ""}>\u26A1 24 kali sehari (Tiap 1 Jam)</option>
+                                <option value="2" ${backupFreq === 2 ? "selected" : ""}>\u{1F504} 12 kali sehari (Tiap 2 Jam)</option>
+                                <option value="4" ${backupFreq === 4 ? "selected" : ""}>\u{1F504} 6 kali sehari (Tiap 4 Jam)</option>
+                                <option value="6" ${backupFreq === 6 ? "selected" : ""}>\u{1F504} 4 kali sehari (Tiap 6 Jam)</option>
+                                <option value="12" ${backupFreq === 12 ? "selected" : ""}>\u{1F504} 2 kali sehari (Tiap 12 Jam)</option>
+                                <option value="24" ${backupFreq === 24 ? "selected" : ""}>\u{1F4C5} 1 kali sehari (Tiap 24 Jam - Standar)</option>
+                                <option value="0" ${backupFreq === 0 ? "selected" : ""}>\u274C Nonaktif (Hanya Manual)</option>
                             </select>
                         </div>
                         <div class="col-span-2 md:col-span-1">
@@ -2303,15 +2396,50 @@ async function renderAdminDashboard(env, currentUser, appSettings) {
             btn.disabled = false;
         }
 
+        async function saveAutoBackupSchedule() {
+            const selectEl = document.getElementById('autoBackupFrequencySelect');
+            if (!selectEl) return;
+            const freq = parseInt(selectEl.value);
+            const btn = document.getElementById('btnSaveAutoBackup');
+            const originalText = btn.innerHTML;
+            btn.innerText = 'Menyimpan...'; btn.disabled = true;
+
+            try {
+                const res = await fetch('/api/admin/backup-config', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ frequency: freq })
+                });
+                const data = await res.json();
+                if (data.success) {
+                    const badge = document.getElementById('autoBackupBadge');
+                    if (badge) {
+                        badge.innerText = freq > 0 ? 'AKTIF' : 'OFF';
+                        badge.className = freq > 0 ? 'text-[10px] font-extrabold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800' : 'text-[10px] font-extrabold px-2 py-0.5 rounded-full bg-slate-200 text-slate-700';
+                    }
+                    const setFreqEl = document.getElementById('setBackupFreq');
+                    if (setFreqEl) setFreqEl.value = String(freq);
+                    await swalDark.fire('Tersimpan!', data.message || 'Jadwal auto-backup berhasil disimpan!', 'success');
+                } else {
+                    await swalDark.fire('Gagal', data.message || 'Gagal menyimpan jadwal auto-backup.', 'error');
+                }
+            } catch (e) {
+                await swalDark.fire('Error', 'Terjadi kesalahan koneksi internet.', 'error');
+            } finally {
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+            }
+        }
+
         async function initDatabaseSchema() {
             const conf = await swalDark.fire({
-                title: "Inisialisasi Database?",
-                text: "Sistem akan membangun ulang struktur tabel, kolom baru, serta mengoptimalkan skema database D1 Anda. Lanjutkan?",
+                title: "Cek & Sinkron Skema Database?",
+                text: "Sistem akan memverifikasi seluruh tabel SQLite dan memastikan kompatibilitas kolom. Lanjutkan?",
                 icon: "question",
                 showCancelButton: true,
-                confirmButtonColor: "#0d9488",
+                confirmButtonColor: "#0284c7",
                 cancelButtonColor: "#ef4444",
-                confirmButtonText: "Ya, Jalankan!",
+                confirmButtonText: "Ya, Sinkronkan!",
                 cancelButtonText: "Batal"
             });
             if (!conf.isConfirmed) return;
@@ -2324,7 +2452,7 @@ async function renderAdminDashboard(env, currentUser, appSettings) {
                 const res = await fetch("/api/admin/db-init", { method: "POST" });
                 const data = await res.json();
                 if (data.success) {
-                    await swalDark.fire("Berhasil", data.message || "Skema database berhasil diinisialisasi!", "success");
+                    await swalDark.fire("Berhasil", data.message || "Skema database berhasil diverifikasi!", "success");
                 } else {
                     await swalDark.fire("Gagal", data.message || "Gagal inisialisasi database.", "error");
                 }
@@ -3013,6 +3141,9 @@ Waktu: ${getWIBTime()}`, updatedSettings);
       const existing = await env.DB.prepare("SELECT key FROM settings WHERE key = 'app'").first();
       if (existing) await env.DB.prepare("UPDATE settings SET value = ? WHERE key = 'app'").bind(settingStr).run();
       else await env.DB.prepare("INSERT INTO settings (key, value) VALUES ('app', ?)").bind(settingStr).run();
+      if (auto_backup_frequency !== undefined) {
+        await env.DB.prepare("INSERT OR REPLACE INTO settings (key, value) VALUES ('auto_backup_frequency', ?)").bind(String(auto_backup_frequency)).run();
+      }
       setCachedAppSettings(JSON.parse(settingStr));
       return jsonResponse({ success: true });
     } catch (e) {
@@ -3529,6 +3660,52 @@ Email Pemilik: ${vpnRecord.email}`, appSettings);
       const backupData = await generateBackupData(env);
       return new Response(JSON.stringify(backupData, null, 2), {
         headers: { "Content-Type": "application/json", "Content-Disposition": 'attachment; filename="backup.json"' }
+      });
+    } catch (e) {
+      return jsonResponse({ success: false, message: e.message }, 500);
+    }
+  }
+  if (url.pathname === "/api/admin/backup-config" && request.method === "GET") {
+    try {
+      const appSettings = await getAppSettings(env);
+      const lastBackupKey = "last_backup_timestamp";
+      let lastBackupTime = 0;
+      try {
+        const row = await env.DB.prepare("SELECT value FROM settings WHERE key = ?").bind(lastBackupKey).first();
+        if (row && row.value) lastBackupTime = parseInt(row.value);
+      } catch (e) {}
+      let lastBackupDate = "-";
+      if (lastBackupTime > 0) {
+        lastBackupDate = new Date(lastBackupTime).toLocaleString('id-ID', { timeZone: 'Asia/Jakarta' }) + " WIB";
+      }
+      return jsonResponse({
+        success: true,
+        frequency: appSettings.auto_backup_frequency !== undefined ? parseInt(appSettings.auto_backup_frequency) : 24,
+        lastBackupTime,
+        lastBackupDate,
+        telegramBotConfigured: Boolean(appSettings.telegram_bot_token && appSettings.telegram_channel_id)
+      });
+    } catch (e) {
+      return jsonResponse({ success: false, message: e.message }, 500);
+    }
+  }
+  if (url.pathname === "/api/admin/backup-config" && request.method === "POST") {
+    try {
+      const body = await request.json();
+      const frequency = parseInt(body.frequency);
+      if (isNaN(frequency) || frequency < 0) {
+        return jsonResponse({ success: false, message: "Nilai frekuensi tidak valid" }, 400);
+      }
+      const appSettings = await getAppSettings(env);
+      appSettings.auto_backup_frequency = frequency;
+      await env.DB.prepare("INSERT OR REPLACE INTO settings (key, value) VALUES ('app', ?)").bind(JSON.stringify(appSettings)).run();
+      await env.DB.prepare("INSERT OR REPLACE INTO settings (key, value) VALUES ('auto_backup_frequency', ?)").bind(String(frequency)).run();
+      cachedAppSettings = null;
+      const timesPerDay = frequency > 0 ? (24 / frequency) : 0;
+      const desc = frequency === 1 ? "Tiap 1 Jam (24x sehari)" : `Tiap ${frequency} Jam (${timesPerDay}x sehari)`;
+      return jsonResponse({
+        success: true,
+        message: frequency > 0 ? `Jadwal auto-backup berhasil diatur ke ${desc}!` : "Auto-backup berhasil dinonaktifkan."
       });
     } catch (e) {
       return jsonResponse({ success: false, message: e.message }, 500);
@@ -5433,10 +5610,10 @@ var worker_default = {
     }
     const botToken = appSettings.telegram_bot_token;
     const chatId = appSettings.telegram_channel_id;
-    const frequency = appSettings.auto_backup_frequency !== void 0 ? appSettings.auto_backup_frequency : 24;
-    if (frequency === 0 || !botToken || !chatId) return;
-    const currentHour = (/* @__PURE__ */ new Date()).getUTCHours();
-    if (currentHour % frequency !== 0) return;
+    const frequency = appSettings.auto_backup_frequency !== void 0 ? parseInt(appSettings.auto_backup_frequency) : 24;
+    if (frequency <= 0 || !botToken || !chatId) return;
+
+    const nowMs = Date.now();
     const lastBackupKey = "last_backup_timestamp";
     let lastBackupTime = 0;
     try {
@@ -5446,11 +5623,13 @@ var worker_default = {
       }
     } catch (e) {
     }
-    const nowMs = Date.now();
-    if (nowMs - lastBackupTime < frequency * 3600 * 1e3 - 3e5) {
-      console.log("Backup otomatis dilewati: sudah dilakukan pada interval ini.");
+
+    // Hitung interval frekuensi jam (misal 1, 2, 4, 6, 12, 24 jam)
+    const intervalMs = frequency * 3600 * 1000;
+    if (lastBackupTime > 0 && (nowMs - lastBackupTime < intervalMs - 120000)) {
       return;
     }
+
     try {
       const backupObj = await generateBackupData(env);
       const { users, invoices, ppob_transactions } = backupObj;
@@ -5464,12 +5643,14 @@ var worker_default = {
       const blob = new Blob([backupData], { type: "application/json" });
       const cleanWib = wibTime.replace(/[\/\s:,]/g, "_");
       const file = new File([blob], `Backup_WarungPulsa_${cleanWib}.json`);
+      const timesPerDay = frequency > 0 ? (24 / frequency) : 0;
+      const freqText = frequency === 1 ? "Tiap 1 Jam (24x Sehari)" : `Tiap ${frequency} Jam (${timesPerDay}x Sehari)`;
       const formData = new FormData();
       formData.append("chat_id", chatId);
       formData.append("caption", `\u{1F4E6} <b>AUTO BACKUP DATABASE</b>
 
 \u{1F552} Waktu: ${wibTime}
-\u23F1\uFE0F Frekuensi: Tiap ${frequency} Jam
+\u23F1\uFE0F Frekuensi: ${freqText}
 \u{1F464} Total User: ${users.length}
 \u{1F4B0} Total Saldo: Rp ${totalSaldo.toLocaleString("id-ID")}
 \u{1F6CD}\uFE0F Total Transaksi: ${totalTransactions}
