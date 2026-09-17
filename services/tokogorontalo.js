@@ -166,8 +166,8 @@ class TokoGorontaloService {
     const text = ((p.namaprovider || '') + ' ' + (p.namaproduk || '') + ' ' + (p.kodeproduk || '')).toLowerCase();
     
     let brand = 'LAINNYA';
-    if (text.includes('telkomsel') || text.includes('tsel') || text.includes('simp')) brand = 'TELKOMSEL';
-    else if (text.includes('byu') || text.includes('by.u')) brand = 'BYU';
+    if (text.includes('byu') || text.includes('by.u')) brand = 'BYU';
+    else if (text.includes('telkomsel') || text.includes('tsel') || text.includes('simp')) brand = 'TELKOMSEL';
     else if (text.includes('indosat') || text.includes('isat') || text.includes('im3')) brand = 'INDOSAT';
     else if (text.includes('axis')) brand = 'AXIS';
     else if (text.includes('xl')) brand = 'XL';
@@ -200,10 +200,10 @@ class TokoGorontaloService {
     if (clean.length < 4) return null;
     const p4 = clean.substring(0, 4);
 
-    if (['0851', '0852', '0853', '0811', '0812', '0813', '0821', '0822', '0823'].includes(p4)) {
-      if (clean.startsWith('085154') || clean.startsWith('085155') || clean.startsWith('085156') || clean.startsWith('085157')) {
-        return 'BYU';
-      }
+    if (p4 === '0851') {
+      return 'BYU';
+    }
+    if (['0852', '0853', '0811', '0812', '0813', '0821', '0822', '0823'].includes(p4)) {
       return 'TELKOMSEL';
     }
     if (['0814', '0815', '0816', '0855', '0856', '0857', '0858'].includes(p4)) {
