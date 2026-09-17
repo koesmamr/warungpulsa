@@ -1039,7 +1039,7 @@ async function renderAdminDashboard(env, currentUser, appSettings) {
     </div>
 
     <!-- Modal Dashboard Statistik -->
-    <div id="statsDashboardModal" class="fixed inset-0 bg-black/80 hidden z-50 flex items-center justify-center p-3 md:p-4 backdrop-blur-sm">
+    <div id="statsDashboardModal" class="fixed inset-0 bg-black/80 hidden z-[100] flex items-center justify-center p-3 md:p-4 backdrop-blur-sm" onclick="if(event.target === this) closeStatsDashboardModal()">
         <div class="bg-gray-900 p-4 md:p-6 rounded-[2rem] w-full max-w-6xl max-h-[96vh] flex flex-col border border-indigo-500/30 shadow-2xl shadow-indigo-950/20">
             <div class="flex justify-between items-center mb-3 border-b border-gray-800 pb-2.5">
                 <div class="flex items-center gap-2">
@@ -1117,7 +1117,7 @@ async function renderAdminDashboard(env, currentUser, appSettings) {
     </div>
 
     <!-- Modal Konfigurasi -->
-    <div id="settingsModal" class="fixed inset-0 bg-black/80 hidden z-50 flex items-center justify-center p-4 backdrop-blur-sm">
+    <div id="settingsModal" class="fixed inset-0 bg-black/80 hidden z-[100] flex items-center justify-center p-4 backdrop-blur-sm" onclick="if(event.target === this) closeSettingsModal()">
         <div class="bg-gray-900 p-6 md:p-8 rounded-3xl w-full max-w-3xl max-h-[90vh] flex flex-col border border-sky-600/30 shadow-2xl">
             <div class="flex justify-between items-center mb-6 border-b border-gray-800 pb-4">
                 <h3 class="text-2xl font-bold text-white tracking-tight flex items-center gap-2">\u2699\uFE0F Konfigurasi Sistem</h3>
@@ -1221,7 +1221,7 @@ async function renderAdminDashboard(env, currentUser, appSettings) {
 
 
     <!-- Modal Broadcast -->
-    <div id="broadcastModal" class="fixed inset-0 bg-black/80 hidden z-50 flex items-center justify-center p-4 backdrop-blur-sm">
+    <div id="broadcastModal" class="fixed inset-0 bg-black/80 hidden z-[100] flex items-center justify-center p-4 backdrop-blur-sm" onclick="if(event.target === this) closeBroadcastModal()">
         <div class="bg-gray-900 p-6 md:p-8 rounded-3xl w-full max-w-2xl border border-gray-700 shadow-2xl">
             <div class="flex justify-between items-center mb-6 border-b border-gray-800 pb-4">
                 <h3 class="text-2xl font-bold text-white tracking-tight flex items-center gap-2">\u{1F4E2} Kirim Pesan Inbox</h3>
@@ -1249,7 +1249,7 @@ async function renderAdminDashboard(env, currentUser, appSettings) {
     </div>
 
     <!-- Modal List Tiket Bantuan -->
-    <div id="ticketManagerModal" class="fixed inset-0 bg-black/80 hidden z-50 flex items-center justify-center p-3 md:p-4 backdrop-blur-sm">
+    <div id="ticketManagerModal" class="fixed inset-0 bg-black/80 hidden z-[100] flex items-center justify-center p-3 md:p-4 backdrop-blur-sm" onclick="if(event.target === this) closeTicketManagerModal()">
         <div class="bg-gray-900 p-4 md:p-5 rounded-2xl w-full max-w-6xl max-h-[95vh] flex flex-col border border-teal-500/30 shadow-2xl">
             <div class="flex justify-between items-center mb-3.5 border-b border-gray-800 pb-2.5">
                 <h3 class="text-lg md:text-xl font-bold text-white tracking-tight flex items-center gap-2">\u{1F3AB} Manajemen Tiket Bantuan</h3>
@@ -1295,7 +1295,7 @@ async function renderAdminDashboard(env, currentUser, appSettings) {
     </div>
 
     <!-- Modal View Chat Tiket -->
-    <div id="ticketViewModal" class="fixed inset-0 bg-black/90 hidden z-[60] flex items-center justify-center p-4 backdrop-blur-md">
+    <div id="ticketViewModal" class="fixed inset-0 bg-black/90 hidden z-[110] flex items-center justify-center p-4 backdrop-blur-md" onclick="if(event.target === this) closeTicketViewModal()">
         <div class="bg-gray-900 rounded-3xl w-full max-w-4xl max-h-[95vh] flex flex-col border border-gray-700 shadow-2xl">
             <div class="p-5 border-b border-gray-800 flex justify-between items-center bg-gray-950 rounded-t-3xl">
                 <div>
@@ -1329,7 +1329,7 @@ async function renderAdminDashboard(env, currentUser, appSettings) {
     </div>
 
     <!-- Modal Inbox User -->
-    <div id="inboxModal" class="fixed inset-0 bg-black/80 hidden z-50 flex items-center justify-center p-4 backdrop-blur-sm">
+    <div id="inboxModal" class="fixed inset-0 bg-black/80 hidden z-[100] flex items-center justify-center p-4 backdrop-blur-sm" onclick="if(event.target === this) closeInboxModal()">
         <div class="bg-gray-900 p-6 md:p-8 rounded-3xl w-full max-w-2xl max-h-[85vh] flex flex-col border border-gray-700 shadow-2xl">
             <div class="flex justify-between items-center mb-6 border-b border-gray-800 pb-4">
                 <h3 class="text-2xl font-bold text-white tracking-tight" id="inboxModalTitle">Inbox User</h3>
@@ -1342,7 +1342,7 @@ async function renderAdminDashboard(env, currentUser, appSettings) {
     </div>
 
     <!-- Modal Riwayat Mutasi User -->
-    <div id="mutasiUserModal" class="fixed inset-0 bg-black/80 hidden z-[60] flex items-center justify-center p-3 md:p-4 backdrop-blur-sm">
+    <div id="mutasiUserModal" class="fixed inset-0 bg-black/80 hidden z-[110] flex items-center justify-center p-3 md:p-4 backdrop-blur-sm" onclick="if(event.target === this) closeUserMutasiModal()">
         <div class="bg-gray-900 p-4 md:p-5 rounded-2xl w-full max-w-5xl max-h-[95vh] flex flex-col border border-green-500/30 shadow-2xl">
             <div class="flex justify-between items-center mb-3 border-b border-gray-800 pb-2">
                 <h3 class="text-lg md:text-xl font-bold text-white tracking-tight flex items-center gap-2" id="mutasiUserModalTitle">\u{1F4B3} Histori Saldo: </h3>
@@ -1367,7 +1367,7 @@ async function renderAdminDashboard(env, currentUser, appSettings) {
     </div>
 
     <!-- Modal Riwayat Transaksi Global -->
-    <div id="globalTransactionsModal" class="fixed inset-0 bg-black/80 hidden z-50 flex items-center justify-center p-3 md:p-4 backdrop-blur-sm">
+    <div id="globalTransactionsModal" class="fixed inset-0 bg-black/80 hidden z-[100] flex items-center justify-center p-3 md:p-4 backdrop-blur-sm" onclick="if(event.target === this) closeGlobalTransactionsModal()">
         <div class="bg-gray-900 p-4 md:p-5 rounded-2xl w-full max-w-7xl max-h-[96vh] flex flex-col border border-orange-500/30 shadow-2xl shadow-orange-950/20">
             <div class="flex justify-between items-center mb-3 border-b border-gray-800 pb-2">
                 <h3 class="text-lg md:text-xl font-bold text-white tracking-tight flex items-center gap-2">
@@ -1467,17 +1467,44 @@ async function renderAdminDashboard(env, currentUser, appSettings) {
             }
         }
 
-        // Kontrol Modal
+        // Kontrol Modal & Hash Navigation
+        function updateAdminUrlHash(newHash) {
+            try {
+                if (newHash) {
+                    if (window.location.hash !== newHash) history.replaceState(null, '', newHash);
+                } else {
+                    if (window.location.hash) history.replaceState(null, '', window.location.pathname + (window.location.search || ''));
+                }
+            } catch(e) {}
+        }
+
         function openSettingsModal() { 
             document.getElementById('settingsModal').classList.remove('hidden'); 
+            updateAdminUrlHash('#settings');
         }
-        function closeSettingsModal() { document.getElementById('settingsModal').classList.add('hidden'); }
-        function openBroadcastModal() { document.getElementById('broadcastModal').classList.remove('hidden'); }
-        function closeBroadcastModal() { document.getElementById('broadcastModal').classList.add('hidden'); }
+        function closeSettingsModal() { 
+            document.getElementById('settingsModal').classList.add('hidden'); 
+            if (window.location.hash === '#settings') updateAdminUrlHash('');
+        }
+        function openBroadcastModal() { 
+            document.getElementById('broadcastModal').classList.remove('hidden'); 
+            updateAdminUrlHash('#broadcast');
+        }
+        function closeBroadcastModal() { 
+            document.getElementById('broadcastModal').classList.add('hidden'); 
+            if (window.location.hash === '#broadcast') updateAdminUrlHash('');
+        }
         function closeInboxModal() { document.getElementById('inboxModal').classList.add('hidden'); }
         function closeUserMutasiModal() { document.getElementById('mutasiUserModal').classList.add('hidden'); }
-        function openGlobalTransactionsModal() { document.getElementById('globalTransactionsModal').classList.remove('hidden'); loadGlobalTransactions(1); }
-        function closeGlobalTransactionsModal() { document.getElementById('globalTransactionsModal').classList.add('hidden'); }
+        function openGlobalTransactionsModal() { 
+            document.getElementById('globalTransactionsModal').classList.remove('hidden'); 
+            updateAdminUrlHash('#transactions');
+            loadGlobalTransactions(1); 
+        }
+        function closeGlobalTransactionsModal() { 
+            document.getElementById('globalTransactionsModal').classList.add('hidden'); 
+            if (window.location.hash === '#transactions') updateAdminUrlHash('');
+        }
 
         // --- DASHBOARD STATISTIK ---
         let statsChartInstance = null;
@@ -1495,6 +1522,7 @@ async function renderAdminDashboard(env, currentUser, appSettings) {
 
         window.openStatsDashboardModal = function() {
             document.getElementById('statsDashboardModal').classList.remove('hidden');
+            updateAdminUrlHash('#stats');
             populateStatsMonthFilter();
             document.getElementById('statsMonthFilter').value = 'today';
             loadChartJsLibrary(() => {
@@ -1504,6 +1532,7 @@ async function renderAdminDashboard(env, currentUser, appSettings) {
 
         window.closeStatsDashboardModal = function() {
             document.getElementById('statsDashboardModal').classList.add('hidden');
+            if (window.location.hash === '#stats') updateAdminUrlHash('');
         }
 
         function populateStatsMonthFilter() {
@@ -1649,8 +1678,15 @@ async function renderAdminDashboard(env, currentUser, appSettings) {
                 }
             });
         }
-        function openTicketManagerModal() { document.getElementById('ticketManagerModal').classList.remove('hidden'); loadAdminTickets(); }
-        function closeTicketManagerModal() { document.getElementById('ticketManagerModal').classList.add('hidden'); }
+        function openTicketManagerModal() { 
+            document.getElementById('ticketManagerModal').classList.remove('hidden'); 
+            updateAdminUrlHash('#tickets');
+            loadAdminTickets(); 
+        }
+        function closeTicketManagerModal() { 
+            document.getElementById('ticketManagerModal').classList.add('hidden'); 
+            if (window.location.hash === '#tickets') updateAdminUrlHash('');
+        }
         function closeTicketViewModal() { document.getElementById('ticketViewModal').classList.add('hidden'); loadAdminTickets(); }
 
         // Fungsi Toggle untuk Accordion Section
@@ -1660,9 +1696,11 @@ async function renderAdminDashboard(env, currentUser, appSettings) {
             if (sec.classList.contains('hidden')) {
                 sec.classList.remove('hidden');
                 icon.classList.add('rotate-180');
+                if (sectionId === 'sectionUser') updateAdminUrlHash('#users');
             } else {
                 sec.classList.add('hidden');
                 icon.classList.remove('rotate-180');
+                if (sectionId === 'sectionUser' && window.location.hash === '#users') updateAdminUrlHash('');
             }
         }
 
@@ -2275,6 +2313,62 @@ async function renderAdminDashboard(env, currentUser, appSettings) {
                 fileReader.readAsText(fileInput.files[0]);
             } catch (e) { swalDark.fire('Error', 'Gagal membaca file.', 'error'); btn.innerText = 'Upload'; btn.disabled = false; }
         }
+
+        // --- HASH ROUTER UNTUK REFRESH / F5 ADMIN DASHBOARD ---
+        function checkAdminHashRouter() {
+            const hash = (window.location.hash || '').toLowerCase();
+            const params = new URLSearchParams(window.location.search);
+            const tab = (params.get('tab') || '').toLowerCase();
+
+            if (hash === '#tokogorontalo' || hash === '#ppob' || tab === 'tokogorontalo' || tab === 'ppob') {
+                if (typeof openTokoGorontaloModal === 'function') openTokoGorontaloModal();
+            } else if (hash === '#settings' || tab === 'settings') {
+                openSettingsModal();
+            } else if (hash === '#broadcast' || tab === 'broadcast') {
+                openBroadcastModal();
+            } else if (hash === '#tickets' || tab === 'tickets') {
+                openTicketManagerModal();
+            } else if (hash === '#transactions' || tab === 'transactions') {
+                openGlobalTransactionsModal();
+            } else if (hash === '#stats' || tab === 'stats') {
+                openStatsDashboardModal();
+            } else if (hash === '#users' || tab === 'users') {
+                const sec = document.getElementById('sectionUser');
+                const icon = document.getElementById('iconUser');
+                if (sec && sec.classList.contains('hidden')) {
+                    sec.classList.remove('hidden');
+                    if (icon) icon.classList.add('rotate-180');
+                    if (typeof loadUsers === 'function') loadUsers();
+                }
+            }
+        }
+
+        window.addEventListener('DOMContentLoaded', checkAdminHashRouter);
+        window.addEventListener('hashchange', checkAdminHashRouter);
+
+        // Global ESC key listener to close any active admin modal
+        window.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                const modalList = [
+                    { id: 'tokoGorontaloModal', close: () => typeof closeTokoGorontaloModal === 'function' && closeTokoGorontaloModal() },
+                    { id: 'settingsModal', close: closeSettingsModal },
+                    { id: 'broadcastModal', close: closeBroadcastModal },
+                    { id: 'ticketManagerModal', close: closeTicketManagerModal },
+                    { id: 'ticketViewModal', close: closeTicketViewModal },
+                    { id: 'globalTransactionsModal', close: closeGlobalTransactionsModal },
+                    { id: 'statsDashboardModal', close: closeStatsDashboardModal },
+                    { id: 'inboxModal', close: closeInboxModal },
+                    { id: 'mutasiUserModal', close: closeUserMutasiModal }
+                ];
+                for (const m of modalList) {
+                    const el = document.getElementById(m.id);
+                    if (el && !el.classList.contains('hidden')) {
+                        m.close();
+                        break;
+                    }
+                }
+            }
+        });
     <\/script>
     ${renderTokoGorontaloAdminModal()}
     `;
@@ -6004,8 +6098,8 @@ Total : Rp.${totalSaldo.toLocaleString("id-ID")}
                         <p class="text-sm text-slate-200 font-medium">Mohon tunggu, jangan tutup atau memuat ulang halaman ini...</p>
                     </div>
                     
-                    <!-- FIX TUMPANG TINDIH NAVBAR PC: Menambahkan md:z-0 pada aside agar modal tertutup -->
-                    <aside id="sidebar" class="fixed md:static inset-y-0 left-0 w-64 bg-white border-r border-slate-200 flex flex-col z-50 transform -translate-x-full md:translate-x-0 transition-transform duration-300 ease-in-out shadow-lg md:shadow-none">
+                    <!-- FIX TUMPANG TINDIH NAVBAR PC: md:z-0 dan md:transform-none agar modal pop-up tampil di atas navbar -->
+                    <aside id="sidebar" class="fixed md:static inset-y-0 left-0 w-64 bg-white border-r border-slate-200 flex flex-col z-40 md:z-0 transform -translate-x-full md:translate-x-0 md:transform-none transition-transform duration-300 ease-in-out shadow-lg md:shadow-none">
                         <div class="p-5 border-b border-slate-200 flex items-center justify-between bg-white relative z-10">
                             <a href="/" class="flex items-center gap-3">
                                 <img src="${LOGO_URL}" alt="Logo" class="w-8 h-8 rounded-full border border-slate-200">
@@ -6048,7 +6142,7 @@ Total : Rp.${totalSaldo.toLocaleString("id-ID")}
                             </a>
                         </div>
                     </aside>
-                    <div class="flex-1 flex flex-col h-screen overflow-hidden bg-transparent">
+                    <div class="flex-1 flex flex-col h-screen overflow-hidden bg-transparent relative z-10">
                         ${appSettings && appSettings.maintenance_mode === true ? `
                         <div class="bg-rose-600 text-white font-bold text-center py-2.5 px-4 text-xs tracking-wider uppercase shadow-md flex items-center justify-center gap-2 z-40 shrink-0">
                             <span class="relative flex h-2 w-2">
@@ -6067,7 +6161,7 @@ Total : Rp.${totalSaldo.toLocaleString("id-ID")}
                             </div>
                             ${unreadCount > 0 ? `<a href="/inbox" class="bg-sky-600 text-white text-[10px] font-bold px-2.5 py-1 rounded-full shadow-md shadow-sky-600/30 animate-pulse">${unreadCount} Baru</a>` : ""}
                         </header>
-                        <main class="flex-1 overflow-y-auto custom-scrollbar relative z-10">
+                        <main class="flex-1 overflow-y-auto custom-scrollbar relative">
                             ${content}
                             <footer class="border-t border-slate-200 mt-12 py-8 text-center text-slate-500 text-xs flex items-center justify-center gap-2">
                                 <img src="${LOGO_URL}" alt="Logo" class="w-4 h-4 opacity-70 grayscale hover:grayscale-0 transition">
@@ -6278,7 +6372,7 @@ Total : Rp.${totalSaldo.toLocaleString("id-ID")}
                 ${ticketListHtml}
 
                 <!-- Modal Buat Tiket -->
-                <div id="createTicketModal" class="fixed inset-0 bg-slate-900/60 hidden z-50 flex items-center justify-center p-4 backdrop-blur-sm">
+                <div id="createTicketModal" class="fixed inset-0 bg-slate-900/60 hidden z-[100] flex items-center justify-center p-4 backdrop-blur-sm" onclick="if(event.target === this) document.getElementById('createTicketModal').classList.add('hidden')">
                     <div class="bg-white p-6 md:p-8 rounded-3xl w-full max-w-lg border border-slate-200 shadow-2xl">
                         <div class="flex justify-between items-center mb-6 border-b border-slate-200 pb-4">
                             <h3 class="text-2xl font-bold text-slate-900 tracking-tight">Kirim Tiket Baru</h3>
@@ -6308,7 +6402,7 @@ Total : Rp.${totalSaldo.toLocaleString("id-ID")}
                 </div>
 
                 <!-- Modal Lihat & Chat Tiket -->
-                <div id="ticketViewModal" class="fixed inset-0 bg-slate-900/60 hidden z-50 flex items-center justify-center p-4 backdrop-blur-md">
+                <div id="ticketViewModal" class="fixed inset-0 bg-slate-900/60 hidden z-[100] flex items-center justify-center p-4 backdrop-blur-md" onclick="if(event.target === this) document.getElementById('ticketViewModal').classList.add('hidden')">
                     <div class="bg-white rounded-3xl w-full max-w-3xl max-h-[95vh] flex flex-col border border-slate-200 shadow-2xl">
                         <div class="p-5 border-b border-slate-200 flex justify-between items-center bg-slate-50 rounded-t-3xl">
                             <div>
@@ -7307,7 +7401,7 @@ Total : Rp.${totalSaldo.toLocaleString("id-ID")}
     if (path === "/cekpulsa-otp" || path === "/api/cekkuota-html") {
       return Response.redirect(url.origin + "/pulsa-ppob", 301);
     }
-    if (path === "/admin" && method === "GET") {
+    if ((path === "/admin" || path === "/admin/tokogorontalo" || path === "/admin/ppob") && method === "GET") {
       if (!currentUser || !isSuperAdmin(currentUser, env)) return Response.redirect(url.origin + "/", 302);
       try {
         await env.DB.prepare("ALTER TABLE users ADD COLUMN is_blocked INTEGER DEFAULT 0").run();
@@ -7318,7 +7412,11 @@ Total : Rp.${totalSaldo.toLocaleString("id-ID")}
       } catch (e) {
       }
       const adminContent = await renderAdminDashboard(env, currentUser, appSettings);
-      return new Response(renderLayout("Admin Dashboard", adminContent), { headers: { "Content-Type": "text/html;charset=UTF-8" } });
+      let autoOpenScript = "";
+      if (path === "/admin/tokogorontalo" || path === "/admin/ppob") {
+        autoOpenScript = "<script>window.addEventListener('DOMContentLoaded', () => { if (typeof openTokoGorontaloModal === 'function') openTokoGorontaloModal(); });</script>";
+      }
+      return new Response(renderLayout("Admin Dashboard", adminContent + autoOpenScript), { headers: { "Content-Type": "text/html;charset=UTF-8" } });
     }
     if (path === "/inbox" && method === "GET") {
       if (!currentUser) return Response.redirect(url.origin + "/", 302);

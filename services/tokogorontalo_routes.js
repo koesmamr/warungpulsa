@@ -941,6 +941,11 @@ function renderPPOBContent(currentUser, appSettings, env) {
 
       function selectCategory(cat) {
           currentCategory = cat;
+          try {
+              if (window.location.hash !== '#' + cat) {
+                  history.replaceState(null, '', '#' + cat);
+              }
+          } catch(e) {}
           document.querySelectorAll('.cat-btn').forEach(btn => btn.classList.remove('active'));
           const btn = document.getElementById('cat-btn-' + cat);
           if (btn) btn.classList.add('active');
@@ -1352,12 +1357,25 @@ function renderPPOBContent(currentUser, appSettings, env) {
           }
       }
 
-      // Initial run
+      // Initial run & Hash router for F5 / Refresh
+      function getValidCategoryFromHash() {
+          const hashCat = (window.location.hash || '').replace('#', '').toLowerCase();
+          const validCats = ['pulsa', 'data', 'pln', 'ewallet', 'game'];
+          return validCats.includes(hashCat) ? hashCat : 'pulsa';
+      }
+
       window.addEventListener('DOMContentLoaded', () => {
           if (isTrxLocked()) {
               startTrxLockCountdown();
           }
-          selectCategory('pulsa');
+          selectCategory(getValidCategoryFromHash());
+      });
+
+      window.addEventListener('hashchange', () => {
+          const targetCat = getValidCategoryFromHash();
+          if (targetCat !== currentCategory) {
+              selectCategory(targetCat);
+          }
       });
   </script>
   `;
@@ -1369,7 +1387,7 @@ function renderPPOBContent(currentUser, appSettings, env) {
 function renderTokoGorontaloAdminModal() {
   return `
   <!-- MODAL TOKO GORONTALO / PPOB ADMIN -->
-  <div id="tokoGorontaloModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-xs hidden z-50 flex items-center justify-center p-4 overflow-y-auto">
+  <div id="tokoGorontaloModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-xs hidden z-[100] flex items-center justify-center p-4 md:p-6 overflow-y-auto" onclick="if(event.target === this) closeTokoGorontaloModal()">
       <div class="bg-white rounded-3xl border border-slate-200 w-full max-w-5xl overflow-hidden shadow-2xl flex flex-col max-h-[92vh]">
           <!-- Modal Header -->
           <div class="p-6 border-b border-slate-200 flex justify-between items-center bg-slate-50/80">
@@ -1535,13 +1553,25 @@ function renderTokoGorontaloAdminModal() {
       let tgTotalPages = 1;
 
       function openTokoGorontaloModal() {
-          document.getElementById('tokoGorontaloModal').classList.remove('hidden');
+          const modal = document.getElementById('tokoGorontaloModal');
+          if (modal) modal.classList.remove('hidden');
+          try {
+              if (window.location.hash !== '#tokogorontalo') {
+                  history.replaceState(null, '', '#tokogorontalo');
+              }
+          } catch(e) {}
           refreshTokoGorontaloInfo();
           loadAdminProducts(1);
       }
 
       function closeTokoGorontaloModal() {
-          document.getElementById('tokoGorontaloModal').classList.add('hidden');
+          const modal = document.getElementById('tokoGorontaloModal');
+          if (modal) modal.classList.add('hidden');
+          try {
+              if (window.location.hash === '#tokogorontalo' || window.location.hash === '#ppob') {
+                  history.replaceState(null, '', window.location.pathname + (window.location.search || ''));
+              }
+          } catch(e) {}
       }
 
       let tgDetectedIpv4 = '116.212.74.104';
@@ -1762,6 +1792,32 @@ function renderTokoGorontaloAdminModal() {
               }
           }
       }
+
+      // Auto-open Toko Gorontalo Modal on F5 / direct hash navigation
+      function checkTgHashRouting() {
+          const hash = (window.location.hash || '').toLowerCase();
+          const params = new URLSearchParams(window.location.search);
+          const tab = (params.get('tab') || '').toLowerCase();
+          if (hash === '#tokogorontalo' || hash === '#ppob' || tab === 'tokogorontalo' || tab === 'ppob') {
+              const modal = document.getElementById('tokoGorontaloModal');
+              if (modal && modal.classList.contains('hidden')) {
+                  openTokoGorontaloModal();
+              }
+          }
+      }
+
+      window.addEventListener('DOMContentLoaded', checkTgHashRouting);
+      window.addEventListener('hashchange', checkTgHashRouting);
+
+      // ESC key listener to close modal
+      window.addEventListener('keydown', (e) => {
+          if (e.key === 'Escape') {
+              const modal = document.getElementById('tokoGorontaloModal');
+              if (modal && !modal.classList.contains('hidden')) {
+                  closeTokoGorontaloModal();
+              }
+          }
+      });
   </script>
   `;
 }
