@@ -5,13 +5,21 @@ const appWorker = require('./app.js');
 
 const port = parseInt(process.env.PORT || '3000', 10);
 
+const OLD_GAS_URL = 'https://script.google.com/macros/s/AKfycbzl9mTViChz10-fRndGyH_LO3sA6Y3-s8_IDKySQnaEtUEbPxyempIu_8LuVrB_yJ3R/exec';
+const NEW_GAS_URL = 'https://script.google.com/macros/s/AKfycbznmzNY0ewVAmsqz5NH-ulHb_YyI9JNmNwwCILOWSDTawDn9tEXSy_l3b3Vw2gHHwIJ-g/exec';
+
+let activeGasUrl = process.env.GAS_WEB_APP_URL;
+if (!activeGasUrl || activeGasUrl === OLD_GAS_URL) {
+  activeGasUrl = NEW_GAS_URL;
+}
+
 // Satukan environment variables dari .env dengan DB dan binding pendukung
 const env = {
   ...process.env,
   DB: db,
   ADMIN_EMAIL: process.env.ADMIN_EMAIL || 'syamsul18782@gmail.com',
   BACKUP_PASSWORD: process.env.BACKUP_PASSWORD || 'Suruan646@Suruan',
-  GAS_WEB_APP_URL: process.env.GAS_WEB_APP_URL || 'https://script.google.com/macros/s/AKfycbznmzNY0ewVAmsqz5NH-ulHb_YyI9JNmNwwCILOWSDTawDn9tEXSy_l3b3Vw2gHHwIJ-g/exec',
+  GAS_WEB_APP_URL: activeGasUrl,
   GAS_SECRET_TOKEN: process.env.GAS_SECRET_TOKEN || 'RahasiaVPNtuban123!',
   AI: {
     run: async (model, opts) => {
@@ -26,6 +34,7 @@ console.log('-------------------------------------------------');
 console.log('Memulai Server Warung Pulsa...');
 console.log('Database terhubung: SQLite (warungpulsa.db)');
 console.log('Admin Email:', env.ADMIN_EMAIL);
+console.log('GAS Mailer URL:', env.GAS_WEB_APP_URL);
 console.log('-------------------------------------------------');
 
 const server = serve({

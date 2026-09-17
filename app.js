@@ -264,11 +264,17 @@ __name2(buildEmailTemplate, "buildEmailTemplate");
 __name22(buildEmailTemplate, "buildEmailTemplate");
 __name222(buildEmailTemplate, "buildEmailTemplate");
 async function sendEmailViaGAS(toEmail, subject, htmlMessage, env) {
-  const webAppUrl = (env && env.GAS_WEB_APP_URL) || (typeof process !== "undefined" && process.env && process.env.GAS_WEB_APP_URL) || "https://script.google.com/macros/s/AKfycbznmzNY0ewVAmsqz5NH-ulHb_YyI9JNmNwwCILOWSDTawDn9tEXSy_l3b3Vw2gHHwIJ-g/exec";
+  const OLD_GAS_URL = "https://script.google.com/macros/s/AKfycbzl9mTViChz10-fRndGyH_LO3sA6Y3-s8_IDKySQnaEtUEbPxyempIu_8LuVrB_yJ3R/exec";
+  const NEW_GAS_URL = "https://script.google.com/macros/s/AKfycbznmzNY0ewVAmsqz5NH-ulHb_YyI9JNmNwwCILOWSDTawDn9tEXSy_l3b3Vw2gHHwIJ-g/exec";
+
+  let webAppUrl = (env && env.GAS_WEB_APP_URL) || (typeof process !== "undefined" && process.env && process.env.GAS_WEB_APP_URL) || NEW_GAS_URL;
+  if (webAppUrl === OLD_GAS_URL) {
+    webAppUrl = NEW_GAS_URL;
+  }
   const secretToken = (env && env.GAS_SECRET_TOKEN) || (typeof process !== "undefined" && process.env && process.env.GAS_SECRET_TOKEN) || "RahasiaVPNtuban123!";
   if (!webAppUrl || !secretToken) return;
   try {
-    await fetch(webAppUrl, {
+    const res = await fetch(webAppUrl, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -278,6 +284,7 @@ async function sendEmailViaGAS(toEmail, subject, htmlMessage, env) {
         htmlMessage
       })
     });
+    console.log(`[Email via GAS] Ke: ${toEmail} | Status: ${res.status} | Endpoint: ${webAppUrl.substring(0, 45)}...`);
   } catch (e) {
     console.error("Gagal mengirim email GAS:", e);
   }
