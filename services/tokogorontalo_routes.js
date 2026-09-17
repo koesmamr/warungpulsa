@@ -303,6 +303,89 @@ function saveSuccessPPOBToInbox(rawDb, { email, product_name, customer_no, sn, r
   }
 }
 
+/**
+ * Otomatis Menyimpan Nomor HP baru / ID Pelanggan PLN ke Buku Kontak (Phonebook) Buyer
+ * Memastikan pembeli tidak harus memasukkan nomor secara manual setiap bertransaksi.
+ */
+function autoSaveBuyerContact(rawDb, { email, customer_no, product, service }) {
+  if (!rawDb || !email || !customer_no) return;
+  try {
+    const cleanNo = String(customer_no).trim();
+    if (!cleanNo || cleanNo.length < 4) return;
+
+    // Tentukan kategori & label default
+    let category = (product && product.category) ? String(product.category).toLowerCase() : '';
+    let brand = (product && product.brand) ? String(product.brand).toUpperCase() : '';
+    const nameLower = (product && product.product_name ? String(product.product_name) : '').toLowerCase();
+
+    if (!category) {
+      if (nameLower.includes('pln') || nameLower.includes('token') || nameLower.includes('listrik')) {
+        category = 'pln';
+      } else if (nameLower.includes('dana') || nameLower.includes('gopay') || nameLower.includes('ovo') || nameLower.includes('shopee')) {
+        category = 'ewallet';
+      } else if (nameLower.includes('data') || nameLower.includes('kuota') || nameLower.includes('gb')) {
+        category = 'data';
+      } else if (nameLower.includes('pulsa')) {
+        category = 'pulsa';
+      } else {
+        category = 'all';
+      }
+    }
+
+    const BRAND_DISPLAY = {
+      'TELKOMSEL': 'Telkomsel',
+      'BYU': 'By.U',
+      'INDOSAT': 'Indosat IM3',
+      'XL': 'XL Axiata',
+      'AXIS': 'Axis',
+      'TRI': 'Tri (3)',
+      'SMARTFREN': 'Smartfren',
+      'PLN': 'Token PLN',
+      'DANA': 'DANA',
+      'GOPAY': 'GoPay',
+      'OVO': 'OVO',
+      'SHOPEEPAY': 'ShopeePay',
+      'GAME': 'Game'
+    };
+
+    let label = '';
+    if (category === 'pln') {
+      label = 'Token PLN';
+    } else if (category === 'pulsa' || category === 'data') {
+      let detected = brand;
+      if ((!detected || detected === 'LAINNYA') && service && typeof service.detectOperator === 'function') {
+        detected = service.detectOperator(cleanNo) || '';
+      }
+      label = BRAND_DISPLAY[detected] || detected || 'Nomor HP';
+    } else if (category === 'ewallet') {
+      label = BRAND_DISPLAY[brand] || brand || 'E-Wallet';
+    } else if (category === 'game') {
+      label = brand || 'Akun Game';
+    } else {
+      label = BRAND_DISPLAY[brand] || brand || 'Nomor Favorit';
+    }
+
+    // Cek apakah nomor sudah ada di daftar kontak user
+    const existing = rawDb.prepare('SELECT id, label, category FROM user_contacts WHERE email = ? AND customer_no = ?').get(email, cleanNo);
+
+    if (existing) {
+      // Jika nomor sudah ada, jangan timpa label kustom buatan user (misal: "Rumah Nenek")!
+      // Cukup perbarui updated_at agar nomor ini otomatis naik ke urutan teratas (paling baru dipakai)
+      rawDb.prepare('UPDATE user_contacts SET updated_at = CURRENT_TIMESTAMP WHERE id = ?').run(existing.id);
+      console.log(`[AutoSaveContact] Nomor sudah ada, waktu pemakaian diperbarui: ${existing.label} (${cleanNo}) untuk ${email}`);
+    } else {
+      // Jika nomor baru, otomatis masukkan ke user_contacts
+      rawDb.prepare(`
+        INSERT INTO user_contacts (email, label, customer_no, category, created_at, updated_at)
+        VALUES (?, ?, ?, ?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
+      `).run(email, label, cleanNo, category);
+      console.log(`[AutoSaveContact] Nomor baru otomatis tersimpan ke Phonebook: ${label} (${cleanNo}) kategori ${category} untuk ${email}`);
+    }
+  } catch (err) {
+    console.error('[autoSaveBuyerContact Error]:', err.message);
+  }
+}
+
 // Set untuk melacak order yang sedang dipantau di background agar tidak polling ganda
 const activePollerReqIds = new Set();
 
@@ -360,6 +443,13 @@ function startBackgroundOrderPoller(rawDb, orderInfo, sendTelegramLog, appSettin
 
           // Masukkan ke Kotak Masuk (Inbox) Pembeli seketika itu juga!
           saveSuccessPPOBToInbox(rawDb, { email, product_name, customer_no, sn, reqid });
+
+          // Otomatis simpan nomor ke buku kontak pembeli
+          autoSaveBuyerContact(rawDb, {
+            email,
+            customer_no,
+            product: { product_name, category: 'pln', brand: 'PLN' }
+          });
 
           // Kirim log Telegram
           if (sendTelegramLog) {
@@ -505,6 +595,12 @@ async function autoReconcilePPOBTransactions(rawDb, service, sendTelegramLog = n
                 customer_no: tx.customer_no,
                 sn,
                 reqid: tx.reqid
+              });
+
+              autoSaveBuyerContact(rawDb, {
+                email: tx.email,
+                customer_no: tx.customer_no,
+                product: { product_name: tx.product_name, category: tx.category, brand: tx.brand }
               });
             }
           }
@@ -671,6 +767,13 @@ async function handleTokoGorontaloRoutes(url, request, env, currentUser, appSett
           VALUES (?, ?, ?, ?, 0)
         `).run(existing.email, titleMsg, bodyMsg, new Date().toLocaleString('id-ID', { timeZone: 'Asia/Jakarta' }) + ' WIB');
 
+        autoSaveBuyerContact(rawDb, {
+          email: existing.email,
+          customer_no: existing.customer_no,
+          product: { product_name: existing.product_name, category: existing.category, brand: existing.brand },
+          service
+        });
+
         if (sendTelegramLog) {
           await sendTelegramLog(
             '⚡ PPOB TRANSAKSI BERHASIL',
@@ -763,14 +866,14 @@ async function handleTokoGorontaloRoutes(url, request, env, currentUser, appSett
             SELECT id, label, customer_no, category, created_at, updated_at
             FROM user_contacts
             WHERE email = ? AND (category = ? OR category = 'all')
-            ORDER BY id DESC
+            ORDER BY updated_at DESC, id DESC
           `).all(currentUser.email, category);
         } else {
           contacts = rawDb.prepare(`
             SELECT id, label, customer_no, category, created_at, updated_at
             FROM user_contacts
             WHERE email = ?
-            ORDER BY id DESC
+            ORDER BY updated_at DESC, id DESC
           `).all(currentUser.email);
         }
         return jsonResponse({ success: true, count: contacts.length, contacts });
@@ -1084,6 +1187,17 @@ async function handleTokoGorontaloRoutes(url, request, env, currentUser, appSett
           sendTelegramLog,
           appSettings
         );
+      }
+
+      // AUTOSAVE NOMOR KE PHONEBOOK / BUKU KONTAK FAVORIT BUYER
+      // Memastikan nomor HP baru atau ID PLN yang diisikan buyer otomatis tersimpan tanpa harus memasukkan manual
+      if (finalStatus !== 'failed') {
+        autoSaveBuyerContact(rawDb, {
+          email: currentUser.email,
+          customer_no,
+          product,
+          service
+        });
       }
 
       // Kirim Telegram Log
@@ -2105,6 +2219,9 @@ function renderPPOBContent(currentUser, appSettings, env) {
               }
 
               if (data.success) {
+                  if (isUserLoggedIn) {
+                      loadUserContacts();
+                  }
                   const isPending = data.status === 'pending';
                   const isSuccess = data.status === 'success';
                   const isFailed = data.status === 'failed';
@@ -2247,7 +2364,7 @@ function renderPPOBContent(currentUser, appSettings, env) {
           if (matched.length === 0) {
               container.innerHTML = \`
                   <div class="flex items-center gap-1.5 text-xs text-slate-400 py-0.5">
-                      <span>Belum ada nomor favorit di kategori ini. Ketik nomor lalu klik <button type="button" onclick="quickSaveCurrentContact()" class="text-amber-600 font-bold hover:underline cursor-pointer">⭐ Simpan</button> untuk transaksi cepat 1-klik.</span>
+                      <span>Nomor HP atau ID PLN yang Anda transaksikan akan <b>otomatis tersimpan</b> di sini untuk Quick Re-Order 1-klik di masa depan.</span>
                   </div>
               \`;
               return;
@@ -3070,5 +3187,6 @@ function renderTokoGorontaloAdminModal() {
 module.exports = {
   handleTokoGorontaloRoutes,
   renderPPOBContent,
-  renderTokoGorontaloAdminModal
+  renderTokoGorontaloAdminModal,
+  autoSaveBuyerContact
 };
