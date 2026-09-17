@@ -323,6 +323,24 @@ async function generateBackupData(env) {
     licenses = results;
   } catch (e) {
   }
+  let ppobTransactions = [];
+  try {
+    const { results } = await env.DB.prepare("SELECT * FROM ppob_transactions").all();
+    ppobTransactions = results || [];
+  } catch (e) {
+  }
+  let ppobProducts = [];
+  try {
+    const { results } = await env.DB.prepare("SELECT * FROM ppob_products").all();
+    ppobProducts = results || [];
+  } catch (e) {
+  }
+  let userContacts = [];
+  try {
+    const { results } = await env.DB.prepare("SELECT * FROM user_contacts").all();
+    userContacts = results || [];
+  } catch (e) {
+  }
   return {
     users,
     vpns,
@@ -333,7 +351,10 @@ async function generateBackupData(env) {
     transactions,
     tickets,
     ticket_replies: ticketReplies,
-    ai_usage: aiUsage
+    ai_usage: aiUsage,
+    ppob_transactions: ppobTransactions,
+    ppob_products: ppobProducts,
+    user_contacts: userContacts
   };
 }
 __name(generateBackupData, "generateBackupData");
@@ -3521,63 +3542,54 @@ Email Pemilik: ${vpnRecord.email}`, appSettings);
         return jsonResponse({ success: false, message: "Bot Token atau Chat ID Telegram belum dikonfigurasi!" }, 400);
       }
       const backupObj = await generateBackupData(env);
-      const { users, vpns, inbox, invoices, settings, licenses } = backupObj;
+      const { users, inbox, invoices, settings, ppob_transactions } = backupObj;
       const dateMatch = now.match(/(\d{2})\/(\d{2})\/(\d{4})/);
       const todayStr = dateMatch ? dateMatch[0] : "";
       const monthStr = dateMatch ? `${dateMatch[2]}/${dateMatch[3]}` : "";
+      const isoToday = dateMatch ? `${dateMatch[3]}-${dateMatch[2]}-${dateMatch[1]}` : "";
+      const isoMonth = dateMatch ? `${dateMatch[3]}-${dateMatch[2]}` : "";
+
       const totalUsers = users.length;
-      const totalVpns = vpns.filter((v) => !v.exp.toLowerCase().includes("jam")).length;
-      const totalServers = appSettings.servers ? appSettings.servers.length : 0;
       const totalSaldo = users.reduce((sum, u) => sum + (u.balance || 0), 0);
-      const paidInvoices = invoices.filter((i) => i.status === "PAID");
-      const xlPurchases = inbox.filter((i) => i.title && i.title.includes("[SUKSES] Pembelian Paket XL"));
-      const totalTransactions = paidInvoices.length + vpns.length + xlPurchases.length;
-      const vpnsThisMonth = vpns.filter((v) => v.date && v.date.includes(monthStr));
-      const topupThisMonth = paidInvoices.filter((i) => i.date && i.date.includes(monthStr)).reduce((sum, i) => sum + (i.amount || 0), 0);
-      const xlThisMonth = xlPurchases.filter((i) => i.date && i.date.includes(monthStr)).length;
-      let vpnMonthDetails = "";
-      const serversList = appSettings.servers || [];
-      serversList.forEach((srv) => {
-        const countSrv = vpnsThisMonth.filter((v) => v.server === srv.name).length;
-        vpnMonthDetails += `- ${srv.name}: ${countSrv}
-`;
-      });
-      const vpnsToday = vpns.filter((v) => v.date && v.date.includes(todayStr));
-      const topupToday = paidInvoices.filter((i) => i.date && i.date.includes(todayStr)).reduce((sum, i) => sum + (i.amount || 0), 0);
-      const xlToday = xlPurchases.filter((i) => i.date && i.date.includes(todayStr)).length;
-      let vpnTodayDetails = "";
-      serversList.forEach((srv) => {
-        const countSrv = vpnsToday.filter((v) => v.server === srv.name).length;
-        vpnTodayDetails += `- ${srv.name}: ${countSrv}
-`;
-      });
+      const paidInvoices = (invoices || []).filter((i) => i.status === "PAID");
+      const ppobTx = ppob_transactions || [];
+      const xlPurchases = (inbox || []).filter((i) => i.title && i.title.includes("[SUKSES] Pembelian Paket XL"));
+      const totalTransactions = paidInvoices.length + ppobTx.length + xlPurchases.length;
+
+      const topupMonthList = paidInvoices.filter((i) => i.date && (i.date.includes(monthStr) || i.date.includes(isoMonth)));
+      const topupThisMonth = topupMonthList.reduce((sum, i) => sum + (i.amount || 0), 0);
+      const ppobThisMonth = ppobTx.filter((p) => p.created_at && (p.created_at.includes(monthStr) || p.created_at.includes(isoMonth))).length +
+                            xlPurchases.filter((i) => i.date && (i.date.includes(monthStr) || i.date.includes(isoMonth))).length;
+
+      const topupTodayList = paidInvoices.filter((i) => i.date && (i.date.includes(todayStr) || i.date.includes(isoToday)));
+      const topupToday = topupTodayList.reduce((sum, i) => sum + (i.amount || 0), 0);
+      const ppobToday = ppobTx.filter((p) => p.created_at && (p.created_at.includes(todayStr) || p.created_at.includes(isoToday))).length +
+                        xlPurchases.filter((i) => i.date && (i.date.includes(todayStr) || i.date.includes(isoToday))).length;
+
       const captionHtml = `<b>\u{1F4CA} Statistik Warung Pulsa</b>
 
 Pengguna: ${totalUsers}
 Transaksi: ${totalTransactions}
-Akun VPN: ${totalVpns}
-Server: ${totalServers}
 Saldo: Rp ${totalSaldo.toLocaleString("id-ID")}
 
 <b>Bulan ini:</b>
 Top Up: Rp ${topupThisMonth.toLocaleString("id-ID")}
-Pembelian paket XL : ${xlThisMonth} transaksi
-Pembuatan Akun: ${vpnsThisMonth.length}
-${vpnMonthDetails}
+Transaksi PPOB & Pulsa: ${ppobThisMonth} transaksi
+
 <b>Hari ini:</b>
 Top Up: Rp ${topupToday.toLocaleString("id-ID")}
-Pembelian paket XL : ${xlToday} transaksi
-Pembuatan Akun: ${vpnsToday.length}
-${vpnTodayDetails}
+Transaksi PPOB & Pulsa: ${ppobToday} transaksi
+
 #warungpulsabackup`;
       const backupData = JSON.stringify(backupObj, null, 2);
       const blob = new Blob([backupData], { type: "application/json" });
       await saveBackupToR2(env, backupObj, now);
+      const cleanNow = now.replace(/[\/\s:,]/g, "_");
       const formData = new FormData();
       formData.append("chat_id", chatId);
       formData.append("caption", captionHtml);
       formData.append("parse_mode", "HTML");
-      formData.append("document", blob, `Backup_WarungPulsa_${now.replace(/[\s:]/g, "_")}.json`);
+      formData.append("document", blob, `Backup_WarungPulsa_${cleanNow}.json`);
       const tgReq = await fetch(`https://api.telegram.org/bot${botToken}/sendDocument`, {
         method: "POST",
         body: formData
@@ -4055,8 +4067,13 @@ DAFTAR KODE (PILIH SALAH SATU DAN KETIK TANPA BASA-BASI):
               const totalUsers = await env.DB.prepare("SELECT COUNT(*) as c FROM users").first("c");
               const totalSaldoRow = await env.DB.prepare("SELECT SUM(balance) as s FROM users").first();
               const totalSaldo = totalSaldoRow ? totalSaldoRow.s : 0;
-              const totalVpn = await env.DB.prepare("SELECT COUNT(*) as c FROM vpns").first("c");
-              dbResult = `DATA DB (BERHASIL): Total Pengguna = ${totalUsers}, Total Seluruh Saldo Semua User = Rp ${totalSaldo.toLocaleString("id-ID")}, Total VPN Aktif = ${totalVpn}`;
+              let totalTransactions = 0;
+              try {
+                const totalInvoices = await env.DB.prepare("SELECT COUNT(*) as c FROM invoices WHERE status = 'PAID'").first("c");
+                const totalPpob = await env.DB.prepare("SELECT COUNT(*) as c FROM ppob_transactions").first("c");
+                totalTransactions = (totalInvoices || 0) + (totalPpob || 0);
+              } catch (e) {}
+              dbResult = `DATA DB (BERHASIL): Total Pengguna = ${totalUsers}, Total Seluruh Saldo Semua User = Rp ${totalSaldo.toLocaleString("id-ID")}, Total Transaksi = ${totalTransactions}`;
             } else if (userMatch) {
               let targetEmail = userMatch[1].trim().toLowerCase();
               let u = await env.DB.prepare("SELECT name, phone, balance, is_blocked FROM users WHERE LOWER(email) = ?").bind(targetEmail).first();
@@ -4139,57 +4156,45 @@ ${trxList}`;
                   dbResult = "DATA DB (GAGAL): Bot Token atau Chat ID Telegram belum dikonfigurasi di Pengaturan Admin.";
                 } else {
                   const backupObj = await generateBackupData(env);
-                  const { users, vpns } = backupObj;
+                  const { users, inbox, invoices, settings, ppob_transactions } = backupObj;
                   const nowStr = getWIBTime();
                   const dateMatch = nowStr.match(/(\d{2})\/(\d{2})\/(\d{4})/);
                   const todayStr = dateMatch ? dateMatch[0] : "";
                   const monthStr = dateMatch ? `${dateMatch[2]}/${dateMatch[3]}` : "";
+                  const isoToday = dateMatch ? `${dateMatch[3]}-${dateMatch[2]}-${dateMatch[1]}` : "";
+                  const isoMonth = dateMatch ? `${dateMatch[3]}-${dateMatch[2]}` : "";
+
                   const totalUsers = users.length;
-                  const totalVpns = vpns.filter((v) => !v.exp.toLowerCase().includes("jam")).length;
-                  const totalServers = appSettings.servers ? appSettings.servers.length : 0;
                   const totalSaldo = users.reduce((sum, u) => sum + (u.balance || 0), 0);
-                  const invoices = backupObj.invoices || [];
-                  const inbox = backupObj.inbox || [];
-                  const paidInvoices = invoices.filter((i2) => i2.status === "PAID");
-                  const xlPurchases = inbox.filter((i2) => i2.title && i2.title.includes("[SUKSES] Pembelian Paket XL"));
-                  const totalTransactions = paidInvoices.length + vpns.length + xlPurchases.length;
-                  const vpnsThisMonth = vpns.filter((v) => v.date && v.date.includes(monthStr));
-                  const topupThisMonth = paidInvoices.filter((i2) => i2.date && i2.date.includes(monthStr)).reduce((sum, i2) => sum + (i2.amount || 0), 0);
-                  const xlThisMonth = xlPurchases.filter((i2) => i2.date && i2.date.includes(monthStr)).length;
-                  let vpnMonthDetails = "";
-                  const serversList = appSettings.servers || [];
-                  serversList.forEach((srv) => {
-                    const countSrv = vpnsThisMonth.filter((v) => v.server === srv.name).length;
-                    vpnMonthDetails += `- ${srv.name}: ${countSrv}
-`;
-                  });
-                  const vpnsToday = vpns.filter((v) => v.date && v.date.includes(todayStr));
-                  const topupToday = paidInvoices.filter((i2) => i2.date && i2.date.includes(todayStr)).reduce((sum, i2) => sum + (i2.amount || 0), 0);
-                  const xlToday = xlPurchases.filter((i2) => i2.date && i2.date.includes(todayStr)).length;
-                  let vpnTodayDetails = "";
-                  serversList.forEach((srv) => {
-                    const countSrv = vpnsToday.filter((v) => v.server === srv.name).length;
-                    vpnTodayDetails += `- ${srv.name}: ${countSrv}
-`;
-                  });
+                  const paidInvoices = (invoices || []).filter((i2) => i2.status === "PAID");
+                  const ppobTx = ppob_transactions || [];
+                  const xlPurchases = (inbox || []).filter((i2) => i2.title && i2.title.includes("[SUKSES] Pembelian Paket XL"));
+                  const totalTransactions = paidInvoices.length + ppobTx.length + xlPurchases.length;
+
+                  const topupMonthList = paidInvoices.filter((i2) => i2.date && (i2.date.includes(monthStr) || i2.date.includes(isoMonth)));
+                  const topupThisMonth = topupMonthList.reduce((sum, i2) => sum + (i2.amount || 0), 0);
+                  const ppobThisMonth = ppobTx.filter((p) => p.created_at && (p.created_at.includes(monthStr) || p.created_at.includes(isoMonth))).length +
+                                        xlPurchases.filter((i2) => i2.date && (i2.date.includes(monthStr) || i2.date.includes(isoMonth))).length;
+
+                  const topupTodayList = paidInvoices.filter((i2) => i2.date && (i2.date.includes(todayStr) || i2.date.includes(isoToday)));
+                  const topupToday = topupTodayList.reduce((sum, i2) => sum + (i2.amount || 0), 0);
+                  const ppobToday = ppobTx.filter((p) => p.created_at && (p.created_at.includes(todayStr) || p.created_at.includes(isoToday))).length +
+                                    xlPurchases.filter((i2) => i2.date && (i2.date.includes(todayStr) || i2.date.includes(isoToday))).length;
+
                   const captionHtml = `<b>\u{1F4CA} Statistik Warung Pulsa (Backup Manual AI)</b>
 
 Pengguna: ${totalUsers}
 Transaksi: ${totalTransactions}
-Akun VPN: ${totalVpns}
-Server: ${totalServers}
 Saldo: Rp ${totalSaldo.toLocaleString("id-ID")}
 
 <b>Bulan ini:</b>
 Top Up: Rp ${topupThisMonth.toLocaleString("id-ID")}
-Pembelian paket XL : ${xlThisMonth} transaksi
-Pembuatan Akun: ${vpnsThisMonth.length}
-${vpnMonthDetails}
+Transaksi PPOB & Pulsa: ${ppobThisMonth} transaksi
+
 <b>Hari ini:</b>
 Top Up: Rp ${topupToday.toLocaleString("id-ID")}
-Pembelian paket XL : ${xlToday} transaksi
-Pembuatan Akun: ${vpnsToday.length}
-${vpnTodayDetails}
+Transaksi PPOB & Pulsa: ${ppobToday} transaksi
+
 #warungpulsabackup`;
                   const backupData = JSON.stringify(backupObj, null, 2);
                   await saveBackupToR2(env, backupObj, nowStr);
@@ -5448,12 +5453,17 @@ var worker_default = {
     }
     try {
       const backupObj = await generateBackupData(env);
-      const { users, vpns } = backupObj;
+      const { users, invoices, ppob_transactions } = backupObj;
+      const totalSaldo = users.reduce((sum, u) => sum + (u.balance || 0), 0);
+      const paidInvoices = (invoices || []).filter((i) => i.status === "PAID");
+      const ppobTx = ppob_transactions || [];
+      const totalTransactions = paidInvoices.length + ppobTx.length;
       const wibTime = getWIBTime();
       const backupData = JSON.stringify(backupObj, null, 2);
       await saveBackupToR2(env, backupObj, wibTime);
       const blob = new Blob([backupData], { type: "application/json" });
-      const file = new File([blob], `Backup_WarungPulsa_${wibTime.replace(/[\s:]/g, "_")}.json`);
+      const cleanWib = wibTime.replace(/[\/\s:,]/g, "_");
+      const file = new File([blob], `Backup_WarungPulsa_${cleanWib}.json`);
       const formData = new FormData();
       formData.append("chat_id", chatId);
       formData.append("caption", `\u{1F4E6} <b>AUTO BACKUP DATABASE</b>
@@ -5461,13 +5471,13 @@ var worker_default = {
 \u{1F552} Waktu: ${wibTime}
 \u23F1\uFE0F Frekuensi: Tiap ${frequency} Jam
 \u{1F464} Total User: ${users.length}
-\u{1F510} Total VPN: ${vpns.length}
+\u{1F4B0} Total Saldo: Rp ${totalSaldo.toLocaleString("id-ID")}
+\u{1F6CD}\uFE0F Total Transaksi: ${totalTransactions}
 
 #autobackup #database #warungpulsabackup`);
       formData.append("parse_mode", "HTML");
       formData.append("document", file);
       await fetch(`https://api.telegram.org/bot${botToken}/sendDocument`, { method: "POST", body: formData });
-      const totalSaldo = users.reduce((sum, u) => sum + (u.balance || 0), 0);
       let rekapText = `Rekap saldo pengguna
 Total : Rp.${totalSaldo.toLocaleString("id-ID")}
 
