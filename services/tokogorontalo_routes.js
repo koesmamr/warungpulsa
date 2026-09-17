@@ -238,8 +238,9 @@ async function executeAutoRefund(rawDb, order, failureReason, source = 'webhook'
     // Kirim Telegram Log untuk audit admin
     if (sendTelegramLog) {
       try {
+        const isHostBalanceLow = cleanReason.toLowerCase().includes('saldo tidak cukup') || cleanReason.toLowerCase().includes('saldo host');
         await sendTelegramLog(
-          '💸 AUTO-REFUND INSTAN BERHASIL',
+          isHostBalanceLow ? '🚨 PERINGATAN: SALDO DEPOSIT HOST HABIS / KURANG' : '💸 AUTO-REFUND INSTAN BERHASIL',
           `Order PPOB Gagal dari Provider!\n\n` +
           `Ref: <code>${order.reqid}</code>\n` +
           `User: <b>${current.email}</b>\n` +
@@ -247,7 +248,8 @@ async function executeAutoRefund(rawDb, order, failureReason, source = 'webhook'
           `Tujuan: <code>${current.customer_no}</code>\n` +
           `Alasan: <i>${cleanReason}</i>\n` +
           `Saldo Dikembalikan: <b>Rp ${refundAmount.toLocaleString('id-ID')}</b> (100% Instan)\n` +
-          `Sumber: <code>${source.toUpperCase()}</code>`,
+          `Sumber: <code>${source.toUpperCase()}</code>` +
+          (isHostBalanceLow ? `\n\n⚠️ <b>PENTING:</b> Saldo deposit di akun Toko Gorontalo (Host) Anda sudah menipis/kurang dari modal produk. Segera lakukan Deposit / Isi Saldo di Toko Gorontalo agar transaksi member dapat berjalan lancar!` : ''),
           appSettings
         );
       } catch (tgErr) {
@@ -2043,6 +2045,7 @@ function renderPPOBContent(currentUser, appSettings, env) {
                                   <div class="mt-2 p-2.5 rounded-xl bg-rose-50 border border-rose-200 text-rose-800 text-xs leading-relaxed">
                                       <b>Pesan Provider:</b> \${escapeHtmlClient(finalData.message)}
                                       \${finalData.message.includes('device anda tidak terdaftar') ? '<br><span class="text-[11px] text-slate-600 mt-1 block"><b>Solusi:</b> Daftarkan IP Server VPS Anda ke Admin / CS Toko Gorontalo agar di-whitelist.</span>' : ''}
+                                      \${finalData.message.toLowerCase().includes('saldo tidak cukup') ? '<br><span class="text-[11px] text-amber-700 font-medium mt-1 block"><b>Catatan:</b> Ini adalah saldo deposit host di server Toko Gorontalo yang sedang menipis/kurang dari modal produk. Saldo dompet Anda sendiri 100% aman dan telah otomatis dikembalikan secara utuh.</span>' : ''}
                                   </div>
                                   \` : ''}
                               </div>
