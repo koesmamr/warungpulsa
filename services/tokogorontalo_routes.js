@@ -263,6 +263,140 @@ async function executeAutoRefund(rawDb, order, failureReason, source = 'webhook'
 }
 
 /**
+ * Menyimpan notifikasi transaksi PPOB / Token PLN Sukses ke Kotak Masuk (Inbox) Akun Pembeli
+ */
+function saveSuccessPPOBToInbox(rawDb, { email, product_name, customer_no, sn, reqid }) {
+  if (!rawDb || !email || !reqid) return;
+  try {
+    const existingInbox = rawDb.prepare('SELECT id FROM inbox WHERE message LIKE ?').get(`%${reqid}%`);
+    if (existingInbox) return; // Mencegah pesan ganda (idempotency)
+
+    const nowWIB = new Date().toLocaleString('id-ID', { timeZone: 'Asia/Jakarta' }) + ' WIB';
+    const isTokenPLN = (product_name || '').toLowerCase().includes('token') || (product_name || '').toLowerCase().includes('pln');
+    const labelSN = isTokenPLN ? 'KODE TOKEN PLN (20 DIGIT)' : 'SERIAL NUMBER (SN) / BUKTI';
+
+    const titleMsg = `⚡ Pembelian ${product_name || 'Produk'} Berhasil!`;
+    const bodyMsg = `
+      <div style="font-family: inherit; line-height: 1.6;">
+        <p style="margin-bottom: 8px;">Pesanan produk digital Anda telah <b style="color: #16a34a;">berhasil diproses</b> oleh server provider.</p>
+        <div style="background-color: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 12px; padding: 14px; margin: 12px 0; font-size: 13px;">
+          <div style="display: flex; justify-content: space-between; margin-bottom: 4px;"><b>Ref ID:</b> <span style="font-family: monospace;">${escapeHtml(reqid)}</span></div>
+          <div style="display: flex; justify-content: space-between; margin-bottom: 4px;"><b>Produk:</b> <span>${escapeHtml(product_name || '-')}</span></div>
+          <div style="display: flex; justify-content: space-between; margin-bottom: 6px;"><b>Tujuan / ID Pelanggan:</b> <span style="font-family: monospace; font-weight: bold;">${escapeHtml(customer_no || '-')}</span></div>
+          <div style="background-color: #ffffff; border: 1.5px dashed #16a34a; border-radius: 10px; padding: 12px; margin-top: 8px; text-align: center;">
+            <span style="font-size: 11px; color: #15803d; font-weight: bold; display: block; margin-bottom: 4px; letter-spacing: 0.5px;">${labelSN}</span>
+            <span style="font-family: monospace; font-size: 19px; font-weight: 900; color: #166534; letter-spacing: 1.5px; user-select: all; display: inline-block; padding: 3px 10px; background: #dcfce7; border-radius: 8px;">${escapeHtml(sn || '-')}</span>
+          </div>
+        </div>
+        <p style="font-size: 12px; color: #64748b; margin-top: 6px;">Waktu Transaksi: ${nowWIB}</p>
+      </div>
+    `;
+
+    rawDb.prepare(`
+      INSERT INTO inbox (email, title, message, date, read)
+      VALUES (?, ?, ?, ?, 0)
+    `).run(email, titleMsg, bodyMsg, nowWIB);
+
+    console.log(`[Inbox Saved] Sukses transaksi ${reqid} tersimpan ke Inbox ${email}`);
+  } catch (err) {
+    console.error('[saveSuccessPPOBToInbox Error]:', err.message);
+  }
+}
+
+// Set untuk melacak order yang sedang dipantau di background agar tidak polling ganda
+const activePollerReqIds = new Set();
+
+/**
+ * Pemantau status transaksi di latar belakang (Background Auto-Poller)
+ * Memungkinkan pembeli langsung melanjutkan aktivitas tanpa menunggu di halaman loading.
+ * Server akan terus memantau hingga token PLN terbit dan langsung memasukkannya ke Inbox pembeli.
+ */
+function startBackgroundOrderPoller(rawDb, orderInfo, sendTelegramLog, appSettings) {
+  const { reqid, customer_no, email, product_name } = orderInfo;
+  if (!reqid || activePollerReqIds.has(reqid)) return;
+
+  activePollerReqIds.add(reqid);
+  console.log(`[Background Poller Started] Ref: ${reqid} (${product_name} ke ${customer_no})`);
+
+  let attempts = 0;
+  const maxAttempts = 20; // 20 kali x 3 detik = 60 detik
+
+  const checkNext = async () => {
+    attempts++;
+    try {
+      // Cek apakah transaksi di database sudah berstatus final
+      const current = rawDb.prepare('SELECT status, is_refunded, sn FROM ppob_transactions WHERE reqid = ?').get(reqid);
+      if (!current || current.status === 'success' || current.is_refunded === 1) {
+        activePollerReqIds.delete(reqid);
+        return;
+      }
+
+      const live = await service.checkStatusToday({ reqid, tujuan: customer_no });
+      if (live) {
+        const liveStatus = live.status !== undefined ? live.status : (live.rc !== undefined ? live.rc : '');
+        const infoText = live.info || live.message || live.pesan || '';
+        const detailText = live.detail || '';
+
+        let sn = '';
+        if (detailText) {
+          const parsed = service.parseDetail(detailText);
+          if (parsed.sn) sn = parsed.sn;
+        }
+        if (!sn && live.bukti) {
+          sn = String(live.bukti).trim();
+        }
+
+        if (isSuccessStatus(liveStatus) || live.rc === '00' || (sn && sn.length >= 6)) {
+          console.log(`[Background Poller SUKSES] Ref: ${reqid}, SN: ${sn}`);
+          rawDb.prepare(`
+            UPDATE ppob_transactions
+            SET status = 'success',
+                sn = COALESCE(NULLIF(?, ''), sn),
+                info = COALESCE(NULLIF(?, ''), info),
+                detail = COALESCE(NULLIF(?, ''), detail),
+                updated_at = CURRENT_TIMESTAMP
+            WHERE reqid = ?
+          `).run(sn, infoText, detailText, reqid);
+
+          // Masukkan ke Kotak Masuk (Inbox) Pembeli seketika itu juga!
+          saveSuccessPPOBToInbox(rawDb, { email, product_name, customer_no, sn, reqid });
+
+          // Kirim log Telegram
+          if (sendTelegramLog) {
+            await sendTelegramLog(
+              '⚡ PPOB TRANSAKSI BERHASIL',
+              `Produk: <b>${product_name}</b>\nTujuan: <code>${customer_no}</code>\nSN / Token: <code>${sn}</code>\nUser: ${email}\nRef: ${reqid}`,
+              appSettings
+            );
+          }
+
+          activePollerReqIds.delete(reqid);
+          return;
+        }
+
+        if (isProviderFailure(liveStatus, infoText, detailText, live.rc, live.success)) {
+          console.log(`[Background Poller GAGAL] Ref: ${reqid}, Reason: ${infoText || detailText}`);
+          await executeAutoRefund(rawDb, orderInfo, infoText || detailText || 'Ditolak provider', 'background_poller', sendTelegramLog, appSettings);
+          activePollerReqIds.delete(reqid);
+          return;
+        }
+      }
+    } catch (err) {
+      console.warn(`[Background Poller Error] Ref: ${reqid} (attempt ${attempts}):`, err.message);
+    }
+
+    if (attempts < maxAttempts) {
+      setTimeout(checkNext, 3000);
+    } else {
+      activePollerReqIds.delete(reqid);
+      console.log(`[Background Poller Finished] Ref: ${reqid} reached max attempts. Will be reconciled by cron.`);
+    }
+  };
+
+  setTimeout(checkNext, 2500);
+}
+
+/**
  * Auto-Reconcile PPOB Transactions:
  * 1. Memeriksa setiap transaksi yang berstatus 'failed' / 'gagal' tetapi belum di-refund (is_refunded = 0),
  *    dan seketika mengembalikan saldo ke akun pengguna.
@@ -336,8 +470,11 @@ async function autoReconcilePPOBTransactions(rawDb, service, sendTelegramLog = n
               const parsed = service.parseDetail(detailText);
               if (parsed.sn) sn = parsed.sn;
             }
+            if (!sn && live.bukti) {
+              sn = String(live.bukti).trim();
+            }
 
-            if (isFailureStatus(liveStatus) || isFailureStatus(infoText) || isFailureStatus(detailText)) {
+            if (isProviderFailure(liveStatus, infoText, detailText, live.rc, live.success)) {
               // Status Gagal pada server provider -> SEKETIKA AUTO-REFUND 100%
               console.log(`[Auto-Reconcile GAGAL] Live check order ${tx.reqid} gagal: ${infoText || liveStatus}`);
               const refResult = await executeAutoRefund(
@@ -349,8 +486,8 @@ async function autoReconcilePPOBTransactions(rawDb, service, sendTelegramLog = n
                 appSettings
               );
               if (refResult.refunded) reconciledCount++;
-            } else if (isSuccessStatus(liveStatus)) {
-              // Status Sukses pada server provider -> UPDATE & NOTIFIKASI
+            } else if (isSuccessStatus(liveStatus) || live.rc === '00' || (sn && sn.length >= 6)) {
+              // Status Sukses pada server provider -> UPDATE & NOTIFIKASI INBOX
               console.log(`[Auto-Reconcile SUKSES] Live check order ${tx.reqid} sukses. SN: ${sn}`);
               rawDb.prepare(`
                 UPDATE ppob_transactions
@@ -362,16 +499,13 @@ async function autoReconcilePPOBTransactions(rawDb, service, sendTelegramLog = n
                 WHERE reqid = ?
               `).run(sn, infoText, detailText, tx.reqid);
 
-              const nowWIB = new Date().toLocaleString('id-ID', { timeZone: 'Asia/Jakarta' }) + ' WIB';
-              rawDb.prepare(`
-                INSERT INTO inbox (email, title, message, date, read)
-                VALUES (?, ?, ?, ?, 0)
-              `).run(
-                tx.email,
-                `Pembelian ${tx.product_name} Berhasil!`,
-                `Nomor Tujuan: <b>${tx.customer_no}</b><br>SN / Token: <b style="color: #0284c7; font-size: 15px;">${sn || '-'}</b><br>Waktu: ${nowWIB}`,
-                nowWIB
-              );
+              saveSuccessPPOBToInbox(rawDb, {
+                email: tx.email,
+                product_name: tx.product_name,
+                customer_no: tx.customer_no,
+                sn,
+                reqid: tx.reqid
+              });
             }
           }
         } catch (err) {
@@ -880,6 +1014,7 @@ async function handleTokoGorontaloRoutes(url, request, env, currentUser, appSett
           const parsed = service.parseDetail(detailMsg);
           if (parsed.sn) sn = parsed.sn;
         }
+        if (!sn && apiResult.bukti) sn = String(apiResult.bukti).trim();
       } else if (isImmediateFailed) {
         finalStatus = 'failed';
         infoMsg = infoMsg || detailMsg || 'Transaksi ditolak oleh server provider';
@@ -899,48 +1034,9 @@ async function handleTokoGorontaloRoutes(url, request, env, currentUser, appSett
           appSettings
         );
       } else {
-        // Status masih pending. Lakukan quick check setelah jeda 1.5 detik
-        // Khusus untuk transaksi seperti Token PLN atau nomor salah, provider umumnya mengembalikan status gagal dalam 1-2 detik
-        try {
-          await new Promise(resolve => setTimeout(resolve, 1500));
-          const quickCheck = await service.checkStatusToday({ reqid, tujuan: customer_no });
-          if (quickCheck) {
-            const qcStatus = quickCheck.status !== undefined ? quickCheck.status : (quickCheck.rc !== undefined ? quickCheck.rc : '');
-            const qcInfo = quickCheck.info || quickCheck.message || quickCheck.pesan || '';
-            const qcDetail = quickCheck.detail || '';
-
-            if (isProviderFailure(qcStatus, qcInfo, qcDetail, quickCheck.rc, quickCheck.success)) {
-              finalStatus = 'failed';
-              infoMsg = qcInfo || qcDetail || 'Transaksi dinyatakan gagal oleh server provider';
-              detailMsg = qcDetail;
-              console.log(`[PPOB Order Quick Check GAGAL] Ref: ${reqid}. Melakukan auto-refund instan...`);
-              await executeAutoRefund(
-                rawDb,
-                {
-                  reqid,
-                  email: currentUser.email,
-                  selling_price: price,
-                  product_name: product.product_name,
-                  customer_no
-                },
-                infoMsg,
-                'quick_check_order',
-                sendTelegramLog,
-                appSettings
-              );
-            } else if (isSuccessStatus(qcStatus) || quickCheck.rc === '00') {
-              finalStatus = 'success';
-              if (qcDetail) {
-                const parsed = service.parseDetail(qcDetail);
-                if (parsed.sn) sn = parsed.sn;
-              }
-              if (qcInfo) infoMsg = qcInfo;
-              detailMsg = qcDetail;
-            }
-          }
-        } catch (qcErr) {
-          console.warn('[Quick Check Error]:', qcErr.message);
-        }
+        // Status masih pending (misal Token PLN yang baru diproses oleh Biller PLN).
+        // TIDAK PERLU menahan / blocking koneksi HTTP user!
+        finalStatus = 'pending';
       }
 
       // Update transaksi di DB
@@ -962,11 +1058,39 @@ async function handleTokoGorontaloRoutes(url, request, env, currentUser, appSett
         reqid
       );
 
+      // JIKA SUKSES LANGSUNG: SIMPAN KE INBOX PEMBELI!
+      if (finalStatus === 'success') {
+        saveSuccessPPOBToInbox(rawDb, {
+          email: currentUser.email,
+          product_name: product.product_name,
+          customer_no,
+          sn,
+          reqid
+        });
+      }
+
+      // JIKA PENDING: JALANKAN BACKGROUND POLLER OTOMATIS (NON-BLOCKING)
+      // Server akan memantau terus hingga token PLN terbit dan langsung memasukkannya ke Inbox pembeli!
+      if (finalStatus === 'pending') {
+        startBackgroundOrderPoller(
+          rawDb,
+          {
+            reqid,
+            email: currentUser.email,
+            product_name: product.product_name,
+            customer_no,
+            selling_price: price
+          },
+          sendTelegramLog,
+          appSettings
+        );
+      }
+
       // Kirim Telegram Log
       if (sendTelegramLog) {
         await sendTelegramLog(
-          '🛒 ORDER PPOB BARU',
-          `Produk: <b>${product.product_name}</b>\nTujuan: <code>${customer_no}</code>\nHarga: Rp ${price.toLocaleString('id-ID')}\nStatus: ${finalStatus.toUpperCase()}\nRef: ${reqid}\nUser: ${currentUser.email}`,
+          finalStatus === 'success' ? '⚡ PPOB TRANSAKSI BERHASIL' : '🛒 ORDER PPOB BARU',
+          `Produk: <b>${product.product_name}</b>\nTujuan: <code>${customer_no}</code>\nHarga: Rp ${price.toLocaleString('id-ID')}\nStatus: ${finalStatus.toUpperCase()}\nRef: ${reqid}\nUser: ${currentUser.email}` + (sn ? `\nSN/Token: <code>${sn}</code>` : ''),
           appSettings
         );
       }
@@ -980,7 +1104,9 @@ async function handleTokoGorontaloRoutes(url, request, env, currentUser, appSett
         customer_no,
         price,
         sn,
-        message: infoMsg
+        message: finalStatus === 'pending'
+          ? 'Pesanan Token PLN Anda sedang diproses oleh server PLN. Anda tidak perlu menunggu di halaman ini, kode token akan otomatis masuk ke Kotak Masuk (Inbox) Anda begitu diterbitkan.'
+          : infoMsg
       });
 
     } catch (e) {
@@ -1979,84 +2105,75 @@ function renderPPOBContent(currentUser, appSettings, env) {
               }
 
               if (data.success) {
-                  let finalData = data;
-                  if (data.status === 'pending' && data.reqid) {
-                      // Tampilkan indikator polling status live ke server provider
-                      document.getElementById('loadingOverlay').classList.remove('hidden');
-                      const loadingP = document.querySelector('#loadingOverlay p');
-                      const originalText = loadingP ? loadingP.innerText : 'Memproses transaksi...';
-                      if (loadingP) loadingP.innerText = 'Memverifikasi status ke server provider (PLN/H2H)...';
+                  const isPending = data.status === 'pending';
+                  const isSuccess = data.status === 'success';
+                  const isFailed = data.status === 'failed';
+                  const snText = data.sn ? \`<div class="bg-emerald-50 border border-emerald-200 p-3.5 rounded-2xl mt-3 text-center"><p class="text-xs text-emerald-700 font-bold mb-1 tracking-wide">SERIAL NUMBER (SN) / TOKEN:</p><p class="font-mono font-black text-emerald-900 text-lg select-all tracking-wider">\${data.sn}</p></div>\` : '';
 
-                      for (let poll = 1; poll <= 8; poll++) {
-                          await new Promise(r => setTimeout(r, 2500));
-                          try {
-                              const stRes = await fetch('/api/ppob/order-status?reqid=' + encodeURIComponent(data.reqid));
-                              const stJson = await stRes.json();
-                              if (stJson.success && stJson.order && stJson.order.status !== 'pending') {
-                                  finalData = {
-                                      ...data,
-                                      status: stJson.order.status,
-                                      sn: stJson.order.sn,
-                                      message: stJson.order.info || data.message
-                                  };
-                                  break;
-                              }
-                          } catch (pErr) {}
-                      }
-                      if (loadingP) loadingP.innerText = originalText;
-                      document.getElementById('loadingOverlay').classList.add('hidden');
-                  }
-
-                  const isSuccess = finalData.status === 'success';
-                  const isFailed = finalData.status === 'failed';
-                  const snText = finalData.sn ? \`<div class="bg-emerald-50 border border-emerald-200 p-3 rounded-xl mt-3 text-center"><p class="text-xs text-emerald-600 font-medium mb-1">Serial Number (SN) / Token:</p><p class="font-mono font-black text-emerald-800 text-base select-all">\${finalData.sn}</p></div>\` : '';
-
-                  let modalTitle = 'Pesanan Diproses!';
+                  let modalTitle = '⚡ Pesanan Diproses!';
                   let modalIcon = 'info';
-                  let statusColorClass = 'text-sky-600';
-                  let statusDesc = 'Pesanan Anda telah diterima oleh sistem provider.';
+                  let statusColorClass = 'bg-amber-100 text-amber-700';
+                  let statusDesc = \`
+                      <div class="p-3.5 bg-sky-50 border border-sky-200 rounded-2xl text-sky-950 text-xs leading-relaxed space-y-1.5">
+                          <b class="text-sky-800 flex items-center gap-1.5 text-sm">
+                              <svg class="w-4 h-4 text-sky-600 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                              Anda Tidak Perlu Menunggu di Halaman Ini!
+                          </b>
+                          <p>Pesanan telah diterima server provider. Server kami otomatis memproses di latar belakang dan <b>kode token PLN akan otomatis masuk ke Kotak Masuk (Inbox)</b> akun Anda begitu diterbitkan (biasanya 5–30 detik).</p>
+                      </div>
+                  \`;
 
                   if (isSuccess) {
                       modalTitle = 'Transaksi Berhasil!';
                       modalIcon = 'success';
-                      statusColorClass = 'text-emerald-600';
-                      statusDesc = 'Pesanan berhasil diproses oleh provider!';
+                      statusColorClass = 'bg-emerald-100 text-emerald-700';
+                      statusDesc = '<p class="text-xs text-slate-600 leading-relaxed">Pesanan Anda telah <b>berhasil diproses</b> oleh provider! Kode token juga telah otomatis disimpan ke <b>Kotak Masuk (Inbox)</b> akun Anda.</p>';
                   } else if (isFailed) {
                       modalTitle = 'Transaksi Gagal / Ditolak';
                       modalIcon = 'error';
-                      statusColorClass = 'text-rose-600';
-                      statusDesc = 'Transaksi ditolak oleh server provider dan <b class="text-emerald-600">saldo Anda telah otomatis dikembalikan (Refund 100% Instan)</b> ke akun Anda.';
+                      statusColorClass = 'bg-rose-100 text-rose-700';
+                      statusDesc = '<p class="text-xs text-slate-600 leading-relaxed">Transaksi ditolak oleh server provider dan <b class="text-emerald-600">saldo Anda telah otomatis dikembalikan (Refund 100% Instan)</b> ke akun Anda.</p>';
                   }
 
-                  await swalDark.fire({
+                  const result = await swalDark.fire({
                       title: modalTitle,
                       html: \`
                           <div class="text-left space-y-3 text-sm">
-                              <p class="text-xs text-slate-600 leading-relaxed">\${statusDesc}</p>
-                              <div class="bg-slate-50 p-3.5 rounded-xl border border-slate-200 text-xs space-y-1.5 font-medium">
-                                  <div class="flex justify-between"><b>Ref ID:</b> <span class="font-mono">\${finalData.reqid}</span></div>
-                                  <div class="flex justify-between"><b>Produk:</b> <span>\${escapeHtmlClient(finalData.product_name)}</span></div>
-                                  <div class="flex justify-between"><b>Tujuan:</b> <span class="font-mono">\${escapeHtmlClient(finalData.customer_no)}</span></div>
-                                  <div class="flex justify-between items-center pt-1 border-t border-slate-200">
+                              \${statusDesc}
+                              <div class="bg-slate-50 p-3.5 rounded-2xl border border-slate-200 text-xs space-y-1.5 font-medium">
+                                  <div class="flex justify-between"><b>Ref ID:</b> <span class="font-mono text-slate-600">\${data.reqid}</span></div>
+                                  <div class="flex justify-between"><b>Produk:</b> <span class="text-slate-900">\${escapeHtmlClient(data.product_name)}</span></div>
+                                  <div class="flex justify-between"><b>Tujuan:</b> <span class="font-mono text-slate-900 font-bold">\${escapeHtmlClient(data.customer_no)}</span></div>
+                                  <div class="flex justify-between items-center pt-1.5 border-t border-slate-200">
                                       <b>Status:</b>
-                                      <span class="font-bold uppercase px-2 py-0.5 rounded text-[11px] \${isSuccess ? 'bg-emerald-100 text-emerald-700' : (isFailed ? 'bg-rose-100 text-rose-700' : 'bg-sky-100 text-sky-700')}">\${finalData.status}</span>
+                                      <span class="font-bold uppercase px-2.5 py-0.5 rounded-md text-[11px] \${statusColorClass}">
+                                          \${isPending ? 'SEDANG DIPROSES' : data.status}
+                                      </span>
                                   </div>
-                                  \${finalData.message ? \`
+                                  \${data.message ? \`
                                   <div class="mt-2 p-2.5 rounded-xl bg-rose-50 border border-rose-200 text-rose-800 text-xs leading-relaxed">
-                                      <b>Pesan Provider:</b> \${escapeHtmlClient(finalData.message)}
-                                      \${finalData.message.includes('device anda tidak terdaftar') ? '<br><span class="text-[11px] text-slate-600 mt-1 block"><b>Solusi:</b> Daftarkan IP Server VPS Anda ke Admin / CS Toko Gorontalo agar di-whitelist.</span>' : ''}
-                                      \${finalData.message.toLowerCase().includes('saldo tidak cukup') ? '<br><span class="text-[11px] text-amber-700 font-medium mt-1 block"><b>Catatan:</b> Ini adalah saldo deposit host di server Toko Gorontalo yang sedang menipis/kurang dari modal produk. Saldo dompet Anda sendiri 100% aman dan telah otomatis dikembalikan secara utuh.</span>' : ''}
+                                      <b>Pesan Provider:</b> \${escapeHtmlClient(data.message)}
+                                      \${data.message.includes('device anda tidak terdaftar') ? '<br><span class="text-[11px] text-slate-600 mt-1 block"><b>Solusi:</b> Daftarkan IP Server VPS Anda ke Admin / CS Toko Gorontalo agar di-whitelist.</span>' : ''}
+                                      \${data.message.toLowerCase().includes('saldo tidak cukup') ? '<br><span class="text-[11px] text-amber-700 font-medium mt-1 block"><b>Catatan:</b> Ini adalah saldo deposit host di server Toko Gorontalo yang sedang menipis/kurang dari modal produk. Saldo dompet Anda sendiri 100% aman dan telah otomatis dikembalikan secara utuh.</span>' : ''}
                                   </div>
                                   \` : ''}
                               </div>
                               \${snText}
-                              <p class="text-[11px] text-slate-400 italic mt-2">Detail bukti mutasi dan transaksi juga telah dicatat di Kotak Masuk (Inbox) Anda.</p>
+                              <p class="text-[11px] text-slate-400 italic mt-2">Pemberitahuan resmi dan bukti transaksi dapat dicek kapan saja di menu <b>Kotak Masuk (Inbox)</b>.</p>
                           </div>
                       \`,
                       icon: modalIcon,
-                      confirmButtonText: 'Tutup'
+                      showCancelButton: isPending || isSuccess,
+                      confirmButtonText: (isPending || isSuccess) ? 'Buka Kotak Masuk' : 'Tutup',
+                      cancelButtonText: 'Tutup / Tetap di Sini',
+                      confirmButtonColor: '#0284c7'
                   });
-                  window.location.reload();
+
+                  if (result.isConfirmed && (isPending || isSuccess)) {
+                      window.location.href = '/inbox';
+                  } else {
+                      window.location.reload();
+                  }
               } else {
                   if (!data.locked) {
                       clearTrxLock();
