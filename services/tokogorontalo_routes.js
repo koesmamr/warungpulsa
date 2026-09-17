@@ -18,10 +18,159 @@ function escapeHtml(str) {
   }[tag]));
 }
 
+function isFailureStatus(statusStr) {
+  if (!statusStr) return false;
+  const s = String(statusStr).toLowerCase().trim();
+  return ['failed', 'gagal', 'error', 'batal', 'rejected', 'declined', 'refund', 'cancel'].includes(s) ||
+         s.includes('gagal') || s.includes('dibatalkan') || s.includes('ditolak');
+}
+
+function isSuccessStatus(statusStr) {
+  if (!statusStr) return false;
+  const s = String(statusStr).toLowerCase().trim();
+  return ['success', 'sukses', 'berhasil'].includes(s) || s.includes('sukses') || s.includes('berhasil');
+}
+
+/**
+ * Eksekusi Auto-Refund Instan
+ * Mengembalikan saldo ke akun pengguna seketika tanpa menunggu proses manual admin,
+ * mencatat mutasi saldo akun, mengirim notifikasi Inbox, serta logging Telegram.
+ */
+async function executeAutoRefund(rawDb, order, failureReason, source = 'webhook', sendTelegramLog = null, appSettings = null) {
+  if (!order || !order.reqid || !order.email) return { refunded: false, reason: 'invalid_order' };
+
+  // Ambil transaksi paling terkini dari database
+  const current = rawDb.prepare('SELECT * FROM ppob_transactions WHERE reqid = ?').get(order.reqid);
+  if (!current) return { refunded: false, reason: 'order_not_found' };
+
+  // Pastikan tidak pernah di-refund ganda (Idempotency)
+  if (current.is_refunded === 1 || current.status === 'refunded') {
+    console.log(`[Auto-Refund] Order ${order.reqid} sudah pernah di-refund sebelumnya.`);
+    return { refunded: false, reason: 'already_refunded' };
+  }
+
+  // Jika statusnya success, tidak boleh di-refund
+  if (isSuccessStatus(current.status)) {
+    console.warn(`[Auto-Refund] Order ${order.reqid} berstatus success, refund dibatalkan.`);
+    return { refunded: false, reason: 'order_was_success' };
+  }
+
+  const refundAmount = Number(current.selling_price) || 0;
+  if (refundAmount <= 0) {
+    return { refunded: false, reason: 'zero_amount' };
+  }
+
+  const nowWIB = new Date().toLocaleString('id-ID', { timeZone: 'Asia/Jakarta' }) + ' WIB';
+  const cleanReason = String(failureReason || current.info || 'Transaksi ditolak oleh sistem provider').trim();
+
+  // Eksekusi atomic refund
+  const runRefundTransaction = () => {
+    // 1. Tandai ppob_transactions sebagai refunded & failed
+    const updateResult = rawDb.prepare(`
+      UPDATE ppob_transactions
+      SET status = 'failed',
+          is_refunded = 1,
+          info = CASE WHEN info IS NULL OR info = '' THEN ? ELSE info END,
+          updated_at = CURRENT_TIMESTAMP
+      WHERE reqid = ? AND (is_refunded = 0 OR is_refunded IS NULL)
+    `).run(cleanReason, order.reqid);
+
+    if (updateResult.changes === 0) {
+      return false; // Race condition caught
+    }
+
+    // 2. Kembalikan saldo pengguna seketika itu juga (100% Instan)
+    rawDb.prepare('UPDATE users SET balance = balance + ? WHERE email = ?').run(refundAmount, current.email);
+
+    // 3. Catat ke mutasi transaksi akun (tipe 'IN')
+    rawDb.prepare(`
+      INSERT INTO transactions (email, type, amount, description, balance, created_at)
+      VALUES (?, 'IN', ?, ?, (SELECT balance FROM users WHERE email = ?), ?)
+    `).run(
+      current.email,
+      refundAmount,
+      `Auto-Refund PPOB Gagal: ${current.product_name} (${current.customer_no}) - Ref: ${order.reqid}`,
+      current.email,
+      nowWIB
+    );
+
+    // 4. Kirim notifikasi instan ke Inbox pengguna
+    const titleMsg = `⚠️ Refund Saldo: Pembelian ${current.product_name} Gagal`;
+    const bodyMsg = `
+      <div style="font-family: inherit; line-height: 1.6;">
+        <p style="margin-bottom: 8px;">Pesanan produk digital Anda tidak berhasil diproses oleh server provider dan <b style="color: #16a34a;">saldo telah otomatis dikembalikan (Refund) 100% secara instan</b> ke akun Anda tanpa perlu menunggu konfirmasi admin.</p>
+        <div style="background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 12px; margin: 12px 0; font-size: 13px;">
+          <div style="display: flex; justify-content: space-between; margin-bottom: 4px;"><b>Ref ID:</b> <span style="font-family: monospace;">${order.reqid}</span></div>
+          <div style="display: flex; justify-content: space-between; margin-bottom: 4px;"><b>Produk:</b> <span>${escapeHtml(current.product_name)}</span></div>
+          <div style="display: flex; justify-content: space-between; margin-bottom: 4px;"><b>Tujuan:</b> <span style="font-family: monospace;">${escapeHtml(current.customer_no)}</span></div>
+          <div style="display: flex; justify-content: space-between; margin-bottom: 4px; color: #dc2626;"><b>Keterangan:</b> <span>${escapeHtml(cleanReason)}</span></div>
+          <div style="display: flex; justify-content: space-between; border-top: 1px solid #e2e8f0; padding-top: 6px; margin-top: 6px; color: #16a34a; font-weight: bold; font-size: 14px;">
+            <span>Saldo Dikembalikan:</span>
+            <span style="font-family: monospace;">+ Rp ${refundAmount.toLocaleString('id-ID')}</span>
+          </div>
+        </div>
+        <p style="font-size: 12px; color: #64748b; margin-top: 6px;">Saldo akun Anda telah bertambah seketika dan dapat langsung digunakan kembali untuk transaksi berikutnya.</p>
+      </div>
+    `;
+
+    rawDb.prepare(`
+      INSERT INTO inbox (email, title, message, date, read)
+      VALUES (?, ?, ?, ?, 0)
+    `).run(current.email, titleMsg, bodyMsg, nowWIB);
+
+    return true;
+  };
+
+  let wasRefunded = false;
+  if (typeof rawDb.transaction === 'function') {
+    wasRefunded = rawDb.transaction(runRefundTransaction)();
+  } else {
+    rawDb.exec('BEGIN TRANSACTION;');
+    try {
+      wasRefunded = runRefundTransaction();
+      rawDb.exec('COMMIT;');
+    } catch (e) {
+      rawDb.exec('ROLLBACK;');
+      throw e;
+    }
+  }
+
+  if (wasRefunded) {
+    console.log(`[Auto-Refund SUCCESS] Ref: ${order.reqid} -> Rp ${refundAmount} refunded to ${current.email} via ${source}`);
+
+    // Kirim Telegram Log untuk audit admin
+    if (sendTelegramLog) {
+      try {
+        await sendTelegramLog(
+          '💸 AUTO-REFUND INSTAN BERHASIL',
+          `Order PPOB Gagal dari Provider!\n\n` +
+          `Ref: <code>${order.reqid}</code>\n` +
+          `User: <b>${current.email}</b>\n` +
+          `Produk: <b>${current.product_name}</b>\n` +
+          `Tujuan: <code>${current.customer_no}</code>\n` +
+          `Alasan: <i>${cleanReason}</i>\n` +
+          `Saldo Dikembalikan: <b>Rp ${refundAmount.toLocaleString('id-ID')}</b> (100% Instan)\n` +
+          `Sumber: <code>${source.toUpperCase()}</code>`,
+          appSettings
+        );
+      } catch (tgErr) {
+        console.warn('[Auto-Refund Telegram Error]:', tgErr.message);
+      }
+    }
+    return { refunded: true, amount: refundAmount };
+  }
+
+  return { refunded: false, reason: 'duplicate_or_rolled_back' };
+}
+
 async function handleTokoGorontaloRoutes(url, request, env, currentUser, appSettings, sendTelegramLog) {
   const path = url.pathname;
   const method = request.method;
   const rawDb = env.DB.rawDb || (require('../db.js').rawDb);
+
+  try {
+    rawDb.exec('ALTER TABLE ppob_transactions ADD COLUMN is_refunded INTEGER DEFAULT 0;');
+  } catch (e) {}
 
   // ================================================================
   // 1. WEBHOOK / CALLBACK HANDLER DARI TOKO GORONTALO
@@ -43,19 +192,31 @@ async function handleTokoGorontaloRoutes(url, request, env, currentUser, appSett
         return jsonResponse({ status: 'ok', message: 'Order not found, logged' });
       }
 
-      const normalizedStatus = String(status || '').toLowerCase();
+      const normalizedStatus = String(status || '').toLowerCase().trim();
       let sn = existing.sn || '';
       if (detail) {
         const parsed = service.parseDetail(detail);
         if (parsed.sn) sn = parsed.sn;
       }
 
-      // Update transaksi
+      // Update data transaksi dari webhook
       rawDb.prepare(`
         UPDATE ppob_transactions
-        SET status = ?, sn = ?, info = ?, detail = ?, raw_response = ?, updated_at = CURRENT_TIMESTAMP
+        SET status = CASE 
+              WHEN status = 'failed' THEN 'failed'
+              WHEN ? IN ('success', 'sukses', 'berhasil') THEN 'success'
+              WHEN ? IN ('failed', 'gagal', 'error', 'batal', 'rejected', 'declined', 'refund', 'cancel') THEN 'failed'
+              ELSE COALESCE(NULLIF(?, ''), status)
+            END,
+            sn = COALESCE(NULLIF(?, ''), sn),
+            info = COALESCE(NULLIF(?, ''), info),
+            detail = COALESCE(NULLIF(?, ''), detail),
+            raw_response = ?,
+            updated_at = CURRENT_TIMESTAMP
         WHERE reqid = ?
       `).run(
+        normalizedStatus,
+        normalizedStatus,
         normalizedStatus,
         sn,
         info || '',
@@ -64,8 +225,8 @@ async function handleTokoGorontaloRoutes(url, request, env, currentUser, appSett
         reqid
       );
 
-      // Handle SUCCESS
-      if (normalizedStatus === 'success' && existing.status !== 'success') {
+      // 1. Handle SUCCESS
+      if (isSuccessStatus(normalizedStatus) && !isSuccessStatus(existing.status)) {
         const titleMsg = `Pembelian ${existing.product_name} Berhasil!`;
         const bodyMsg = `Nomor Tujuan: <b>${existing.customer_no}</b><br>SN / Token: <b style="color: #0284c7; font-size: 15px;">${sn || '-'}</b><br>Waktu: ${new Date().toLocaleString('id-ID', { timeZone: 'Asia/Jakarta' })} WIB`;
         
@@ -83,39 +244,10 @@ async function handleTokoGorontaloRoutes(url, request, env, currentUser, appSett
         }
       }
 
-      // Handle FAILED -> Auto-Refund Saldo
-      if (normalizedStatus === 'failed' && existing.status !== 'failed') {
-        const refundAmount = Number(existing.selling_price) || 0;
-        if (refundAmount > 0) {
-          rawDb.prepare('UPDATE users SET balance = balance + ? WHERE email = ?').run(refundAmount, existing.email);
-          
-          rawDb.prepare(`
-            INSERT INTO transactions (email, type, amount, description, balance, created_at)
-            VALUES (?, 'IN', ?, ?, (SELECT balance FROM users WHERE email = ?), ?)
-          `).run(
-            existing.email,
-            refundAmount,
-            `Refund Pembelian PPOB Gagal: ${existing.product_name} (${existing.customer_no}) - Ref: ${reqid}`,
-            existing.email,
-            new Date().toLocaleString('id-ID', { timeZone: 'Asia/Jakarta' }) + ' WIB'
-          );
-
-          const titleMsg = `Pembelian ${existing.product_name} Gagal (Saldo Dikembalikan)`;
-          const bodyMsg = `Transaksi ke <b>${existing.customer_no}</b> gagal dari sistem provider.<br>Saldo sebesar <b>Rp ${refundAmount.toLocaleString('id-ID')}</b> telah otomatis dikembalikan ke akun Anda.`;
-          
-          rawDb.prepare(`
-            INSERT INTO inbox (email, title, message, date, read)
-            VALUES (?, ?, ?, ?, 0)
-          `).run(existing.email, titleMsg, bodyMsg, new Date().toLocaleString('id-ID', { timeZone: 'Asia/Jakarta' }) + ' WIB');
-
-          if (sendTelegramLog) {
-            await sendTelegramLog(
-              '⚠️ PPOB TRANSAKSI GAGAL (REFUND)',
-              `Produk: <b>${existing.product_name}</b>\nTujuan: <code>${existing.customer_no}</code>\nInfo: ${info || '-'}\nSaldo Rp ${refundAmount.toLocaleString('id-ID')} telah dikembalikan ke ${existing.email}.`,
-              appSettings
-            );
-          }
-        }
+      // 2. Handle FAILED -> Auto-Refund Instan Seketika itu Juga Tanpa Menunggu Admin
+      if (isFailureStatus(normalizedStatus) || isFailureStatus(info) || isFailureStatus(detail)) {
+        const failureReason = info || detail || 'Ditolak / Gagal dari server provider';
+        await executeAutoRefund(rawDb, existing, failureReason, 'webhook', sendTelegramLog, appSettings);
       }
 
       return jsonResponse({ status: 'ok', received: true });
@@ -284,39 +416,39 @@ async function handleTokoGorontaloRoutes(url, request, env, currentUser, appSett
       let sn = '';
       let infoMsg = apiResult.info || 'Transaksi sedang diproses oleh sistem provider.';
 
-      if (apiResult.status === 'success') {
+      if (isSuccessStatus(apiResult.status)) {
         finalStatus = 'success';
         if (apiResult.detail) {
           const parsed = service.parseDetail(apiResult.detail);
           sn = parsed.sn;
         }
-      } else if (apiResult.status === 'failed' || apiResult.status === 'error') {
+      } else if (isFailureStatus(apiResult.status)) {
         finalStatus = 'failed';
-        // Langsung kembalikan saldo jika provider langsung menolak
-        rawDb.prepare('UPDATE users SET balance = balance + ? WHERE email = ?').run(price, currentUser.email);
-        rawDb.prepare(`
-          INSERT INTO transactions (email, type, amount, description, balance, created_at)
-          VALUES (?, 'IN', ?, ?, (SELECT balance FROM users WHERE email = ?), ?)
-        `).run(
-          currentUser.email,
-          price,
-          `Refund Pembelian Gagal: ${product.product_name} - ${infoMsg}`,
-          currentUser.email,
-          new Date().toLocaleString('id-ID', { timeZone: 'Asia/Jakarta' }) + ' WIB'
+        await executeAutoRefund(
+          rawDb,
+          {
+            reqid,
+            email: currentUser.email,
+            selling_price: price,
+            product_name: product.product_name,
+            customer_no
+          },
+          infoMsg,
+          'immediate_order_api',
+          sendTelegramLog,
+          appSettings
         );
-
-        const titleMsg = `Pembelian ${product.product_name} Gagal (Saldo Dikembalikan)`;
-        const bodyMsg = `Transaksi ke <b>${customer_no}</b> ditolak oleh server provider (${escapeHtml(infoMsg)}).<br>Saldo sebesar <b>Rp ${price.toLocaleString('id-ID')}</b> telah otomatis dikembalikan ke akun Anda.`;
-        rawDb.prepare(`
-          INSERT INTO inbox (email, title, message, date, read)
-          VALUES (?, ?, ?, ?, 0)
-        `).run(currentUser.email, titleMsg, bodyMsg, new Date().toLocaleString('id-ID', { timeZone: 'Asia/Jakarta' }) + ' WIB');
       }
 
       // Update transaksi di DB
       rawDb.prepare(`
         UPDATE ppob_transactions
-        SET status = ?, sn = ?, info = ?, detail = ?, raw_response = ?, updated_at = CURRENT_TIMESTAMP
+        SET status = CASE WHEN is_refunded = 1 THEN 'failed' ELSE ? END,
+            sn = COALESCE(NULLIF(?, ''), sn),
+            info = COALESCE(NULLIF(?, ''), info),
+            detail = COALESCE(NULLIF(?, ''), detail),
+            raw_response = ?,
+            updated_at = CURRENT_TIMESTAMP
         WHERE reqid = ?
       `).run(
         finalStatus,
@@ -374,13 +506,23 @@ async function handleTokoGorontaloRoutes(url, request, env, currentUser, appSett
 
           rawDb.prepare(`
             UPDATE ppob_transactions
-            SET status = ?, sn = ?, info = ?, detail = ?, updated_at = CURRENT_TIMESTAMP
+            SET status = CASE WHEN is_refunded = 1 THEN 'failed' ELSE ? END,
+                sn = COALESCE(NULLIF(?, ''), sn),
+                info = COALESCE(NULLIF(?, ''), info),
+                detail = COALESCE(NULLIF(?, ''), detail),
+                updated_at = CURRENT_TIMESTAMP
             WHERE reqid = ?
           `).run(newStatus, sn, liveStatus.info || order.info, liveStatus.detail || order.detail, reqid);
 
           order.status = newStatus;
           order.sn = sn;
           order.info = liveStatus.info || order.info;
+
+          // Auto-refund instan jika provider melaporkan status gagal saat live check
+          if (isFailureStatus(newStatus) || isFailureStatus(liveStatus.info)) {
+            await executeAutoRefund(rawDb, order, liveStatus.info || 'Gagal dari server provider', 'live_check', sendTelegramLog, appSettings);
+            order.status = 'failed';
+          }
         }
       } catch (err) {
         console.warn('[PPOB Live Check Error]:', err.message);
@@ -555,12 +697,40 @@ async function handleTokoGorontaloRoutes(url, request, env, currentUser, appSett
 
         rawDb.prepare(`
           UPDATE ppob_transactions
-          SET status = ?, sn = COALESCE(NULLIF(?, ''), sn), info = ?, detail = ?, updated_at = CURRENT_TIMESTAMP
+          SET status = CASE WHEN is_refunded = 1 THEN 'failed' ELSE ? END,
+              sn = COALESCE(NULLIF(?, ''), sn),
+              info = COALESCE(NULLIF(?, ''), info),
+              detail = COALESCE(NULLIF(?, ''), detail),
+              updated_at = CURRENT_TIMESTAMP
           WHERE reqid = ?
         `).run(newStatus, sn, live.info || '', live.detail || '', reqid);
+
+        // Auto-refund instan jika provider mengembalikan status gagal saat admin memeriksa
+        if (isFailureStatus(newStatus) || isFailureStatus(live.info)) {
+          const order = rawDb.prepare('SELECT * FROM ppob_transactions WHERE reqid = ?').get(reqid);
+          if (order) {
+            await executeAutoRefund(rawDb, order, live.info || 'Gagal dari server provider', 'admin_check', sendTelegramLog, appSettings);
+          }
+        }
       }
 
       return jsonResponse({ success: true, live });
+    }
+
+    // H. Manual Refund Pesanan dari Admin jika diperlukan
+    if (path === '/api/admin/tokogorontalo/orders/refund' && method === 'POST') {
+      const { reqid, reason } = await request.json();
+      if (!reqid) return jsonResponse({ success: false, message: 'reqid wajib diisi' }, 400);
+
+      const order = rawDb.prepare('SELECT * FROM ppob_transactions WHERE reqid = ?').get(reqid);
+      if (!order) return jsonResponse({ success: false, message: 'Pesanan tidak ditemukan' }, 404);
+
+      const result = await executeAutoRefund(rawDb, order, reason || 'Refund manual oleh Administrator', 'admin_manual', sendTelegramLog, appSettings);
+      if (result.refunded) {
+        return jsonResponse({ success: true, message: `Berhasil mengembalikan saldo Rp ${result.amount.toLocaleString('id-ID')} ke akun ${order.email}` });
+      } else {
+        return jsonResponse({ success: false, message: `Refund tidak dapat diproses: ${result.reason}` }, 400);
+      }
     }
 
     // H. Buat Tiket Deposit Saldo Host

@@ -148,6 +148,7 @@ CREATE TABLE IF NOT EXISTS ppob_transactions (
     info TEXT DEFAULT '',
     detail TEXT DEFAULT '',
     raw_response TEXT DEFAULT '',
+    is_refunded INTEGER DEFAULT 0,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
 );
