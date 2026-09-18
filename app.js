@@ -224,9 +224,9 @@ function buildEmailTemplate(title, bodyContent) {
         <style>
             body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; background-color: #f3f4f6; margin: 0; padding: 0; -webkit-font-smoothing: antialiased; }
             .wrapper { max-width: 600px; margin: 40px auto; background-color: #ffffff; border-radius: 12px; overflow: hidden; border: 1px solid #e5e7eb; box-shadow: 0 10px 25px rgba(0,0,0,0.05); }
-            .header { background-color: #1e3a8a; padding: 30px 40px; text-align: left; display: flex; align-items: center; }
-            .header img { width: 48px; height: 48px; border-radius: 50%; vertical-align: middle; border: 2px solid rgba(255,255,255,0.2); }
-            .header h1 { color: #ffffff; margin: 0 0 0 15px; font-size: 24px; font-weight: 800; display: inline-block; vertical-align: middle; letter-spacing: -0.5px; }
+            .header { background-color: #1e3a8a; padding: 25px 35px; text-align: left; display: flex; align-items: center; }
+            .header img { width: 48px; height: 48px; border-radius: 50%; vertical-align: middle; border: 2px solid rgba(255,255,255,0.3); background-color: #ffffff; object-fit: contain; }
+            .header h1 { color: #ffffff; margin: 0; font-size: 22px; font-weight: 800; display: inline-block; vertical-align: middle; letter-spacing: -0.5px; line-height: 1.2; }
             .content { padding: 40px; color: #374151; line-height: 1.6; font-size: 15px; }
             .content h2 { color: #111827; font-size: 20px; font-weight: 700; margin-top: 0; margin-bottom: 20px; border-bottom: 2px solid #f3f4f6; padding-bottom: 10px; }
             .content p { margin-bottom: 16px; }
@@ -244,7 +244,10 @@ function buildEmailTemplate(title, bodyContent) {
         <div class="wrapper">
             <div class="header">
                 <img src="${logoUrl}" alt="Logo Warung Pulsa">
-                <h1>Warung Pulsa</h1>
+                <div style="display:inline-block;vertical-align:middle;margin-left:14px;">
+                    <h1 style="margin:0;font-size:22px;color:#ffffff;line-height:1.2;font-weight:800;">Warung Pulsa</h1>
+                    <span style="font-size:11px;color:#fcd34d;font-weight:700;letter-spacing:1px;text-transform:uppercase;display:block;">✦ Cendana ✦</span>
+                </div>
             </div>
             <div class="content">
                 <h2>${title}</h2>
@@ -5695,18 +5698,23 @@ Total : Rp.${totalSaldo.toLocaleString("id-ID")}
       try {
         const fsModule = require('fs');
         const pathModule = require('path');
-        const logoFile = pathModule.join(__dirname, 'logo.png');
-        if (fsModule.existsSync(logoFile)) {
-          const logoBuffer = fsModule.readFileSync(logoFile);
-          return new Response(logoBuffer, {
+        const isFavicon = path === "/favicon.ico";
+        const targetFileName = isFavicon ? 'favicon.ico' : 'logo.png';
+        let targetFilePath = pathModule.join(__dirname, targetFileName);
+        if (!fsModule.existsSync(targetFilePath) && isFavicon) {
+          targetFilePath = pathModule.join(__dirname, 'logo.png');
+        }
+        if (fsModule.existsSync(targetFilePath)) {
+          const fileBuffer = fsModule.readFileSync(targetFilePath);
+          return new Response(fileBuffer, {
             headers: {
-              "Content-Type": "image/png",
+              "Content-Type": isFavicon && targetFilePath.endsWith('.ico') ? "image/x-icon" : "image/png",
               "Cache-Control": "public, max-age=86400"
             }
           });
         }
       } catch (errLogo) {
-        console.error('Gagal memuat logo.png:', errLogo.message);
+        console.error('Gagal memuat logo/favicon:', errLogo.message);
       }
     }
     if (path === "/qris-manual.jpg" || path === "/qris-shopee.jpg" || path === "/qris-gopay.jpg") {
@@ -5796,11 +5804,11 @@ Total : Rp.${totalSaldo.toLocaleString("id-ID")}
                         <div class="max-w-6xl mx-auto px-4 sm:px-6 py-3.5 flex items-center justify-between">
                             <div class="flex items-center gap-3">
                                 <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-sky-500 to-blue-600 p-0.5 shadow-md shadow-sky-500/20">
-                                    <img src="${LOGO_URL}" alt="Warung Pulsa Logo" class="w-full h-full object-cover rounded-[10px]">
+                                    <img src="${LOGO_URL}" alt="Warung Pulsa Logo" class="w-full h-full object-contain rounded-[10px] bg-white">
                                 </div>
                                 <div>
                                     <span class="text-xl font-extrabold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-slate-900 via-sky-800 to-blue-900 block leading-tight">Warung Pulsa</span>
-                                    <span class="text-[10px] uppercase font-bold tracking-widest text-slate-400 block">Cloud Infrastructure & Network</span>
+                                    <span class="text-[10px] uppercase font-bold tracking-widest text-amber-600 block">✦ Cendana ✦</span>
                                 </div>
                             </div>
                             <div class="flex items-center gap-2">
@@ -6209,20 +6217,20 @@ Total : Rp.${totalSaldo.toLocaleString("id-ID")}
         `;
     const renderLayout = /* @__PURE__ */ __name222((title, content) => {
       const metaTags = `
-                <meta name="title" content="${title} - Warung Pulsa">
-                <meta name="description" content="Warung Pulsa - Platform Agen Pulsa All Operator, Paket Data Internet, Token Listrik PLN, dan Top Up Saldo E-Wallet Otomatis 24 Jam Termurah.">
-                <meta name="keywords" content="Warung Pulsa, Pulsa Murah, Agen Pulsa, Beli Pulsa, Paket Data, Kuota Internet, Token PLN, Top Up E-Wallet, PPOB 24 Jam">
+                <meta name="title" content="${title} - Warung Pulsa Cendana">
+                <meta name="description" content="Warung Pulsa Cendana - Platform Agen Pulsa All Operator, Paket Data Internet, Token Listrik PLN, dan Top Up Saldo E-Wallet Otomatis 24 Jam Termurah.">
+                <meta name="keywords" content="Warung Pulsa Cendana, Warung Pulsa, Pulsa Murah, Agen Pulsa, Beli Pulsa, Paket Data, Kuota Internet, Token PLN, Top Up E-Wallet, PPOB 24 Jam">
                 <meta name="theme-color" content="#f8fafc">
                 <meta property="og:type" content="website">
                 <meta property="og:url" content="/">
-                <meta property="og:title" content="${title} | Warung Pulsa">
-                <meta property="og:description" content="Warung Pulsa - Platform Agen Pulsa All Operator, Paket Data Internet, Token Listrik PLN, dan Top Up Saldo E-Wallet Otomatis 24 Jam Termurah.">
+                <meta property="og:title" content="${title} | Warung Pulsa Cendana">
+                <meta property="og:description" content="Warung Pulsa Cendana - Platform Agen Pulsa All Operator, Paket Data Internet, Token Listrik PLN, dan Top Up Saldo E-Wallet Otomatis 24 Jam Termurah.">
                 <meta property="og:image" content="${LOGO_URL}">
-                <meta property="og:site_name" content="Warung Pulsa">
+                <meta property="og:site_name" content="Warung Pulsa Cendana">
                 <meta property="twitter:card" content="summary_large_image">
                 <meta property="twitter:url" content="/">
-                <meta property="twitter:title" content="${title} | Warung Pulsa">
-                <meta property="twitter:description" content="Warung Pulsa - Platform Agen Pulsa All Operator, Paket Data Internet, Token Listrik PLN, dan Top Up Saldo E-Wallet Otomatis 24 Jam Termurah.">
+                <meta property="twitter:title" content="${title} | Warung Pulsa Cendana">
+                <meta property="twitter:description" content="Warung Pulsa Cendana - Platform Agen Pulsa All Operator, Paket Data Internet, Token Listrik PLN, dan Top Up Saldo E-Wallet Otomatis 24 Jam Termurah.">
                 <meta property="twitter:image" content="${LOGO_URL}">`;
       if (currentUser) {
         const unreadCount = currentUser.inbox_unread_count || 0;
@@ -6232,9 +6240,11 @@ Total : Rp.${totalSaldo.toLocaleString("id-ID")}
                 <head>
                     <meta charset="UTF-8">
                     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-                    <title>${title} - Warung Pulsa</title>
+                    <title>${title} - Warung Pulsa Cendana</title>
                     ${metaTags}
+                    <link rel="icon" type="image/x-icon" href="/favicon.ico">
                     <link rel="icon" type="image/png" href="${LOGO_URL}">
+                    <link rel="apple-touch-icon" href="${LOGO_URL}">
                     <script src="https://cdn.tailwindcss.com"><\/script>
                     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"><\/script>
                     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"><\/script>
@@ -6306,7 +6316,7 @@ Total : Rp.${totalSaldo.toLocaleString("id-ID")}
                             <!-- Outer spinning ring -->
                             <div class="w-24 h-24 rounded-full border-4 border-sky-400/30 border-t-sky-500 animate-spin"></div>
                             <!-- Logo in the center -->
-                            <img src="${LOGO_URL}" alt="Logo" class="w-14 h-14 rounded-full absolute object-cover shadow-lg shadow-sky-500/20">
+                            <img src="${LOGO_URL}" alt="Logo" class="w-14 h-14 rounded-full absolute object-contain shadow-lg shadow-sky-500/20 bg-white p-1">
                         </div>
                         <h3 class="text-xl font-black text-white tracking-wider uppercase mb-2 animate-pulse">proses create akun...wait...</h3>
                         <p class="text-sm text-slate-200 font-medium">Mohon tunggu, jangan tutup atau memuat ulang halaman ini...</p>
@@ -6314,10 +6324,13 @@ Total : Rp.${totalSaldo.toLocaleString("id-ID")}
                     
                     <!-- FIX TUMPANG TINDIH NAVBAR PC: md:z-0 dan md:transform-none agar modal pop-up tampil di atas navbar -->
                     <aside id="sidebar" class="fixed md:static inset-y-0 left-0 w-64 bg-white border-r border-slate-200 flex flex-col z-40 md:z-0 transform -translate-x-full md:translate-x-0 md:transform-none transition-transform duration-300 ease-in-out shadow-lg md:shadow-none">
-                        <div class="p-5 border-b border-slate-200 flex items-center justify-between bg-white relative z-10">
+                        <div class="p-4 border-b border-slate-200 flex items-center justify-between bg-white relative z-10">
                             <a href="/" class="flex items-center gap-3">
-                                <img src="${LOGO_URL}" alt="Logo" class="w-8 h-8 rounded-full border border-slate-200">
-                                <span class="text-xl font-bold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-sky-600 to-blue-700">Warung Pulsa</span>
+                                <img src="${LOGO_URL}" alt="Logo" class="w-9 h-9 rounded-full border border-slate-200 object-contain shadow-xs bg-white">
+                                <div>
+                                    <span class="text-lg font-bold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-sky-600 to-blue-700 block leading-tight">Warung Pulsa</span>
+                                    <span class="text-[10px] font-bold text-amber-500 tracking-wider uppercase block">✦ Cendana ✦</span>
+                                </div>
                             </a>
                             <button onclick="toggleSidebar()" class="md:hidden text-slate-500 hover:text-slate-800 p-1 rounded-lg hover:bg-slate-100 transition">
                                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
@@ -6370,7 +6383,7 @@ Total : Rp.${totalSaldo.toLocaleString("id-ID")}
                         <header class="md:hidden bg-white border-b border-slate-200 p-4 flex items-center justify-between z-30 shadow-xs">
                             <div class="flex items-center gap-3">
                                 <button onclick="toggleSidebar()" class="pulse-hamburger p-1"><svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg></button>
-                                <img src="${LOGO_URL}" alt="Logo" class="w-7 h-7 rounded-full border border-slate-200">
+                                <img src="${LOGO_URL}" alt="Logo" class="w-8 h-8 rounded-full border border-slate-200 object-contain bg-white">
                                 <span class="text-lg font-bold text-slate-900 truncate">${title}</span>
                             </div>
                             ${unreadCount > 0 ? `<a href="/inbox" class="bg-sky-600 text-white text-[10px] font-bold px-2.5 py-1 rounded-full shadow-md shadow-sky-600/30 animate-pulse">${unreadCount} Baru</a>` : ""}
@@ -6378,8 +6391,8 @@ Total : Rp.${totalSaldo.toLocaleString("id-ID")}
                         <main class="flex-1 overflow-y-auto custom-scrollbar relative">
                             ${content}
                             <footer class="border-t border-slate-200 mt-12 py-8 text-center text-slate-500 text-xs flex items-center justify-center gap-2">
-                                <img src="${LOGO_URL}" alt="Logo" class="w-4 h-4 opacity-70 grayscale hover:grayscale-0 transition">
-                                <span>&copy; ${(/* @__PURE__ */ new Date()).getFullYear()} Warung Pulsa. Hak cipta dilindungi.</span>
+                                <img src="${LOGO_URL}" alt="Logo" class="w-5 h-5 opacity-80 hover:opacity-100 transition object-contain">
+                                <span>&copy; ${(/* @__PURE__ */ new Date()).getFullYear()} Warung Pulsa Cendana. Hak cipta dilindungi.</span>
                             </footer>
                         </main>
                     </div>
@@ -6399,9 +6412,11 @@ Total : Rp.${totalSaldo.toLocaleString("id-ID")}
                 <head>
                     <meta charset="UTF-8">
                     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-                    <title>${title} - Warung Pulsa</title>
+                    <title>${title} - Warung Pulsa Cendana</title>
                     ${metaTags}
+                    <link rel="icon" type="image/x-icon" href="/favicon.ico">
                     <link rel="icon" type="image/png" href="${LOGO_URL}">
+                    <link rel="apple-touch-icon" href="${LOGO_URL}">
                     <script src="https://cdn.tailwindcss.com"><\/script>
                     <script src="https://accounts.google.com/gsi/client" async defer><\/script>
                     <style>
@@ -6440,8 +6455,11 @@ Total : Rp.${totalSaldo.toLocaleString("id-ID")}
                     <nav class="bg-white/95 backdrop-blur-md border-b border-slate-200 sticky top-0 z-50 shadow-xs">
                         <div class="max-w-6xl mx-auto px-4 py-4 flex justify-between items-center">
                             <a href="/" class="flex items-center gap-3 group">
-                                <img src="${LOGO_URL}" alt="Logo" class="w-8 h-8 md:w-10 md:h-10 rounded-full border border-slate-200 shadow-sm group-hover:border-sky-500 transition duration-300">
-                                <span class="text-xl md:text-2xl font-bold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-cyan-600 via-sky-600 to-blue-700">Warung Pulsa</span>
+                                <img src="${LOGO_URL}" alt="Logo" class="w-10 h-10 md:w-11 md:h-11 rounded-full border border-slate-200 shadow-sm group-hover:border-sky-500 transition duration-300 object-contain bg-white">
+                                <div>
+                                    <span class="text-xl md:text-2xl font-bold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-cyan-600 via-sky-600 to-blue-700 block leading-tight">Warung Pulsa</span>
+                                    <span class="text-[10px] md:text-[11px] font-bold text-amber-500 uppercase tracking-widest block">✦ Cendana ✦</span>
+                                </div>
                             </a>
                             <div class="hidden md:flex gap-7 items-center text-sm font-semibold">
                                 <a href="/" class="text-slate-600 hover:text-sky-600 transition">Beranda</a>
@@ -6473,8 +6491,11 @@ Total : Rp.${totalSaldo.toLocaleString("id-ID")}
                         <div class="max-w-6xl mx-auto px-4 grid grid-cols-1 md:grid-cols-3 gap-10">
                             <div>
                                 <div class="flex items-center gap-3 mb-4">
-                                    <img src="${LOGO_URL}" alt="Logo" class="w-8 h-8 rounded-full border border-slate-200">
-                                    <h3 class="text-xl font-bold text-sky-600">Warung Pulsa</h3>
+                                    <img src="${LOGO_URL}" alt="Logo" class="w-9 h-9 rounded-full border border-slate-200 object-contain bg-white">
+                                    <div>
+                                        <h3 class="text-xl font-bold text-sky-600 leading-tight">Warung Pulsa</h3>
+                                        <span class="text-[10px] font-bold text-amber-500 uppercase tracking-widest block">✦ Cendana ✦</span>
+                                    </div>
                                 </div>
                                 <p class="text-slate-600 leading-relaxed text-sm">Pusat layanan Beli Pulsa All Operator, Paket Kuota Internet, Token Listrik PLN, dan Top Up Saldo E-Wallet otomatis 24 Jam dengan harga agen termurah dan transaksi instan.</p>
                             </div>
@@ -6498,7 +6519,7 @@ Total : Rp.${totalSaldo.toLocaleString("id-ID")}
                                 </ul>
                             </div>
                         </div>
-                        <div class="text-center text-slate-500 mt-10 pt-6 border-t border-slate-200 text-xs">&copy; ${(/* @__PURE__ */ new Date()).getFullYear()} Warung Pulsa. Hak cipta dilindungi.</div>
+                        <div class="text-center text-slate-500 mt-10 pt-6 border-t border-slate-200 text-xs">&copy; ${(/* @__PURE__ */ new Date()).getFullYear()} Warung Pulsa Cendana. Hak cipta dilindungi.</div>
                     </footer>
                 </body>
                 </html>`;
@@ -6819,14 +6840,14 @@ Total : Rp.${totalSaldo.toLocaleString("id-ID")}
             <div class="relative mx-auto mb-7 w-32 h-32 md:w-36 md:h-36 flex items-center justify-center float-logo">
                 <div class="absolute inset-0 bg-gradient-to-tr from-cyan-400 via-sky-500 to-blue-600 rounded-3xl blur-2xl opacity-40 glow-pulse"></div>
                 <div class="relative w-28 h-28 md:w-32 md:h-32 rounded-3xl p-2 bg-white border-2 border-sky-400/60 shadow-[0_10px_35px_rgba(14,165,233,0.25)] flex items-center justify-center overflow-hidden">
-                    <img src="${LOGO_URL}" alt="Logo Warung Pulsa" class="w-full h-full object-cover rounded-2xl">
+                    <img src="${LOGO_URL}" alt="Logo Warung Pulsa Cendana" class="w-full h-full object-contain">
                 </div>
             </div>
 
             <h1 class="text-2xl md:text-3xl font-black text-slate-900 tracking-tight">
                 Warung <span class="text-transparent bg-clip-text bg-gradient-to-r from-sky-600 to-blue-600">Pulsa</span>
             </h1>
-            <p class="text-xs font-bold tracking-widest text-sky-600 uppercase mt-1 mb-3">Portal Member & Layanan Digital</p>
+            <p class="text-xs font-bold tracking-widest text-amber-500 uppercase mt-1 mb-3">✦ Cendana ✦</p>
             <p class="text-xs md:text-sm text-slate-600 leading-relaxed mb-8">Silakan masuk menggunakan akun Google Anda untuk mengakses dashboard, isi saldo otomatis, dan bertransaksi Pulsa & PPOB 24 Jam nonstop.</p>
 
             <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200 mb-7 flex flex-col items-center justify-center shadow-inner">
@@ -6913,14 +6934,14 @@ Total : Rp.${totalSaldo.toLocaleString("id-ID")}
                                 <div class="relative mx-auto mb-6 w-24 h-24 md:w-28 md:h-28 flex items-center justify-center">
                                     <div class="absolute inset-0 bg-gradient-to-tr from-cyan-400 via-sky-500 to-blue-600 rounded-3xl blur-xl opacity-35 animate-pulse"></div>
                                     <div class="relative w-20 h-20 md:w-24 md:h-24 rounded-3xl p-1 bg-white border-2 border-sky-400/70 shadow-lg flex items-center justify-center overflow-hidden">
-                                        <img src="${LOGO_URL}" alt="Logo Warung Pulsa" class="w-full h-full object-cover rounded-2xl">
+                                        <img src="${LOGO_URL}" alt="Logo Warung Pulsa Cendana" class="w-full h-full object-contain">
                                     </div>
                                 </div>
 
                                 <h3 class="text-2xl font-black text-slate-900 tracking-tight mb-1">
                                     Masuk ke <span class="text-transparent bg-clip-text bg-gradient-to-r from-sky-600 to-blue-600">Warung Pulsa</span>
                                 </h3>
-                                <p class="text-xs font-bold text-sky-600 uppercase tracking-widest mb-3">Portal Transaksi &amp; Member Resmi</p>
+                                <p class="text-xs font-bold text-amber-500 uppercase tracking-widest mb-3">✦ Cendana ✦</p>
                                 <p class="text-xs md:text-sm text-slate-500 mb-6 leading-relaxed">
                                     Masuk menggunakan akun Google dengan 1 klik untuk mulai mengisi saldo otomatis dan bertransaksi 24 jam nonstop.
                                 </p>

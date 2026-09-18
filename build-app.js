@@ -31,7 +31,7 @@ code = code.replace(
 // 4. Buat LOGO_URL dinamis dari environment
 code = code.replace(
   /var LOGO_URL = \"[^\"]+\";/,
-  'var LOGO_URL = (typeof process !== "undefined" && process.env && process.env.LOGO_URL) || "https://srpcom.cloud/logo%20tuban%20store.png";'
+  'var LOGO_URL = (typeof process !== "undefined" && process.env && process.env.LOGO_URL) || "/logo.png";'
 );
 
 // Simpan HANYA ke folder 37 warungpulsa
