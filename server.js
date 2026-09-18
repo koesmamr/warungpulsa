@@ -21,10 +21,12 @@ const env = {
   BACKUP_PASSWORD: process.env.BACKUP_PASSWORD || 'Suruan646@Suruan',
   GAS_WEB_APP_URL: activeGasUrl,
   GAS_SECRET_TOKEN: process.env.GAS_SECRET_TOKEN || 'RahasiaVPNtuban123!',
+  DEEPSEEK_API_KEY: process.env.DEEPSEEK_API_KEY || 'sk-b15cc5eb16174519a61761b8a0d9011e',
+  GEMINI_API_KEY: process.env.GEMINI_API_KEY || 'AIzaSyA40MjBzjfrz5USxbksV61M-B6aMc3NP_0',
   AI: {
     run: async (model, opts) => {
-      console.warn('[AI] Cloudflare Workers AI tidak aktif di VPS. Mengalihkan ke Gemini API.');
-      return { response: 'Layanan AI dialihkan ke Google Gemini.' };
+      console.warn('[AI] Cloudflare Workers AI tidak aktif di VPS. Mengalihkan ke DeepSeek API.');
+      return { response: 'Layanan AI dialihkan ke DeepSeek AI.' };
     }
   },
   BACKUP_BUCKET: null

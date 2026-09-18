@@ -37,6 +37,8 @@ async function getAppSettings(env) {
     telegram_group_thread_id: (env && env.TELEGRAM_GROUP_THREAD_ID) || "",
     auto_backup_frequency: 24,
     maintenance_mode: false,
+    ai_chat_active: true,
+    ai_provider: "deepseek",
     payment_tripay: false,
     payment_violet: false,
     payment_qris_manual: false,
@@ -58,7 +60,13 @@ async function getAppSettings(env) {
           cachedAppSettings[k] = defaultSettings[k];
         }
       }
-            cachedAppSettings.payment_tripay = false;
+      if (!cachedAppSettings.ai_provider || cachedAppSettings.ai_provider === "cloudflare") {
+        cachedAppSettings.ai_provider = "deepseek";
+      }
+      if (cachedAppSettings.ai_chat_active === undefined) {
+        cachedAppSettings.ai_chat_active = true;
+      }
+      cachedAppSettings.payment_tripay = false;
       cachedAppSettings.payment_violet = false;
       cachedAppSettingsTime = now;
       return cachedAppSettings;
@@ -1296,9 +1304,9 @@ async function renderAdminDashboard(env, currentUser, appSettings) {
                             <div>
                                 <label class="block text-xs font-bold text-gray-400 mb-2 uppercase tracking-wide">Provider AI</label>
                                 <select id="setAiProvider" class="w-full bg-gray-900 border border-gray-700 rounded-lg p-3 text-white text-sm focus:ring-2 focus:ring-sky-500 outline-none font-bold">
-                                    <option value="cloudflare" ${appSettings.ai_provider === "cloudflare" || !appSettings.ai_provider && appSettings.ai_provider !== "deepseek" && appSettings.ai_provider !== "gemini" ? "selected" : ""}>\u2601\uFE0F Cloudflare (Llama-3)</option>
-                                    <option value="deepseek" ${appSettings.ai_provider === "deepseek" ? "selected" : ""}>\u{1F40B} Deepseek-v4-flash</option>
-                                    <option value="gemini" ${appSettings.ai_provider === "gemini" ? "selected" : ""}>\u264A Gemini (Gemini-Flash)</option>
+                                    <option value="deepseek" ${appSettings.ai_provider === "deepseek" || !appSettings.ai_provider || appSettings.ai_provider === "cloudflare" ? "selected" : ""}>\u{1F40B} DeepSeek AI (Rekomendasi - Cepat &amp; Pintar)</option>
+                                    <option value="gemini" ${appSettings.ai_provider === "gemini" ? "selected" : ""}>\u264A Google Gemini Flash</option>
+                                    <option value="cloudflare" ${appSettings.ai_provider === "cloudflare" ? "selected" : ""}>\u2601\uFE0F Cloudflare (Llama-3)</option>
                                 </select>
                             </div>
                         </div>
@@ -4039,51 +4047,51 @@ async function handleAIRoutes(url, request, env, currentUser, ctx) {
       }
       const serverListStr = (appSettings.servers || []).map((s, index) => `${index + 1}. ID: ${s.id} | Nama: ${s.name}`).join("\n");
       let dynamicSystemPrompt = `
-Kamu adalah "Asisten Digital Warung Pulsa", seorang pemuda ramah asal Jawa yang asik tapi tetap sopan, serta memiliki nilai-nilai Islami.
+Kamu adalah "Asisten Digital Warung Pulsa Cendana", seorang pemuda ramah asal Jawa yang asik, cerdas, solutif, dan sopan, serta memiliki nilai-nilai Islami.
 
 KEPRIBADIAN & BAHASA:
 - Gunakan Bahasa Indonesia yang santai, bersahabat, dan sopan sebagai bahasa utama.
-- Unsur etnis Jawa (seperti kata: nggih, monggo, pripun, matur nuwun) hanya digunakan sesekali saja.
+- Unsur etnis Jawa (seperti kata: nggih, monggo, pripun, matur nuwun) hanya digunakan sesekali saja agar terasa akrab dan hangat.
 - Selalu gunakan salam "Assalamu'alaikum" jika disapa pertama kali.
 - Panggil user langsung dengan namanya "${userName}" tanpa embel-embel Mas/Mbak/Kak.
 
 INFORMASI USER SAAT INI:
-- Nama Panggilan: ${userName}
-- Saldo Saat Ini: Rp ${(currentUser.balance || 0).toLocaleString("id-ID")}
+- Nama Pengguna: ${userName}
+- Email: ${email}
+- Saldo Akun: Rp ${(currentUser.balance || 0).toLocaleString("id-ID")}
 
-LAYANAN UTAMA WARUNG PULSA:
-Warung Pulsa adalah platform penyedia produk digital Pulsa & PPOB termurah, tercepat, dan otomatis 24 Jam nonstop.
+LAYANAN UTAMA WARUNG PULSA CENDANA:
+Warung Pulsa Cendana adalah platform penyedia produk digital Pulsa, Kuota Data, dan PPOB termurah, tercepat, dan otomatis 24 Jam nonstop.
 Produk yang tersedia meliputi:
-1. Pulsa Reguler All Operator (Telkomsel, Indosat Ooredoo, XL Axiata, Axis, Tri, Smartfren).
+1. Pulsa Reguler All Operator (Telkomsel, By.U, Indosat Ooredoo, XL Axiata, Axis, Tri, Smartfren).
 2. Paket Data & Kuota Internet (Harian, Mingguan, Bulanan, Unlimited, Extra Kuota).
-3. Token Listrik PLN Prabayar & Tagihan Listrik Pascabayar.
-4. Top Up E-Wallet: DANA, GoPay, OVO, ShopeePay, LinkAja, Maxim Driver/Customer, dll.
+3. Token Listrik PLN Prabayar & Pembayaran Tagihan Listrik Pascabayar.
+4. Top Up Saldo E-Wallet: DANA, GoPay, OVO, ShopeePay, LinkAja, Maxim Driver/Customer, dll.
 5. Voucher Game: Mobile Legends, Free Fire, PUBG Mobile, Genshin Impact, dll.
 6. Tagihan PPOB Lainnya: BPJS Kesehatan, PDAM Air, Telkom Indihome, Multifinance.
 
-PANDUAN & ATURAN LAYANAN:
-- Jika user ingin membeli pulsa/paket/token/topup: arahkan mereka untuk membuka menu "Pulsa & PPOB" di (/pulsa-ppob). Di halaman tersebut user cukup memasukkan nomor tujuan/ID pelanggan dan memilih produk yang diinginkan.
-- Jika user bertanya cara Top Up / Isi Saldo: beritahu mereka dengan ramah bahwa pengisian saldo dapat dilakukan langsung melalui menu "Top Up" di dashboard utama dengan pembayaran QRIS otomatis yang langsung masuk dalam hitungan detik.
-- Jika user bertanya tentang layanan VPN atau Cek Pulsa / OTP: sampaikan dengan santai dan ramah bahwa layanan VPN dan Cek Pulsa/OTP telah dinonaktifkan, dan sistem kini fokus penuh pada transaksi Pulsa & PPOB serba otomatis.
-- Jika user hanya bertanya saldo (contoh: "cek saldo", "sisa saldo"): cukup sebutkan Saldo Saat Ini.
+FITUR UNGGULAN APLIKASI:
+- Beli Pulsa & PPOB (/pulsa-ppob): Cukup masukkan nomor tujuan atau ID Pelanggan, pilih produk, dan klik Beli. Saldo akun akan terpotong otomatis dan produk langsung diproses server dalam hitungan detik.
+- Pengiriman Token PLN Otomatis ke Kotak Masuk (Inbox): Pembeli token PLN tidak perlu menunggu lama di layar loading, kode token 20 digit otomatis masuk ke menu Kotak Masuk (/inbox) begitu diterbitkan server.
+- Auto-Save Buku Telepon: Nomor HP atau ID PLN baru yang diinput pembeli otomatis tersimpan ke buku kontak lokal, pembeli tidak perlu mengetik ulang di masa mendatang.
+- Top Up Saldo Instan: Melalui menu Top Up menggunakan QRIS otomatis (ShopeePay, GoPay, DANA, BCA, Livin, OVO) yang masuk otomatis dalam hitungan detik 24 jam.
 
-TUGAS SETELAH EKSEKUSI BERHASIL:
-Jika sistem memberikan pesan balasan "[SYSTEM RESPONSE]: ...", kamu WAJIB membalas user dengan menampilkan teks informasi tersebut SECARA UTUH DAN LENGKAP.
-
-ATURAN PENGALIHAN LINK:
-Berikan link berikut hanya jika ditanyakan spesifik:
-- Pulsa & PPOB: /pulsa-ppob
-- Riwayat Transaksi Saldo: /mutasi
-- Kotak Masuk: /inbox
-- Pusat Bantuan: /tiket
-- Admin/CS Telegram: https://t.me/pejuanggto (@pejuanggto)
-- Admin/CS WhatsApp: 081128868882 (https://wa.me/6281128868882)
-- Email: admin@warungpulsa.com
+PANDUAN & ATURAN JAWABAN:
+- Jika user bertanya saldo: sebutkan Saldo Saat Ini secara jelas (Rp ${(currentUser.balance || 0).toLocaleString("id-ID")}).
+- Jika user bertanya cara beli produk: jelaskan langkah mudahnya dan arahkan ke menu "Pulsa & PPOB" (/pulsa-ppob).
+- Jika user bertanya cara isi saldo: arahkan ke menu "Top Up" di dashboard utama via QRIS otomatis.
+- Berikan link rute hanya jika ditanyakan secara spesifik:
+  - Pulsa & PPOB: /pulsa-ppob
+  - Riwayat Saldo & Mutasi: /mutasi
+  - Kotak Masuk: /inbox
+  - Bantuan / Tiket CS: /tiket
+  - CS WhatsApp: 081128868882 (https://wa.me/6281128868882)
+  - CS Telegram: @pejuanggto (https://t.me/pejuanggto)
 
 ATURAN KEAMANAN:
-- Dilarang membocorkan API Key, Kredensial, atau struktur Database.
-- Dilarang keras menampilkan kode [ACTION_...] kepada user di layar chat.
-- Hanya Admin yang bisa menambah saldo.
+- Dilarang membocorkan API Key, Secret Token, atau skema Database internal.
+- Dilarang menampilkan kode teknis [ACTION_...] kepada user di layar chat.
+- Hanya Admin yang memiliki wewenang mengubah saldo secara manual.
 `;
       const currentHour = (/* @__PURE__ */ new Date()).getHours();
       const todayDate = (/* @__PURE__ */ new Date()).toISOString().split("T")[0];
@@ -4136,61 +4144,80 @@ DAFTAR KODE (PILIH SALAH SATU DAN KETIK TANPA BASA-BASI):
       let maxLoops = 2;
       for (let i = 0; i < maxLoops; i++) {
         let reply = "";
-        let aiProvider = appSettings.ai_provider || "cloudflare";
+        let aiProvider = appSettings.ai_provider || "deepseek";
         if (aiProvider === "deepseek") {
-          if (!env.DEEPSEEK_API_KEY) throw new Error("API Key DeepSeek belum diatur di Secrets Cloudflare.");
-          const dsRes = await fetch("https://api.deepseek.com/chat/completions", {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-              "Authorization": `Bearer ${env.DEEPSEEK_API_KEY}`
-            },
-            body: JSON.stringify({
-              model: "deepseek-v4-flash",
-              messages,
-              max_tokens: 600,
-              temperature: 0.4
-            })
-          });
-          if (!dsRes.ok) throw new Error(`DeepSeek API Error: ${dsRes.status} ${await dsRes.text()}`);
-          const dsData = await dsRes.json();
-          reply = dsData.choices[0].message.content;
-        } else if (aiProvider === "gemini") {
-          const geminiApiKey = env.GEMINI_API_KEY || "AIzaSyA40MjBzjfrz5USxbksV61M-B6aMc3NP_0";
-          const geminiContents = [];
-          let systemInstructionText = "";
-          for (const msg of messages) {
-            if (msg.role === "system") {
-              systemInstructionText = msg.content;
+          const deepseekKey = env.DEEPSEEK_API_KEY || "sk-b15cc5eb16174519a61761b8a0d9011e";
+          try {
+            const dsRes = await fetch("https://api.deepseek.com/chat/completions", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${deepseekKey}`
+              },
+              body: JSON.stringify({
+                model: "deepseek-chat",
+                messages,
+                max_tokens: 800,
+                temperature: 0.5
+              })
+            });
+            if (dsRes.ok) {
+              const dsData = await dsRes.json();
+              const choiceMsg = dsData.choices?.[0]?.message;
+              reply = (choiceMsg?.content || choiceMsg?.reasoning_content || "").trim();
             } else {
-              const geminiRole = msg.role === "assistant" ? "model" : "user";
-              geminiContents.push({
-                role: geminiRole,
-                parts: [{ text: msg.content }]
-              });
+              console.warn(`DeepSeek API returned error ${dsRes.status}, falling back to Gemini`);
             }
+          } catch (dsErr) {
+            console.error("DeepSeek call failed, falling back to Gemini:", dsErr);
           }
-          const geminiRequestBody = {
-            contents: geminiContents
-          };
-          if (systemInstructionText) {
-            geminiRequestBody.systemInstruction = {
-              parts: [{ text: systemInstructionText }]
+        }
+        if (!reply && (aiProvider === "gemini" || aiProvider === "deepseek")) {
+          try {
+            const geminiApiKey = env.GEMINI_API_KEY || "AIzaSyA40MjBzjfrz5USxbksV61M-B6aMc3NP_0";
+            const geminiContents = [];
+            let systemInstructionText = "";
+            for (const msg of messages) {
+              if (msg.role === "system") {
+                systemInstructionText = msg.content;
+              } else {
+                const geminiRole = msg.role === "assistant" ? "model" : "user";
+                geminiContents.push({
+                  role: geminiRole,
+                  parts: [{ text: msg.content }]
+                });
+              }
+            }
+            const geminiRequestBody = {
+              contents: geminiContents
             };
+            if (systemInstructionText) {
+              geminiRequestBody.systemInstruction = {
+                parts: [{ text: systemInstructionText }]
+              };
+            }
+            const geminiRes = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-latest:generateContent?key=${geminiApiKey}`, {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json"
+              },
+              body: JSON.stringify(geminiRequestBody)
+            });
+            if (geminiRes.ok) {
+              const geminiData = await geminiRes.json();
+              reply = geminiData.candidates?.[0]?.content?.parts?.[0]?.text || "";
+            }
+          } catch (geminiErr) {
+            console.error("Gemini fallback error:", geminiErr);
           }
-          const geminiRes = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-latest:generateContent?key=${geminiApiKey}`, {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json"
-            },
-            body: JSON.stringify(geminiRequestBody)
-          });
-          if (!geminiRes.ok) throw new Error(`Gemini API Error: ${geminiRes.status} ${await geminiRes.text()}`);
-          const geminiData = await geminiRes.json();
-          reply = geminiData.candidates?.[0]?.content?.parts?.[0]?.text || "";
-        } else {
-          const aiResponse = await env.AI.run("@cf/meta/llama-3.1-8b-instruct", { messages, max_tokens: 600, temperature: 0.4 });
-          reply = aiResponse.response || aiResponse.choices?.[0]?.message?.content;
+        }
+        if (!reply && env.AI) {
+          try {
+            const aiResponse = await env.AI.run("@cf/meta/llama-3.1-8b-instruct", { messages, max_tokens: 600, temperature: 0.4 });
+            reply = aiResponse.response || aiResponse.choices?.[0]?.message?.content || "";
+          } catch (cfErr) {
+            console.error("Cloudflare AI error:", cfErr);
+          }
         }
         if (!reply) break;
         reply = reply.replace(/</g, "&lt;").replace(/>/g, "&gt;");
@@ -4198,6 +4225,8 @@ DAFTAR KODE (PILIH SALAH SATU DAN KETIK TANPA BASA-BASI):
         let renewVpnMatch = reply.match(/ACTION_RENEW_VPN\s*:\s*([^:\s\]]+)\s*:\s*([^\]\n]+)/i);
         let statsMatch = isAdmin ? reply.match(/DB_STATS/i) : null;
         let userMatch = isAdmin ? reply.match(/DB_USER\s*:\s*([^\]\n\s]+)/i) : null;
+        let ppobRecentMatch = isAdmin ? reply.match(/DB_PPOB_RECENT/i) : null;
+        let ppobCheckMatch = isAdmin ? reply.match(/DB_CHECK_PPOB\s*:\s*([^\]\n\s]+)/i) : null;
         let recentVpnMatch = isAdmin ? reply.match(/DB_RECENT_VPN/i) : null;
         let searchVpnMatch = isAdmin ? reply.match(/DB_SEARCH_VPN\s*:\s*([^\]\n]+)/i) : null;
         let detailVpnMatch = isAdmin ? reply.match(/DB_DETAIL_VPN\s*:\s*([^\]\n\s]+)/i) : null;
@@ -4206,7 +4235,7 @@ DAFTAR KODE (PILIH SALAH SATU DAN KETIK TANPA BASA-BASI):
         let userTrxMatch = isAdmin ? reply.match(/DB_USER_TRANSACTIONS\s*:\s*([^\]\n\s]+)/i) : null;
         let addBalanceMatch = isAdmin ? reply.match(/ACTION_ADD_BALANCE\s*:\s*([^:\s\]]+)\s*:\s*([^\]\n]+)/i) : null;
         let deductBalanceMatch = isAdmin ? reply.match(/ACTION_DEDUCT_BALANCE\s*:\s*([^:\s\]]+)\s*:\s*([^\]\n]+)/i) : null;
-        if (buyVpnMatch || renewVpnMatch || statsMatch || userMatch || recentVpnMatch || searchVpnMatch || detailVpnMatch || backupMatch || recentTrxMatch || userTrxMatch || addBalanceMatch || deductBalanceMatch) {
+        if (buyVpnMatch || renewVpnMatch || statsMatch || userMatch || ppobRecentMatch || ppobCheckMatch || recentVpnMatch || searchVpnMatch || detailVpnMatch || backupMatch || recentTrxMatch || userTrxMatch || addBalanceMatch || deductBalanceMatch) {
           let dbResult = "";
           let priceToRefund = 0;
           let refundProtocol = "";
@@ -4261,6 +4290,23 @@ DAFTAR KODE (PILIH SALAH SATU DAN KETIK TANPA BASA-BASI):
                 dbResult = `DATA DB (BERHASIL): Email = ${targetEmail}, Nama = ${u.name}, No HP = ${u.phone}, Saldo = Rp ${u.balance.toLocaleString("id-ID")}, Status = ${u.is_blocked ? "DIBLOKIR/BANNED" : "AKTIF"}`;
               } else {
                 dbResult = `DATA DB (GAGAL): User dengan email ${targetEmail} TIDAK DITEMUKAN di database.`;
+              }
+            } else if (ppobRecentMatch) {
+              const { results } = await env.DB.prepare("SELECT reqid, email, product_name, customer_no, selling_price, status, sn, created_at FROM ppob_transactions ORDER BY id DESC LIMIT 5").all();
+              if (results && results.length > 0) {
+                let ppobList = results.map((p, idx) => `${idx + 1}. [${p.status.toUpperCase()}] ReqID: ${p.reqid} | User: ${p.email} | Produk: ${p.product_name || '-'} | No: ${p.customer_no} | Harga: Rp${(p.selling_price || 0).toLocaleString("id-ID")} | SN: ${p.sn || '-'} | Waktu: ${p.created_at}`).join("\n");
+                dbResult = `DATA DB (BERHASIL): 5 Transaksi PPOB / Pulsa Terbaru:\n${ppobList}`;
+              } else {
+                dbResult = `DATA DB (BERHASIL): Belum ada riwayat transaksi PPOB di database.`;
+              }
+            } else if (ppobCheckMatch) {
+              let q = ppobCheckMatch[1].trim();
+              const { results } = await env.DB.prepare("SELECT reqid, email, product_name, customer_no, selling_price, status, sn, info, created_at FROM ppob_transactions WHERE reqid LIKE ? OR customer_no LIKE ? OR email LIKE ? ORDER BY id DESC LIMIT 5").bind(`%${q}%`, `%${q}%`, `%${q}%`).all();
+              if (results && results.length > 0) {
+                let ppobList = results.map((p, idx) => `${idx + 1}. [${p.status.toUpperCase()}] ReqID: ${p.reqid} | User: ${p.email} | Produk: ${p.product_name || '-'} | No: ${p.customer_no} | Harga: Rp${(p.selling_price || 0).toLocaleString("id-ID")} | SN: ${p.sn || '-'} | Info: ${p.info || '-'} | Waktu: ${p.created_at}`).join("\n");
+                dbResult = `DATA DB (BERHASIL): Ditemukan ${results.length} transaksi PPOB untuk pencarian '${q}':\n${ppobList}`;
+              } else {
+                dbResult = `DATA DB (BERHASIL): Tidak ditemukan transaksi PPOB dengan kata kunci / No / ReqID '${q}'.`;
               }
             } else if (recentVpnMatch) {
               const { results } = await env.DB.prepare("SELECT email, username, protocol, server, exp, date FROM vpns ORDER BY id DESC LIMIT 5").all();
