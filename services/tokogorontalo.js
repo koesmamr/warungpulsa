@@ -165,8 +165,8 @@ class TokoGorontaloService {
   categorizeProduct(p) {
     const text = ((p.namaprovider || '') + ' ' + (p.namaproduk || '') + ' ' + (p.kodeproduk || '')).toLowerCase();
     
-    // Khusus Wifi ID
-    if (text.includes('wifi') || text.includes('wifi_id') || text.includes('wifi id') || text.includes('wifiid')) {
+    // Khusus Voucher Wifi ID Telkom (bukan Wifi Modem)
+    if ((text.includes('wifi id') || text.includes('wifi_id') || text.includes('wifi-id') || text.includes('wifiid')) && !text.includes('modem')) {
       return { category: 'wifiID', brand: 'WIFIID' };
     }
 
@@ -184,13 +184,14 @@ class TokoGorontaloService {
     else if (text.includes('ovo')) brand = 'OVO';
     else if (text.includes('shopee')) brand = 'SHOPEEPAY';
     else if (text.includes('mobile legend') || text.includes('free fire') || text.includes('pubg') || text.includes('game')) brand = 'GAME';
+    else if (text.includes('modem')) brand = 'MODEM';
 
     let category = 'lainnya';
     if (brand === 'PLN') category = 'pln';
     else if (['DANA', 'GOPAY', 'OVO', 'SHOPEEPAY'].includes(brand) || text.includes('ewallet') || text.includes('wallet')) category = 'ewallet';
     else if (brand === 'GAME') category = 'game';
     else if (text.includes('pulsa') || text.includes('reguler') || text.includes('transfer')) category = 'pulsa';
-    else if (text.includes('data') || text.includes('kuota') || text.includes('aigo') || text.includes('bronet') || text.includes('gb') || text.includes('unlimited') || text.includes('voucher') || text.includes('actvoc') || text.includes('combo')) category = 'data';
+    else if (text.includes('data') || text.includes('kuota') || text.includes('modem') || text.includes('aigo') || text.includes('bronet') || text.includes('gb') || text.includes('unlimited') || text.includes('voucher') || text.includes('actvoc') || text.includes('combo')) category = 'data';
     else if (['TELKOMSEL', 'INDOSAT', 'XL', 'AXIS', 'TRI', 'SMARTFREN', 'BYU'].includes(brand)) category = 'pulsa';
 
     return { category, brand };
