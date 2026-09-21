@@ -824,6 +824,15 @@ async function handleTokoGorontaloRoutes(url, request, env, currentUser, appSett
   }
 
   if (path === '/api/ppob/products' && method === 'GET') {
+    // Auto-fix DB: Pastikan produk modem tidak masuk ke kategori wifiID
+    try {
+      rawDb.prepare(`
+        UPDATE ppob_products 
+        SET category = 'data', brand = 'MODEM' 
+        WHERE category = 'wifiID' AND (product_name LIKE '%Modem%' OR provider_name LIKE '%Modem%' OR product_code LIKE 'adh%' OR product_code LIKE 'adw%')
+      `).run();
+    } catch(e) {}
+
     let category = url.searchParams.get('category') || '';
     let brand = url.searchParams.get('brand') || '';
     const phone = url.searchParams.get('phone') || '';
@@ -837,10 +846,15 @@ async function handleTokoGorontaloRoutes(url, request, env, currentUser, appSett
     const params = [];
 
     if (category) {
-      sql += ' AND category = ?';
-      params.push(category);
+      if (category === 'wifiID') {
+        sql += ' AND (category = ? OR brand = "WIFIID") AND product_name NOT LIKE "%modem%" AND product_code NOT LIKE "adh%" AND product_code NOT LIKE "adw%"';
+        params.push(category);
+      } else {
+        sql += ' AND category = ?';
+        params.push(category);
+      }
     }
-    if (brand) {
+    if (brand && category !== 'wifiID') {
       sql += ' AND brand = ?';
       params.push(brand.toUpperCase());
     }
@@ -2041,9 +2055,17 @@ function renderPPOBContent(currentUser, appSettings, env) {
               loading.classList.add('hidden');
 
               if (data.success && data.products && data.products.length > 0) {
-                  cachedProducts = data.products;
-                  countBadge.innerText = data.products.length + ' produk tersedia';
-                  renderProductCards(data.products);
+                  let list = data.products;
+                  if (currentCategory === 'wifiID') {
+                      list = list.filter(p => {
+                          const code = (p.product_code || '').toLowerCase();
+                          const name = (p.product_name || '').toLowerCase();
+                          return !code.startsWith('adh') && !code.startsWith('adw') && !name.includes('modem');
+                      });
+                  }
+                  cachedProducts = list;
+                  countBadge.innerText = list.length + ' produk tersedia';
+                  renderProductCards(list);
               } else {
                   empty.classList.remove('hidden');
                   countBadge.innerText = '0 produk';
@@ -2143,7 +2165,16 @@ function renderPPOBContent(currentUser, appSettings, env) {
           const remaining = getTrxRemainingSeconds();
           const isLocked = remaining > 0;
 
-          grid.innerHTML = products.map(p => \`
+          let list = products;
+          if (currentCategory === 'wifiID') {
+              list = products.filter(p => {
+                  const code = (p.product_code || '').toLowerCase();
+                  const name = (p.product_name || '').toLowerCase();
+                  return !code.startsWith('adh') && !code.startsWith('adw') && !name.includes('modem');
+              });
+          }
+
+          grid.innerHTML = list.map(p => \`
               <div onclick="handleCardClick('\${p.product_code}')" class="p-5 rounded-2xl border-2 border-slate-200 bg-white hover:border-sky-500 hover:shadow-lg transition cursor-pointer flex flex-col justify-between group">
                   <div>
                       <div class="flex items-start justify-between gap-2 mb-2">
