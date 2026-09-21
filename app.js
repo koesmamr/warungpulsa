@@ -8166,11 +8166,19 @@ Waktu: ${getWIBTime()}`, appSettings);
           return jsonResponse({ success: false, message: "Nominal top up tidak valid. Minimal Rp 1.000 dan Maksimal Rp 10.000.000." }, 400);
         }
         if (selectedMethod === "shopeepay" || selectedMethod === "auto") {
-          const uniqueCode = Math.floor(Math.random() * 99) + 1;
+          // Cari kode unik yang belum dipakai oleh invoice UNPAID saat ini untuk menghindari benturan
+          const unpaidRows = await env.DB.prepare("SELECT amount FROM invoices WHERE status = 'UNPAID' AND amount >= ? AND amount <= ?").bind(amount + 1, amount + 999).all().catch(() => ({ results: [] }));
+          const usedAmounts = new Set((unpaidRows.results || []).map((r) => r.amount));
+          let uniqueCode = Math.floor(Math.random() * 99) + 1;
+          for (let attempt = 0; attempt < 100; attempt++) {
+            if (!usedAmounts.has(amount + uniqueCode)) break;
+            uniqueCode = Math.floor(Math.random() * 99) + 1;
+          }
           const nominalUnik = amount + uniqueCode;
-          const refKode = "AGPSHOPEE-" + Date.now() + "-" + Math.floor(Math.random() * 1000);
           const tx = await createShopeePayTransaction(env, appSettings, nominalUnik);
           if (tx.success) {
+            const orderSn = tx.order_sn || "";
+            const refKode = orderSn ? `AGPSHOPEE-${orderSn}-${Date.now()}` : `AGPSHOPEE-${Date.now()}-${Math.floor(Math.random() * 1000)}`;
             await env.DB.prepare("INSERT INTO invoices (ref, email, amount, status, date) VALUES (?, ?, ?, 'UNPAID', ?)").bind(refKode, currentUser.email, nominalUnik, getWIBTime()).run();
             const qrDisplay = tx.qr_url || ("https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=" + encodeURIComponent(tx.qr_string || ''));
             const pendingMsg = `Halo! Anda telah membuat permintaan Top Up Saldo via QRIS Otomatis sebesar <b class="text-green-400">Rp ${nominalUnik.toLocaleString("id-ID")}</b> (Termasuk kode unik Rp ${uniqueCode}).<br><br>Silakan scan QRIS di bawah ini sebelum batas waktu habis (Maksimal 15 Menit):<br><br><div style="text-align: center; margin: 15px 0;"><img src="${qrDisplay}" alt="QRIS Otomatis" style="max-width:220px;border-radius:12px;margin:auto;display:block;border:1px solid #374151;"></div><br><span style="font-size:10px;color:#6b7280;">No. Ref: ${refKode}</span><div style="text-align: center; margin-top: 20px;"><button onclick="checkInboxPayment('${refKode}', true)" class="bg-green-600 hover:bg-green-500 text-white font-bold py-3 px-6 rounded-xl text-sm transition shadow-lg inline-flex items-center gap-2 cursor-pointer border border-green-400/30 hover:scale-105"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg> 🔍 Cek Status Pembayaran</button><div class="mt-2 text-xs text-yellow-400/80 font-mono flex items-center justify-center gap-1.5"><span class="relative flex h-2 w-2"><span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-yellow-400 opacity-75"></span><span class="relative inline-flex rounded-full h-2 w-2 bg-yellow-500"></span></span> Deteksi live aktif di latar belakang...</div></div>`;
@@ -8197,11 +8205,19 @@ Status: UNPAID PENDING`, appSettings));
           }
         }
         if (selectedMethod === "gopay" || (selectedMethod === "auto" && appSettings.payment_gopay)) {
-          const uniqueCode = Math.floor(Math.random() * 99) + 1;
+          // Cari kode unik yang belum dipakai oleh invoice UNPAID saat ini untuk menghindari benturan
+          const unpaidRows = await env.DB.prepare("SELECT amount FROM invoices WHERE status = 'UNPAID' AND amount >= ? AND amount <= ?").bind(amount + 1, amount + 999).all().catch(() => ({ results: [] }));
+          const usedAmounts = new Set((unpaidRows.results || []).map((r) => r.amount));
+          let uniqueCode = Math.floor(Math.random() * 99) + 1;
+          for (let attempt = 0; attempt < 100; attempt++) {
+            if (!usedAmounts.has(amount + uniqueCode)) break;
+            uniqueCode = Math.floor(Math.random() * 99) + 1;
+          }
           const nominalUnik = amount + uniqueCode;
-          const refKode = "AGPGOPAY-" + Date.now() + "-" + Math.floor(Math.random() * 1000);
           const tx = await createGoPayTransaction(env, appSettings, nominalUnik);
           if (tx.success) {
+            const txId = tx.transaction_id || "";
+            const refKode = txId ? `AGPGOPAY-${txId}-${Date.now()}` : `AGPGOPAY-${Date.now()}-${Math.floor(Math.random() * 1000)}`;
             await env.DB.prepare("INSERT INTO invoices (ref, email, amount, status, date) VALUES (?, ?, ?, 'UNPAID', ?)").bind(refKode, currentUser.email, nominalUnik, getWIBTime()).run();
             const qrDisplay = tx.qr_url || ("https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=" + encodeURIComponent(tx.qr_string || ''));
             const pendingMsg = `Halo! Anda telah membuat permintaan Top Up Saldo via GoPay sebesar <b class="text-green-400">Rp ${nominalUnik.toLocaleString("id-ID")}</b> (Termasuk kode unik Rp ${uniqueCode}).<br><br>Silakan scan QRIS GoPay di bawah ini sebelum batas waktu habis (Maksimal 15 Menit):<br><br><div style="text-align: center; margin: 15px 0;"><img src="${qrDisplay}" alt="QRIS GoPay" style="max-width:220px;border-radius:12px;margin:auto;display:block;border:1px solid #374151;"></div><br><span style="font-size:10px;color:#6b7280;">No. Ref: ${refKode}</span><div style="text-align: center; margin-top: 20px;"><button onclick="checkInboxPayment('${refKode}', true)" class="bg-green-600 hover:bg-green-500 text-white font-bold py-3 px-6 rounded-xl text-sm transition shadow-lg inline-flex items-center gap-2 cursor-pointer border border-green-400/30 hover:scale-105"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg> 🔍 Cek Status Pembayaran</button><div class="mt-2 text-xs text-yellow-400/80 font-mono flex items-center justify-center gap-1.5"><span class="relative flex h-2 w-2"><span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-yellow-400 opacity-75"></span><span class="relative inline-flex rounded-full h-2 w-2 bg-yellow-500"></span></span> Deteksi live aktif di latar belakang...</div></div>`;
@@ -8350,10 +8366,19 @@ Stack: ${e.stack || ""}`, appSettings);
         const amount = bodyObj.transaction?.amount || bodyObj.amount || bodyObj.data?.amount;
         const status = String(bodyObj.transaction?.status || bodyObj.status || bodyObj.transaction_status || bodyObj.data?.status || "").toLowerCase();
         const issuer = String(bodyObj.transaction?.issuer || bodyObj.issuer || "").toLowerCase();
-        const isMoneyIn = bodyObj.is_money_in === true || bodyObj.data?.is_money_in === true;
+        const isPaidField = bodyObj.paid === true || bodyObj.transaction?.paid === true || bodyObj.data?.paid === true;
+        const isStatusSuccess = (status === "settlement" || status === "success" || status === "paid" || status === "1") && status !== "pending" && status !== "2";
 
-        if (amount && (status === "settlement" || status === "success" || status === "paid" || status === "1" || isMoneyIn)) {
-          const invoice = await env.DB.prepare("SELECT * FROM invoices WHERE amount = ? AND status = 'UNPAID' AND (ref LIKE 'AGP%' OR ref LIKE 'AGPGOPAY%' OR ref LIKE 'AGPSHOPEE%') ORDER BY rowid DESC LIMIT 1").bind(parseInt(amount)).first();
+        // HANYA proses jika status BENAR-BENAR sukses / paid (BUKAN sekadar is_money_in yang selalu true di QRIS)
+        if (amount && (isStatusSuccess || isPaidField)) {
+          const orderSn = bodyObj.transaction?.order_sn || bodyObj.order_sn || bodyObj.data?.order_sn;
+          let invoice = null;
+          if (orderSn) {
+            invoice = await env.DB.prepare("SELECT * FROM invoices WHERE status = 'UNPAID' AND (ref LIKE ? OR ref = ?)").bind(`%${orderSn}%`, orderSn).first();
+          }
+          if (!invoice) {
+            invoice = await env.DB.prepare("SELECT * FROM invoices WHERE amount = ? AND status = 'UNPAID' AND (ref LIKE 'AGP%' OR ref LIKE 'AGPGOPAY%' OR ref LIKE 'AGPSHOPEE%') ORDER BY rowid DESC LIMIT 1").bind(parseInt(amount)).first();
+          }
           if (invoice) {
             const updateInvoice = await env.DB.prepare("UPDATE invoices SET status = 'PAID' WHERE ref = ? AND status = 'UNPAID'").bind(invoice.ref).run();
             if (updateInvoice.meta.changes === 1) {
@@ -8394,8 +8419,22 @@ Stack: ${e.stack || ""}`, appSettings);
           bodyData = await request.json().catch(() => ({}));
         }
         const ref = bodyData.ref || url.searchParams.get("ref");
-        const orderSn = bodyData.order_sn || url.searchParams.get("order_sn");
-        const transactionId = bodyData.transaction_id || url.searchParams.get("transaction_id");
+        let orderSn = bodyData.order_sn || url.searchParams.get("order_sn");
+        let transactionId = bodyData.transaction_id || url.searchParams.get("transaction_id");
+
+        // Ekstrak order_sn atau transaction_id langsung dari ref jika ada
+        if (!orderSn && ref && ref.startsWith("AGPSHOPEE-")) {
+          const parts = ref.split("-");
+          if (parts.length >= 3 && parts[1].length >= 10 && !isNaN(parts[1])) {
+            orderSn = parts[1];
+          }
+        }
+        if (!transactionId && ref && ref.startsWith("AGPGOPAY-")) {
+          const parts = ref.split("-");
+          if (parts.length >= 3 && parts[1].length >= 8) {
+            transactionId = parts[1];
+          }
+        }
 
         if (!ref) return jsonResponse({ success: false, message: "Parameter ref diperlukan." }, 400);
 
@@ -8413,56 +8452,94 @@ Stack: ${e.stack || ""}`, appSettings);
 
         if (ref.startsWith("AGPSHOPEE-") || ref.startsWith("AGP-")) {
           gatewayType = "ShopeePay";
-          // 1. Cek spesifik order_sn jika tersedia
+          let isExplicitPending = false;
+
+          // 1. Cek spesifik order_sn via API status
           if (orderSn) {
             const statusData = await checkShopeePayStatus(env, appSettings, orderSn);
-            if (statusData && (statusData.paid === true || statusData.status === "success" || statusData.order_status === 1 || statusData.status === 1)) {
-              isPaid = true;
-            }
-          }
-          // 2. Cek riwayat mutasi ShopeePay via /shopeepay/transactions
-          if (!isPaid) {
-            const shopeeTrx = await checkShopeePayTransactions(env, appSettings);
-            for (const trx of shopeeTrx) {
-              const trxAmount = parseInt(trx.amount);
-              const isMoneyIn = trx.is_money_in === true || trx.status === 1 || String(trx.title || "").includes("Pembayaran") || String(trx.status || "").toLowerCase() === "settlement";
-              if (trxAmount === parseInt(invoice.amount) && isMoneyIn) {
+            if (statusData) {
+              // HANYA jika paid === true DAN status === "success" atau order_status === 1
+              if (statusData.paid === true && (statusData.status === "success" || statusData.order_status === 1)) {
                 isPaid = true;
-                break;
+              } else if (statusData.paid === false || statusData.status === "pending" || statusData.order_status === 2) {
+                // JIKA statusData mengonfirmasi pesanan masih pending, TANDAI dan JANGAN fallback yang bisa salah deteksi
+                isExplicitPending = true;
               }
             }
           }
-          // 3. Fallback cek ke /transactions jika perlu
-          if (!isPaid) {
-            const generalTrx = await checkGoPayTransactions(env, appSettings);
-            for (const trx of generalTrx) {
-              const trxStatus = String(trx.status || "").toLowerCase();
-              if (parseInt(trx.amount) === parseInt(invoice.amount) && (trxStatus === "settlement" || trxStatus === "success" || trxStatus === "paid")) {
-                isPaid = true;
-                break;
+
+          // 2. Cek riwayat mutasi ShopeePay via /shopeepay/transactions
+          // HANYA jika belum terkonfirmasi paid DAN tidak berstatus pending eksplisit
+          if (!isPaid && !isExplicitPending) {
+            const shopeeTrx = await checkShopeePayTransactions(env, appSettings);
+            for (const trx of shopeeTrx) {
+              const trxAmount = parseInt(trx.amount);
+              // PENTING: Di AutoGoPay ShopeePay:
+              // - status: 1 = SUCCESS / SUDAH DIBAYAR
+              // - status: 2 = PENDING / BELUM DIBAYAR
+              // - is_money_in bernilai true untuk SEMUA pesanan (termasuk yang belum dibayar!)
+              // - title "Pembayaran Diterima" ada di SEMUA pesanan (termasuk yang belum dibayar!)
+              // Oleh karena itu, HANYA terima trx.status === 1 atau settlement/success, dan TOLAK status 2 / pending!
+              const isTrxSuccess = (trx.status === 1 || String(trx.status).toLowerCase() === "settlement" || String(trx.status).toLowerCase() === "success") && trx.status !== 2 && String(trx.status).toLowerCase() !== "pending";
+              if (!isTrxSuccess) continue;
+
+              if (orderSn) {
+                // Jika order_sn ada, pastikan order_sn SAMA PERSIS
+                if (trx.order_sn === orderSn && trxAmount === parseInt(invoice.amount)) {
+                  isPaid = true;
+                  break;
+                }
+              } else {
+                // Fallback untuk invoice lama tanpa order_sn:
+                // Nominal sama dan order_sn transaksi ini belum pernah di-klaim oleh invoice PAID manapun di DB
+                if (trxAmount === parseInt(invoice.amount)) {
+                  const alreadyClaimed = await env.DB.prepare("SELECT ref FROM invoices WHERE status = 'PAID' AND (ref LIKE ? OR ref = ?)").bind(`%${trx.order_sn}%`, trx.order_sn).first();
+                  if (!alreadyClaimed) {
+                    isPaid = true;
+                    break;
+                  }
+                }
               }
             }
           }
         } else if (ref.startsWith("AGPGOPAY-")) {
           gatewayType = "GoPay";
+          let isExplicitPending = false;
+
           // 1. Cek spesifik transaction_id jika ada
           if (transactionId) {
             const statusData = await checkGoPayStatus(env, appSettings, transactionId);
             if (statusData) {
               const txStatus = String(statusData.transaction_status || statusData.status || "").toLowerCase();
-              if (txStatus === "settlement" || txStatus === "success") {
+              if (statusData.paid === true || txStatus === "settlement" || txStatus === "success") {
                 isPaid = true;
+              } else if (txStatus === "pending" || statusData.paid === false) {
+                isExplicitPending = true;
               }
             }
           }
-          // 2. Cek riwayat transaksi GoPay
-          if (!isPaid) {
+
+          // 2. Cek riwayat transaksi GoPay jika belum terdeteksi
+          if (!isPaid && !isExplicitPending) {
             const gopayTrx = await checkGoPayTransactions(env, appSettings);
             for (const trx of gopayTrx) {
               const trxStatus = String(trx.status || "").toLowerCase();
-              if (parseInt(trx.amount) === parseInt(invoice.amount) && (trxStatus === "settlement" || trxStatus === "success" || trxStatus === "paid")) {
-                isPaid = true;
-                break;
+              const isTrxSuccess = (trxStatus === "settlement" || trxStatus === "success" || trxStatus === "paid" || trx.status === 1) && trxStatus !== "pending" && trx.status !== 2;
+              if (!isTrxSuccess) continue;
+
+              if (transactionId) {
+                if ((trx.transaction_id === transactionId || trx.order_id === transactionId) && parseInt(trx.amount) === parseInt(invoice.amount)) {
+                  isPaid = true;
+                  break;
+                }
+              } else {
+                if (parseInt(trx.amount) === parseInt(invoice.amount)) {
+                  const alreadyClaimed = await env.DB.prepare("SELECT ref FROM invoices WHERE status = 'PAID' AND (ref LIKE ? OR ref = ?)").bind(`%${trx.transaction_id || trx.order_id}%`, trx.transaction_id || trx.order_id).first();
+                  if (!alreadyClaimed) {
+                    isPaid = true;
+                    break;
+                  }
+                }
               }
             }
           }
