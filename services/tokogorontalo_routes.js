@@ -319,7 +319,9 @@ function autoSaveBuyerContact(rawDb, { email, customer_no, product, service }) {
     const nameLower = (product && product.product_name ? String(product.product_name) : '').toLowerCase();
 
     if (!category) {
-      if (nameLower.includes('pln') || nameLower.includes('token') || nameLower.includes('listrik')) {
+      if (nameLower.includes('wifi')) {
+        category = 'wifiID';
+      } else if (nameLower.includes('pln') || nameLower.includes('token') || nameLower.includes('listrik')) {
         category = 'pln';
       } else if (nameLower.includes('dana') || nameLower.includes('gopay') || nameLower.includes('ovo') || nameLower.includes('shopee')) {
         category = 'ewallet';
@@ -345,11 +347,14 @@ function autoSaveBuyerContact(rawDb, { email, customer_no, product, service }) {
       'GOPAY': 'GoPay',
       'OVO': 'OVO',
       'SHOPEEPAY': 'ShopeePay',
-      'GAME': 'Game'
+      'GAME': 'Game',
+      'WIFIID': 'Wifi ID'
     };
 
     let label = '';
-    if (category === 'pln') {
+    if (category === 'wifiid' || category === 'wifiid') {
+      label = 'Wifi ID Penerima';
+    } else if (category === 'pln') {
       label = 'Token PLN';
     } else if (category === 'pulsa' || category === 'data') {
       let detected = brand;
@@ -806,7 +811,8 @@ async function handleTokoGorontaloRoutes(url, request, env, currentUser, appSett
       { id: 'data', name: 'Paket Data', icon: 'wifi', desc: 'Kuota & internet murah' },
       { id: 'pln', name: 'Token PLN', icon: 'zap', desc: 'Listrik prabayar 24/7' },
       { id: 'ewallet', name: 'Top Up E-Wallet', icon: 'wallet', desc: 'DANA, GoPay, OVO, ShopeePay' },
-      { id: 'game', name: 'Voucher Game', icon: 'gamepad', desc: 'ML, FF, PUBG, Roblox dll' }
+      { id: 'game', name: 'Voucher Game', icon: 'gamepad', desc: 'ML, FF, PUBG, Roblox dll' },
+      { id: 'wifiID', name: 'Wifi ID', icon: 'rss', desc: 'Voucher Wifi ID Telkom' }
     ];
     return jsonResponse({ success: true, categories });
   }
@@ -896,7 +902,7 @@ async function handleTokoGorontaloRoutes(url, request, env, currentUser, appSett
         if (label.length > 60) label = label.substring(0, 60);
 
         category = (category || 'all').toString().trim().toLowerCase();
-        const validCats = ['pulsa', 'data', 'pln', 'ewallet', 'game', 'all'];
+        const validCats = ['pulsa', 'data', 'pln', 'ewallet', 'game', 'wifiid', 'wifiID', 'all'];
         if (!validCats.includes(category)) category = 'all';
 
         // Cek apakah nomor sudah tersimpan untuk user ini
@@ -1598,7 +1604,7 @@ function renderPPOBContent(currentUser, appSettings, env) {
       </div>
 
       <!-- Kategori Tab Selector -->
-      <div class="grid grid-cols-2 sm:grid-cols-5 gap-3 mb-8">
+      <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 mb-8">
           <button onclick="selectCategory('pulsa')" id="cat-btn-pulsa" class="cat-btn active flex flex-col items-center justify-center p-4 rounded-2xl border-2 transition font-bold text-center gap-2 shadow-xs cursor-pointer">
               <div class="w-12 h-12 rounded-xl bg-sky-100 text-sky-600 flex items-center justify-center">
                   <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"></path></svg>
@@ -1623,11 +1629,17 @@ function renderPPOBContent(currentUser, appSettings, env) {
               </div>
               <span class="text-sm">E-Wallet</span>
           </button>
-          <button onclick="selectCategory('game')" id="cat-btn-game" class="cat-btn flex flex-col items-center justify-center p-4 rounded-2xl border-2 transition font-bold text-center gap-2 shadow-xs cursor-pointer col-span-2 sm:col-span-1">
+          <button onclick="selectCategory('game')" id="cat-btn-game" class="cat-btn flex flex-col items-center justify-center p-4 rounded-2xl border-2 transition font-bold text-center gap-2 shadow-xs cursor-pointer">
               <div class="w-12 h-12 rounded-xl bg-rose-100 text-rose-600 flex items-center justify-center">
                   <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 5v2m0 4v2m0 4v2M5 5a2 2 0 00-2 2v3a2 2 0 110 4v3a2 2 0 002 2h14a2 2 0 002-2v-3a2 2 0 110-4V7a2 2 0 00-2-2H5z"></path></svg>
               </div>
               <span class="text-sm">Voucher Game</span>
+          </button>
+          <button onclick="selectCategory('wifiID')" id="cat-btn-wifiID" class="cat-btn flex flex-col items-center justify-center p-4 rounded-2xl border-2 transition font-bold text-center gap-2 shadow-xs cursor-pointer">
+              <div class="w-12 h-12 rounded-xl bg-cyan-100 text-cyan-600 flex items-center justify-center">
+                  <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.111 16.404a5.5 5.5 0 017.778 0M12 20h.01m-7.08-7.071c3.904-3.905 10.236-3.905 14.141 0M1.394 9.393c5.857-5.857 15.355-5.857 21.213 0"></path></svg>
+              </div>
+              <span class="text-sm">Wifi ID</span>
           </button>
       </div>
 
@@ -1776,6 +1788,7 @@ function renderPPOBContent(currentUser, appSettings, env) {
                       <button type="button" onclick="setModalContactCategory('pln')" class="modal-cat-pill px-3 py-1 rounded-lg text-xs font-bold transition cursor-pointer bg-slate-100 text-slate-600 hover:bg-slate-200" data-cat="pln">⚡ PLN</button>
                       <button type="button" onclick="setModalContactCategory('ewallet')" class="modal-cat-pill px-3 py-1 rounded-lg text-xs font-bold transition cursor-pointer bg-slate-100 text-slate-600 hover:bg-slate-200" data-cat="ewallet">💳 E-Wallet</button>
                       <button type="button" onclick="setModalContactCategory('game')" class="modal-cat-pill px-3 py-1 rounded-lg text-xs font-bold transition cursor-pointer bg-slate-100 text-slate-600 hover:bg-slate-200" data-cat="game">🎮 Game</button>
+                      <button type="button" onclick="setModalContactCategory('wifiID')" class="modal-cat-pill px-3 py-1 rounded-lg text-xs font-bold transition cursor-pointer bg-slate-100 text-slate-600 hover:bg-slate-200" data-cat="wifiID">📶 Wifi ID</button>
                   </div>
               </div>
 
@@ -1812,6 +1825,7 @@ function renderPPOBContent(currentUser, appSettings, env) {
                                   <option value="pln">⚡ Token PLN</option>
                                   <option value="ewallet">💳 E-Wallet</option>
                                   <option value="game">🎮 Voucher Game</option>
+                                  <option value="wifiID">📶 Wifi ID</option>
                                   <option value="all">🌐 Semua Kategori</option>
                               </select>
                           </div>
@@ -1890,7 +1904,8 @@ function renderPPOBContent(currentUser, appSettings, env) {
           'GOPAY': 'GoPay',
           'OVO': 'OVO',
           'SHOPEEPAY': 'ShopeePay',
-          'GAME': 'Game'
+          'GAME': 'Game',
+          'WIFIID': 'Wifi ID'
       };
 
       function selectCategory(cat) {
@@ -1932,6 +1947,13 @@ function renderPPOBContent(currentUser, appSettings, env) {
               renderBrandPills(['GAME']);
               currentBrand = 'GAME';
               fetchProducts();
+          } else if (cat === 'wifiID') {
+              label.innerText = 'Nomor HP / WhatsApp Penerima Voucher';
+              input.placeholder = 'Contoh: 081234567890 (Untuk kirim kode voucher)';
+              helper.innerText = 'Kode voucher Wifi ID & username/password akan langsung dikirim ke Inbox & WhatsApp penerima.';
+              brandContainer.classList.add('hidden');
+              currentBrand = 'WIFIID';
+              fetchProducts();
           } else {
               label.innerText = 'Nomor Handphone Tujuan';
               input.placeholder = 'Contoh: 081234567890';
@@ -1970,7 +1992,7 @@ function renderPPOBContent(currentUser, appSettings, env) {
           const badge = document.getElementById('operatorBadge');
           const nameSpan = document.getElementById('operatorName');
 
-          if (currentCategory === 'pln' || currentCategory === 'ewallet' || currentCategory === 'game') {
+          if (currentCategory === 'pln' || currentCategory === 'ewallet' || currentCategory === 'game' || currentCategory === 'wifiID') {
               badge.classList.add('hidden');
               return;
           }
@@ -2358,6 +2380,7 @@ function renderPPOBContent(currentUser, appSettings, env) {
               case 'pln': return '⚡';
               case 'ewallet': return '💳';
               case 'game': return '🎮';
+              case 'wifiid': return '📶';
               case 'pulsa':
               case 'data': return '📱';
               default: return '⭐';
@@ -2371,6 +2394,7 @@ function renderPPOBContent(currentUser, appSettings, env) {
               case 'data': return 'DATA';
               case 'ewallet': return 'E-WALLET';
               case 'game': return 'GAME';
+              case 'wifiid': return 'WIFI ID';
               default: return 'SEMUA';
           }
       }
@@ -2390,6 +2414,7 @@ function renderPPOBContent(currentUser, appSettings, env) {
               if (currentCategory === 'pulsa' || currentCategory === 'data') return c.category === 'pulsa' || c.category === 'data';
               if (currentCategory === 'ewallet') return c.category === 'ewallet';
               if (currentCategory === 'game') return c.category === 'game';
+              if (currentCategory === 'wifiID') return c.category === 'wifiid' || c.category === 'wifiID';
               return true;
           });
 
@@ -2438,7 +2463,7 @@ function renderPPOBContent(currentUser, appSettings, env) {
               input.classList.remove('ring-4', 'ring-sky-200');
           }, 600);
 
-          if (currentCategory === 'pln' || currentCategory === 'ewallet' || currentCategory === 'game') {
+          if (currentCategory === 'pln' || currentCategory === 'ewallet' || currentCategory === 'game' || currentCategory === 'wifiID') {
               fetchProducts();
           } else {
               handlePhoneInput(customerNo);
@@ -2742,8 +2767,9 @@ function renderPPOBContent(currentUser, appSettings, env) {
       // Initial run & Hash router for F5 / Refresh
       function getValidCategoryFromHash() {
           const hashCat = (window.location.hash || '').replace('#', '').toLowerCase();
-          const validCats = ['pulsa', 'data', 'pln', 'ewallet', 'game'];
-          return validCats.includes(hashCat) ? hashCat : 'pulsa';
+          const validCats = ['pulsa', 'data', 'pln', 'ewallet', 'game', 'wifiid'];
+          if (!validCats.includes(hashCat)) return 'pulsa';
+          return hashCat === 'wifiid' ? 'wifiID' : hashCat;
       }
 
       window.addEventListener('DOMContentLoaded', () => {
@@ -2888,6 +2914,7 @@ function renderTokoGorontaloAdminModal() {
                           <option value="pln">Token PLN</option>
                           <option value="ewallet">E-Wallet</option>
                           <option value="game">Voucher Game</option>
+                          <option value="wifiID">Wifi ID</option>
                       </select>
                       <select id="tgFilterBrand" onchange="loadAdminProducts(1)" class="bg-white border border-slate-200 rounded-xl px-3 py-2 text-xs font-semibold text-slate-700">
                           <option value="">Semua Operator / Brand</option>
@@ -2903,6 +2930,7 @@ function renderTokoGorontaloAdminModal() {
                           <option value="GOPAY">GoPay</option>
                           <option value="OVO">OVO</option>
                           <option value="SHOPEEPAY">ShopeePay</option>
+                          <option value="WIFIID">Wifi ID</option>
                       </select>
                   </div>
                   <div class="w-full md:w-64">

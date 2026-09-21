@@ -165,6 +165,11 @@ class TokoGorontaloService {
   categorizeProduct(p) {
     const text = ((p.namaprovider || '') + ' ' + (p.namaproduk || '') + ' ' + (p.kodeproduk || '')).toLowerCase();
     
+    // Khusus Wifi ID
+    if (text.includes('wifi') || text.includes('wifi_id') || text.includes('wifi id') || text.includes('wifiid')) {
+      return { category: 'wifiID', brand: 'WIFIID' };
+    }
+
     let brand = 'LAINNYA';
     if (text.includes('byu') || text.includes('by.u')) brand = 'BYU';
     else if (text.includes('telkomsel') || text.includes('tsel') || text.includes('simp')) brand = 'TELKOMSEL';
