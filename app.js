@@ -39,6 +39,7 @@ async function getAppSettings(env) {
     maintenance_mode: false,
     ai_chat_active: true,
     ai_provider: "deepseek",
+    ai_hourly_limit: 10,
     payment_tripay: false,
     payment_violet: false,
     payment_qris_manual: false,
@@ -65,6 +66,9 @@ async function getAppSettings(env) {
       }
       if (cachedAppSettings.ai_chat_active === undefined) {
         cachedAppSettings.ai_chat_active = true;
+      }
+      if (!cachedAppSettings.ai_hourly_limit) {
+        cachedAppSettings.ai_hourly_limit = 10;
       }
       cachedAppSettings.payment_tripay = false;
       cachedAppSettings.payment_violet = false;
@@ -1309,6 +1313,10 @@ async function renderAdminDashboard(env, currentUser, appSettings) {
                                     <option value="cloudflare" ${appSettings.ai_provider === "cloudflare" ? "selected" : ""}>\u2601\uFE0F Cloudflare (Llama-3)</option>
                                 </select>
                             </div>
+                            <div>
+                                <label class="block text-xs font-bold text-gray-400 mb-2 uppercase tracking-wide">Batas Chat per Jam (Hemat Token)</label>
+                                <input type="number" id="setAiHourlyLimit" value="${appSettings.ai_hourly_limit || 10}" min="1" max="100" class="w-full bg-gray-900 border border-gray-700 rounded-lg p-3 text-white text-sm focus:ring-2 focus:ring-sky-500 outline-none font-bold" placeholder="10">
+                            </div>
                         </div>
                         <div class="mt-3 pt-3 border-t border-gray-800 space-y-3">
                             <div>
@@ -2224,6 +2232,7 @@ async function renderAdminDashboard(env, currentUser, appSettings) {
                     gopay_qris_static: document.getElementById('setGopayQrisStatic') ? document.getElementById('setGopayQrisStatic').value.trim() : '',
                     ai_chat_active: document.getElementById('setAiActive').value === 'true',
                     ai_provider: document.getElementById('setAiProvider').value,
+                    ai_hourly_limit: document.getElementById('setAiHourlyLimit') ? (parseInt(document.getElementById('setAiHourlyLimit').value) || 10) : 10,
                     telegram_bot_token: document.getElementById('setTgToken').value,
                     telegram_channel_id: document.getElementById('setTgChatId').value,
                     auto_backup_frequency: parseInt(document.getElementById('setBackupFreq').value),
@@ -3147,8 +3156,8 @@ Waktu: ${getWIBTime()}`, updatedSettings);
   }
   if (url.pathname === "/api/admin/settings" && request.method === "POST") {
     try {
-      const { payment_tripay, payment_violet, payment_qris_manual, payment_shopeepay, payment_gopay, autogopay_api_key, shopeepay_qris_static, gopay_qris_static, ai_chat_active, ai_provider, price_per_day, script_price_per_day, kmsp_markup, telegram_bot_token, telegram_channel_id, auto_backup_frequency, maintenance_mode, servers } = await request.json();
-      const settingStr = JSON.stringify({ payment_tripay, payment_violet, payment_qris_manual, payment_shopeepay, payment_gopay, autogopay_api_key, shopeepay_qris_static, gopay_qris_static, ai_chat_active, ai_provider, price_per_day, script_price_per_day, kmsp_markup, telegram_bot_token, telegram_channel_id, auto_backup_frequency, maintenance_mode, servers });
+      const { payment_tripay, payment_violet, payment_qris_manual, payment_shopeepay, payment_gopay, autogopay_api_key, shopeepay_qris_static, gopay_qris_static, ai_chat_active, ai_provider, ai_hourly_limit, price_per_day, script_price_per_day, kmsp_markup, telegram_bot_token, telegram_channel_id, auto_backup_frequency, maintenance_mode, servers } = await request.json();
+      const settingStr = JSON.stringify({ payment_tripay, payment_violet, payment_qris_manual, payment_shopeepay, payment_gopay, autogopay_api_key, shopeepay_qris_static, gopay_qris_static, ai_chat_active, ai_provider, ai_hourly_limit: parseInt(ai_hourly_limit) || 10, price_per_day, script_price_per_day, kmsp_markup, telegram_bot_token, telegram_channel_id, auto_backup_frequency, maintenance_mode, servers });
       const existing = await env.DB.prepare("SELECT key FROM settings WHERE key = 'app'").first();
       if (existing) await env.DB.prepare("UPDATE settings SET value = ? WHERE key = 'app'").bind(settingStr).run();
       else await env.DB.prepare("INSERT INTO settings (key, value) VALUES ('app', ?)").bind(settingStr).run();
@@ -4103,8 +4112,9 @@ ATURAN KEAMANAN:
         if (usage.slot !== slotKey) {
           await env.DB.prepare("UPDATE ai_usage SET count = 1, slot = ? WHERE email = ?").bind(slotKey, email).run();
         } else {
-          if (usage.count >= 50 && !isAdmin) {
-            return jsonResponse({ success: false, message: "Waduh, batas chat AI sudah mencapai limit (Maks 50x per jam). Coba lagi jam depan ya!" }, 429);
+          const hourlyLimit = parseInt(appSettings.ai_hourly_limit) || 10;
+          if (usage.count >= hourlyLimit && !isAdmin) {
+            return jsonResponse({ success: false, message: `Waduh, batas chat AI kamu sudah mencapai batas maksimal (${hourlyLimit}x per jam). Coba lagi jam depan ya!` }, 429);
           }
           await env.DB.prepare("UPDATE ai_usage SET count = count + 1 WHERE email = ?").bind(email).run();
         }
@@ -4139,7 +4149,8 @@ DAFTAR KODE (PILIH SALAH SATU DAN KETIK TANPA BASA-BASI):
 - Mutasi User: [DB_USER_TRANSACTIONS:email]
 ===================================`;
       }
-      let messages = [{ role: "system", content: dynamicSystemPrompt }, ...history.slice(-20), { role: "user", content: message }];
+      // Pangkas ke 6 riwayat terakhir untuk menghemat token input hingga 70%
+      let messages = [{ role: "system", content: dynamicSystemPrompt }, ...history.slice(-6), { role: "user", content: message }];
       let finalReply = `Mohon maaf ${userName}, server AI saya sedang sedikit sibuk. Bisa dicoba lagi sebentar lagi?`;
       let maxLoops = 2;
       for (let i = 0; i < maxLoops; i++) {
@@ -4157,7 +4168,7 @@ DAFTAR KODE (PILIH SALAH SATU DAN KETIK TANPA BASA-BASI):
               body: JSON.stringify({
                 model: "deepseek-chat",
                 messages,
-                max_tokens: 800,
+                max_tokens: 380,
                 temperature: 0.5
               })
             });
@@ -4189,7 +4200,11 @@ DAFTAR KODE (PILIH SALAH SATU DAN KETIK TANPA BASA-BASI):
               }
             }
             const geminiRequestBody = {
-              contents: geminiContents
+              contents: geminiContents,
+              generationConfig: {
+                maxOutputTokens: 380,
+                temperature: 0.5
+              }
             };
             if (systemInstructionText) {
               geminiRequestBody.systemInstruction = {
@@ -4213,7 +4228,7 @@ DAFTAR KODE (PILIH SALAH SATU DAN KETIK TANPA BASA-BASI):
         }
         if (!reply && env.AI) {
           try {
-            const aiResponse = await env.AI.run("@cf/meta/llama-3.1-8b-instruct", { messages, max_tokens: 600, temperature: 0.4 });
+            const aiResponse = await env.AI.run("@cf/meta/llama-3.1-8b-instruct", { messages, max_tokens: 380, temperature: 0.4 });
             reply = aiResponse.response || aiResponse.choices?.[0]?.message?.content || "";
           } catch (cfErr) {
             console.error("Cloudflare AI error:", cfErr);
