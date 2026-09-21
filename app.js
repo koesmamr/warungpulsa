@@ -3853,6 +3853,18 @@ Total : Rp.${totalSaldo.toLocaleString("id-ID")}
         await env.DB.prepare("DELETE FROM ai_usage").run();
       } catch (e) {
       }
+      try {
+        await env.DB.prepare("DELETE FROM ppob_transactions").run();
+      } catch (e) {
+      }
+      try {
+        await env.DB.prepare("DELETE FROM ppob_products").run();
+      } catch (e) {
+      }
+      try {
+        await env.DB.prepare("DELETE FROM user_contacts").run();
+      } catch (e) {
+      }
       const stmts = [];
       for (const u of data.users) stmts.push(env.DB.prepare("INSERT INTO users (email, name, phone, balance, is_blocked) VALUES (?, ?, ?, ?, ?)").bind(u.email, u.name, u.phone, u.balance, u.is_blocked || 0));
       for (const v of data.vpns) stmts.push(env.DB.prepare("INSERT INTO vpns (id, email, server, protocol, username, date, exp) VALUES (?, ?, ?, ?, ?, ?, ?)").bind(v.id, v.email, v.server, v.protocol, v.username, v.date, v.exp));
@@ -3873,6 +3885,21 @@ Total : Rp.${totalSaldo.toLocaleString("id-ID")}
       }
       for (const au of data.ai_usage || []) {
         stmts.push(env.DB.prepare("INSERT INTO ai_usage (email, count, slot) VALUES (?, ?, ?)").bind(au.email, au.count, au.slot));
+      }
+      for (const pt of data.ppob_transactions || []) {
+        stmts.push(env.DB.prepare("INSERT INTO ppob_transactions (reqid, email, product_code, product_name, customer_no, cost_price, selling_price, status, sn, info, detail, raw_response, is_refunded, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)").bind(
+          pt.reqid, pt.email, pt.product_code, pt.product_name, pt.customer_no, pt.cost_price, pt.selling_price, pt.status, pt.sn || '', pt.info || '', pt.detail || '', pt.raw_response || '', pt.is_refunded || 0, pt.created_at, pt.updated_at
+        ));
+      }
+      for (const pp of data.ppob_products || []) {
+        stmts.push(env.DB.prepare("INSERT INTO ppob_products (provider_id, provider_name, product_code, product_name, description, product_type, category, brand, cost_price, markup_type, markup_value, selling_price, is_active, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)").bind(
+          pp.provider_id, pp.provider_name, pp.product_code, pp.product_name, pp.description, pp.product_type, pp.category, pp.brand, pp.cost_price, pp.markup_type || 'fixed', pp.markup_value !== void 0 && pp.markup_value !== null ? pp.markup_value : 750, pp.selling_price, pp.is_active !== void 0 && pp.is_active !== null ? pp.is_active : 1, pp.updated_at
+        ));
+      }
+      for (const uc of data.user_contacts || []) {
+        stmts.push(env.DB.prepare("INSERT INTO user_contacts (email, label, customer_no, category, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?)").bind(
+          uc.email, uc.label, uc.customer_no, uc.category || 'all', uc.created_at, uc.updated_at
+        ));
       }
       const BATCH_SIZE = 90;
       for (let i = 0; i < stmts.length; i += BATCH_SIZE) await env.DB.batch(stmts.slice(i, i + BATCH_SIZE));
