@@ -824,12 +824,18 @@ async function handleTokoGorontaloRoutes(url, request, env, currentUser, appSett
   }
 
   if (path === '/api/ppob/products' && method === 'GET') {
-    // Auto-fix DB: Pastikan produk modem tidak masuk ke kategori wifiID
+    // Auto-fix DB: Pastikan produk Wifi ID Telkom masuk ke wifiID dan produk modem ke data
     try {
       rawDb.prepare(`
         UPDATE ppob_products 
+        SET category = 'wifiID', brand = 'WIFIID' 
+        WHERE (product_code LIKE 'wifi-id%' OR product_code LIKE 'wifi_id%' OR product_name LIKE '%wifi id%')
+          AND product_name NOT LIKE '%modem%'
+      `).run();
+      rawDb.prepare(`
+        UPDATE ppob_products 
         SET category = 'data', brand = 'MODEM' 
-        WHERE category = 'wifiID' AND (product_name LIKE '%Modem%' OR provider_name LIKE '%Modem%' OR product_code LIKE 'adh%' OR product_code LIKE 'adw%')
+        WHERE product_name LIKE '%Modem%' OR provider_name LIKE '%Modem%' OR product_code LIKE 'adh%' OR product_code LIKE 'adw%'
       `).run();
     } catch(e) {}
 
@@ -847,8 +853,14 @@ async function handleTokoGorontaloRoutes(url, request, env, currentUser, appSett
 
     if (category) {
       if (category === 'wifiID') {
-        sql += ' AND (category = ? OR brand = "WIFIID") AND product_name NOT LIKE "%modem%" AND product_code NOT LIKE "adh%" AND product_code NOT LIKE "adw%"';
-        params.push(category);
+        sql += ` AND (
+          category = ? 
+          OR brand = ? 
+          OR product_code LIKE 'wifi-id%' 
+          OR product_code LIKE 'wifi_id%' 
+          OR product_name LIKE '%wifi id%'
+        ) AND product_name NOT LIKE ? AND product_code NOT LIKE ? AND product_code NOT LIKE ?`;
+        params.push('wifiID', 'WIFIID', '%modem%', 'adh%', 'adw%');
       } else {
         sql += ' AND category = ?';
         params.push(category);
