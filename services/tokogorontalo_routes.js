@@ -273,9 +273,18 @@ function saveSuccessPPOBToInbox(rawDb, { email, product_name, customer_no, sn, r
 
     const nowWIB = new Date().toLocaleString('id-ID', { timeZone: 'Asia/Jakarta' }) + ' WIB';
     const isTokenPLN = (product_name || '').toLowerCase().includes('token') || (product_name || '').toLowerCase().includes('pln');
-    const labelSN = isTokenPLN ? 'KODE TOKEN PLN (20 DIGIT)' : 'SERIAL NUMBER (SN) / BUKTI';
+    const isWifiID = (product_name || '').toLowerCase().includes('wifi');
+    let labelSN = 'SERIAL NUMBER (SN) / BUKTI';
+    let iconEmoji = '📱';
+    if (isTokenPLN) {
+      labelSN = 'KODE TOKEN PLN (20 DIGIT)';
+      iconEmoji = '⚡';
+    } else if (isWifiID) {
+      labelSN = 'KODE VOUCHER / AKUN WIFI ID (USERNAME & PASSWORD)';
+      iconEmoji = '📶';
+    }
 
-    const titleMsg = `⚡ Pembelian ${product_name || 'Produk'} Berhasil!`;
+    const titleMsg = `${iconEmoji} Pembelian ${product_name || 'Produk'} Berhasil!`;
     const bodyMsg = `
       <div style="font-family: inherit; line-height: 1.6;">
         <p style="margin-bottom: 8px;">Pesanan produk digital Anda telah <b style="color: #16a34a;">berhasil diproses</b> oleh server provider.</p>
@@ -1241,6 +1250,23 @@ async function handleTokoGorontaloRoutes(url, request, env, currentUser, appSett
         );
       }
 
+      const isPln = product.category === 'pln' || (product.product_name || '').toLowerCase().includes('pln');
+      const isWifi = product.category === 'wifiID' || (product.product_name || '').toLowerCase().includes('wifi');
+      const isGame = product.category === 'game';
+
+      let pendingMessage = 'Pesanan Anda sedang diproses oleh server provider. Status dan rincian transaksi akan otomatis diperbarui.';
+      if (isPln) {
+        pendingMessage = 'Pesanan Token PLN Anda sedang diproses oleh server PLN. Anda tidak perlu menunggu di halaman ini, kode token akan otomatis masuk ke Kotak Masuk (Inbox) Anda begitu diterbitkan.';
+      } else if (isWifi) {
+        pendingMessage = 'Pesanan Voucher Wifi ID Anda sedang diproses oleh server provider. Anda tidak perlu menunggu di halaman ini, kode voucher (Username & Password) akan otomatis masuk ke Kotak Masuk (Inbox) Anda begitu diterbitkan.';
+      } else if (isEwallet) {
+        pendingMessage = 'Top Up saldo E-Wallet sedang diproses ke nomor tujuan. Saldo akan otomatis bertambah ke akun penerima.';
+      } else if (isGame) {
+        pendingMessage = 'Pesanan Voucher / Top Up Game sedang diproses ke akun tujuan.';
+      } else {
+        pendingMessage = 'Pesanan pulsa / kuota data sedang diproses oleh operator ke nomor tujuan.';
+      }
+
       return jsonResponse({
         success: true,
         reqid,
@@ -1251,7 +1277,7 @@ async function handleTokoGorontaloRoutes(url, request, env, currentUser, appSett
         price,
         sn,
         message: finalStatus === 'pending'
-          ? 'Pesanan Token PLN Anda sedang diproses oleh server PLN. Anda tidak perlu menunggu di halaman ini, kode token akan otomatis masuk ke Kotak Masuk (Inbox) Anda begitu diterbitkan.'
+          ? pendingMessage
           : infoMsg
       });
 
@@ -2322,9 +2348,37 @@ function renderPPOBContent(currentUser, appSettings, env) {
                   const isPending = data.status === 'pending';
                   const isSuccess = data.status === 'success';
                   const isFailed = data.status === 'failed';
-                  const snText = data.sn ? \`<div class="bg-emerald-50 border border-emerald-200 p-3.5 rounded-2xl mt-3 text-center"><p class="text-xs text-emerald-700 font-bold mb-1 tracking-wide">SERIAL NUMBER (SN) / TOKEN:</p><p class="font-mono font-black text-emerald-900 text-lg select-all tracking-wider">\${data.sn}</p></div>\` : '';
+                  const prodNameLower = (data.product_name || '').toLowerCase();
+                  const isPln = currentCategory === 'pln' || prodNameLower.includes('pln') || prodNameLower.includes('token');
+                  const isWifi = currentCategory === 'wifiID' || prodNameLower.includes('wifi');
+                  const isGame = currentCategory === 'game';
+                  const isEwallet = currentCategory === 'ewallet';
 
-                  let modalTitle = '⚡ Pesanan Diproses!';
+                  let codeName = 'Serial Number (SN)';
+                  let modalIconEmoji = '📱';
+                  let snLabel = 'SERIAL NUMBER (SN) / BUKTI:';
+
+                  if (isPln) {
+                      codeName = 'kode token PLN';
+                      modalIconEmoji = '⚡';
+                      snLabel = 'KODE TOKEN PLN (20 DIGIT):';
+                  } else if (isWifi) {
+                      codeName = 'kode voucher / akun Wifi ID';
+                      modalIconEmoji = '📶';
+                      snLabel = 'KODE VOUCHER / USERNAME & PASSWORD:';
+                  } else if (isEwallet) {
+                      codeName = 'nomor referensi';
+                      modalIconEmoji = '💳';
+                      snLabel = 'NOMOR REFERENSI:';
+                  } else if (isGame) {
+                      codeName = 'kode voucher game';
+                      modalIconEmoji = '🎮';
+                      snLabel = 'KODE VOUCHER / SN GAME:';
+                  }
+
+                  const snText = data.sn ? \`<div class="bg-emerald-50 border border-emerald-200 p-3.5 rounded-2xl mt-3 text-center"><p class="text-xs text-emerald-700 font-bold mb-1 tracking-wide">\${snLabel}</p><p class="font-mono font-black text-emerald-900 text-lg select-all tracking-wider">\${data.sn}</p></div>\` : '';
+
+                  let modalTitle = modalIconEmoji + ' Pesanan Diproses!';
                   let modalIcon = 'info';
                   let statusColorClass = 'bg-amber-100 text-amber-700';
                   let statusDesc = \`
@@ -2333,7 +2387,7 @@ function renderPPOBContent(currentUser, appSettings, env) {
                               <svg class="w-4 h-4 text-sky-600 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                               Anda Tidak Perlu Menunggu di Halaman Ini!
                           </b>
-                          <p>Pesanan telah diterima server provider. Server kami otomatis memproses di latar belakang dan <b>kode token PLN akan otomatis masuk ke Kotak Masuk (Inbox)</b> akun Anda begitu diterbitkan (biasanya 5–30 detik).</p>
+                          <p>Pesanan telah diterima server provider. Server kami otomatis memproses di latar belakang dan <b>\${codeName} akan otomatis masuk ke Kotak Masuk (Inbox)</b> akun Anda begitu diterbitkan (biasanya 5–30 detik).</p>
                       </div>
                   \`;
 
@@ -2341,7 +2395,7 @@ function renderPPOBContent(currentUser, appSettings, env) {
                       modalTitle = 'Transaksi Berhasil!';
                       modalIcon = 'success';
                       statusColorClass = 'bg-emerald-100 text-emerald-700';
-                      statusDesc = '<p class="text-xs text-slate-600 leading-relaxed">Pesanan Anda telah <b>berhasil diproses</b> oleh provider! Kode token juga telah otomatis disimpan ke <b>Kotak Masuk (Inbox)</b> akun Anda.</p>';
+                      statusDesc = \`<p class="text-xs text-slate-600 leading-relaxed">Pesanan Anda telah <b>berhasil diproses</b> oleh provider! \${codeName} juga telah otomatis disimpan ke <b>Kotak Masuk (Inbox)</b> akun Anda.</p>\`;
                   } else if (isFailed) {
                       modalTitle = 'Transaksi Gagal / Ditolak';
                       modalIcon = 'error';
