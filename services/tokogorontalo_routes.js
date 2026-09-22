@@ -128,6 +128,101 @@ function isProviderFailure(status, info, detail, rc, success) {
   return false;
 }
 
+function escapeTgHtml(str) {
+  if (!str) return '';
+  return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+}
+
+/**
+ * Mengirim notifikasi Telegram untuk event PPOB (sukses/refund/alert).
+ * Bekerja baik saat dipanggil dari HTTP route (menggunakan sendTelegramLog yang dipassing)
+ * maupun dari timer interval background (fallback fetch langsung ke Telegram Bot API).
+ */
+async function dispatchTelegramLog(rawDb, statusHeader, bodyMsg, appSettings = null, sendTelegramLog = null) {
+  try {
+    let settings = appSettings;
+    if (!settings && rawDb) {
+      try {
+        const row = rawDb.prepare("SELECT value FROM settings WHERE key = 'app'").get();
+        if (row && row.value) {
+          settings = JSON.parse(row.value);
+        }
+      } catch (e) {}
+    }
+
+    if (sendTelegramLog && typeof sendTelegramLog === 'function') {
+      await sendTelegramLog(statusHeader, bodyMsg, settings);
+      return;
+    }
+
+    // Direct Telegram Bot API fallback
+    if (!settings) return;
+    const botToken = String(settings.telegram_bot_token || '').trim();
+    const rawChatId = String(settings.telegram_channel_id || '').trim();
+    if (!botToken || !rawChatId) return;
+
+    const candidateIds = [rawChatId];
+    if (/^-\d{9,12}$/.test(rawChatId) && !rawChatId.startsWith('-100')) {
+      candidateIds.push('-100' + rawChatId.substring(1));
+    } else if (/^\d{9,12}$/.test(rawChatId)) {
+      candidateIds.push('-100' + rawChatId);
+    }
+
+    const cleanHeader = String(statusHeader || '').trim();
+    const headerPrefix = cleanHeader.startsWith('#warungpulsa') ? '' : '#warungpulsa\n';
+    const now = new Date();
+    const utcTime = now.getTime() + now.getTimezoneOffset() * 60000;
+    const wib = new Date(utcTime + 7 * 3600000);
+    const pad = (n) => String(n).padStart(2, '0');
+    const timeStr = `${pad(wib.getDate())}/${pad(wib.getMonth() + 1)}/${wib.getFullYear()}, ${pad(wib.getHours())}.${pad(wib.getMinutes())}.${pad(wib.getSeconds())} WIB`;
+    const finalMessage = `${headerPrefix}<b>${cleanHeader}</b>\n\n${bodyMsg}\n\n🕒 ${timeStr}`;
+
+    for (const targetChatId of candidateIds) {
+      try {
+        const res = await fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ chat_id: targetChatId, text: finalMessage, parse_mode: 'HTML' })
+        });
+        const data = await res.json();
+        if (data && data.ok) return;
+      } catch (e) {}
+    }
+  } catch (err) {
+    console.warn('[dispatchTelegramLog Error]:', err.message);
+  }
+}
+
+/**
+ * Format pesan Telegram untuk transaksi PPOB yang sukses
+ */
+function formatPPOBTelegramSuccess(order, sn) {
+  const name = order.product_name || 'Produk PPOB';
+  const nameLower = name.toLowerCase();
+  const isWifi = nameLower.includes('wifi');
+  const isPln = nameLower.includes('token') || nameLower.includes('pln') || nameLower.includes('listrik');
+
+  let labelSn = 'SN / Bukti';
+  if (isWifi) {
+    labelSn = 'Kode Voucher Wifi ID';
+  } else if (isPln) {
+    labelSn = 'Token Listrik PLN';
+  }
+
+  const priceVal = order.selling_price || order.cost_price || order.price || 0;
+  const priceStr = priceVal ? `Rp ${Number(priceVal).toLocaleString('id-ID')}` : '-';
+
+  return (
+    `Produk: <b>${escapeTgHtml(name)}</b>\n` +
+    `Tujuan: <code>${escapeTgHtml(order.customer_no || '-')}</code>\n` +
+    `Harga: <b>${priceStr}</b>\n` +
+    `${labelSn}: <code>${escapeTgHtml(sn || '-')}</code>\n` +
+    `User: ${escapeTgHtml(order.email || '-')}\n` +
+    `Ref: <code>${escapeTgHtml(order.reqid || '-')}</code>\n` +
+    `Status: <b>SUCCESS (Selesai Diproses)</b>`
+  );
+}
+
 /**
  * Eksekusi Auto-Refund Instan
  * Mengembalikan saldo ke akun pengguna seketika tanpa menunggu proses manual admin,
@@ -236,25 +331,25 @@ async function executeAutoRefund(rawDb, order, failureReason, source = 'webhook'
     console.log(`[Auto-Refund SUCCESS] Ref: ${order.reqid} -> Rp ${refundAmount} refunded to ${current.email} via ${source}`);
 
     // Kirim Telegram Log untuk audit admin
-    if (sendTelegramLog) {
-      try {
-        const isHostBalanceLow = cleanReason.toLowerCase().includes('saldo tidak cukup') || cleanReason.toLowerCase().includes('saldo host');
-        await sendTelegramLog(
-          isHostBalanceLow ? '🚨 PERINGATAN: SALDO DEPOSIT HOST HABIS / KURANG' : '💸 AUTO-REFUND INSTAN BERHASIL',
-          `Order PPOB Gagal dari Provider!\n\n` +
-          `Ref: <code>${order.reqid}</code>\n` +
-          `User: <b>${current.email}</b>\n` +
-          `Produk: <b>${current.product_name}</b>\n` +
-          `Tujuan: <code>${current.customer_no}</code>\n` +
-          `Alasan: <i>${cleanReason}</i>\n` +
-          `Saldo Dikembalikan: <b>Rp ${refundAmount.toLocaleString('id-ID')}</b> (100% Instan)\n` +
-          `Sumber: <code>${source.toUpperCase()}</code>` +
-          (isHostBalanceLow ? `\n\n⚠️ <b>PENTING:</b> Saldo deposit di akun Toko Gorontalo (Host) Anda sudah menipis/kurang dari modal produk. Segera lakukan Deposit / Isi Saldo di Toko Gorontalo agar transaksi member dapat berjalan lancar!` : ''),
-          appSettings
-        );
-      } catch (tgErr) {
-        console.warn('[Auto-Refund Telegram Error]:', tgErr.message);
-      }
+    try {
+      const isHostBalanceLow = cleanReason.toLowerCase().includes('saldo tidak cukup') || cleanReason.toLowerCase().includes('saldo host');
+      await dispatchTelegramLog(
+        rawDb,
+        isHostBalanceLow ? '🚨 PERINGATAN: SALDO DEPOSIT HOST HABIS / KURANG' : '💸 AUTO-REFUND INSTAN BERHASIL',
+        `Order PPOB Gagal dari Provider!\n\n` +
+        `Ref: <code>${escapeTgHtml(order.reqid)}</code>\n` +
+        `User: <b>${escapeTgHtml(current.email)}</b>\n` +
+        `Produk: <b>${escapeTgHtml(current.product_name)}</b>\n` +
+        `Tujuan: <code>${escapeTgHtml(current.customer_no)}</code>\n` +
+        `Alasan: <i>${escapeTgHtml(cleanReason)}</i>\n` +
+        `Saldo Dikembalikan: <b>Rp ${refundAmount.toLocaleString('id-ID')}</b> (100% Instan)\n` +
+        `Sumber: <code>${source.toUpperCase()}</code>` +
+        (isHostBalanceLow ? `\n\n⚠️ <b>PENTING:</b> Saldo deposit di akun Toko Gorontalo (Host) Anda sudah menipis/kurang dari modal produk. Segera lakukan Deposit / Isi Saldo di Toko Gorontalo agar transaksi member dapat berjalan lancar!` : ''),
+        appSettings,
+        sendTelegramLog
+      );
+    } catch (tgErr) {
+      console.warn('[Auto-Refund Telegram Error]:', tgErr.message);
     }
     return { refunded: true, amount: refundAmount };
   }
@@ -466,12 +561,16 @@ function startBackgroundOrderPoller(rawDb, orderInfo, sendTelegramLog, appSettin
           });
 
           // Kirim log Telegram
-          if (sendTelegramLog) {
-            await sendTelegramLog(
+          try {
+            await dispatchTelegramLog(
+              rawDb,
               '⚡ PPOB TRANSAKSI BERHASIL',
-              `Produk: <b>${product_name}</b>\nTujuan: <code>${customer_no}</code>\nSN / Token: <code>${sn}</code>\nUser: ${email}\nRef: ${reqid}`,
-              appSettings
+              formatPPOBTelegramSuccess({ product_name, customer_no, email, reqid }, sn),
+              appSettings,
+              sendTelegramLog
             );
+          } catch (tgErr) {
+            console.warn('[Background Poller Telegram Error]:', tgErr.message);
           }
 
           activePollerReqIds.delete(reqid);
@@ -616,6 +715,19 @@ async function autoReconcilePPOBTransactions(rawDb, service, sendTelegramLog = n
                 customer_no: tx.customer_no,
                 product: { product_name: tx.product_name, category: tx.category, brand: tx.brand }
               });
+
+              // Kirim notifikasi Telegram bahwa transaksi PPOB / Voucher Wifi ID / Token PLN telah BERHASIL!
+              try {
+                await dispatchTelegramLog(
+                  rawDb,
+                  '⚡ PPOB TRANSAKSI BERHASIL',
+                  formatPPOBTelegramSuccess(tx, sn),
+                  appSettings,
+                  sendTelegramLog
+                );
+              } catch (tgErr) {
+                console.warn('[Auto-Reconcile Telegram Error]:', tgErr.message);
+              }
             }
           }
         } catch (err) {
@@ -773,13 +885,13 @@ async function handleTokoGorontaloRoutes(url, request, env, currentUser, appSett
 
       // 1. Handle SUCCESS
       if (isSuccess && !isSuccessStatus(existing.status)) {
-        const titleMsg = `Pembelian ${existing.product_name} Berhasil!`;
-        const bodyMsg = `Nomor Tujuan: <b>${existing.customer_no}</b><br>SN / Token: <b style="color: #0284c7; font-size: 15px;">${sn || '-'}</b><br>Waktu: ${new Date().toLocaleString('id-ID', { timeZone: 'Asia/Jakarta' })} WIB`;
-        
-        rawDb.prepare(`
-          INSERT INTO inbox (email, title, message, date, read)
-          VALUES (?, ?, ?, ?, 0)
-        `).run(existing.email, titleMsg, bodyMsg, new Date().toLocaleString('id-ID', { timeZone: 'Asia/Jakarta' }) + ' WIB');
+        saveSuccessPPOBToInbox(rawDb, {
+          email: existing.email,
+          product_name: existing.product_name,
+          customer_no: existing.customer_no,
+          sn,
+          reqid: existing.reqid
+        });
 
         autoSaveBuyerContact(rawDb, {
           email: existing.email,
@@ -788,12 +900,16 @@ async function handleTokoGorontaloRoutes(url, request, env, currentUser, appSett
           service
         });
 
-        if (sendTelegramLog) {
-          await sendTelegramLog(
+        try {
+          await dispatchTelegramLog(
+            rawDb,
             '⚡ PPOB TRANSAKSI BERHASIL',
-            `Produk: <b>${existing.product_name}</b>\nTujuan: <code>${existing.customer_no}</code>\nSN: <code>${sn}</code>\nUser: ${existing.email}\nRef: ${existing.reqid}`,
-            appSettings
+            formatPPOBTelegramSuccess(existing, sn),
+            appSettings,
+            sendTelegramLog
           );
+        } catch (tgErr) {
+          console.warn('[Webhook Telegram Error]:', tgErr.message);
         }
       }
 
@@ -1328,6 +1444,7 @@ async function handleTokoGorontaloRoutes(url, request, env, currentUser, appSett
             await executeAutoRefund(rawDb, order, infoText || detailText || 'Gagal dari server provider', 'live_check', sendTelegramLog, appSettings);
             order = rawDb.prepare('SELECT * FROM ppob_transactions WHERE reqid = ?').get(order.reqid);
           } else if (isSuccessStatus(liveStatus) || live.rc === '00' || (sn && sn.length >= 6)) {
+            const wasPending = (order.status === 'pending' || !order.status);
             rawDb.prepare(`
               UPDATE ppob_transactions
               SET status = 'success',
@@ -1339,18 +1456,31 @@ async function handleTokoGorontaloRoutes(url, request, env, currentUser, appSett
             `).run(sn, infoText, detailText, order.reqid);
             order = rawDb.prepare('SELECT * FROM ppob_transactions WHERE reqid = ?').get(order.reqid);
 
-            // Buat notifikasi Inbox sukses jika belum ada
+            // Buat notifikasi Inbox sukses kartu voucher/token jika belum ada
             try {
-              const existingInbox = rawDb.prepare('SELECT id FROM inbox WHERE message LIKE ?').get(`%${order.reqid}%`);
-              if (!existingInbox) {
-                const titleMsg = `Pembelian ${order.product_name} Berhasil!`;
-                const bodyMsg = `Nomor Tujuan: <b>${order.customer_no}</b><br>SN / Token: <b style="color: #0284c7; font-size: 15px;">${sn || '-'}</b><br>Waktu: ${new Date().toLocaleString('id-ID', { timeZone: 'Asia/Jakarta' })} WIB`;
-                rawDb.prepare(`
-                  INSERT INTO inbox (email, title, message, date, read)
-                  VALUES (?, ?, ?, ?, 0)
-                `).run(order.email, titleMsg, bodyMsg, new Date().toLocaleString('id-ID', { timeZone: 'Asia/Jakarta' }) + ' WIB');
-              }
+              saveSuccessPPOBToInbox(rawDb, {
+                email: order.email,
+                product_name: order.product_name,
+                customer_no: order.customer_no,
+                sn,
+                reqid: order.reqid
+              });
             } catch (eInbox) {}
+
+            // Kirim log Telegram jika sebelumnya pending dan sekarang sukses
+            if (wasPending) {
+              try {
+                await dispatchTelegramLog(
+                  rawDb,
+                  '⚡ PPOB TRANSAKSI BERHASIL',
+                  formatPPOBTelegramSuccess(order, sn),
+                  appSettings,
+                  sendTelegramLog
+                );
+              } catch (tgErr) {
+                console.warn('[Order-Status Telegram Error]:', tgErr.message);
+              }
+            }
           }
         }
       } catch (err) {
@@ -1571,6 +1701,9 @@ async function handleTokoGorontaloRoutes(url, request, env, currentUser, appSett
           sn = parsed.sn;
         }
 
+        const existingOrder = rawDb.prepare('SELECT * FROM ppob_transactions WHERE reqid = ?').get(reqid);
+        const wasPending = existingOrder && (existingOrder.status === 'pending' || !existingOrder.status);
+
         rawDb.prepare(`
           UPDATE ppob_transactions
           SET status = CASE WHEN is_refunded = 1 THEN 'failed' ELSE ? END,
@@ -1586,6 +1719,36 @@ async function handleTokoGorontaloRoutes(url, request, env, currentUser, appSett
           const order = rawDb.prepare('SELECT * FROM ppob_transactions WHERE reqid = ?').get(reqid);
           if (order) {
             await executeAutoRefund(rawDb, order, live.info || 'Gagal dari server provider', 'admin_check', sendTelegramLog, appSettings);
+          }
+        } else if (isSuccessStatus(newStatus) || live.rc === '00' || (sn && sn.length >= 6)) {
+          const updatedOrder = rawDb.prepare('SELECT * FROM ppob_transactions WHERE reqid = ?').get(reqid);
+          if (updatedOrder) {
+            saveSuccessPPOBToInbox(rawDb, {
+              email: updatedOrder.email,
+              product_name: updatedOrder.product_name,
+              customer_no: updatedOrder.customer_no,
+              sn: sn || updatedOrder.sn,
+              reqid: updatedOrder.reqid
+            });
+            autoSaveBuyerContact(rawDb, {
+              email: updatedOrder.email,
+              customer_no: updatedOrder.customer_no,
+              product: { product_name: updatedOrder.product_name, category: updatedOrder.category, brand: updatedOrder.brand }
+            });
+
+            if (wasPending) {
+              try {
+                await dispatchTelegramLog(
+                  rawDb,
+                  '⚡ PPOB TRANSAKSI BERHASIL',
+                  formatPPOBTelegramSuccess(updatedOrder, sn || updatedOrder.sn),
+                  appSettings,
+                  sendTelegramLog
+                );
+              } catch (tgErr) {
+                console.warn('[Admin Check Telegram Error]:', tgErr.message);
+              }
+            }
           }
         }
       }
