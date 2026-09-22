@@ -15,7 +15,7 @@ var CACHE_TTL = 3e5;
 function isSuperAdmin(userOrEmail, env) {
   if (!userOrEmail) return false;
   if (typeof userOrEmail === "object") {
-    if (userOrEmail.is_admin === 1 || userOrEmail.is_admin === "1" || userOrEmail.is_admin === true) {
+    if (userOrEmail.is_admin === 2 || userOrEmail.is_admin === "2") {
       return true;
     }
   }
@@ -26,7 +26,26 @@ function isSuperAdmin(userOrEmail, env) {
     const rawDb = (env && env.DB && env.DB.rawDb) || (require('./db.js').rawDb);
     if (rawDb && email) {
       const row = rawDb.prepare('SELECT is_admin FROM users WHERE LOWER(email) = ?').get(email);
-      if (row && (row.is_admin === 1 || row.is_admin === '1' || row.is_admin === true)) return true;
+      if (row && (row.is_admin === 2 || row.is_admin === '2')) return true;
+    }
+  } catch (e) {}
+  return false;
+}
+
+function isAdmin(userOrEmail, env) {
+  if (!userOrEmail) return false;
+  if (isSuperAdmin(userOrEmail, env)) return true;
+  if (typeof userOrEmail === "object") {
+    if (userOrEmail.is_admin === 1 || userOrEmail.is_admin === "1" || userOrEmail.is_admin === 2 || userOrEmail.is_admin === "2" || userOrEmail.is_admin === true) {
+      return true;
+    }
+  }
+  const email = (typeof userOrEmail === "string" ? userOrEmail : (userOrEmail.email || "")).toLowerCase().trim();
+  try {
+    const rawDb = (env && env.DB && env.DB.rawDb) || (require('./db.js').rawDb);
+    if (rawDb && email) {
+      const row = rawDb.prepare('SELECT is_admin FROM users WHERE LOWER(email) = ?').get(email);
+      if (row && (row.is_admin === 1 || row.is_admin === '1' || row.is_admin === 2 || row.is_admin === '2' || row.is_admin === true)) return true;
     }
   } catch (e) {}
   return false;
@@ -677,6 +696,7 @@ __name2(handleKMSPRoutes, "handleKMSPRoutes");
 __name22(handleKMSPRoutes, "handleKMSPRoutes");
 __name222(handleKMSPRoutes, "handleKMSPRoutes");
 async function renderAdminDashboard(env, currentUser, appSettings) {
+  const isCurrentSuperAdmin = isSuperAdmin(currentUser, env);
   const kmspMarkup = appSettings.kmsp_markup !== void 0 ? appSettings.kmsp_markup : 3e3;
   const backupFreq = appSettings.auto_backup_frequency !== void 0 ? parseInt(appSettings.auto_backup_frequency) : 24;
   const licPrice = appSettings.script_price_per_day || 500;
@@ -1162,22 +1182,28 @@ async function renderAdminDashboard(env, currentUser, appSettings) {
                     <div class="bg-slate-50 p-5 rounded-2xl border border-slate-200 flex flex-col justify-between hover:border-slate-300 transition shadow-sm">
                         <div>
                             <div class="flex items-center gap-2 mb-2">
-                                <span class="text-lg">\u{1F4E5}</span>
+                                <span class="text-lg">📥</span>
                                 <h3 class="font-extrabold text-slate-900 text-sm md:text-base">Impor Data (Restore)</h3>
                             </div>
                             <p class="text-xs text-slate-600 leading-relaxed mb-2.5">
                                 Kembalikan seluruh isi database dari file cadangan JSON yang pernah diunduh.
                             </p>
                             <div class="p-2.5 bg-amber-50 border border-amber-200 rounded-xl mb-3 text-[11px] text-amber-800 leading-relaxed">
-                                \u26A0\uFE0F <b>PERINGATAN:</b> Data saat ini akan ditimpa dengan data dari file backup.
+                                ⚠️ <b>PERINGATAN:</b> Data saat ini akan ditimpa dengan data dari file backup.
                             </div>
                         </div>
+                        ${isCurrentSuperAdmin ? `
                         <div class="space-y-2.5 mt-auto">
                             <input type="file" id="restoreFile" accept=".json" class="block w-full text-xs text-slate-600 file:mr-2.5 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-[11px] file:font-bold file:bg-slate-200 file:text-slate-800 hover:file:bg-slate-300 transition cursor-pointer bg-white rounded-xl p-1.5 border border-slate-300">
                             <button onclick="restoreBackup()" id="btnRestore" class="w-full bg-rose-600 hover:bg-rose-500 active:scale-95 text-white font-bold py-2.5 px-3 rounded-xl transition text-xs shadow-md shadow-rose-600/20 cursor-pointer">
                                 Pulihkan Database
                             </button>
-                        </div>
+                        </div>` : `
+                        <div class="p-3.5 bg-slate-100 border border-slate-200 rounded-xl text-center flex flex-col items-center gap-1.5 mt-auto">
+                            <span class="text-base">🔒</span>
+                            <span class="font-bold text-slate-700 text-xs">Khusus Super Admin</span>
+                            <span class="text-[11px] text-slate-500 leading-tight">Fitur Restore Database hanya dapat diakses oleh Pemilik / Super Admin untuk mencegah penghapusan data tanpa izin.</span>
+                        </div>`}
                     </div>
 
                 </div>
@@ -1377,7 +1403,14 @@ async function renderAdminDashboard(env, currentUser, appSettings) {
                             </select>
                         </div>
                     </div>
-<button type="submit" id="btnSaveSettings" class="w-full bg-sky-600 hover:bg-sky-500 text-white font-bold py-4 rounded-xl shadow-lg transition text-lg mt-4">Simpan Konfigurasi</button>
+${isCurrentSuperAdmin ? `
+<button type="submit" id="btnSaveSettings" class="w-full bg-sky-600 hover:bg-sky-500 text-white font-bold py-4 rounded-xl shadow-lg transition text-lg mt-4 cursor-pointer">Simpan Konfigurasi</button>
+` : `
+<div class="mt-4 p-4 bg-amber-500/10 border border-amber-500/30 rounded-xl text-center text-amber-300 text-xs font-bold flex items-center justify-center gap-2">
+    <svg class="w-5 h-5 text-amber-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2-2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
+    <span>Mode Baca (Read-Only): Hanya <b>Super Admin</b> yang memiliki hak akses untuk mengubah konfigurasi sistem &amp; API Key.</span>
+</div>
+`}
                 </form>
             </div>
         </div>
@@ -2157,11 +2190,12 @@ async function renderAdminDashboard(env, currentUser, appSettings) {
                         tbody.innerHTML = data.data.map(u => {
                             const ownerEmail = '${((env && env.ADMIN_EMAIL) || "syamsul18782@gmail.com").toLowerCase().trim()}';
                             const isOwner = u.email.toLowerCase() === 'syamsul18782@gmail.com' || u.email.toLowerCase() === ownerEmail;
-                            const isAdmin = isOwner || u.is_admin === 1;
+                            const isUserSuperAdmin = isOwner || u.is_admin === 2;
+                            const isUserAdmin = !isUserSuperAdmin && (u.is_admin === 1);
                             
-                            const roleBadge = isOwner 
+                            const roleBadge = isUserSuperAdmin 
                                 ? '<span class="bg-amber-500/20 text-amber-300 border border-amber-500/30 text-[10px] px-2 py-0.5 rounded-md uppercase font-black tracking-wider">Super Admin</span>'
-                                : (u.is_admin === 1 
+                                : (isUserAdmin 
                                     ? '<span class="bg-purple-500/20 text-purple-300 border border-purple-500/30 text-[10px] px-2 py-0.5 rounded-md uppercase font-bold tracking-wider">Admin</span>' 
                                     : '<span class="bg-gray-800 text-gray-400 border border-gray-700 text-[10px] px-2 py-0.5 rounded-md uppercase font-bold tracking-wider">User</span>');
                             
@@ -2169,11 +2203,12 @@ async function renderAdminDashboard(env, currentUser, appSettings) {
                                 ? '<span class="bg-sky-500/20 text-cyan-400 border border-sky-500/30 text-[10px] px-2.5 py-0.5 rounded-md uppercase font-bold tracking-wider">Banned</span>' 
                                 : '<span class="bg-green-500/20 text-green-400 border border-green-500/30 text-[10px] px-2.5 py-0.5 rounded-md uppercase font-bold tracking-wider">Aktif</span>';
 
-                            const adminToggleBtn = isOwner 
-                                ? '' 
-                                : (u.is_admin === 1 
-                                    ? \`<button onclick="actionUser('\${u.email}', 'toggle_admin', 0)" class="bg-amber-600 hover:bg-amber-500 text-white text-xs font-bold px-3 py-1.5 rounded-lg transition shadow" title="Cabut hak akses admin">Cabut Admin</button>\` 
-                                    : \`<button onclick="actionUser('\${u.email}', 'toggle_admin', 1)" class="bg-purple-600 hover:bg-purple-500 text-white text-xs font-bold px-3 py-1.5 rounded-lg transition shadow" title="Angkat menjadi admin">Jadikan Admin</button>\`);
+                            let adminToggleBtn = '';
+                            if (${isCurrentSuperAdmin}) {
+                                if (!isOwner) {
+                                    adminToggleBtn = \`<button onclick="manageUserRole('\${u.email}', \${u.is_admin || 0})" class="bg-purple-600 hover:bg-purple-500 text-white text-xs font-bold px-3 py-1.5 rounded-lg transition shadow flex items-center gap-1" title="Ubah role pengguna">\u{1F6E1}\uFE0F Kelola Role</button>\`;
+                                }
+                            }
 
                             return \`
                             <tr class="border-b border-gray-700/50 hover:bg-gray-800/50 transition user-row">
@@ -2273,6 +2308,10 @@ async function renderAdminDashboard(env, currentUser, appSettings) {
             btn.innerText = 'Kirim Pesan Sekarang'; btn.disabled = false;
         });
 
+        function escapeHtmlClient(str) {
+            return String(str || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+        }
+
         async function actionUser(email, action, targetValue = null) {
             let value = 0;
             let keterangan = '';
@@ -2303,16 +2342,17 @@ async function renderAdminDashboard(env, currentUser, appSettings) {
                 const conf = await swalDark.fire({ title: 'Konfirmasi', text: 'Ubah status blokir untuk ' + email + '?', icon: 'warning', showCancelButton: true });
                 if (!conf.isConfirmed) return;
             } else if (action === 'toggle_admin') {
-                const isPromoting = targetValue === 1;
+                let roleLabel = 'Pengguna Biasa';
+                if (targetValue === 2) roleLabel = 'Super Admin (Akses Penuh)';
+                else if (targetValue === 1) roleLabel = 'Admin Biasa';
+
                 const conf = await swalDark.fire({
-                    title: isPromoting ? 'Angkat Menjadi Admin?' : 'Cabut Hak Akses Admin?',
-                    html: isPromoting 
-                        ? ('<p class="text-sm text-gray-300 leading-relaxed">Pengguna <b>' + escapeHtmlClient(email) + '</b> akan diangkat menjadi <b>Administrator</b>.<br><br>User ini akan memiliki hak akses penuh untuk mengelola Warung Pulsa di Panel Admin.</p>')
-                        : ('<p class="text-sm text-gray-300 leading-relaxed">Hak akses Administrator untuk <b>' + escapeHtmlClient(email) + '</b> akan dicabut dan akun akan kembali menjadi <b>Pengguna Biasa</b>.</p>'),
-                    icon: 'warning',
+                    title: 'Ubah Role Pengguna?',
+                    html: '<p class="text-sm text-slate-300 leading-relaxed">Pengguna <b>' + escapeHtmlClient(email) + '</b> akan diubah rolenya menjadi:<br><b class="text-purple-400 text-base font-bold uppercase tracking-wider block mt-1">' + roleLabel + '</b><br>Lanjutkan perubahan hak akses ini?</p>',
+                    icon: 'question',
                     showCancelButton: true,
-                    confirmButtonColor: isPromoting ? '#9333ea' : '#d97706',
-                    confirmButtonText: isPromoting ? 'Ya, Jadikan Admin' : 'Ya, Cabut Admin',
+                    confirmButtonColor: targetValue > 0 ? '#7c3aed' : '#d97706',
+                    confirmButtonText: 'Ya, Terapkan Role',
                     cancelButtonText: 'Batal'
                 });
                 if (!conf.isConfirmed) return;
@@ -2328,6 +2368,49 @@ async function renderAdminDashboard(env, currentUser, appSettings) {
                     swalDark.fire('Gagal', data.message || 'Gagal memproses aksi.', 'error');
                 }
             } catch(e) { swalDark.fire('Error', 'Sistem error', 'error'); }
+        }
+
+        async function manageUserRole(email, currentRole) {
+            const current = parseInt(currentRole) || 0;
+            const { value: selectedRole } = await swalDark.fire({
+                title: 'Kelola Hak Akses / Role',
+                html: '<div class="text-left text-sm space-y-3 pt-2 text-slate-300">' +
+                      '<p class="text-xs text-slate-400">Pilih tingkatan hak akses untuk pengguna:<br><b class="text-white text-sm break-all font-mono">' + escapeHtmlClient(email) + '</b></p>' +
+                      '<label class="flex items-start gap-3 p-3 rounded-xl border border-slate-700 hover:border-amber-500/50 bg-gray-800/80 cursor-pointer transition">' +
+                      '<input type="radio" name="role_choice" value="2" ' + (current === 2 ? 'checked' : '') + ' class="mt-1 text-amber-500 focus:ring-amber-500">' +
+                      '<div><div class="font-bold text-amber-400 flex items-center gap-1.5">👑 Super Admin</div><div class="text-xs text-slate-400 mt-0.5">Wewenang penuh: restore database, ubah konfigurasi sistem / API Key, dan kelola role akun lain.</div></div>' +
+                      '</label>' +
+                      '<label class="flex items-start gap-3 p-3 rounded-xl border border-slate-700 hover:border-purple-500/50 bg-gray-800/80 cursor-pointer transition">' +
+                      '<input type="radio" name="role_choice" value="1" ' + (current === 1 ? 'checked' : '') + ' class="mt-1 text-purple-500 focus:ring-purple-500">' +
+                      '<div><div class="font-bold text-purple-400 flex items-center gap-1.5">🛡️ Admin Biasa</div><div class="text-xs text-slate-400 mt-0.5">Kelola pesanan, katalog PPOB Toko Gorontalo & markup, tambah/kurang saldo, dan tiket. Tidak bisa restore atau ubah role.</div></div>' +
+                      '</label>' +
+                      '<label class="flex items-start gap-3 p-3 rounded-xl border border-slate-700 hover:border-gray-500/50 bg-gray-800/80 cursor-pointer transition">' +
+                      '<input type="radio" name="role_choice" value="0" ' + (current === 0 ? 'checked' : '') + ' class="mt-1 text-slate-400">' +
+                      '<div><div class="font-bold text-slate-200 flex items-center gap-1.5">👤 Pengguna Biasa</div><div class="text-xs text-slate-400 mt-0.5">Hanya bisa bertransaksi sebagai pelanggan biasa tanpa akses ke Panel Admin.</div></div>' +
+                      '</label>' +
+                      '</div>',
+                focusConfirm: false,
+                showCancelButton: true,
+                confirmButtonColor: '#7c3aed',
+                confirmButtonText: 'Simpan Role',
+                cancelButtonText: 'Batal',
+                preConfirm: () => {
+                    const checked = document.querySelector('input[name="role_choice"]:checked');
+                    if (!checked) {
+                        Swal.showValidationMessage('Silakan pilih salah satu role');
+                        return false;
+                    }
+                    return parseInt(checked.value);
+                }
+            });
+
+            if (selectedRole !== undefined && selectedRole !== null) {
+                if (selectedRole === current) {
+                    swalDark.fire('Info', 'Role yang dipilih sama dengan role saat ini.', 'info');
+                    return;
+                }
+                actionUser(email, 'toggle_admin', selectedRole);
+            }
         }
 
         async function viewInbox(email) {
@@ -2581,7 +2664,7 @@ async function handleAdminRoutes(url, request, env, currentUser, appSettings, se
   if (!url.pathname.startsWith("/api/admin/")) {
     return null;
   }
-  if (!currentUser || !isSuperAdmin(currentUser, env)) {
+  if (!currentUser || !isAdmin(currentUser, env)) {
     return jsonResponse({ success: false, message: "Unauthorized" }, 401);
   }
   const now = getWIBTime();
@@ -3017,7 +3100,7 @@ async function handleAdminRoutes(url, request, env, currentUser, appSettings, se
         await env.DB.prepare("ALTER TABLE users ADD COLUMN is_admin INTEGER DEFAULT 0").run();
       } catch (e) {}
       const superAdminEmail = ((env && env.ADMIN_EMAIL) || "syamsul18782@gmail.com").toLowerCase().trim();
-      await env.DB.prepare("UPDATE users SET is_admin = 1 WHERE LOWER(email) = ? OR LOWER(email) = 'syamsul18782@gmail.com'").bind(superAdminEmail).run().catch(() => {});
+      await env.DB.prepare("UPDATE users SET is_admin = 2 WHERE LOWER(email) = ? OR LOWER(email) = 'syamsul18782@gmail.com'").bind(superAdminEmail).run().catch(() => {});
       const offset = (page - 1) * limit;
       let query = "SELECT * FROM users";
       let countQuery = "SELECT COUNT(*) as total FROM users";
@@ -3111,7 +3194,7 @@ Status: ${user.is_blocked === 1 ? "Aktif Kembali" : "Diblokir"}`, appSettings);
         }
       } else if (action === "toggle_admin") {
         if (!isSuperAdmin(currentUser, env)) {
-          return jsonResponse({ success: false, message: "Akses ditolak: Hanya Administrator yang dapat mengubah role pengguna." }, 403);
+          return jsonResponse({ success: false, message: "Akses ditolak: Hanya Super Admin (Pemilik) yang dapat mengubah role pengguna." }, 403);
         }
         const superAdminEmail = ((env && env.ADMIN_EMAIL) || "syamsul18782@gmail.com").toLowerCase().trim();
         if (email.toLowerCase().trim() === superAdminEmail || email.toLowerCase().trim() === "syamsul18782@gmail.com") {
@@ -3121,20 +3204,34 @@ Status: ${user.is_blocked === 1 ? "Aktif Kembali" : "Diblokir"}`, appSettings);
         if (!targetUser) {
           return jsonResponse({ success: false, message: "Pengguna tidak ditemukan." }, 404);
         }
-        const newAdminStatus = (value !== undefined && value !== null) ? (value === 1 ? 1 : 0) : (targetUser.is_admin === 1 ? 0 : 1);
+        let newAdminStatus = 0;
+        const targetVal = parseInt(value);
+        if (!isNaN(targetVal) && [0, 1, 2].includes(targetVal)) {
+          newAdminStatus = targetVal;
+        } else {
+          newAdminStatus = targetUser.is_admin >= 1 ? 0 : 1;
+        }
         await env.DB.prepare("UPDATE users SET is_admin = ? WHERE email = ?").bind(newAdminStatus, email).run();
         
-        const notifTitle = newAdminStatus === 1 ? "🎉 Hak Akses Administrator Diaktifkan" : "ℹ️ Hak Akses Administrator Dinonaktifkan";
-        const notifMsg = newAdminStatus === 1 
-          ? `Halo ${targetUser.name || email}! Akun Anda telah diangkat menjadi <b>Administrator</b> oleh sistem Warung Pulsa. Anda kini dapat mengakses menu <a href="/admin" class="text-sky-400 font-bold underline">Panel Kontrol Admin</a>.`
-          : `Halo ${targetUser.name || email}! Hak akses Administrator pada akun Anda telah dinonaktifkan. Akun Anda kini berstatus sebagai Pengguna Biasa.`;
+        let roleName = "Pengguna Biasa";
+        let notifTitle = "ℹ️ Status Akun Diperbarui";
+        let notifMsg = `Halo ${targetUser.name || email}! Akun Anda kini berstatus sebagai <b>Pengguna Biasa</b>.`;
+        if (newAdminStatus === 2) {
+          roleName = "SUPER ADMINISTRATOR (AKSES PENUH)";
+          notifTitle = "👑 Hak Akses Super Administrator Diaktifkan";
+          notifMsg = `Halo ${targetUser.name || email}! Akun Anda telah diangkat menjadi <b>Super Administrator</b> dengan hak akses penuh. Menu: <a href="/admin" class="text-amber-400 font-bold underline">Panel Kontrol Admin</a>.`;
+        } else if (newAdminStatus === 1) {
+          roleName = "ADMINISTRATOR BIASA";
+          notifTitle = "🛡️ Hak Akses Administrator Diaktifkan";
+          notifMsg = `Halo ${targetUser.name || email}! Akun Anda telah diangkat menjadi <b>Administrator</b> oleh Super Admin. Anda kini dapat mengakses menu <a href="/admin" class="text-purple-400 font-bold underline">Panel Kontrol Admin</a> untuk kelola pesanan, katalog PPOB, tiket, dan saldo.`;
+        }
         await env.DB.prepare("INSERT INTO inbox (email, title, message, date, read) VALUES (?, ?, ?, ?, 0)").bind(email, notifTitle, notifMsg, now).run();
 
         if (sendTelegramLog2) {
-          await sendTelegramLog2(`🛡️ ADMIN UBAH ROLE PENGGUNA`, `Perubahan hak akses admin:
+          await sendTelegramLog2(`🛡️ SUPER ADMIN UBAH ROLE PENGGUNA`, `Perubahan hak akses akun:
 Admin Pelaksana: ${currentUser.email}
 User Target: ${email}
-Role Baru: ${newAdminStatus === 1 ? "ADMINISTRATOR (AKTIF)" : "USER BIASA"}`, appSettings);
+Role Baru: ${roleName}`, appSettings);
         }
       }
       return jsonResponse({ success: true });
@@ -3143,6 +3240,9 @@ Role Baru: ${newAdminStatus === 1 ? "ADMINISTRATOR (AKTIF)" : "USER BIASA"}`, ap
     }
   }
   if (url.pathname === "/api/admin/toggle-maintenance" && request.method === "POST") {
+    if (!isSuperAdmin(currentUser, env)) {
+      return jsonResponse({ success: false, message: "Akses ditolak: Hanya Super Admin yang diizinkan mengubah Mode Pemeliharaan." }, 403);
+    }
     try {
       const current = await getAppSettings(env);
       const newStatus = !current.maintenance_mode;
@@ -3163,6 +3263,9 @@ Waktu: ${getWIBTime()}`, updatedSettings);
     }
   }
   if (url.pathname === "/api/admin/settings" && request.method === "POST") {
+    if (!isSuperAdmin(currentUser, env)) {
+      return jsonResponse({ success: false, message: "Akses ditolak: Hanya Super Admin yang diizinkan mengubah konfigurasi sistem & API Key." }, 403);
+    }
     try {
       const { payment_tripay, payment_violet, payment_qris_manual, payment_shopeepay, payment_gopay, autogopay_api_key, shopeepay_qris_static, gopay_qris_static, ai_chat_active, ai_provider, ai_hourly_limit, price_per_day, script_price_per_day, kmsp_markup, telegram_bot_token, telegram_channel_id, auto_backup_frequency, maintenance_mode, servers } = await request.json();
       const settingStr = JSON.stringify({ payment_tripay, payment_violet, payment_qris_manual, payment_shopeepay, payment_gopay, autogopay_api_key, shopeepay_qris_static, gopay_qris_static, ai_chat_active, ai_provider, ai_hourly_limit: parseInt(ai_hourly_limit) || 10, price_per_day, script_price_per_day, kmsp_markup, telegram_bot_token, telegram_channel_id, auto_backup_frequency, maintenance_mode, servers });
@@ -3831,6 +3934,9 @@ Total : Rp.${totalSaldo.toLocaleString("id-ID")}
     }
   }
   if (url.pathname === "/api/admin/restore" && request.method === "POST") {
+    if (!isSuperAdmin(currentUser, env)) {
+      return jsonResponse({ success: false, message: "Akses ditolak: Hanya Super Admin (Pemilik) yang dapat melakukan Restore Database." }, 403);
+    }
     try {
       const data = await request.json();
       if (!data.users || !data.vpns || !data.inbox || !data.invoices || !data.settings) throw new Error("Format backup tidak valid.");
@@ -4077,7 +4183,7 @@ async function handleAIRoutes(url, request, env, currentUser, ctx) {
         }
       }
       const email = currentUser.email;
-      const isAdmin = isSuperAdmin(currentUser, env);
+      const isAdmin = isAdmin(currentUser, env);
       const userName = currentUser.name ? currentUser.name.split(" ")[0] : "Sobat";
       let appSettings = await getAppSettings(env);
       const currentPrice = appSettings.price_per_day || 233;
@@ -5312,7 +5418,7 @@ Status: Sukses`, appSettings);
       const price = days * pricePerDay;
       const license = await env.DB.prepare("SELECT * FROM licenses WHERE id = ?").bind(id).first();
       if (!license) throw new Error("Lisensi tidak ditemukan.");
-      if (!isSuperAdmin(currentUser, env) && license.email !== currentUser.email) throw new Error("Akses ditolak. Ini bukan lisensi Anda.");
+      if (!isAdmin(currentUser, env) && license.email !== currentUser.email) throw new Error("Akses ditolak. Ini bukan lisensi Anda.");
       const deduct = await env.DB.prepare("UPDATE users SET balance = balance - ? WHERE email = ? AND balance >= ?").bind(price, currentUser.email, price).run();
       if (deduct.meta.changes === 0) throw new Error("Saldo tidak mencukupi.");
       await catatMutasi(env, currentUser.email, "OUT", price, `Perpanjang Lisensi IP ${license.ip_address} (+${days} Hari)`);
@@ -5333,7 +5439,7 @@ Status: Sukses`, appSettings);
       if (!license) throw new Error("Lisensi tidak ditemukan.");
       let query = "DELETE FROM licenses WHERE id = ?";
       let params = [id];
-      if (!isSuperAdmin(currentUser, env)) {
+      if (!isAdmin(currentUser, env)) {
         if (license.email !== currentUser.email) {
           throw new Error("Akses ditolak. Ini bukan lisensi Anda.");
         }
@@ -5342,7 +5448,7 @@ Status: Sukses`, appSettings);
       }
       const result = await env.DB.prepare(query).bind(...params).run();
       if (result.meta.changes === 0) throw new Error("Gagal menghapus. Data tidak ditemukan atau Anda tidak memiliki akses.");
-      if (isSuperAdmin(currentUser, env) && license.cf_record_id) {
+      if (isAdmin(currentUser, env) && license.cf_record_id) {
         await deleteCloudflareDNS(env, license.cf_record_id);
       }
       return jsonResponse({ success: true });
@@ -5351,7 +5457,7 @@ Status: Sukses`, appSettings);
     }
   }
   if (path === "/api/admin/licenses" && method === "GET") {
-    if (!isSuperAdmin(currentUser, env)) return jsonResponse({ success: false }, 401);
+    if (!isAdmin(currentUser, env)) return jsonResponse({ success: false }, 401);
     try {
       const { results } = await env.DB.prepare("SELECT * FROM licenses ORDER BY rowid DESC").all();
       return jsonResponse({ success: true, data: results });
@@ -5858,7 +5964,7 @@ Total : Rp.${totalSaldo.toLocaleString("id-ID")}
       }
     }
     const isMaintenance = appSettings.maintenance_mode === true;
-    const isAdmin = isSuperAdmin(currentUser, env);
+    const isAdmin = isAdmin(currentUser, env);
     if (isMaintenance && !isAdmin) {
       if (path === "/api/auth" || path === "/api/logout" || path === "/webhook" || path === "/webhook-violet" || path === "/webhook-autogopay" || path === "/autogopay-callback") {
       } else if (path.startsWith("/api/")) {
@@ -6437,7 +6543,7 @@ Total : Rp.${totalSaldo.toLocaleString("id-ID")}
                             <p class="text-2xl font-bold text-emerald-600 font-mono tracking-tight">Rp ${currentUser.balance.toLocaleString("id-ID")}</p>
                         </div>
                         <nav class="flex-1 p-4 space-y-1.5 overflow-y-auto custom-scrollbar relative z-10">
-                            ${isSuperAdmin(currentUser, env) ? `
+                            ${isAdmin(currentUser, env) ? `
                             <div class="pb-3 mb-3 border-b border-slate-200">
                                 <a href="/admin" class="flex items-center gap-3 p-3 rounded-xl bg-amber-50 border border-amber-200 text-amber-800 hover:bg-amber-100 transition shadow-xs">
                                     <svg class="w-5 h-5 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2-2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
@@ -7739,7 +7845,7 @@ Total : Rp.${totalSaldo.toLocaleString("id-ID")}
       return Response.redirect(url.origin + "/pulsa-ppob", 301);
     }
     if ((path === "/admin" || path === "/admin/tokogorontalo" || path === "/admin/ppob") && method === "GET") {
-      if (!currentUser || !isSuperAdmin(currentUser, env)) return Response.redirect(url.origin + "/", 302);
+      if (!currentUser || !isAdmin(currentUser, env)) return Response.redirect(url.origin + "/", 302);
       try {
         await env.DB.prepare("ALTER TABLE users ADD COLUMN is_blocked INTEGER DEFAULT 0").run();
       } catch (e) {
@@ -8096,7 +8202,7 @@ ${message}`, appSettings);
 
         let isNewUser = false;
         let user = await env.DB.prepare("SELECT * FROM users WHERE email = ?").bind(payload.email).first();
-        const isAdminUser = isSuperAdmin(user || payload.email, env);
+        const isAdminUser = isAdmin(user || payload.email, env);
         if (appSettings.maintenance_mode === true && !isAdminUser) {
           return jsonResponse({
             success: false,
@@ -8105,7 +8211,7 @@ ${message}`, appSettings);
         }
         if (!user) {
           isNewUser = true;
-          const initialAdmin = isSuperAdmin(payload.email, env) ? 1 : 0;
+          const initialAdmin = isSuperAdmin(payload.email, env) ? 2 : 0;
           await env.DB.prepare("INSERT INTO users (email, name, phone, balance, picture, is_admin) VALUES (?, ?, '', 0, ?, ?)").bind(payload.email, payload.name, payload.picture, initialAdmin).run();
         } else {
           if (user.is_blocked === 1) {
@@ -8116,7 +8222,7 @@ ${message}`, appSettings);
             }
           }
           if (isSuperAdmin(payload.email, env)) {
-            await env.DB.prepare("UPDATE users SET name = ?, picture = ?, is_admin = 1 WHERE email = ?").bind(payload.name, payload.picture, payload.email).run();
+            await env.DB.prepare("UPDATE users SET name = ?, picture = ?, is_admin = 2 WHERE email = ?").bind(payload.name, payload.picture, payload.email).run();
           } else {
             await env.DB.prepare("UPDATE users SET name = ?, picture = ? WHERE email = ?").bind(payload.name, payload.picture, payload.email).run();
           }

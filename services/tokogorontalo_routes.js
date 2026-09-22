@@ -1367,14 +1367,14 @@ async function handleTokoGorontaloRoutes(url, request, env, currentUser, appSett
   if (path.startsWith('/api/admin/tokogorontalo/')) {
     const isUserAdmin = (user) => {
       if (!user) return false;
-      if (user.is_admin === 1 || user.is_admin === '1' || user.is_admin === true) return true;
+      if (user.is_admin === 1 || user.is_admin === '1' || user.is_admin === 2 || user.is_admin === '2' || user.is_admin === true) return true;
       const userEmail = (user.email || '').toLowerCase().trim();
       const adminEmail = ((env && env.ADMIN_EMAIL) || (typeof process !== 'undefined' && process.env && process.env.ADMIN_EMAIL) || 'syamsul18782@gmail.com').toLowerCase().trim();
       if (userEmail === adminEmail || userEmail === 'syamsul18782@gmail.com') return true;
       if (rawDb && userEmail) {
         try {
           const row = rawDb.prepare('SELECT is_admin FROM users WHERE LOWER(email) = ?').get(userEmail);
-          if (row && (row.is_admin === 1 || row.is_admin === '1' || row.is_admin === true)) return true;
+          if (row && (row.is_admin === 1 || row.is_admin === '1' || row.is_admin === 2 || row.is_admin === '2' || row.is_admin === true)) return true;
         } catch (e) {}
       }
       return false;
