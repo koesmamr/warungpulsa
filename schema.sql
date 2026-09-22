@@ -9,6 +9,7 @@ CREATE TABLE IF NOT EXISTS users (
     phone TEXT,
     balance INTEGER DEFAULT 0,
     is_blocked INTEGER DEFAULT 0,
+    is_admin INTEGER DEFAULT 0,
     phonebook TEXT DEFAULT '[]',
     picture TEXT
 );

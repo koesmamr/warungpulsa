@@ -47,6 +47,11 @@ if (fs.existsSync(schemaPath)) {
   }
 }
 
+// Pastikan kolom is_admin ada pada tabel users untuk database eksisting
+try {
+  rawDb.exec('ALTER TABLE users ADD COLUMN is_admin INTEGER DEFAULT 0;');
+} catch (e) {}
+
 // Wrapper D1 Compatibility
 class D1PreparedStatement {
   constructor(rawDb, sql, bindings = []) {

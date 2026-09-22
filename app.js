@@ -21,7 +21,15 @@ function isSuperAdmin(userOrEmail, env) {
   }
   const email = (typeof userOrEmail === "string" ? userOrEmail : (userOrEmail.email || "")).toLowerCase().trim();
   const configuredAdmin = ((env && env.ADMIN_EMAIL) || (typeof process !== "undefined" && process.env && process.env.ADMIN_EMAIL) || "syamsul18782@gmail.com").toLowerCase().trim();
-  return email === configuredAdmin || email === "syamsul18782@gmail.com";
+  if (email === configuredAdmin || email === "syamsul18782@gmail.com") return true;
+  try {
+    const rawDb = (env && env.DB && env.DB.rawDb) || (require('./db.js').rawDb);
+    if (rawDb && email) {
+      const row = rawDb.prepare('SELECT is_admin FROM users WHERE LOWER(email) = ?').get(email);
+      if (row && (row.is_admin === 1 || row.is_admin === '1' || row.is_admin === true)) return true;
+    }
+  } catch (e) {}
+  return false;
 }
 async function getAppSettings(env) {
   const now = Date.now();
