@@ -12,7 +12,7 @@ const { handleTokoGorontaloRoutes, renderPPOBContent, renderTokoGorontaloAdminMo
 var cachedAppSettings = null;
 var cachedAppSettingsTime = 0;
 var CACHE_TTL = 3e5;
-function isSuperAdmin(userOrEmail, env) {
+function checkIsSuperAdmin(userOrEmail, env) {
   if (!userOrEmail) return false;
   if (typeof userOrEmail === "object") {
     if (userOrEmail.is_admin === 2 || userOrEmail.is_admin === "2") {
@@ -32,9 +32,9 @@ function isSuperAdmin(userOrEmail, env) {
   return false;
 }
 
-function isAdmin(userOrEmail, env) {
+function checkIsAdmin(userOrEmail, env) {
   if (!userOrEmail) return false;
-  if (isSuperAdmin(userOrEmail, env)) return true;
+  if (checkIsSuperAdmin(userOrEmail, env)) return true;
   if (typeof userOrEmail === "object") {
     if (userOrEmail.is_admin === 1 || userOrEmail.is_admin === "1" || userOrEmail.is_admin === 2 || userOrEmail.is_admin === "2" || userOrEmail.is_admin === true) {
       return true;
@@ -50,6 +50,9 @@ function isAdmin(userOrEmail, env) {
   } catch (e) {}
   return false;
 }
+
+const isSuperAdmin = checkIsSuperAdmin;
+const isAdmin = checkIsAdmin;
 async function getAppSettings(env) {
   const now = Date.now();
   if (cachedAppSettings && now - cachedAppSettingsTime < CACHE_TTL) {
@@ -4183,7 +4186,7 @@ async function handleAIRoutes(url, request, env, currentUser, ctx) {
         }
       }
       const email = currentUser.email;
-      const isAdmin = isAdmin(currentUser, env);
+      const isAdmin = checkIsAdmin(currentUser, env);
       const userName = currentUser.name ? currentUser.name.split(" ")[0] : "Sobat";
       let appSettings = await getAppSettings(env);
       const currentPrice = appSettings.price_per_day || 233;
@@ -5964,8 +5967,8 @@ Total : Rp.${totalSaldo.toLocaleString("id-ID")}
       }
     }
     const isMaintenance = appSettings.maintenance_mode === true;
-    const isAdmin = isAdmin(currentUser, env);
-    if (isMaintenance && !isAdmin) {
+    const isUserAdmin = checkIsAdmin(currentUser, env);
+    if (isMaintenance && !isUserAdmin) {
       if (path === "/api/auth" || path === "/api/logout" || path === "/webhook" || path === "/webhook-violet" || path === "/webhook-autogopay" || path === "/autogopay-callback") {
       } else if (path.startsWith("/api/")) {
         return jsonResponse({ success: false, message: "Sistem sedang dalam mode pemeliharaan (Maintenance)." }, 503);
@@ -6559,12 +6562,12 @@ Total : Rp.${totalSaldo.toLocaleString("id-ID")}
                         <div class="p-4 border-t border-slate-200 bg-slate-50/70 relative z-10">
                             <a href="/profil" title="Buka Profil Saya" class="flex items-center gap-3 p-2 -mx-2 rounded-xl hover:bg-slate-100 transition cursor-pointer group">
                                 ${currentUser.picture ? `
-                                    <img src="${currentUser.picture}" alt="${escapeHTML(currentUser.name)}" class="w-10 h-10 rounded-full object-cover shadow-sm shrink-0 border border-slate-300 transition" referrerpolicy="no-referrer">
+                                    <img src="${currentUser.picture}" alt="${escapeHTML(currentUser.name || '')}" class="w-10 h-10 rounded-full object-cover shadow-sm shrink-0 border border-slate-300 transition" referrerpolicy="no-referrer">
                                 ` : `
-                                    <div class="w-10 h-10 rounded-full bg-sky-600 flex items-center justify-center font-bold text-white uppercase shadow-sm shrink-0 group-hover:bg-sky-500 transition">${currentUser.name.charAt(0)}</div>
+                                    <div class="w-10 h-10 rounded-full bg-sky-600 flex items-center justify-center font-bold text-white uppercase shadow-sm shrink-0 group-hover:bg-sky-500 transition">${(currentUser.name || "U").charAt(0)}</div>
                                 `}
                                 <div class="overflow-hidden flex-grow">
-                                    <p class="text-sm font-bold text-slate-900 truncate group-hover:text-sky-600 transition">${escapeHTML(currentUser.name)}</p>
+                                    <p class="text-sm font-bold text-slate-900 truncate group-hover:text-sky-600 transition">${escapeHTML(currentUser.name || 'Pelanggan')}</p>
                                     <p class="text-[10px] text-slate-500 truncate">${currentUser.email}</p>
                                 </div>
                                 <svg class="w-4 h-4 text-slate-400 group-hover:text-sky-600 transition" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
@@ -7988,16 +7991,16 @@ Total : Rp.${totalSaldo.toLocaleString("id-ID")}
                 <div class="bg-white p-6 md:p-10 rounded-3xl border border-slate-200 shadow-xl">
                     <div class="flex flex-col items-center mb-8 border-b border-slate-100 pb-6">
                         ${currentUser.picture ? `
-                            <img src="${currentUser.picture}" alt="${escapeHTML(currentUser.name)}" class="w-20 h-20 rounded-full object-cover shadow-md border-2 border-sky-500 mb-3" referrerpolicy="no-referrer">
+                            <img src="${currentUser.picture}" alt="${escapeHTML(currentUser.name || '')}" class="w-20 h-20 rounded-full object-cover shadow-md border-2 border-sky-500 mb-3" referrerpolicy="no-referrer">
                         ` : `
-                            <div class="w-20 h-20 rounded-full bg-sky-600 flex items-center justify-center font-bold text-white text-2xl uppercase shadow-md mb-3">${currentUser.name.charAt(0)}</div>
+                            <div class="w-20 h-20 rounded-full bg-sky-600 flex items-center justify-center font-bold text-white text-2xl uppercase shadow-md mb-3">${(currentUser.name || "U").charAt(0)}</div>
                         `}
-                        <h2 class="text-lg font-bold text-slate-900">${escapeHTML(currentUser.name)}</h2>
+                        <h2 class="text-lg font-bold text-slate-900">${escapeHTML(currentUser.name || 'Pengguna')}</h2>
                         <p class="text-xs text-slate-500 font-mono mt-1">${currentUser.email}</p>
                     </div>
                     <form id="profileForm" class="space-y-6">
                         <div><label class="block text-sm font-bold tracking-wide text-slate-600 mb-2 uppercase">Email Akun (Terkunci)</label><input type="email" value="${currentUser.email}" disabled class="w-full bg-slate-100 border border-slate-200 rounded-xl p-4 text-slate-500 cursor-not-allowed font-medium"></div>
-                        <div><label class="block text-sm font-bold tracking-wide text-slate-600 mb-2 uppercase">Nama Lengkap</label><input type="text" id="profileName" value="${escapeHTML(currentUser.name)}" required class="w-full bg-slate-50 border border-slate-200 rounded-xl p-4 text-slate-900 focus:bg-white focus:ring-2 focus:ring-sky-500 outline-none transition font-medium"></div>
+                        <div><label class="block text-sm font-bold tracking-wide text-slate-600 mb-2 uppercase">Nama Lengkap</label><input type="text" id="profileName" value="${escapeHTML(currentUser.name || '')}" required class="w-full bg-slate-50 border border-slate-200 rounded-xl p-4 text-slate-900 focus:bg-white focus:ring-2 focus:ring-sky-500 outline-none transition font-medium"></div>
                         <div><label class="block text-sm font-bold tracking-wide text-slate-600 mb-2 uppercase">Nomor WhatsApp / XL Tersimpan</label><input type="text" id="profilePhone" value="${currentUser.phone || ""}" placeholder="Contoh: 081234567890" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-4 text-slate-900 focus:bg-white focus:ring-2 focus:ring-sky-500 outline-none transition font-medium"></div>
                         <div class="pt-4"><button type="submit" id="btnUpdateProfile" class="w-full bg-sky-600 hover:bg-sky-500 text-white font-black py-4 px-4 rounded-xl transition shadow-lg text-lg tracking-wide">Simpan Perubahan</button></div>
                     </form>
