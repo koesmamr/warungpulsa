@@ -203,7 +203,9 @@ async function sendTelegramLog(statusHeader, bodyMsg, appSettings) {
     candidateIds.push('-100' + rawChatId);
   }
 
-  const finalMessage = `<b>${statusHeader}</b>\n\n${bodyMsg}\n\n🕒 ${getWIBTime()}`;
+  const cleanHeader = String(statusHeader || '').trim();
+  const headerPrefix = cleanHeader.startsWith('#warungpulsa') ? '' : '#warungpulsa\n';
+  const finalMessage = `${headerPrefix}<b>${cleanHeader}</b>\n\n${bodyMsg}\n\n🕒 ${getWIBTime()}`;
 
   for (const targetChatId of candidateIds) {
     try {
@@ -3877,7 +3879,8 @@ Email Pemilik: ${vpnRecord.email}`, appSettings);
       const ppobToday = ppobTx.filter((p) => p.created_at && (p.created_at.includes(todayStr) || p.created_at.includes(isoToday))).length +
                         xlPurchases.filter((i) => i.date && (i.date.includes(todayStr) || i.date.includes(isoToday))).length;
 
-      const captionHtml = `<b>\u{1F4CA} Statistik Warung Pulsa</b>
+      const captionHtml = `#warungpulsa
+<b>\u{1F4CA} Statistik Warung Pulsa</b>
 
 Pengguna: ${totalUsers}
 Transaksi: ${totalTransactions}
@@ -5855,7 +5858,8 @@ var worker_default = {
       const freqText = frequency === 1 ? "Tiap 1 Jam (24x Sehari)" : `Tiap ${frequency} Jam (${timesPerDay}x Sehari)`;
       const formData = new FormData();
       formData.append("chat_id", chatId);
-      formData.append("caption", `\u{1F4E6} <b>AUTO BACKUP DATABASE</b>
+      formData.append("caption", `#warungpulsa
+\u{1F4E6} <b>AUTO BACKUP DATABASE</b>
 
 \u{1F552} Waktu: ${wibTime}
 \u23F1\uFE0F Frekuensi: ${freqText}
