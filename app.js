@@ -7799,19 +7799,19 @@ Total : Rp.${totalSaldo.toLocaleString("id-ID")}
                             <h3 class="text-xl font-bold text-slate-900 mb-3">Pulsa & Paket Data</h3>
                             <p class="text-sm text-slate-600 leading-relaxed mb-6">Isi ulang pulsa reguler, pulsa transfer, dan paket kuota internet untuk seluruh operator Indonesia (Telkomsel, Indosat, XL, AXIS, Tri, Smartfren).</p>
                         </div>
-                        <a href="/pulsa-ppob" class="block w-full bg-sky-600 hover:bg-sky-500 text-white text-center font-bold py-3 px-4 rounded-xl text-sm transition shadow-md">Beli Pulsa & Data</a>
+                        <a href="/pulsa-ppob#pulsa" class="block w-full bg-sky-600 hover:bg-sky-500 text-white text-center font-bold py-3 px-4 rounded-xl text-sm transition shadow-md">Beli Pulsa & Data</a>
                     </div>
 
-                    <!-- Card 2: Token Listrik PLN & Tagihan -->
+                    <!-- Card 2: Token Listrik PLN -->
                     <div class="bg-white rounded-3xl border border-slate-200 shadow-xl p-8 flex flex-col justify-between hover:-translate-y-1.5 transition-transform duration-300">
                         <div>
                             <div class="w-14 h-14 rounded-2xl bg-amber-50 text-amber-600 flex items-center justify-center mb-6">
                                 <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
                             </div>
                             <h3 class="text-xl font-bold text-slate-900 mb-3">Token Listrik PLN</h3>
-                            <p class="text-sm text-slate-600 leading-relaxed mb-6">Beli token listrik prabayar instan langsung masuk 24 jam dengan nomor token SN tercatat otomatis di history transaksi akun Anda.</p>
+                            <p class="text-sm text-slate-600 leading-relaxed mb-6">Beli token listrik prabayar PLN 24 jam nonstop. Kode token 20 digit diterbitkan seketika dan otomatis masuk ke Kotak Masuk (Inbox) Anda.</p>
                         </div>
-                        <a href="/pulsa-ppob" class="block w-full bg-amber-600 hover:bg-amber-500 text-white text-center font-bold py-3 px-4 rounded-xl text-sm transition shadow-md">Beli Token PLN</a>
+                        <a href="/pulsa-ppob#pln" class="block w-full bg-amber-600 hover:bg-amber-500 text-white text-center font-bold py-3 px-4 rounded-xl text-sm transition shadow-md">Beli Token PLN</a>
                     </div>
 
                     <!-- Card 3: E-Wallet & Voucher Game -->
@@ -7823,7 +7823,7 @@ Total : Rp.${totalSaldo.toLocaleString("id-ID")}
                             <h3 class="text-xl font-bold text-slate-900 mb-3">E-Wallet & Voucher Game</h3>
                             <p class="text-sm text-slate-600 leading-relaxed mb-6">Top up saldo DANA, GoPay, OVO, ShopeePay, LinkAja, Maxim Driver, serta voucher game populer Mobile Legends, Free Fire, dan lainnya.</p>
                         </div>
-                        <a href="/pulsa-ppob" class="block w-full bg-emerald-600 hover:bg-emerald-500 text-white text-center font-bold py-3 px-4 rounded-xl text-sm transition shadow-md">Top Up E-Wallet</a>
+                        <a href="/pulsa-ppob#ewallet" class="block w-full bg-emerald-600 hover:bg-emerald-500 text-white text-center font-bold py-3 px-4 rounded-xl text-sm transition shadow-md">Top Up E-Wallet</a>
                     </div>
                 </div>
 

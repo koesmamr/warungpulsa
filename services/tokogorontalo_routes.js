@@ -973,7 +973,7 @@ async function handleTokoGorontaloRoutes(url, request, env, currentUser, appSett
       if (detected) brand = detected;
     }
 
-    let sql = 'SELECT id, product_code, product_name, description, product_type, category, brand, cost_price, selling_price FROM ppob_products WHERE is_active = 1';
+    let sql = "SELECT id, product_code, product_name, description, product_type, category, brand, cost_price, selling_price FROM ppob_products WHERE is_active = 1 AND (product_type != 'open' OR product_type IS NULL)";
     const params = [];
 
     if (category) {
@@ -2133,16 +2133,17 @@ function renderPPOBContent(currentUser, appSettings, env) {
           'DANA': 'DANA',
           'GOPAY': 'GoPay',
           'OVO': 'OVO',
-          'SHOPEEPAY': 'ShopeePay',
+          'SHOPEEPAY': 'Shopee / ShopeePay',
           'GAME': 'Game',
           'WIFIID': 'Wifi ID'
       };
 
-      function selectCategory(cat) {
+      function selectCategory(cat, targetBrand = '') {
           currentCategory = cat;
           try {
-              if (window.location.hash !== '#' + cat) {
-                  history.replaceState(null, '', '#' + cat);
+              const hashTarget = targetBrand ? '#' + targetBrand.toLowerCase() : '#' + cat;
+              if (window.location.hash !== hashTarget) {
+                  history.replaceState(null, '', hashTarget);
               }
           } catch(e) {}
           document.querySelectorAll('.cat-btn').forEach(btn => btn.classList.remove('active'));
@@ -2162,19 +2163,21 @@ function renderPPOBContent(currentUser, appSettings, env) {
               currentBrand = 'PLN';
               fetchProducts();
           } else if (cat === 'ewallet') {
-              label.innerText = 'Nomor Akun E-Wallet';
+              label.innerText = 'Nomor HP Akun Shopee / E-Wallet';
               input.placeholder = 'Contoh: 081234567890';
-              helper.innerText = 'Pilih e-wallet dan masukkan nomor HP yang terdaftar.';
+              helper.innerText = 'Pilih e-wallet (Shopee, DANA, GoPay, OVO) lalu masukkan nomor HP yang terdaftar.';
               brandContainer.classList.remove('hidden');
-              renderBrandPills(['DANA', 'GOPAY', 'OVO', 'SHOPEEPAY']);
-              currentBrand = 'DANA';
+              const ewalletBrands = ['SHOPEEPAY', 'DANA', 'GOPAY', 'OVO'];
+              const selectedBrand = targetBrand && ewalletBrands.includes(targetBrand.toUpperCase()) ? targetBrand.toUpperCase() : 'SHOPEEPAY';
+              renderBrandPills(ewalletBrands, selectedBrand);
+              currentBrand = selectedBrand;
               fetchProducts();
           } else if (cat === 'game') {
               label.innerText = 'User ID Akun Game';
               input.placeholder = 'Masukkan User ID (Contoh: 12345678)';
               helper.innerText = 'Pilih game lalu masukkan User ID & Server ID.';
               brandContainer.classList.remove('hidden');
-              renderBrandPills(['GAME']);
+              renderBrandPills(['GAME'], 'GAME');
               currentBrand = 'GAME';
               fetchProducts();
           } else if (cat === 'wifiID') {
@@ -2194,10 +2197,11 @@ function renderPPOBContent(currentUser, appSettings, env) {
           renderFavoriteChips();
       }
 
-      function renderBrandPills(brands) {
+      function renderBrandPills(brands, activeBrand = '') {
           const container = document.getElementById('brandPills');
-          container.innerHTML = brands.map((b, idx) => \`
-              <button onclick="setBrand('\${b}')" id="pill-\${b}" class="brand-pill \${idx === 0 ? 'bg-sky-600 text-white' : 'bg-slate-100 text-slate-700 hover:bg-slate-200'} font-bold text-xs px-4 py-2 rounded-xl transition cursor-pointer">
+          const targetActive = activeBrand || brands[0];
+          container.innerHTML = brands.map((b) => \`
+              <button onclick="setBrand('\${b}')" id="pill-\${b}" class="brand-pill \${b === targetActive ? 'bg-sky-600 text-white' : 'bg-slate-100 text-slate-700 hover:bg-slate-200'} font-bold text-xs px-4 py-2 rounded-xl transition cursor-pointer">
                   \${BRAND_NAMES[b] || b}
               </button>
           \`).join('');
@@ -3041,10 +3045,22 @@ function renderPPOBContent(currentUser, appSettings, env) {
 
       // Initial run & Hash router for F5 / Refresh
       function getValidCategoryFromHash() {
-          const hashCat = (window.location.hash || '').replace('#', '').toLowerCase();
+          const rawHash = (window.location.hash || '').replace('#', '').toLowerCase().trim();
+          if (rawHash === 'shopee' || rawHash === 'shopeepay') {
+              return { cat: 'ewallet', brand: 'SHOPEEPAY' };
+          }
+          if (rawHash === 'dana') {
+              return { cat: 'ewallet', brand: 'DANA' };
+          }
+          if (rawHash === 'gopay') {
+              return { cat: 'ewallet', brand: 'GOPAY' };
+          }
+          if (rawHash === 'ovo') {
+              return { cat: 'ewallet', brand: 'OVO' };
+          }
           const validCats = ['pulsa', 'data', 'pln', 'ewallet', 'game', 'wifiid'];
-          if (!validCats.includes(hashCat)) return 'pulsa';
-          return hashCat === 'wifiid' ? 'wifiID' : hashCat;
+          if (!validCats.includes(rawHash)) return { cat: 'pulsa', brand: '' };
+          return { cat: rawHash === 'wifiid' ? 'wifiID' : rawHash, brand: '' };
       }
 
       window.addEventListener('DOMContentLoaded', () => {
@@ -3054,13 +3070,14 @@ function renderPPOBContent(currentUser, appSettings, env) {
           if (isUserLoggedIn) {
               loadUserContacts();
           }
-          selectCategory(getValidCategoryFromHash());
+          const route = getValidCategoryFromHash();
+          selectCategory(route.cat, route.brand);
       });
 
       window.addEventListener('hashchange', () => {
-          const targetCat = getValidCategoryFromHash();
-          if (targetCat !== currentCategory) {
-              selectCategory(targetCat);
+          const route = getValidCategoryFromHash();
+          if (route.cat !== currentCategory || (route.brand && route.brand !== currentBrand)) {
+              selectCategory(route.cat, route.brand);
           }
       });
 
