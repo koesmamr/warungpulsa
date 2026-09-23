@@ -290,7 +290,7 @@ function buildEmailTemplate(title, bodyContent) {
                 <img src="${logoUrl}" alt="Logo Warung Pulsa">
                 <div style="display:inline-block;vertical-align:middle;margin-left:14px;">
                     <h1 style="margin:0;font-size:22px;color:#ffffff;line-height:1.2;font-weight:800;">Warung Pulsa</h1>
-                    <span style="font-size:11px;color:#fcd34d;font-weight:700;letter-spacing:1px;text-transform:uppercase;display:block;">✦ Cendana ✦</span>
+                    <span style="font-size:11px;color:#fcd34d;font-weight:700;letter-spacing:1px;text-transform:uppercase;display:block;">✦ Gass Umkm ✦</span>
                 </div>
             </div>
             <div class="content">
@@ -4203,7 +4203,7 @@ async function handleAIRoutes(url, request, env, currentUser, ctx) {
       }
       const serverListStr = (appSettings.servers || []).map((s, index) => `${index + 1}. ID: ${s.id} | Nama: ${s.name}`).join("\n");
       let dynamicSystemPrompt = `
-Kamu adalah "Asisten Digital Warung Pulsa Cendana", seorang pemuda ramah asal Jawa yang asik, cerdas, solutif, dan sopan, serta memiliki nilai-nilai Islami.
+Kamu adalah "Asisten Digital Warung Pulsa Gass Umkm", seorang pemuda ramah asal Jawa yang asik, cerdas, solutif, dan sopan, serta memiliki nilai-nilai Islami.
 
 KEPRIBADIAN & BAHASA:
 - Gunakan Bahasa Indonesia yang santai, bersahabat, dan sopan sebagai bahasa utama.
@@ -4216,8 +4216,8 @@ INFORMASI USER SAAT INI:
 - Email: ${email}
 - Saldo Akun: Rp ${(currentUser.balance || 0).toLocaleString("id-ID")}
 
-LAYANAN UTAMA WARUNG PULSA CENDANA:
-Warung Pulsa Cendana adalah platform penyedia produk digital Pulsa, Kuota Data, dan PPOB termurah, tercepat, dan otomatis 24 Jam nonstop.
+LAYANAN UTAMA WARUNG PULSA GASS UMKM:
+Warung Pulsa Gass Umkm adalah platform penyedia produk digital Pulsa, Kuota Data, dan PPOB termurah, tercepat, dan otomatis 24 Jam nonstop.
 Produk yang tersedia meliputi:
 1. Pulsa Reguler All Operator (Telkomsel, By.U, Indosat Ooredoo, XL Axiata, Axis, Tri, Smartfren).
 2. Paket Data & Kuota Internet (Harian, Mingguan, Bulanan, Unlimited, Extra Kuota).
@@ -5926,17 +5926,18 @@ Total : Rp.${totalSaldo.toLocaleString("id-ID")}
         console.error('Gagal memuat logo/favicon:', errLogo.message);
       }
     }
-    if (path === "/qris-manual.jpg" || path === "/qris-shopee.jpg" || path === "/qris-gopay.jpg") {
+    if (path === "/qris-manual.jpg" || path === "/qris-shopee.jpg" || path === "/qris-gopay.jpg" || path === "/outlet-gassumkm.jpg" || path === "/outlet-gassumkm.png" || path === "/outlet.jpg") {
       try {
         const fsModule = require('fs');
         const pathModule = require('path');
         const fileName = path.replace('/', '');
-        const qrisFile = pathModule.join(__dirname, fileName);
-        if (fsModule.existsSync(qrisFile)) {
-          const qrisBuffer = fsModule.readFileSync(qrisFile);
-          return new Response(qrisBuffer, {
+        const targetFile = pathModule.join(__dirname, fileName);
+        if (fsModule.existsSync(targetFile)) {
+          const fileBuf = fsModule.readFileSync(targetFile);
+          const mimeType = fileName.endsWith('.png') ? "image/png" : "image/jpeg";
+          return new Response(fileBuf, {
             headers: {
-              "Content-Type": "image/jpeg",
+              "Content-Type": mimeType,
               "Cache-Control": "public, max-age=86400"
             }
           });
@@ -6017,7 +6018,7 @@ Total : Rp.${totalSaldo.toLocaleString("id-ID")}
                                 </div>
                                 <div>
                                     <span class="text-xl font-extrabold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-slate-900 via-sky-800 to-blue-900 block leading-tight">Warung Pulsa</span>
-                                    <span class="text-[10px] uppercase font-bold tracking-widest text-amber-600 block">✦ Cendana ✦</span>
+                                    <span class="text-[10px] uppercase font-bold tracking-widest text-amber-600 block">✦ Gass Umkm ✦</span>
                                 </div>
                             </div>
                             <div class="flex items-center gap-2">
@@ -6426,20 +6427,20 @@ Total : Rp.${totalSaldo.toLocaleString("id-ID")}
         `;
     const renderLayout = /* @__PURE__ */ __name222((title, content) => {
       const metaTags = `
-                <meta name="title" content="${title} - Warung Pulsa Cendana">
-                <meta name="description" content="Warung Pulsa Cendana - Platform Agen Pulsa All Operator, Paket Data Internet, Token Listrik PLN, dan Top Up Saldo E-Wallet Otomatis 24 Jam Termurah.">
-                <meta name="keywords" content="Warung Pulsa Cendana, Warung Pulsa, Pulsa Murah, Agen Pulsa, Beli Pulsa, Paket Data, Kuota Internet, Token PLN, Top Up E-Wallet, PPOB 24 Jam">
+                <meta name="title" content="${title} - Warung Pulsa Gass Umkm">
+                <meta name="description" content="Warung Pulsa Gass Umkm - Platform Agen Pulsa All Operator, Paket Data Internet, Token Listrik PLN, dan Top Up Saldo E-Wallet Otomatis 24 Jam Termurah.">
+                <meta name="keywords" content="Warung Pulsa Gass Umkm, Warung Pulsa, Pulsa Murah, Agen Pulsa, Beli Pulsa, Paket Data, Kuota Internet, Token PLN, Top Up E-Wallet, PPOB 24 Jam">
                 <meta name="theme-color" content="#f8fafc">
                 <meta property="og:type" content="website">
                 <meta property="og:url" content="/">
-                <meta property="og:title" content="${title} | Warung Pulsa Cendana">
-                <meta property="og:description" content="Warung Pulsa Cendana - Platform Agen Pulsa All Operator, Paket Data Internet, Token Listrik PLN, dan Top Up Saldo E-Wallet Otomatis 24 Jam Termurah.">
+                <meta property="og:title" content="${title} | Warung Pulsa Gass Umkm">
+                <meta property="og:description" content="Warung Pulsa Gass Umkm - Platform Agen Pulsa All Operator, Paket Data Internet, Token Listrik PLN, dan Top Up Saldo E-Wallet Otomatis 24 Jam Termurah.">
                 <meta property="og:image" content="${LOGO_URL}">
-                <meta property="og:site_name" content="Warung Pulsa Cendana">
+                <meta property="og:site_name" content="Warung Pulsa Gass Umkm">
                 <meta property="twitter:card" content="summary_large_image">
                 <meta property="twitter:url" content="/">
-                <meta property="twitter:title" content="${title} | Warung Pulsa Cendana">
-                <meta property="twitter:description" content="Warung Pulsa Cendana - Platform Agen Pulsa All Operator, Paket Data Internet, Token Listrik PLN, dan Top Up Saldo E-Wallet Otomatis 24 Jam Termurah.">
+                <meta property="twitter:title" content="${title} | Warung Pulsa Gass Umkm">
+                <meta property="twitter:description" content="Warung Pulsa Gass Umkm - Platform Agen Pulsa All Operator, Paket Data Internet, Token Listrik PLN, dan Top Up Saldo E-Wallet Otomatis 24 Jam Termurah.">
                 <meta property="twitter:image" content="${LOGO_URL}">`;
       if (currentUser) {
         const unreadCount = currentUser.inbox_unread_count || 0;
@@ -6449,7 +6450,7 @@ Total : Rp.${totalSaldo.toLocaleString("id-ID")}
                 <head>
                     <meta charset="UTF-8">
                     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-                    <title>${title} - Warung Pulsa Cendana</title>
+                    <title>${title} - Warung Pulsa Gass Umkm</title>
                     ${metaTags}
                     <link rel="icon" type="image/x-icon" href="/favicon.ico">
                     <link rel="icon" type="image/png" href="${LOGO_URL}">
@@ -6538,7 +6539,7 @@ Total : Rp.${totalSaldo.toLocaleString("id-ID")}
                                 <img src="${LOGO_URL}" alt="Logo" class="w-9 h-9 rounded-full border border-slate-200 object-contain shadow-xs bg-white">
                                 <div>
                                     <span class="text-lg font-bold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-sky-600 to-blue-700 block leading-tight">Warung Pulsa</span>
-                                    <span class="text-[10px] font-bold text-amber-500 tracking-wider uppercase block">✦ Cendana ✦</span>
+                                    <span class="text-[10px] font-bold text-amber-500 tracking-wider uppercase block">✦ Gass Umkm ✦</span>
                                 </div>
                             </a>
                             <button onclick="toggleSidebar()" class="md:hidden text-slate-500 hover:text-slate-800 p-1 rounded-lg hover:bg-slate-100 transition">
@@ -6601,7 +6602,7 @@ Total : Rp.${totalSaldo.toLocaleString("id-ID")}
                             ${content}
                             <footer class="border-t border-slate-200 mt-12 py-8 text-center text-slate-500 text-xs flex items-center justify-center gap-2">
                                 <img src="${LOGO_URL}" alt="Logo" class="w-5 h-5 opacity-80 hover:opacity-100 transition object-contain">
-                                <span>&copy; ${(/* @__PURE__ */ new Date()).getFullYear()} Warung Pulsa Cendana. Hak cipta dilindungi.</span>
+                                <span>&copy; ${(/* @__PURE__ */ new Date()).getFullYear()} Warung Pulsa Gass Umkm. Hak cipta dilindungi.</span>
                             </footer>
                         </main>
                     </div>
@@ -6621,7 +6622,7 @@ Total : Rp.${totalSaldo.toLocaleString("id-ID")}
                 <head>
                     <meta charset="UTF-8">
                     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-                    <title>${title} - Warung Pulsa Cendana</title>
+                    <title>${title} - Warung Pulsa Gass Umkm</title>
                     ${metaTags}
                     <link rel="icon" type="image/x-icon" href="/favicon.ico">
                     <link rel="icon" type="image/png" href="${LOGO_URL}">
@@ -6667,7 +6668,7 @@ Total : Rp.${totalSaldo.toLocaleString("id-ID")}
                                 <img src="${LOGO_URL}" alt="Logo" class="w-10 h-10 md:w-11 md:h-11 rounded-full border border-slate-200 shadow-sm group-hover:border-sky-500 transition duration-300 object-contain bg-white">
                                 <div>
                                     <span class="text-xl md:text-2xl font-bold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-cyan-600 via-sky-600 to-blue-700 block leading-tight">Warung Pulsa</span>
-                                    <span class="text-[10px] md:text-[11px] font-bold text-amber-500 uppercase tracking-widest block">✦ Cendana ✦</span>
+                                    <span class="text-[10px] md:text-[11px] font-bold text-amber-500 uppercase tracking-widest block">✦ Gass Umkm ✦</span>
                                 </div>
                             </a>
                             <div class="hidden md:flex gap-7 items-center text-sm font-semibold">
@@ -6703,7 +6704,7 @@ Total : Rp.${totalSaldo.toLocaleString("id-ID")}
                                     <img src="${LOGO_URL}" alt="Logo" class="w-9 h-9 rounded-full border border-slate-200 object-contain bg-white">
                                     <div>
                                         <h3 class="text-xl font-bold text-sky-600 leading-tight">Warung Pulsa</h3>
-                                        <span class="text-[10px] font-bold text-amber-500 uppercase tracking-widest block">✦ Cendana ✦</span>
+                                        <span class="text-[10px] font-bold text-amber-500 uppercase tracking-widest block">✦ Gass Umkm ✦</span>
                                     </div>
                                 </div>
                                 <p class="text-slate-600 leading-relaxed text-sm">Pusat layanan Beli Pulsa All Operator, Paket Kuota Internet, Token Listrik PLN, dan Top Up Saldo E-Wallet otomatis 24 Jam dengan harga agen termurah dan transaksi instan.</p>
@@ -6718,9 +6719,10 @@ Total : Rp.${totalSaldo.toLocaleString("id-ID")}
                                 </ul>
                             </div>
                             <div>
-                                <h4 class="font-bold text-slate-900 mb-4 uppercase tracking-wider text-sm">Layanan Pelanggan (CS)</h4>
-                                <p class="text-sm text-slate-600 mb-3">Jika mengalami kendala teknis atau transaksi, silakan hubungi CS kami (Arif):</p>
+                                <h4 class="font-bold text-slate-900 mb-4 uppercase tracking-wider text-sm">Layanan Pelanggan (CS) &amp; Lokasi</h4>
+                                <p class="text-sm text-slate-600 mb-3">Kunjungi gerai fisik kami atau hubungi CS kami (Arif):</p>
                                 <ul class="space-y-3 text-sm text-slate-700 font-medium">
+                                    <li><a href="https://maps.app.goo.gl/sgSyLtGm9tL7szYu6" target="_blank" rel="noopener noreferrer" class="flex items-center gap-3 hover:text-emerald-600 transition group"><div class="bg-white border border-slate-200 p-2 rounded-full group-hover:border-emerald-300 shadow-xs"><svg class="w-4 h-4 text-emerald-600" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg></div><span>Lokasi Toko: Google Maps Gass UMKM</span></a></li>
                                     <li><a href="https://wa.me/6285240260221" target="_blank" class="flex items-center gap-3 hover:text-emerald-600 transition group"><div class="bg-white border border-slate-200 p-2 rounded-full group-hover:border-emerald-300 shadow-xs"><svg class="w-4 h-4 text-emerald-600" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg></div><span>WhatsApp: 085240260221</span></a>
                                     </li>
                                     <li><a href="https://t.me/pejuanggto" target="_blank" class="flex items-center gap-3 hover:text-sky-600 transition group"><div class="bg-white border border-slate-200 p-2 rounded-full group-hover:border-sky-300 shadow-xs"><svg class="w-4 h-4 text-sky-600" fill="currentColor" viewBox="0 0 24 24"><path d="M11.944 0A12 12 0 000 12a12 12 0 0012 12 12 12 0 0012-12A12 12 0 0012 0a12 12 0 00-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 01.171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.892-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg></div><span>Telegram: @pejuanggto</span></a></li>
@@ -6728,7 +6730,7 @@ Total : Rp.${totalSaldo.toLocaleString("id-ID")}
                                 </ul>
                             </div>
                         </div>
-                        <div class="text-center text-slate-500 mt-10 pt-6 border-t border-slate-200 text-xs">&copy; ${(/* @__PURE__ */ new Date()).getFullYear()} Warung Pulsa Cendana. Hak cipta dilindungi.</div>
+                        <div class="text-center text-slate-500 mt-10 pt-6 border-t border-slate-200 text-xs">&copy; ${(/* @__PURE__ */ new Date()).getFullYear()} Warung Pulsa Gass Umkm. Hak cipta dilindungi.</div>
                     </footer>
                 </body>
                 </html>`;
@@ -7055,14 +7057,14 @@ Total : Rp.${totalSaldo.toLocaleString("id-ID")}
             <div class="relative mx-auto mb-7 w-32 h-32 md:w-36 md:h-36 flex items-center justify-center float-logo">
                 <div class="absolute inset-0 bg-gradient-to-tr from-cyan-400 via-sky-500 to-blue-600 rounded-3xl blur-2xl opacity-40 glow-pulse"></div>
                 <div class="relative w-28 h-28 md:w-32 md:h-32 rounded-3xl p-2 bg-white border-2 border-sky-400/60 shadow-[0_10px_35px_rgba(14,165,233,0.25)] flex items-center justify-center overflow-hidden">
-                    <img src="${LOGO_URL}" alt="Logo Warung Pulsa Cendana" class="w-full h-full object-contain">
+                    <img src="${LOGO_URL}" alt="Logo Warung Pulsa Gass Umkm" class="w-full h-full object-contain">
                 </div>
             </div>
 
             <h1 class="text-2xl md:text-3xl font-black text-slate-900 tracking-tight">
                 Warung <span class="text-transparent bg-clip-text bg-gradient-to-r from-sky-600 to-blue-600">Pulsa</span>
             </h1>
-            <p class="text-xs font-bold tracking-widest text-amber-500 uppercase mt-1 mb-3">✦ Cendana ✦</p>
+            <p class="text-xs font-bold tracking-widest text-amber-500 uppercase mt-1 mb-3">✦ Gass Umkm ✦</p>
             <p class="text-xs md:text-sm text-slate-600 leading-relaxed mb-8">Silakan masuk menggunakan akun Google Anda untuk mengakses dashboard, isi saldo otomatis, dan bertransaksi Pulsa & PPOB 24 Jam nonstop.</p>
 
             <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200 mb-7 flex flex-col items-center justify-center shadow-inner">
@@ -7149,14 +7151,14 @@ Total : Rp.${totalSaldo.toLocaleString("id-ID")}
                                 <div class="relative mx-auto mb-6 w-24 h-24 md:w-28 md:h-28 flex items-center justify-center">
                                     <div class="absolute inset-0 bg-gradient-to-tr from-cyan-400 via-sky-500 to-blue-600 rounded-3xl blur-xl opacity-35 animate-pulse"></div>
                                     <div class="relative w-20 h-20 md:w-24 md:h-24 rounded-3xl p-1 bg-white border-2 border-sky-400/70 shadow-lg flex items-center justify-center overflow-hidden">
-                                        <img src="${LOGO_URL}" alt="Logo Warung Pulsa Cendana" class="w-full h-full object-contain">
+                                        <img src="${LOGO_URL}" alt="Logo Warung Pulsa Gass Umkm" class="w-full h-full object-contain">
                                     </div>
                                 </div>
 
                                 <h3 class="text-2xl font-black text-slate-900 tracking-tight mb-1">
                                     Masuk ke <span class="text-transparent bg-clip-text bg-gradient-to-r from-sky-600 to-blue-600">Warung Pulsa</span>
                                 </h3>
-                                <p class="text-xs font-bold text-amber-500 uppercase tracking-widest mb-3">✦ Cendana ✦</p>
+                                <p class="text-xs font-bold text-amber-500 uppercase tracking-widest mb-3">✦ Gass Umkm ✦</p>
                                 <p class="text-xs md:text-sm text-slate-500 mb-6 leading-relaxed">
                                     Masuk menggunakan akun Google dengan 1 klik untuk mulai mengisi saldo otomatis dan bertransaksi 24 jam nonstop.
                                 </p>
@@ -7316,6 +7318,94 @@ Total : Rp.${totalSaldo.toLocaleString("id-ID")}
                                 </div>
                                 <h3 class="text-xl font-bold text-slate-900 mb-3">Deposit QRIS Otomatis</h3>
                                 <p class="text-slate-600 text-sm leading-relaxed">Pengisian saldo akun instan via QRIS Nasional (BCA, Mandiri, BRI, BNI, Dana, ShopeePay, GoPay) yang otomatis masuk dalam hitungan detik 24 jam.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Section: Gerai & Outlet Fisik Gass UMKM -->
+                <div class="py-16 md:py-24 bg-gradient-to-b from-slate-50 via-white to-slate-50 border-b border-slate-200 relative z-10">
+                    <div class="max-w-6xl mx-auto px-4">
+                        <div class="text-center mb-12">
+                            <span class="text-xs font-extrabold text-amber-600 uppercase tracking-widest bg-amber-50 border border-amber-200 px-3 py-1 rounded-full">✦ Gerai Fisik Resmi ✦</span>
+                            <h2 class="text-3xl md:text-4xl font-black text-slate-900 mt-3">Outlet Fisik &amp; Layanan Gass UMKM</h2>
+                            <p class="text-slate-500 text-sm max-w-xl mx-auto mt-2">Kunjungi gerai fisik kami untuk layanan Kasir Digital UMKM, Agen Perbankan Resmi, Pulsa &amp; PPOB, serta transaksi langsung.</p>
+                        </div>
+
+                        <div class="bg-white rounded-3xl border border-slate-200 shadow-xl overflow-hidden grid grid-cols-1 lg:grid-cols-12 gap-0 items-center">
+                            <!-- Foto Fisik Warung / Outlet -->
+                            <div class="lg:col-span-6 relative bg-slate-900 overflow-hidden flex items-center justify-center p-3 sm:p-5 group">
+                                <div class="relative w-full overflow-hidden rounded-2xl border border-slate-700/60 shadow-2xl">
+                                    <img src="/outlet-gassumkm.jpg" alt="Outlet Fisik Warung Pulsa Gass UMKM" class="w-full h-[320px] sm:h-[400px] object-cover object-center transform group-hover:scale-105 transition-transform duration-500">
+                                    <div class="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent pointer-events-none"></div>
+                                    <div class="absolute bottom-3 left-3 right-3 p-3 bg-slate-900/85 backdrop-blur-md rounded-xl border border-white/10 text-white flex items-center justify-between">
+                                        <div class="flex items-center gap-2.5">
+                                            <span class="w-3 h-3 rounded-full bg-emerald-400 animate-ping"></span>
+                                            <div>
+                                                <p class="text-xs font-bold leading-tight">Outlet Gass UMKM</p>
+                                                <p class="text-[10px] text-slate-300">Siap Melayani Kebutuhan Digital Anda</p>
+                                            </div>
+                                        </div>
+                                        <span class="text-[10px] font-semibold bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 px-2 py-0.5 rounded-full">Buka &amp; Aktif</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Keterangan & Layanan Fisik -->
+                            <div class="lg:col-span-6 p-6 sm:p-8 lg:p-10 flex flex-col justify-center">
+                                <div class="inline-flex items-center gap-2 mb-3">
+                                    <span class="text-[11px] font-bold text-sky-600 bg-sky-50 border border-sky-200 px-2.5 py-0.5 rounded-lg uppercase tracking-wider">Warung Pulsa Gass UMKM</span>
+                                    <span class="text-[11px] font-bold text-amber-600 bg-amber-50 border border-amber-200 px-2.5 py-0.5 rounded-lg uppercase tracking-wider">Solusi Digital</span>
+                                </div>
+                                <h3 class="text-2xl sm:text-3xl font-black text-slate-900 mb-4 leading-tight">Aplikasi Gass UMKM &bull; Solusi Kasir Digital Untuk UMKM</h3>
+                                <p class="text-slate-600 text-sm leading-relaxed mb-6">
+                                    Selain transaksi online 24 jam nonstop, gerai fisik kami menyediakan layanan transaksi langsung, kemitraan aplikasi kasir UMKM modern, serta transfer perbankan cepat dan aman.
+                                </p>
+
+                                <div class="space-y-3.5 mb-8">
+                                    <div class="flex items-start gap-3">
+                                        <div class="w-8 h-8 rounded-xl bg-sky-50 text-sky-600 flex items-center justify-center shrink-0 border border-sky-100 mt-0.5">
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path></svg>
+                                        </div>
+                                        <div>
+                                            <h4 class="text-sm font-bold text-slate-900">Aplikasi Kasir Digital POS UMKM</h4>
+                                            <p class="text-xs text-slate-500 leading-relaxed">Sistem kasir pintar untuk warung, toko kelontong, dan UMKM guna memudahkan pencatatan penjualan dan stok harian.</p>
+                                        </div>
+                                    </div>
+
+                                    <div class="flex items-start gap-3">
+                                        <div class="w-8 h-8 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0 border border-emerald-100 mt-0.5">
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"></path></svg>
+                                        </div>
+                                        <div>
+                                            <h4 class="text-sm font-bold text-slate-900">Layanan Keuangan &amp; Agen Perbankan</h4>
+                                            <p class="text-xs text-slate-500 leading-relaxed">Melayani Agen BRILink &amp; BNI Agen46 untuk transfer antar bank, setor tunai, tarik tunai, serta bayar tagihan resmi.</p>
+                                        </div>
+                                    </div>
+
+                                    <div class="flex items-start gap-3">
+                                        <div class="w-8 h-8 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center shrink-0 border border-amber-100 mt-0.5">
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                                        </div>
+                                        <div>
+                                            <h4 class="text-sm font-bold text-slate-900">Lokasi Toko &amp; Informasi Kost</h4>
+                                            <p class="text-xs text-slate-500 leading-relaxed">Lokasi strategis, terpantau CCTV 24 Jam. Kontak &amp; Info Kost: 0821-9389-4907.</p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- CTA Google Maps Button -->
+                                <div class="flex flex-col sm:flex-row gap-3 pt-2 border-t border-slate-100">
+                                    <a href="https://maps.app.goo.gl/sgSyLtGm9tL7szYu6" target="_blank" rel="noopener noreferrer" class="inline-flex items-center justify-center gap-2.5 px-6 py-3.5 rounded-2xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-bold text-sm shadow-lg shadow-emerald-600/25 hover:shadow-xl hover:shadow-emerald-600/35 hover:-translate-y-0.5 transition-all duration-200">
+                                        <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+                                        <span>Buka Petunjuk Arah di Google Maps</span>
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+                                    </a>
+                                    <a href="https://wa.me/6282193894907" target="_blank" rel="noopener noreferrer" class="inline-flex items-center justify-center gap-2 px-5 py-3.5 rounded-2xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-sm transition">
+                                        <svg class="w-4 h-4 text-emerald-600" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+                                        <span>Hubungi Gerai</span>
+                                    </a>
+                                </div>
                             </div>
                         </div>
                     </div>
