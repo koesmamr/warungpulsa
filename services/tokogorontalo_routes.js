@@ -1213,9 +1213,10 @@ async function handleTokoGorontaloRoutes(url, request, env, currentUser, appSett
       const webhookUrl = `${url.origin}/api/webhook/tokogorontalo`;
 
       // Eksekusi API Toko Gorontalo
-      const isEwallet = product.category === 'ewallet';
+      // Di Toko Gorontalo / OtomaX, paket fixed denom (shp10, dna10, gpy10, pulsa, data, pln)
+      // menggunakan jenistrx = 1. Hanya produk dengan product_type = 'open' yang menggunakan jenistrx = 2.
       const isOpen = product.product_type === 'open';
-      const jenistrx = (isEwallet || isOpen) ? 2 : 1;
+      const jenistrx = isOpen ? 2 : 1;
 
       let apiResult;
       try {
