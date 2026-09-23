@@ -8,7 +8,7 @@ var __defProp22 = Object.defineProperty;
 var __name22 = /* @__PURE__ */ __name2((target, value) => __defProp22(target, "name", { value, configurable: true }), "__name");
 var __defProp222 = Object.defineProperty;
 var __name222 = /* @__PURE__ */ __name22((target, value) => __defProp222(target, "name", { value, configurable: true }), "__name");
-const { handleTokoGorontaloRoutes, renderPPOBContent, renderTokoGorontaloAdminModal } = require('./services/tokogorontalo_routes.js');
+const { handleTokoGorontaloRoutes, renderPPOBContent, renderTokoGorontaloAdminModal, syncMissingPPOBInbox } = require('./services/tokogorontalo_routes.js');
 var cachedAppSettings = null;
 var cachedAppSettingsTime = 0;
 var CACHE_TTL = 3e5;
@@ -5961,7 +5961,7 @@ Total : Rp.${totalSaldo.toLocaleString("id-ID")}
             currentUser = null;
           } else {
             currentUser = user;
-            const unreadInboxRow = await env.DB.prepare("SELECT COUNT(*) as count FROM inbox WHERE email = ? AND read = 0").bind(user.email).first();
+            const unreadInboxRow = await env.DB.prepare("SELECT COUNT(*) as count FROM inbox WHERE LOWER(email) = LOWER(?) AND read = 0").bind(user.email).first();
             currentUser.inbox_unread_count = unreadInboxRow ? unreadInboxRow.count : 0;
             currentUser.inbox = [];
             currentUser.vpns = [];
@@ -7870,18 +7870,27 @@ Total : Rp.${totalSaldo.toLocaleString("id-ID")}
     }
     if (path === "/inbox" && method === "GET") {
       if (!currentUser) return Response.redirect(url.origin + "/", 302);
+
+      // Auto-sinkronisasi transaksi PPOB (Shopee, Token PLN, Wifi ID, Pulsa) yang sukses tapi pesannya belum tercatat di inbox
+      try {
+        const rawDb = env.DB.rawDb || (require('./db.js').rawDb);
+        if (rawDb && typeof syncMissingPPOBInbox === 'function') {
+          syncMissingPPOBInbox(rawDb, currentUser.email);
+        }
+      } catch (eSync) {}
+
       // Auto-cleanup pesan pending yang fakturnya sudah PAID
-      await env.DB.prepare("DELETE FROM inbox WHERE email = ? AND (title LIKE '%[PENDING]%' OR title LIKE '%PENDING%') AND EXISTS (SELECT 1 FROM invoices WHERE invoices.email = inbox.email AND invoices.status = 'PAID' AND inbox.message LIKE '%' || invoices.ref || '%')").bind(currentUser.email).run().catch(() => {});
-      await env.DB.prepare("UPDATE inbox SET read = 1 WHERE email = ? AND read = 0").bind(currentUser.email).run();
+      await env.DB.prepare("DELETE FROM inbox WHERE LOWER(email) = LOWER(?) AND (title LIKE '%[PENDING]%' OR title LIKE '%PENDING%') AND EXISTS (SELECT 1 FROM invoices WHERE LOWER(invoices.email) = LOWER(inbox.email) AND invoices.status = 'PAID' AND inbox.message LIKE '%' || invoices.ref || '%')").bind(currentUser.email).run().catch(() => {});
+      await env.DB.prepare("UPDATE inbox SET read = 1 WHERE LOWER(email) = LOWER(?) AND read = 0").bind(currentUser.email).run();
       const inboxPage = parseInt(url.searchParams.get("page") || "1");
       const inboxLimit = 10;
       const inboxOffset = (inboxPage - 1) * inboxLimit;
       const totalInbox = await env.DB.prepare(
-        "SELECT COUNT(*) as count FROM inbox WHERE email = ?"
+        "SELECT COUNT(*) as count FROM inbox WHERE LOWER(email) = LOWER(?)"
       ).bind(currentUser.email).first("count") || 0;
       const totalPages = Math.ceil(totalInbox / inboxLimit) || 1;
       const { results: inboxResults } = await env.DB.prepare(
-        "SELECT * FROM inbox WHERE email = ? ORDER BY id DESC LIMIT ? OFFSET ?"
+        "SELECT * FROM inbox WHERE LOWER(email) = LOWER(?) ORDER BY id DESC LIMIT ? OFFSET ?"
       ).bind(currentUser.email, inboxLimit, inboxOffset).all();
       let inboxHtml = `<div class="text-center py-16 bg-white rounded-3xl border border-slate-200 shadow-sm relative z-10"><p class="text-slate-500 text-lg font-medium">Belum ada pesan di kotak masuk Anda.</p></div>`;
       let pendingRefs = [];

@@ -358,38 +358,57 @@ async function executeAutoRefund(rawDb, order, failureReason, source = 'webhook'
 }
 
 /**
- * Menyimpan notifikasi transaksi PPOB / Token PLN Sukses ke Kotak Masuk (Inbox) Akun Pembeli
+ * Menyimpan notifikasi transaksi PPOB / Token PLN / E-Wallet Sukses ke Kotak Masuk (Inbox) Akun Pembeli
  */
 function saveSuccessPPOBToInbox(rawDb, { email, product_name, customer_no, sn, reqid }) {
   if (!rawDb || !email || !reqid) return;
   try {
+    const cleanEmail = String(email).trim().toLowerCase();
     const existingInbox = rawDb.prepare('SELECT id FROM inbox WHERE message LIKE ?').get(`%${reqid}%`);
     if (existingInbox) return; // Mencegah pesan ganda (idempotency)
 
     const nowWIB = new Date().toLocaleString('id-ID', { timeZone: 'Asia/Jakarta' }) + ' WIB';
-    const isTokenPLN = (product_name || '').toLowerCase().includes('token') || (product_name || '').toLowerCase().includes('pln');
-    const isWifiID = (product_name || '').toLowerCase().includes('wifi');
+    const prodLower = (product_name || '').toLowerCase();
+    const isTokenPLN = prodLower.includes('token') || prodLower.includes('pln');
+    const isWifiID = prodLower.includes('wifi');
+    const isEwallet = ['shopee', 'shopeepay', 'dana', 'ovo', 'gopay', 'linkaja', 'ewallet', 'wallet'].some(w => prodLower.includes(w));
+    const isGame = ['game', 'diamond', 'mobile legends', 'free fire', 'pubg', 'genshin', 'valorant'].some(w => prodLower.includes(w));
+
     let labelSN = 'SERIAL NUMBER (SN) / BUKTI';
     let iconEmoji = '📱';
+    let productDesc = 'Pesanan produk digital Anda telah <b style="color: #16a34a;">berhasil diproses</b> oleh server provider.';
+
     if (isTokenPLN) {
       labelSN = 'KODE TOKEN PLN (20 DIGIT)';
       iconEmoji = '⚡';
+      productDesc = 'Token listrik PLN Anda telah <b style="color: #16a34a;">berhasil diterbitkan</b> dan siap dimasukkan ke meteran listrik.';
     } else if (isWifiID) {
       labelSN = 'KODE VOUCHER / AKUN WIFI ID (USERNAME & PASSWORD)';
       iconEmoji = '📶';
+      productDesc = 'Voucher Wifi ID Anda telah <b style="color: #16a34a;">berhasil diterbitkan</b> dan siap digunakan untuk login ke jaringan @wifi.id.';
+    } else if (isEwallet) {
+      labelSN = 'STATUS & BUKTI TOP UP';
+      iconEmoji = '👛';
+      productDesc = 'Top Up saldo e-wallet Anda telah <b style="color: #16a34a;">berhasil ditambahkan</b> langsung ke akun penerima.';
+    } else if (isGame) {
+      labelSN = 'KODE VOUCHER / SERIAL NUMBER';
+      iconEmoji = '🎮';
+      productDesc = 'Voucher / Top Up Game Anda telah <b style="color: #16a34a;">berhasil diproses</b> ke akun game tujuan.';
     }
 
     const titleMsg = `${iconEmoji} Pembelian ${product_name || 'Produk'} Berhasil!`;
+    const cleanSn = (sn && String(sn).trim() !== '-' && String(sn).trim() !== '') ? String(sn).trim() : (isEwallet ? 'SUKSES TERISI' : 'BERHASIL DIPROSES');
+
     const bodyMsg = `
       <div style="font-family: inherit; line-height: 1.6;">
-        <p style="margin-bottom: 8px;">Pesanan produk digital Anda telah <b style="color: #16a34a;">berhasil diproses</b> oleh server provider.</p>
+        <p style="margin-bottom: 8px;">${productDesc}</p>
         <div style="background-color: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 12px; padding: 14px; margin: 12px 0; font-size: 13px;">
           <div style="display: flex; justify-content: space-between; margin-bottom: 4px;"><b>Ref ID:</b> <span style="font-family: monospace;">${escapeHtml(reqid)}</span></div>
           <div style="display: flex; justify-content: space-between; margin-bottom: 4px;"><b>Produk:</b> <span>${escapeHtml(product_name || '-')}</span></div>
-          <div style="display: flex; justify-content: space-between; margin-bottom: 6px;"><b>Tujuan / ID Pelanggan:</b> <span style="font-family: monospace; font-weight: bold;">${escapeHtml(customer_no || '-')}</span></div>
+          <div style="display: flex; justify-content: space-between; margin-bottom: 6px;"><b>Tujuan / No Akun:</b> <span style="font-family: monospace; font-weight: bold;">${escapeHtml(customer_no || '-')}</span></div>
           <div style="background-color: #ffffff; border: 1.5px dashed #16a34a; border-radius: 10px; padding: 12px; margin-top: 8px; text-align: center;">
             <span style="font-size: 11px; color: #15803d; font-weight: bold; display: block; margin-bottom: 4px; letter-spacing: 0.5px;">${labelSN}</span>
-            <span style="font-family: monospace; font-size: 19px; font-weight: 900; color: #166534; letter-spacing: 1.5px; user-select: all; display: inline-block; padding: 3px 10px; background: #dcfce7; border-radius: 8px;">${escapeHtml(sn || '-')}</span>
+            <span style="font-family: monospace; font-size: 19px; font-weight: 900; color: #166534; letter-spacing: 1.5px; user-select: all; display: inline-block; padding: 3px 10px; background: #dcfce7; border-radius: 8px;">${escapeHtml(cleanSn)}</span>
           </div>
         </div>
         <p style="font-size: 12px; color: #64748b; margin-top: 6px;">Waktu Transaksi: ${nowWIB}</p>
@@ -399,11 +418,88 @@ function saveSuccessPPOBToInbox(rawDb, { email, product_name, customer_no, sn, r
     rawDb.prepare(`
       INSERT INTO inbox (email, title, message, date, read)
       VALUES (?, ?, ?, ?, 0)
-    `).run(email, titleMsg, bodyMsg, nowWIB);
+    `).run(cleanEmail, titleMsg, bodyMsg, nowWIB);
 
-    console.log(`[Inbox Saved] Sukses transaksi ${reqid} tersimpan ke Inbox ${email}`);
+    console.log(`[Inbox Saved] Sukses transaksi ${reqid} tersimpan ke Inbox ${cleanEmail}`);
   } catch (err) {
     console.error('[saveSuccessPPOBToInbox Error]:', err.message);
+  }
+}
+
+/**
+ * Sinkronisasi Otomatis Transaksi PPOB yang Sukses ke Inbox Pembeli.
+ * Memeriksa transaksi berstatus 'success' atau transaksi 'pending' yang faktanya sudah sukses
+ * dari respon provider / info provider.
+ */
+function syncMissingPPOBInbox(rawDb, targetEmail = null) {
+  if (!rawDb) return;
+  try {
+    // 1. Cek transaksi yang statusnya 'pending' tetapi responnya mengandung sukses / berhasil
+    let fixSql = `
+      SELECT reqid, email, product_name, customer_no, sn, info, detail, raw_response, status
+      FROM ppob_transactions
+      WHERE (status = 'pending' OR status IS NULL OR status = '')
+        AND (is_refunded = 0 OR is_refunded IS NULL)
+        AND (
+          LOWER(info) LIKE '%berhasil%' OR LOWER(info) LIKE '%sukses%' OR LOWER(info) LIKE '%success%'
+          OR LOWER(detail) LIKE '%berhasil%' OR LOWER(detail) LIKE '%sukses%' OR LOWER(detail) LIKE '%success%'
+          OR LOWER(raw_response) LIKE '%berhasil%' OR LOWER(raw_response) LIKE '%sukses%' OR LOWER(raw_response) LIKE '%success%'
+          OR (sn IS NOT NULL AND length(sn) >= 6)
+        )
+    `;
+    const fixParams = [];
+    if (targetEmail) {
+      fixSql += ' AND LOWER(email) = LOWER(?)';
+      fixParams.push(targetEmail);
+    }
+    const pendingSuccesses = rawDb.prepare(fixSql).all(...fixParams);
+    for (const tx of pendingSuccesses) {
+      console.log(`[Inbox Auto-Sync] Mengoreksi status pending menjadi success untuk Ref: ${tx.reqid}`);
+      rawDb.prepare(`
+        UPDATE ppob_transactions
+        SET status = 'success',
+            updated_at = CURRENT_TIMESTAMP
+        WHERE reqid = ?
+      `).run(tx.reqid);
+      saveSuccessPPOBToInbox(rawDb, {
+        email: tx.email,
+        product_name: tx.product_name,
+        customer_no: tx.customer_no,
+        sn: tx.sn || tx.info || 'SUKSES',
+        reqid: tx.reqid
+      });
+    }
+
+    // 2. Cek semua transaksi yang sudah 'success' namun pesannya belum tercatat di inbox
+    let sql = `
+      SELECT reqid, email, product_name, customer_no, sn, info, status, created_at
+      FROM ppob_transactions
+      WHERE status = 'success'
+    `;
+    const params = [];
+    if (targetEmail) {
+      sql += ' AND LOWER(email) = LOWER(?)';
+      params.push(targetEmail);
+    }
+    sql += ' ORDER BY id DESC LIMIT 50';
+
+    const successfulOrders = rawDb.prepare(sql).all(...params);
+    for (const order of successfulOrders) {
+      if (!order.reqid || !order.email) continue;
+      const existing = rawDb.prepare('SELECT id FROM inbox WHERE message LIKE ?').get(`%${order.reqid}%`);
+      if (!existing) {
+        console.log(`[Inbox Auto-Sync] Membuat pesan inbox yang terlewat untuk Ref: ${order.reqid} (${order.product_name}) ke ${order.email}`);
+        saveSuccessPPOBToInbox(rawDb, {
+          email: order.email,
+          product_name: order.product_name,
+          customer_no: order.customer_no,
+          sn: order.sn || order.info || 'SUKSES',
+          reqid: order.reqid
+        });
+      }
+    }
+  } catch (err) {
+    console.error('[syncMissingPPOBInbox Error]:', err.message);
   }
 }
 
@@ -538,7 +634,7 @@ function startBackgroundOrderPoller(rawDb, orderInfo, sendTelegramLog, appSettin
           sn = String(live.bukti).trim();
         }
 
-        if (isSuccessStatus(liveStatus) || live.rc === '00' || (sn && sn.length >= 6)) {
+        if (isSuccessStatus(liveStatus) || isSuccessStatus(infoText) || live.rc === '00' || (sn && sn.length >= 6)) {
           console.log(`[Background Poller SUKSES] Ref: ${reqid}, SN: ${sn}`);
           rawDb.prepare(`
             UPDATE ppob_transactions
@@ -689,7 +785,7 @@ async function autoReconcilePPOBTransactions(rawDb, service, sendTelegramLog = n
                 appSettings
               );
               if (refResult.refunded) reconciledCount++;
-            } else if (isSuccessStatus(liveStatus) || live.rc === '00' || (sn && sn.length >= 6)) {
+            } else if (isSuccessStatus(liveStatus) || isSuccessStatus(infoText) || live.rc === '00' || (sn && sn.length >= 6)) {
               // Status Sukses pada server provider -> UPDATE & NOTIFIKASI INBOX
               console.log(`[Auto-Reconcile SUKSES] Live check order ${tx.reqid} sukses. SN: ${sn}`);
               rawDb.prepare(`
@@ -739,6 +835,10 @@ async function autoReconcilePPOBTransactions(rawDb, service, sendTelegramLog = n
     console.warn('[Auto-Reconcile Error]:', globalErr.message);
   }
 
+  try {
+    syncMissingPPOBInbox(rawDb, targetEmail);
+  } catch (eSync) {}
+
   return reconciledCount;
 }
 
@@ -779,6 +879,10 @@ async function handleTokoGorontaloRoutes(url, request, env, currentUser, appSett
   } catch (e) {}
 
   if (currentUser && currentUser.email) {
+    try {
+      syncMissingPPOBInbox(rawDb, currentUser.email);
+    } catch (eSync) {}
+
     // Jalankan auto-reconcile non-blocking untuk currentUser
     // Segera me-refund saldo jika ada transaksi gagal sebelumnya yang belum di-refund
     setTimeout(() => {
@@ -1269,7 +1373,7 @@ async function handleTokoGorontaloRoutes(url, request, env, currentUser, appSett
       const rawApiStatus = apiResult.status !== undefined ? apiResult.status : (apiResult.rc !== undefined ? apiResult.rc : '');
       const isImmediateFailed = isProviderFailure(rawApiStatus, infoMsg, detailMsg, apiResult.rc, apiResult.success);
 
-      if (isSuccessStatus(rawApiStatus) || apiResult.rc === '00') {
+      if (isSuccessStatus(rawApiStatus) || isSuccessStatus(infoMsg) || apiResult.rc === '00') {
         finalStatus = 'success';
         if (detailMsg) {
           const parsed = service.parseDetail(detailMsg);
@@ -1445,7 +1549,7 @@ async function handleTokoGorontaloRoutes(url, request, env, currentUser, appSett
             console.log(`[Order-Status Live Check GAGAL] Ref: ${order.reqid}. Melakukan auto-refund instan...`);
             await executeAutoRefund(rawDb, order, infoText || detailText || 'Gagal dari server provider', 'live_check', sendTelegramLog, appSettings);
             order = rawDb.prepare('SELECT * FROM ppob_transactions WHERE reqid = ?').get(order.reqid);
-          } else if (isSuccessStatus(liveStatus) || live.rc === '00' || (sn && sn.length >= 6)) {
+          } else if (isSuccessStatus(liveStatus) || isSuccessStatus(infoText) || live.rc === '00' || (sn && sn.length >= 6)) {
             const wasPending = (order.status === 'pending' || !order.status);
             rawDb.prepare(`
               UPDATE ppob_transactions
@@ -3656,5 +3760,7 @@ module.exports = {
   handleTokoGorontaloRoutes,
   renderPPOBContent,
   renderTokoGorontaloAdminModal,
-  autoSaveBuyerContact
+  autoSaveBuyerContact,
+  saveSuccessPPOBToInbox,
+  syncMissingPPOBInbox
 };
