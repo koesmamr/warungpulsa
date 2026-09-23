@@ -1369,6 +1369,7 @@ async function handleTokoGorontaloRoutes(url, request, env, currentUser, appSett
 
       const isPln = product.category === 'pln' || (product.product_name || '').toLowerCase().includes('pln');
       const isWifi = product.category === 'wifiID' || (product.product_name || '').toLowerCase().includes('wifi');
+      const isEwallet = product.category === 'ewallet' || ['shopeepay', 'shopee', 'dana', 'ovo', 'gopay', 'linkaja'].some(b => (product.brand || '').toLowerCase().includes(b) || (product.product_name || '').toLowerCase().includes(b));
       const isGame = product.category === 'game';
 
       let pendingMessage = 'Pesanan Anda sedang diproses oleh server provider. Status dan rincian transaksi akan otomatis diperbarui.';
