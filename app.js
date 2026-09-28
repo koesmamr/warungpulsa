@@ -291,7 +291,7 @@ function buildEmailTemplate(title, bodyContent) {
                 <img src="${logoUrl}" alt="Logo Warung Pulsa">
                 <div style="display:inline-block;vertical-align:middle;margin-left:14px;">
                     <h1 style="margin:0;font-size:22px;color:#ffffff;line-height:1.2;font-weight:800;">Warung Pulsa</h1>
-                    <span style="font-size:11px;color:#fcd34d;font-weight:700;letter-spacing:1px;text-transform:uppercase;display:block;">✦ Gass Umkm ✦</span>
+                    <span style="font-size:11px;color:#fcd34d;font-weight:700;letter-spacing:1px;text-transform:uppercase;display:block;">✦ AqilaPulsa ✦</span>
                 </div>
             </div>
             <div class="content">
@@ -4204,7 +4204,7 @@ async function handleAIRoutes(url, request, env, currentUser, ctx) {
       }
       const serverListStr = (appSettings.servers || []).map((s, index) => `${index + 1}. ID: ${s.id} | Nama: ${s.name}`).join("\n");
       let dynamicSystemPrompt = `
-Kamu adalah "Asisten Digital Warung Pulsa Gass Umkm", seorang pemuda ramah asal Jawa yang asik, cerdas, solutif, dan sopan, serta memiliki nilai-nilai Islami.
+Kamu adalah "Asisten Digital Warung Pulsa AqilaPulsa", seorang pemuda ramah asal Jawa yang asik, cerdas, solutif, dan sopan, serta memiliki nilai-nilai Islami.
 
 KEPRIBADIAN & BAHASA:
 - Gunakan Bahasa Indonesia yang santai, bersahabat, dan sopan sebagai bahasa utama.
@@ -4217,8 +4217,8 @@ INFORMASI USER SAAT INI:
 - Email: ${email}
 - Saldo Akun: Rp ${(currentUser.balance || 0).toLocaleString("id-ID")}
 
-LAYANAN UTAMA WARUNG PULSA GASS UMKM:
-Warung Pulsa Gass Umkm adalah platform penyedia produk digital Pulsa, Kuota Data, dan PPOB termurah, tercepat, dan otomatis 24 Jam nonstop.
+LAYANAN UTAMA WARUNG PULSA AQILAPULSA:
+Warung Pulsa AqilaPulsa adalah platform penyedia produk digital Pulsa, Kuota Data, dan PPOB termurah, tercepat, dan otomatis 24 Jam nonstop.
 Produk yang tersedia meliputi:
 1. Pulsa Reguler All Operator (Telkomsel, By.U, Indosat Ooredoo, XL Axiata, Axis, Tri, Smartfren).
 2. Paket Data & Kuota Internet (Harian, Mingguan, Bulanan, Unlimited, Extra Kuota).
@@ -5928,7 +5928,7 @@ Total : Rp.${totalSaldo.toLocaleString("id-ID")}
         console.error('Gagal memuat logo/favicon:', errLogo.message);
       }
     }
-    if (path === "/qris-manual.jpg" || path === "/qris-shopee.jpg" || path === "/qris-gopay.jpg" || path === "/outlet-gassumkm.jpg" || path === "/outlet-gassumkm.png" || path === "/outlet.jpg") {
+    if (path === "/qris-manual.jpg" || path === "/qris-shopee.jpg" || path === "/qris-gopay.jpg" || path === "/outlet-gassumkm.jpg" || path === "/outlet-gassumkm.png" || path === "/outlet-aqilapulsa.jpg" || path === "/outlet-aqilapulsa.png" || path === "/outlet.jpg") {
       try {
         const fsModule = require('fs');
         const pathModule = require('path');
@@ -6020,7 +6020,7 @@ Total : Rp.${totalSaldo.toLocaleString("id-ID")}
                                 </div>
                                 <div>
                                     <span class="text-xl font-extrabold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-slate-900 via-sky-800 to-blue-900 block leading-tight">Warung Pulsa</span>
-                                    <span class="text-[10px] uppercase font-bold tracking-widest text-amber-600 block">✦ Gass Umkm ✦</span>
+                                    <span class="text-[10px] uppercase font-bold tracking-widest text-amber-600 block">✦ AqilaPulsa ✦</span>
                                 </div>
                             </div>
                             <div class="flex items-center gap-2">
@@ -6429,20 +6429,20 @@ Total : Rp.${totalSaldo.toLocaleString("id-ID")}
         `;
     const renderLayout = /* @__PURE__ */ __name222((title, content) => {
       const metaTags = `
-                <meta name="title" content="${title} - Warung Pulsa Gass Umkm">
-                <meta name="description" content="Warung Pulsa Gass Umkm - Platform Agen Pulsa All Operator, Paket Data Internet, Token Listrik PLN, dan Top Up Saldo E-Wallet Otomatis 24 Jam Termurah.">
-                <meta name="keywords" content="Warung Pulsa Gass Umkm, Warung Pulsa, Pulsa Murah, Agen Pulsa, Beli Pulsa, Paket Data, Kuota Internet, Token PLN, Top Up E-Wallet, PPOB 24 Jam">
+                <meta name="title" content="${title} - Warung Pulsa AqilaPulsa">
+                <meta name="description" content="Warung Pulsa AqilaPulsa - Platform Agen Pulsa All Operator, Paket Data Internet, Token Listrik PLN, dan Top Up Saldo E-Wallet Otomatis 24 Jam Termurah.">
+                <meta name="keywords" content="Warung Pulsa AqilaPulsa, Warung Pulsa, Pulsa Murah, Agen Pulsa, Beli Pulsa, Paket Data, Kuota Internet, Token PLN, Top Up E-Wallet, PPOB 24 Jam">
                 <meta name="theme-color" content="#f8fafc">
                 <meta property="og:type" content="website">
                 <meta property="og:url" content="/">
-                <meta property="og:title" content="${title} | Warung Pulsa Gass Umkm">
-                <meta property="og:description" content="Warung Pulsa Gass Umkm - Platform Agen Pulsa All Operator, Paket Data Internet, Token Listrik PLN, dan Top Up Saldo E-Wallet Otomatis 24 Jam Termurah.">
+                <meta property="og:title" content="${title} | Warung Pulsa AqilaPulsa">
+                <meta property="og:description" content="Warung Pulsa AqilaPulsa - Platform Agen Pulsa All Operator, Paket Data Internet, Token Listrik PLN, dan Top Up Saldo E-Wallet Otomatis 24 Jam Termurah.">
                 <meta property="og:image" content="${LOGO_URL}">
-                <meta property="og:site_name" content="Warung Pulsa Gass Umkm">
+                <meta property="og:site_name" content="Warung Pulsa AqilaPulsa">
                 <meta property="twitter:card" content="summary_large_image">
                 <meta property="twitter:url" content="/">
-                <meta property="twitter:title" content="${title} | Warung Pulsa Gass Umkm">
-                <meta property="twitter:description" content="Warung Pulsa Gass Umkm - Platform Agen Pulsa All Operator, Paket Data Internet, Token Listrik PLN, dan Top Up Saldo E-Wallet Otomatis 24 Jam Termurah.">
+                <meta property="twitter:title" content="${title} | Warung Pulsa AqilaPulsa">
+                <meta property="twitter:description" content="Warung Pulsa AqilaPulsa - Platform Agen Pulsa All Operator, Paket Data Internet, Token Listrik PLN, dan Top Up Saldo E-Wallet Otomatis 24 Jam Termurah.">
                 <meta property="twitter:image" content="${LOGO_URL}">`;
       if (currentUser) {
         const unreadCount = currentUser.inbox_unread_count || 0;
@@ -6452,7 +6452,7 @@ Total : Rp.${totalSaldo.toLocaleString("id-ID")}
                 <head>
                     <meta charset="UTF-8">
                     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-                    <title>${title} - Warung Pulsa Gass Umkm</title>
+                    <title>${title} - Warung Pulsa AqilaPulsa</title>
                     ${metaTags}
                     <link rel="icon" type="image/x-icon" href="/favicon.ico">
                     <link rel="icon" type="image/png" href="${LOGO_URL}">
@@ -6541,7 +6541,7 @@ Total : Rp.${totalSaldo.toLocaleString("id-ID")}
                                 <img src="${LOGO_URL}" alt="Logo" class="w-9 h-9 rounded-full border border-slate-200 object-contain shadow-xs bg-white">
                                 <div>
                                     <span class="text-lg font-bold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-sky-600 to-blue-700 block leading-tight">Warung Pulsa</span>
-                                    <span class="text-[10px] font-bold text-amber-500 tracking-wider uppercase block">✦ Gass Umkm ✦</span>
+                                    <span class="text-[10px] font-bold text-amber-500 tracking-wider uppercase block">✦ AqilaPulsa ✦</span>
                                 </div>
                             </a>
                             <button onclick="toggleSidebar()" class="md:hidden text-slate-500 hover:text-slate-800 p-1 rounded-lg hover:bg-slate-100 transition">
@@ -6604,7 +6604,7 @@ Total : Rp.${totalSaldo.toLocaleString("id-ID")}
                             ${content}
                             <footer class="border-t border-slate-200 mt-12 py-8 text-center text-slate-500 text-xs flex items-center justify-center gap-2">
                                 <img src="${LOGO_URL}" alt="Logo" class="w-5 h-5 opacity-80 hover:opacity-100 transition object-contain">
-                                <span>&copy; ${(/* @__PURE__ */ new Date()).getFullYear()} Warung Pulsa Gass Umkm. Hak cipta dilindungi.</span>
+                                <span>&copy; ${(/* @__PURE__ */ new Date()).getFullYear()} Warung Pulsa AqilaPulsa. Hak cipta dilindungi.</span>
                             </footer>
                         </main>
                     </div>
@@ -6624,7 +6624,7 @@ Total : Rp.${totalSaldo.toLocaleString("id-ID")}
                 <head>
                     <meta charset="UTF-8">
                     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-                    <title>${title} - Warung Pulsa Gass Umkm</title>
+                    <title>${title} - Warung Pulsa AqilaPulsa</title>
                     ${metaTags}
                     <link rel="icon" type="image/x-icon" href="/favicon.ico">
                     <link rel="icon" type="image/png" href="${LOGO_URL}">
@@ -6692,7 +6692,7 @@ Total : Rp.${totalSaldo.toLocaleString("id-ID")}
                                 <img src="${LOGO_URL}" alt="Logo" class="w-10 h-10 md:w-11 md:h-11 rounded-full border border-slate-200 shadow-sm group-hover:border-sky-500 transition duration-300 object-contain bg-white">
                                 <div>
                                     <span class="text-xl md:text-2xl font-bold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-cyan-600 via-sky-600 to-blue-700 block leading-tight">Warung Pulsa</span>
-                                    <span class="text-[10px] md:text-[11px] font-bold text-amber-500 uppercase tracking-widest block">✦ Gass Umkm ✦</span>
+                                    <span class="text-[10px] md:text-[11px] font-bold text-amber-500 uppercase tracking-widest block">✦ AqilaPulsa ✦</span>
                                 </div>
                             </a>
                             <div class="hidden md:flex gap-7 items-center text-sm font-semibold">
@@ -6728,7 +6728,7 @@ Total : Rp.${totalSaldo.toLocaleString("id-ID")}
                                     <img src="${LOGO_URL}" alt="Logo" class="w-9 h-9 rounded-full border border-slate-200 object-contain bg-white">
                                     <div>
                                         <h3 class="text-xl font-bold text-sky-600 leading-tight">Warung Pulsa</h3>
-                                        <span class="text-[10px] font-bold text-amber-500 uppercase tracking-widest block">✦ Gass Umkm ✦</span>
+                                        <span class="text-[10px] font-bold text-amber-500 uppercase tracking-widest block">✦ AqilaPulsa ✦</span>
                                     </div>
                                 </div>
                                 <p class="text-slate-600 leading-relaxed text-sm">Pusat layanan Beli Pulsa All Operator, Paket Kuota Internet, Token Listrik PLN, dan Top Up Saldo E-Wallet otomatis 24 Jam dengan harga agen termurah dan transaksi instan.</p>
@@ -6746,7 +6746,7 @@ Total : Rp.${totalSaldo.toLocaleString("id-ID")}
                                 <h4 class="font-bold text-slate-900 mb-4 uppercase tracking-wider text-sm">Layanan Pelanggan (CS) &amp; Lokasi</h4>
                                 <p class="text-sm text-slate-600 mb-3">Kunjungi gerai fisik kami atau hubungi CS kami (Arif):</p>
                                 <ul class="space-y-3 text-sm text-slate-700 font-medium">
-                                    <li><a href="https://maps.app.goo.gl/sgSyLtGm9tL7szYu6" target="_blank" rel="noopener noreferrer" class="flex items-center gap-3 hover:text-emerald-600 transition group"><div class="bg-white border border-slate-200 p-2 rounded-full group-hover:border-emerald-300 shadow-xs"><svg class="w-4 h-4 text-emerald-600" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg></div><span>Lokasi Toko: Google Maps Gass UMKM</span></a></li>
+                                    <li><a href="https://maps.app.goo.gl/sgSyLtGm9tL7szYu6" target="_blank" rel="noopener noreferrer" class="flex items-center gap-3 hover:text-emerald-600 transition group"><div class="bg-white border border-slate-200 p-2 rounded-full group-hover:border-emerald-300 shadow-xs"><svg class="w-4 h-4 text-emerald-600" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg></div><span>Lokasi Toko: Google Maps AqilaPulsa</span></a></li>
                                     <li><a href="https://wa.me/6285240260221" target="_blank" class="flex items-center gap-3 hover:text-emerald-600 transition group"><div class="bg-white border border-slate-200 p-2 rounded-full group-hover:border-emerald-300 shadow-xs"><svg class="w-4 h-4 text-emerald-600" fill="currentColor" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981z"/></svg></div><span>WhatsApp: 085240260221</span></a>
                                     </li>
                                     <li><a href="https://t.me/pejuanggto" target="_blank" class="flex items-center gap-3 hover:text-sky-600 transition group"><div class="bg-white border border-slate-200 p-2 rounded-full group-hover:border-sky-300 shadow-xs"><svg class="w-4 h-4 text-sky-600" fill="currentColor" viewBox="0 0 24 24"><path d="M11.944 0A12 12 0 000 12a12 12 0 0012 12 12 12 0 0012-12A12 12 0 0012 0a12 12 0 00-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 01.171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.892-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg></div><span>Telegram: @pejuanggto</span></a></li>
@@ -6754,7 +6754,7 @@ Total : Rp.${totalSaldo.toLocaleString("id-ID")}
                                 </ul>
                             </div>
                         </div>
-                        <div class="text-center text-slate-500 mt-10 pt-6 border-t border-slate-200 text-xs">&copy; ${(/* @__PURE__ */ new Date()).getFullYear()} Warung Pulsa Gass Umkm. Hak cipta dilindungi.</div>
+                        <div class="text-center text-slate-500 mt-10 pt-6 border-t border-slate-200 text-xs">&copy; ${(/* @__PURE__ */ new Date()).getFullYear()} Warung Pulsa AqilaPulsa. Hak cipta dilindungi.</div>
                     </footer>
                 </body>
                 </html>`;
@@ -7081,14 +7081,14 @@ Total : Rp.${totalSaldo.toLocaleString("id-ID")}
             <div class="relative mx-auto mb-7 w-32 h-32 md:w-36 md:h-36 flex items-center justify-center float-logo">
                 <div class="absolute inset-0 bg-gradient-to-tr from-cyan-400 via-sky-500 to-blue-600 rounded-3xl blur-2xl opacity-40 glow-pulse"></div>
                 <div class="relative w-28 h-28 md:w-32 md:h-32 rounded-3xl p-2 bg-white border-2 border-sky-400/60 shadow-[0_10px_35px_rgba(14,165,233,0.25)] flex items-center justify-center overflow-hidden">
-                    <img src="${LOGO_URL}" alt="Logo Warung Pulsa Gass Umkm" class="w-full h-full object-contain">
+                    <img src="${LOGO_URL}" alt="Logo Warung Pulsa AqilaPulsa" class="w-full h-full object-contain">
                 </div>
             </div>
 
             <h1 class="text-2xl md:text-3xl font-black text-slate-900 tracking-tight">
                 Warung <span class="text-transparent bg-clip-text bg-gradient-to-r from-sky-600 to-blue-600">Pulsa</span>
             </h1>
-            <p class="text-xs font-bold tracking-widest text-amber-500 uppercase mt-1 mb-3">✦ Gass Umkm ✦</p>
+            <p class="text-xs font-bold tracking-widest text-amber-500 uppercase mt-1 mb-3">✦ AqilaPulsa ✦</p>
             <p class="text-xs md:text-sm text-slate-600 leading-relaxed mb-8">Silakan masuk menggunakan akun Google Anda untuk mengakses dashboard, isi saldo otomatis, dan bertransaksi Pulsa & PPOB 24 Jam nonstop.</p>
 
             <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200 mb-7 flex flex-col items-center justify-center shadow-inner">
@@ -7175,14 +7175,14 @@ Total : Rp.${totalSaldo.toLocaleString("id-ID")}
                                 <div class="relative mx-auto mb-6 w-24 h-24 md:w-28 md:h-28 flex items-center justify-center">
                                     <div class="absolute inset-0 bg-gradient-to-tr from-cyan-400 via-sky-500 to-blue-600 rounded-3xl blur-xl opacity-35 animate-pulse"></div>
                                     <div class="relative w-20 h-20 md:w-24 md:h-24 rounded-3xl p-1 bg-white border-2 border-sky-400/70 shadow-lg flex items-center justify-center overflow-hidden">
-                                        <img src="${LOGO_URL}" alt="Logo Warung Pulsa Gass Umkm" class="w-full h-full object-contain">
+                                        <img src="${LOGO_URL}" alt="Logo Warung Pulsa AqilaPulsa" class="w-full h-full object-contain">
                                     </div>
                                 </div>
 
                                 <h3 class="text-2xl font-black text-slate-900 tracking-tight mb-1">
                                     Masuk ke <span class="text-transparent bg-clip-text bg-gradient-to-r from-sky-600 to-blue-600">Warung Pulsa</span>
                                 </h3>
-                                <p class="text-xs font-bold text-amber-500 uppercase tracking-widest mb-3">✦ Gass Umkm ✦</p>
+                                <p class="text-xs font-bold text-amber-500 uppercase tracking-widest mb-3">✦ AqilaPulsa ✦</p>
                                 <p class="text-xs md:text-sm text-slate-500 mb-6 leading-relaxed">
                                     Masuk menggunakan akun Google dengan 1 klik untuk mulai mengisi saldo otomatis dan bertransaksi 24 jam nonstop.
                                 </p>
@@ -7347,12 +7347,12 @@ Total : Rp.${totalSaldo.toLocaleString("id-ID")}
                     </div>
                 </div>
 
-                <!-- Section: Gerai & Outlet Fisik Gass UMKM -->
+                <!-- Section: Gerai & Outlet Fisik AqilaPulsa -->
                 <div class="py-16 md:py-24 bg-gradient-to-b from-slate-50 via-white to-slate-50 border-b border-slate-200 relative z-10">
                     <div class="max-w-6xl mx-auto px-4">
                         <div class="text-center mb-12">
                             <span class="text-xs font-extrabold text-amber-600 uppercase tracking-widest bg-amber-50 border border-amber-200 px-3 py-1 rounded-full">✦ Gerai Fisik Resmi ✦</span>
-                            <h2 class="text-3xl md:text-4xl font-black text-slate-900 mt-3">Outlet Fisik &amp; Layanan Gass UMKM</h2>
+                            <h2 class="text-3xl md:text-4xl font-black text-slate-900 mt-3">Outlet Fisik &amp; Layanan AqilaPulsa</h2>
                             <p class="text-slate-500 text-sm max-w-xl mx-auto mt-2">Kunjungi gerai fisik kami untuk layanan Kasir Digital UMKM, Agen Perbankan Resmi, Pulsa &amp; PPOB, serta transaksi langsung.</p>
                         </div>
 
@@ -7360,13 +7360,13 @@ Total : Rp.${totalSaldo.toLocaleString("id-ID")}
                             <!-- Foto Fisik Warung / Outlet -->
                             <div class="lg:col-span-6 relative bg-slate-900 overflow-hidden flex items-center justify-center p-3 sm:p-5 group">
                                 <div class="relative w-full overflow-hidden rounded-2xl border border-slate-700/60 shadow-2xl">
-                                    <img src="/outlet-gassumkm.jpg" alt="Outlet Fisik Warung Pulsa Gass UMKM" class="w-full h-[320px] sm:h-[400px] object-cover object-center transform group-hover:scale-105 transition-transform duration-500">
+                                    <img src="/outlet-aqilapulsa.jpg" alt="Outlet Fisik Warung Pulsa AqilaPulsa" class="w-full h-[320px] sm:h-[400px] object-cover object-center transform group-hover:scale-105 transition-transform duration-500">
                                     <div class="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent pointer-events-none"></div>
                                     <div class="absolute bottom-3 left-3 right-3 p-3 bg-slate-900/85 backdrop-blur-md rounded-xl border border-white/10 text-white flex items-center justify-between">
                                         <div class="flex items-center gap-2.5">
                                             <span class="w-3 h-3 rounded-full bg-emerald-400 animate-ping"></span>
                                             <div>
-                                                <p class="text-xs font-bold leading-tight">Outlet Gass UMKM</p>
+                                                <p class="text-xs font-bold leading-tight">Outlet AqilaPulsa</p>
                                                 <p class="text-[10px] text-slate-300">Siap Melayani Kebutuhan Digital Anda</p>
                                             </div>
                                         </div>
@@ -7378,10 +7378,10 @@ Total : Rp.${totalSaldo.toLocaleString("id-ID")}
                             <!-- Keterangan & Layanan Fisik -->
                             <div class="lg:col-span-6 p-6 sm:p-8 lg:p-10 flex flex-col justify-center">
                                 <div class="inline-flex items-center gap-2 mb-3">
-                                    <span class="text-[11px] font-bold text-sky-600 bg-sky-50 border border-sky-200 px-2.5 py-0.5 rounded-lg uppercase tracking-wider">Warung Pulsa Gass UMKM</span>
+                                    <span class="text-[11px] font-bold text-sky-600 bg-sky-50 border border-sky-200 px-2.5 py-0.5 rounded-lg uppercase tracking-wider">Warung Pulsa AqilaPulsa</span>
                                     <span class="text-[11px] font-bold text-amber-600 bg-amber-50 border border-amber-200 px-2.5 py-0.5 rounded-lg uppercase tracking-wider">Solusi Digital</span>
                                 </div>
-                                <h3 class="text-2xl sm:text-3xl font-black text-slate-900 mb-4 leading-tight">Aplikasi Gass UMKM &bull; Solusi Kasir Digital Untuk UMKM</h3>
+                                <h3 class="text-2xl sm:text-3xl font-black text-slate-900 mb-4 leading-tight">Aplikasi AqilaPulsa &bull; Solusi Kasir Digital Untuk UMKM</h3>
                                 <p class="text-slate-600 text-sm leading-relaxed mb-6">
                                     Selain transaksi online 24 jam nonstop, gerai fisik kami menyediakan layanan transaksi langsung, kemitraan aplikasi kasir UMKM modern, serta transfer perbankan cepat dan aman.
                                 </p>
