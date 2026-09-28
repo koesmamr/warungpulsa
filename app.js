@@ -259,7 +259,7 @@ __name2(verifyWebhookSignature, "verifyWebhookSignature");
 __name22(verifyWebhookSignature, "verifyWebhookSignature");
 __name222(verifyWebhookSignature, "verifyWebhookSignature");
 function buildEmailTemplate(title, bodyContent) {
-  const logoUrl = (typeof env !== "undefined" && env && env.DOMAIN_NAME) ? ("https://" + env.DOMAIN_NAME + "/logo.png") : "https://warungpulsa.web.id/logo.png";
+  const logoUrl = (typeof env !== "undefined" && env && env.DOMAIN_NAME) ? ("https://" + env.DOMAIN_NAME + "/logo.png") : "https://aqilapulsa.com/logo.png";
   return `
     <!DOCTYPE html>
     <html lang="id">

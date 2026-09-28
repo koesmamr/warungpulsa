@@ -129,7 +129,7 @@ cat > /etc/nginx/sites-available/warungpulsa << 'EOF'
 server {
     listen 80 default_server;
     listen 8080;
-    server_name warungpulsa.web.id www.warungpulsa.web.id _;
+    server_name aqilapulsa.com www.aqilapulsa.com warungpulsa.web.id www.warungpulsa.web.id _;
 
     client_max_body_size 50M;
 
@@ -182,7 +182,7 @@ echo "  🎉 AUTOINSTALL WARUNG PULSA BERHASIL SELESAI!"
 echo "=================================================================="
 echo "Web Warung Pulsa Anda sekarang sudah AKTIF dan dapat diakses:"
 echo "👉 Akses Web         : http://${SERVER_IP} atau http://${SERVER_IP}:8080"
-echo "👉 Domain Resmi      : https://warungpulsa.web.id"
+echo "👉 Domain Resmi      : https://aqilapulsa.com (atau https://warungpulsa.web.id)"
 echo ""
 echo "📌 Lokasi instalasi   : /var/www/warungpulsa"
 echo "📌 Status PM2         : ketik 'pm2 status' atau 'pm2 logs warungpulsa'"
@@ -200,5 +200,5 @@ echo "   Terima kasih!"
 echo "   ----------------------------------------------------------------------"
 echo ""
 echo "🔐 Pasang SSL HTTPS (Let's Encrypt) saat domain sudah diarahkan:"
-echo "   certbot --nginx -d warungpulsa.web.id -d www.warungpulsa.web.id"
+echo "   certbot --nginx -d aqilapulsa.com -d www.aqilapulsa.com"
 echo "=================================================================="

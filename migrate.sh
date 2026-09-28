@@ -423,7 +423,7 @@ server {
     client_max_body_size 50M;
     location / {
         proxy_pass http://127.0.0.1:3000;
-        proxy_set_header Host warungpulsa.web.id;
+        proxy_set_header Host $host;
         proxy_set_header X-Real-IP $remote_addr;
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
         proxy_set_header X-Forwarded-Proto http;
@@ -495,7 +495,7 @@ EOF
 
 [ "$MIGRATE_WARUNG" = true ] && cat << EOF
 📌 WARUNGPULSA:
-   • Domain Resmi (HTTPS) : https://warungpulsa.web.id
+   • Domain Resmi (HTTPS) : https://aqilapulsa.com (atau https://warungpulsa.web.id)
    • Direct IP Testing    : http://${NEW_IP}:8080
    • Status PM2           : warungpulsa (Online - Port 3000)
 
