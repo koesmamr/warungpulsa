@@ -2658,7 +2658,7 @@ ${isCurrentSuperAdmin ? `
             }
         });
     <\/script>
-    ${renderTokoGorontaloAdminModal()}
+    ${renderTokoGorontaloAdminModal(isCurrentSuperAdmin)}
     `;
 }
 __name(renderAdminDashboard, "renderAdminDashboard");

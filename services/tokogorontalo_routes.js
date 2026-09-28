@@ -1891,13 +1891,12 @@ async function handleTokoGorontaloRoutes(url, request, env, currentUser, appSett
     // I. Cek IP Public Server VPS (Untuk didaftarkan ke Whitelist Toko Gorontalo)
     if (path === '/api/admin/tokogorontalo/server-ip' && method === 'GET') {
       let ipv4 = '116.212.74.104';
-      let ipv6 = '2001:df7:5300:23::68';
       try {
         const ipRes = await fetch('https://api.ipify.org?format=json', { signal: AbortSignal.timeout(4000) });
         const ipData = await ipRes.json();
         if (ipData && ipData.ip) ipv4 = ipData.ip;
       } catch (e) {}
-      return jsonResponse({ success: true, ip: ipv4, ipv4, ipv6 });
+      return jsonResponse({ success: true, ip: ipv4, ipv4 });
     }
   }
 
@@ -3252,7 +3251,7 @@ function renderPPOBContent(currentUser, appSettings, env) {
 /**
  * Render Modal Admin Panel Toko Gorontalo
  */
-function renderTokoGorontaloAdminModal() {
+function renderTokoGorontaloAdminModal(isCurrentSuperAdmin = false) {
   return `
   <!-- MODAL TOKO GORONTALO / PPOB ADMIN -->
   <div id="tokoGorontaloModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-xs hidden z-[100] flex items-center justify-center p-4 md:p-6 overflow-y-auto" onclick="if(event.target === this) closeTokoGorontaloModal()">
@@ -3314,8 +3313,10 @@ function renderTokoGorontaloAdminModal() {
                       <p class="text-xs text-slate-600 leading-relaxed">
                           Toko Gorontalo mewajibkan <b>IP Server VPS</b> terdaftar di akun Member Anda. Jika belum terdaftar, API mengembalikan error: <code class="bg-amber-100 text-amber-900 px-1 py-0.5 rounded font-mono text-[11px]">"device anda tidak terdaftar"</code>.
                       </p>
-                      <p class="text-xs text-slate-700 font-medium pt-0.5">
-                          IP Server VPS Anda: <b id="tgServerIpDisplay" class="font-mono text-indigo-700 bg-white px-2.5 py-1 rounded-lg border border-amber-200 shadow-2xs">Mendeteksi...</b>
+                      <p class="text-xs text-slate-700 font-medium pt-0.5 flex items-center gap-2">
+                          <span>IP Server VPS Anda:</span>
+                          <b id="tgServerIpDisplay" class="font-mono text-indigo-700 bg-white px-2.5 py-1 rounded-lg border border-amber-200 shadow-2xs">116.212.74.104</b>
+                          <span class="text-[11px] text-emerald-700 bg-emerald-100 font-bold px-2 py-0.5 rounded-full">IPv4 Murni</span>
                       </p>
                   </div>
                   <div class="flex items-center gap-2 shrink-0">
@@ -3336,20 +3337,28 @@ function renderTokoGorontaloAdminModal() {
                       <h4 class="font-extrabold text-slate-900 text-sm mb-1">Pengaturan Markup & Sinkronisasi Katalog</h4>
                       <p class="text-xs text-slate-500">Tentukan margin keuntungan (Markup) lalu klik <b>Simpan Markup</b>, atau tarik harga modal terbaru dari server provider.</p>
                   </div>
-                  <div class="flex items-center gap-2.5 w-full md:w-auto flex-wrap">
-                      <div class="flex items-center gap-2 bg-white px-3 py-2 rounded-xl border border-slate-200 shadow-2xs">
-                          <span class="text-xs font-bold text-slate-500">Markup Rp</span>
-                          <input type="number" id="tgSyncMarkupInput" value="750" class="w-24 font-bold font-mono text-sm text-slate-800 focus:outline-none" placeholder="750">
-                      </div>
-                      <button onclick="applyGlobalMarkup()" id="tgSaveMarkupBtn" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-2.5 px-4 rounded-xl text-xs transition shadow-sm flex items-center gap-1.5 shrink-0 cursor-pointer" title="Simpan nilai markup ini dan terapkan langsung ke harga jual produk lokal">
-                          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
-                          Simpan Markup
-                      </button>
-                      <button onclick="runTokoGorontaloSync()" id="tgSyncBtn" class="bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-2.5 px-4 rounded-xl text-xs transition shadow-sm flex items-center gap-1.5 shrink-0 cursor-pointer" title="Tarik harga modal terbaru dari server Toko Gorontalo dan terapkan markup ini">
-                          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
-                          Sinkronkan Dari Server
-                      </button>
+              ${isCurrentSuperAdmin ? `
+              <div class="flex items-center gap-2.5 w-full md:w-auto flex-wrap">
+                  <div class="flex items-center gap-2 bg-white px-3 py-2 rounded-xl border border-slate-200 shadow-2xs">
+                      <span class="text-xs font-bold text-slate-500">Markup Rp</span>
+                      <input type="number" id="tgSyncMarkupInput" value="750" class="w-24 font-bold font-mono text-sm text-slate-800 focus:outline-none" placeholder="750">
                   </div>
+                  <button onclick="applyGlobalMarkup()" id="tgSaveMarkupBtn" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-2.5 px-4 rounded-xl text-xs transition shadow-sm flex items-center gap-1.5 shrink-0 cursor-pointer" title="Simpan nilai markup ini dan terapkan langsung ke harga jual produk lokal">
+                      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                      Simpan Markup
+                  </button>
+                  <button onclick="runTokoGorontaloSync()" id="tgSyncBtn" class="bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-2.5 px-4 rounded-xl text-xs transition shadow-sm flex items-center gap-1.5 shrink-0 cursor-pointer" title="Tarik harga modal terbaru dari server Toko Gorontalo dan terapkan markup ini">
+                      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
+                      Sinkronkan Dari Server
+                  </button>
+              </div>
+              ` : `
+              <div class="p-3 bg-amber-50 border border-amber-200 rounded-xl text-amber-800 text-xs font-bold flex items-center gap-2">
+                  <svg class="w-4 h-4 text-amber-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2-2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
+                  <span>Mode Baca (Read-Only): Hanya <b>Super Admin</b> yang dapat mengubah markup &amp; sinkronisasi produk.</span>
+              </div>
+              `}
+              </div>
               </div>
 
               <!-- Filter & Search Produk -->
@@ -3423,6 +3432,7 @@ function renderTokoGorontaloAdminModal() {
   </div>
 
   <script>
+      const tgIsSuperAdmin = ${isCurrentSuperAdmin ? 'true' : 'false'};
       let tgCurrentPage = 1;
       let tgTotalPages = 1;
       let tgLoadedProducts = [];
@@ -3450,7 +3460,6 @@ function renderTokoGorontaloAdminModal() {
       }
 
       let tgDetectedIpv4 = '116.212.74.104';
-      let tgDetectedIpv6 = '2001:df7:5300:23::68';
 
       async function loadTgServerIp() {
           try {
@@ -3459,15 +3468,13 @@ function renderTokoGorontaloAdminModal() {
               const displayEl = document.getElementById('tgServerIpDisplay');
               const waLinkEl = document.getElementById('tgWaLink');
 
-              if (data.success) {
-                  if (data.ipv4) tgDetectedIpv4 = data.ipv4;
-                  if (data.ipv6) tgDetectedIpv6 = data.ipv6;
-                  if (displayEl) displayEl.innerText = tgDetectedIpv4 + ' (IPv4) | ' + tgDetectedIpv6 + ' (IPv6)';
+              if (data.success && data.ipv4) {
+                  tgDetectedIpv4 = data.ipv4;
+                  if (displayEl) displayEl.innerText = tgDetectedIpv4;
                   if (waLinkEl) {
                       const tgLines = [
                           'Halo Admin Toko Gorontalo, tolong daftarkan IP server VPS saya untuk transaksi H2H akun Member ID: 178082835085:',
-                          '- IPv4: ' + tgDetectedIpv4,
-                          '- IPv6: ' + tgDetectedIpv6,
+                          '- IP VPS (IPv4): ' + tgDetectedIpv4,
                           'Terima kasih!'
                       ];
                       const msg = encodeURIComponent(tgLines.join(String.fromCharCode(10)));
@@ -3482,8 +3489,7 @@ function renderTokoGorontaloAdminModal() {
       function copyTgIpRegistrationFormat() {
           const tgLines = [
               'Halo Admin Toko Gorontalo, tolong daftarkan IP server VPS saya untuk transaksi H2H akun Member ID: 178082835085:',
-              '- IPv4: ' + tgDetectedIpv4,
-              '- IPv6: ' + tgDetectedIpv6,
+              '- IP VPS (IPv4): ' + tgDetectedIpv4,
               'Terima kasih!'
           ];
           const text = tgLines.join(String.fromCharCode(10));
@@ -3525,6 +3531,10 @@ function renderTokoGorontaloAdminModal() {
       }
 
       async function applyGlobalMarkup() {
+          if (!tgIsSuperAdmin) {
+              swalDark.fire('Akses Ditolak', 'Hanya Super Admin yang memiliki hak akses untuk mengubah markup produk.', 'warning');
+              return;
+          }
           const markupInput = document.getElementById('tgSyncMarkupInput');
           const markup = parseInt(markupInput.value) || 0;
           const cat = document.getElementById('tgFilterCategory') ? document.getElementById('tgFilterCategory').value : '';
@@ -3585,6 +3595,10 @@ function renderTokoGorontaloAdminModal() {
       }
 
       async function runTokoGorontaloSync() {
+          if (!tgIsSuperAdmin) {
+              swalDark.fire('Akses Ditolak', 'Hanya Super Admin yang memiliki hak akses untuk sinkronisasi produk.', 'warning');
+              return;
+          }
           const btn = document.getElementById('tgSyncBtn');
           const markupInput = document.getElementById('tgSyncMarkupInput');
           const markup = parseInt(markupInput.value) || 750;
@@ -3661,9 +3675,9 @@ function renderTokoGorontaloAdminModal() {
                               </span>
                           </td>
                           <td class="p-3 text-center">
-                              <button onclick="editProductModal('\${p.product_code}')" class="bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold px-2.5 py-1 rounded-lg text-xs transition cursor-pointer">
-                                  Edit
-                              </button>
+                              \${tgIsSuperAdmin 
+                                  ? '<button onclick="editProductModal(\\\'' + p.product_code + '\\\')" class="bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold px-2.5 py-1 rounded-lg text-xs transition cursor-pointer">Edit</button>'
+                                  : '<span class="inline-flex items-center gap-1 text-[11px] font-semibold text-slate-400 bg-slate-100 px-2.5 py-1 rounded-lg cursor-not-allowed" title="Hanya Super Admin yang diizinkan mengedit produk">🔒 Terkunci</span>'}
                           </td>
                       </tr>
                   \`).join('');
@@ -3699,6 +3713,10 @@ function renderTokoGorontaloAdminModal() {
       }
 
       async function editProductModal(code) {
+          if (!tgIsSuperAdmin) {
+              swalDark.fire('Akses Ditolak', 'Hanya Super Admin yang memiliki hak akses untuk mengedit produk.', 'warning');
+              return;
+          }
           const p = (tgLoadedProducts || []).find(x => x.product_code === code);
           if (!p) return;
           const name = escapeHtmlClient(p.product_name || code);
