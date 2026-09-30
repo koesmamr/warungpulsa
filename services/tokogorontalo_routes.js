@@ -1017,11 +1017,35 @@ async function handleTokoGorontaloRoutes(url, request, env, currentUser, appSett
         }
       }
 
-      // 2. Handle FAILED -> Auto-Refund Instan Seketika itu Juga Tanpa Menunggu Admin
+      // 2. Handle FAILED -> Verifikasi live ke server provider sebelum refund (Mencegah Webhook Spoofing)
       if (isFailed) {
-        const failureReason = info || detail || 'Ditolak / Gagal dari server provider';
-        console.log(`[Webhook TokoGorontalo] Order ${existing.reqid} gagal (${failureReason}). Mengeksekusi auto-refund...`);
-        await executeAutoRefund(rawDb, existing, failureReason, 'webhook', sendTelegramLog, appSettings);
+        let confirmedFailed = false;
+        let failureReason = info || detail || 'Ditolak / Gagal dari server provider';
+
+        try {
+          // Double-check langsung ke server Toko Gorontalo menggunakan koneksi resmi VPS ber-IP whitelist
+          const liveCheck = await service.checkStatusToday({ reqid: existing.reqid, tujuan: existing.customer_no });
+          if (liveCheck) {
+            const liveStatus = liveCheck.status !== undefined ? liveCheck.status : (liveCheck.rc !== undefined ? liveCheck.rc : '');
+            const liveInfo = liveCheck.info || liveCheck.message || liveCheck.pesan || '';
+            const liveDetail = liveCheck.detail || '';
+            if (isProviderFailure(liveStatus, liveInfo, liveDetail, liveCheck.rc, liveCheck.success)) {
+              confirmedFailed = true;
+              failureReason = liveInfo || liveDetail || failureReason;
+            } else if (isSuccessStatus(liveStatus) || liveCheck.rc === '00') {
+              console.warn(`[Webhook TokoGorontalo] Webhook menyatakan gagal, namun server resmi Toko Gorontalo menyatakan SUKSES untuk reqid: ${existing.reqid}. Refund dibatalkan!`);
+            } else {
+              console.log(`[Webhook TokoGorontalo] Status di server Toko Gorontalo masih '${liveStatus}'. Menunda auto-refund untuk diverifikasi oleh poller latar belakang.`);
+            }
+          }
+        } catch (errCheck) {
+          console.warn(`[Webhook TokoGorontalo] Gagal memverifikasi live status order ${existing.reqid}:`, errCheck.message);
+        }
+
+        if (confirmedFailed) {
+          console.log(`[Webhook TokoGorontalo] Order ${existing.reqid} terkonfirmasi gagal valid dari server Toko Gorontalo (${failureReason}). Mengeksekusi auto-refund...`);
+          await executeAutoRefund(rawDb, existing, failureReason, 'webhook_verified', sendTelegramLog, appSettings);
+        }
       }
 
       return jsonResponse({ status: 'ok', received: true });
@@ -1268,8 +1292,15 @@ async function handleTokoGorontaloRoutes(url, request, env, currentUser, appSett
 
       // Ambil data user terkini
       const user = rawDb.prepare('SELECT balance FROM users WHERE email = ?').get(currentUser.email);
-      const userBalance = Number(user.balance) || 0;
+      const userBalance = Number(user ? user.balance : 0) || 0;
       const price = Number(product.selling_price) || 0;
+
+      if (!price || isNaN(price) || price < 500) {
+        return jsonResponse({
+          success: false,
+          message: 'Harga produk tidak valid. Silakan hubungi customer service kami.'
+        }, 400);
+      }
 
       if (userBalance < price) {
         return jsonResponse({
@@ -1281,8 +1312,16 @@ async function handleTokoGorontaloRoutes(url, request, env, currentUser, appSett
       // Generate REQID unik
       const reqid = `WP${Date.now()}${Math.floor(Math.random() * 1000)}`;
 
-      // Potong saldo user
-      rawDb.prepare('UPDATE users SET balance = balance - ? WHERE email = ?').run(price, currentUser.email);
+      // Potong saldo user secara ATOMIC (Anti Race Condition / Double Spending)
+      const deduct = rawDb.prepare('UPDATE users SET balance = balance - ? WHERE email = ? AND balance >= ?').run(price, currentUser.email, price);
+      if (deduct.changes === 0) {
+        const uNow = rawDb.prepare('SELECT balance FROM users WHERE email = ?').get(currentUser.email);
+        const sNow = uNow ? Number(uNow.balance) || 0 : 0;
+        return jsonResponse({
+          success: false,
+          message: `Saldo Anda (Rp ${sNow.toLocaleString('id-ID')}) tidak mencukupi untuk transaksi ini.`
+        }, 400);
+      }
       
       // Catat mutasi saldo
       rawDb.prepare(`
@@ -1519,6 +1558,20 @@ async function handleTokoGorontaloRoutes(url, request, env, currentUser, appSett
     }
     if (!order) return jsonResponse({ success: false, message: 'Pesanan tidak ditemukan' }, 404);
 
+    // Proteksi IDOR & Privasi: Pastikan hanya pemilik pesanan atau admin yang dapat melihat status
+    const isOwner = currentUser && currentUser.email && order.email && (currentUser.email.toLowerCase() === order.email.toLowerCase());
+    const isUserAdminCheck = (u) => {
+      if (!u) return false;
+      if (u.is_admin === 1 || u.is_admin === '1' || u.is_admin === 2 || u.is_admin === '2' || u.is_admin === true) return true;
+      const uEmail = (u.email || '').toLowerCase().trim();
+      const aEmail = ((env && env.ADMIN_EMAIL) || (typeof process !== 'undefined' && process.env && process.env.ADMIN_EMAIL) || 'syamsul18782@gmail.com').toLowerCase().trim();
+      return uEmail === aEmail || uEmail === 'syamsul18782@gmail.com';
+    };
+    const isAdminUser = isUserAdminCheck(currentUser);
+    if (!isOwner && !isAdminUser) {
+      return jsonResponse({ success: false, message: 'Akses ditolak. Anda tidak memiliki izin untuk melihat pesanan ini.' }, 403);
+    }
+
     // 1. Jika transaksi di DB sudah berstatus gagal tetapi belum di-refund -> Langsung auto-refund!
     if (isProviderFailure(order.status, order.info, order.detail) && (order.is_refunded === 0 || !order.is_refunded)) {
       console.log(`[Order-Status] Auto-refund transaksi gagal belum di-refund: Ref ${order.reqid}`);
@@ -1594,7 +1647,11 @@ async function handleTokoGorontaloRoutes(url, request, env, currentUser, appSett
       }
     }
 
-    return jsonResponse({ success: true, order });
+    const publicOrder = { ...order };
+    if (!isAdminUser) {
+      delete publicOrder.cost_price;
+    }
+    return jsonResponse({ success: true, order: publicOrder });
   }
 
   // ================================================================

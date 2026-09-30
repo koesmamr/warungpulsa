@@ -51,7 +51,8 @@ const server = serve({
     };
     return appWorker.fetch(request, env, ctx);
   },
-  port: port
+  port: port,
+  hostname: '127.0.0.1'
 }, (info) => {
   console.log('=================================================');
   console.log(`🚀 WARUNG PULSA SERVER BERHASIL AKTIF!`);
