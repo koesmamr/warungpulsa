@@ -977,24 +977,39 @@ async function renderAdminDashboard(env, currentUser, appSettings) {
         }
     </style>
     <div id="adminPanelContainer" class="max-w-7xl mx-auto px-4 md:px-8 py-8 md:py-12">
-        <h1 class="text-3xl font-black text-slate-900 mb-8 tracking-tight">Panel Kontrol Admin</h1>
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
+            <div>
+                <div class="flex items-center gap-2 mb-1">
+                    <span class="text-xs font-extrabold uppercase tracking-widest text-sky-600 bg-sky-50 px-2.5 py-0.5 rounded-full border border-sky-200">Administrator Hub</span>
+                    <span class="text-xs text-slate-400">•</span>
+                    <span class="text-xs font-bold text-slate-500">AqilaPulsa System Control</span>
+                </div>
+                <h1 class="text-2xl md:text-3xl font-black text-slate-900 tracking-tight">Panel Kontrol Admin</h1>
+            </div>
+            <div class="flex items-center gap-3">
+                <a href="/pulsa-ppob" class="bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 font-bold px-4 py-2 rounded-xl text-xs transition flex items-center gap-2 shadow-2xs">
+                    <svg class="w-4 h-4 text-sky-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
+                    Lihat Web Pelanggan
+                </a>
+            </div>
+        </div>
         
         <!-- Status Banner Mode Maintenance -->
         ${appSettings.maintenance_mode ? `
-        <div class="mb-8 p-5 md:p-6 rounded-3xl bg-gradient-to-r from-rose-50 via-red-50 to-amber-50 border-2 border-rose-300 shadow-xl flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+        <div class="mb-8 p-5 md:p-6 rounded-3xl bg-gradient-to-r from-rose-50 via-red-50 to-amber-50 border-2 border-rose-300 shadow-sm flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
             <div class="flex items-start md:items-center gap-4">
                 <div class="w-12 h-12 rounded-2xl bg-rose-600 text-white flex items-center justify-center shrink-0 shadow-lg shadow-rose-600/30">
                     <svg class="w-6 h-6 animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
                 </div>
                 <div>
                     <div class="flex items-center gap-2 mb-1 flex-wrap">
-                        <span class="bg-rose-600 text-white text-[11px] font-black uppercase tracking-widest px-2.5 py-0.5 rounded-full shadow-sm">RESTRICTED ACCESS</span>
+                        <span class="bg-rose-600 text-white text-[11px] font-black uppercase tracking-widest px-2.5 py-0.5 rounded-full shadow-xs">RESTRICTED ACCESS</span>
                         <h3 class="text-slate-900 font-extrabold text-lg">Mode Maintenance SEDANG AKTIF</h3>
                     </div>
                     <p class="text-slate-600 text-xs md:text-sm leading-relaxed">Website saat ini ditutup untuk pengunjung umum & pengguna biasa. HANYA Administrator yang dapat login dan mengelola sistem.</p>
                 </div>
             </div>
-            <button onclick="toggleMaintenanceQuick()" class="bg-rose-600 hover:bg-rose-700 active:scale-95 text-white font-black py-3 px-6 rounded-xl text-sm transition shadow-lg flex items-center gap-2 shrink-0 cursor-pointer">
+            <button onclick="toggleMaintenanceQuick()" class="bg-rose-600 hover:bg-rose-700 active:scale-95 text-white font-black py-3 px-6 rounded-xl text-sm transition shadow-md flex items-center gap-2 shrink-0 cursor-pointer">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 5.636a9 9 0 010 12.728m0 0l-2.829-2.829m2.829 2.829L21 21M15.536 8.464a5 5 0 010 7.072m0 0l-2.829-2.829m-4.243 2.829a4.978 4.978 0 01-1.414-2.83m-1.414 5.658a9 9 0 01-2.167-9.238m7.824 2.167a1 1 0 111.414 1.414m-1.414-1.414L3 3m8.293 8.293l1.414 1.414"></path></svg>
                 Matikan Maintenance Mode
             </button>
@@ -1007,65 +1022,174 @@ async function renderAdminDashboard(env, currentUser, appSettings) {
                 </div>
                 <div>
                     <div class="flex items-center gap-2 mb-1 flex-wrap">
-                        <span class="bg-emerald-600 text-white text-[11px] font-black uppercase tracking-widest px-2.5 py-0.5 rounded-full shadow-sm">LIVE / NORMAL</span>
+                        <span class="bg-emerald-600 text-white text-[11px] font-black uppercase tracking-widest px-2.5 py-0.5 rounded-full shadow-xs">LIVE / NORMAL</span>
                         <h3 class="text-slate-900 font-extrabold text-lg">Website Beroperasi Normal (Publik)</h3>
                     </div>
-                    <p class="text-slate-600 text-xs md:text-sm leading-relaxed">Website dapat diakses secara publik dan seluruh pengguna dapat melakukan login, transaksi QRIS, serta order VPN secara normal.</p>
+                    <p class="text-slate-600 text-xs md:text-sm leading-relaxed">Website dapat diakses secara publik dan seluruh pengguna dapat melakukan login, transaksi QRIS, serta transaksi Pulsa, Data, PLN & PPOB secara lancar.</p>
                 </div>
             </div>
-            <button onclick="toggleMaintenanceQuick()" class="bg-white hover:bg-slate-100 active:scale-95 text-slate-800 border-2 border-slate-300 font-black py-3 px-6 rounded-xl text-sm transition shadow-sm flex items-center gap-2 shrink-0 cursor-pointer">
+            <button onclick="toggleMaintenanceQuick()" class="bg-white hover:bg-slate-100 active:scale-95 text-slate-800 border-2 border-slate-300 font-black py-3 px-6 rounded-xl text-sm transition shadow-2xs flex items-center gap-2 shrink-0 cursor-pointer">
                 <span class="w-2.5 h-2.5 rounded-full bg-rose-600"></span>
                 Aktifkan Maintenance Mode
             </button>
         </div>
         `}
         
-        <!-- Action Control Bar -->
-        <div class="flex flex-wrap gap-4 mb-8 border-b border-slate-200 pb-8">
-            <button onclick="toggleMaintenanceQuick()" class="${appSettings.maintenance_mode ? 'bg-rose-600 hover:bg-rose-500 ring-4 ring-rose-200' : 'bg-slate-800 hover:bg-slate-700'} text-white font-bold py-3.5 px-6 rounded-xl shadow-lg transition flex items-center gap-3">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
-                Maintenance: ${appSettings.maintenance_mode ? '🔴 AKTIF (ON)' : '🟢 NONAKTIF (OFF)'}
-            </button>
-            <button onclick="openSettingsModal()" class="bg-sky-600 hover:bg-sky-500 text-white font-bold py-3.5 px-6 rounded-xl shadow-lg transition flex items-center gap-3">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
-                Konfigurasi Sistem
-            </button>
-            <button onclick="openBroadcastModal()" class="bg-yellow-600 hover:bg-yellow-500 text-white font-bold py-3.5 px-6 rounded-xl shadow-lg transition flex items-center gap-3">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z"></path></svg>
-                Broadcast
-            </button>
-<button onclick="openTokoGorontaloModal()" class="bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-3.5 px-6 rounded-xl shadow-lg transition flex items-center gap-3 cursor-pointer">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
-                Toko Gorontalo (PPOB)
-            </button>
-<button onclick="openTicketManagerModal()" class="bg-teal-600 hover:bg-teal-500 text-white font-bold py-3.5 px-6 rounded-xl shadow-lg transition flex items-center gap-3 relative">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192l-3.536 3.536M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-5 0a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
-                Manajemen Tiket
-                <span id="ticketBadge" class="absolute -top-2 -right-2 bg-sky-500 text-white text-xs px-2 py-0.5 rounded-full hidden animate-pulse">0</span>
-            </button>
-            <button onclick="openGlobalTransactionsModal()" class="bg-orange-600 hover:bg-orange-500 text-white font-bold py-3.5 px-6 rounded-xl shadow-lg transition flex items-center gap-3">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"></path></svg>
-                Global Transaksi
-            </button>
-            <button onclick="openStatsDashboardModal()" class="bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-3.5 px-6 rounded-xl shadow-lg transition flex items-center gap-3">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
-                Dashboard Statistik
-            </button>
+        <!-- Action Control Grid (Modern Bento Hub) -->
+        <div class="mb-10">
+            <div class="flex items-center justify-between mb-4">
+                <div>
+                    <h2 class="text-lg font-black text-slate-900 tracking-tight">Menu Kontrol & Layanan Utama</h2>
+                    <p class="text-xs text-slate-500">Pusat integrasi PPOB, monitoring transaksi, konfigurasi sistem & dukungan pelanggan.</p>
+                </div>
+                <span class="hidden sm:inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-sky-50 text-sky-700 border border-sky-200">
+                    <span class="w-2 h-2 rounded-full bg-sky-500"></span>
+                    6 Modul Siap Pakai
+                </span>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                <!-- 1. Toko Gorontalo (PPOB) -->
+                <div onclick="openTokoGorontaloModal()" class="group bg-white hover:bg-indigo-50/50 p-5 rounded-2xl border border-slate-200 hover:border-indigo-300 transition-all duration-200 shadow-xs hover:shadow-md cursor-pointer flex items-center justify-between relative overflow-hidden">
+                    <div class="flex items-center gap-4">
+                        <div class="w-12 h-12 rounded-2xl bg-indigo-600 text-white flex items-center justify-center shadow-md shadow-indigo-600/25 shrink-0 group-hover:scale-105 transition-transform">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                        </div>
+                        <div>
+                            <div class="flex items-center gap-2">
+                                <h3 class="font-extrabold text-slate-900 text-sm md:text-base group-hover:text-indigo-600 transition-colors">Toko Gorontalo (PPOB)</h3>
+                                <span class="text-[10px] font-extrabold bg-indigo-100 text-indigo-700 px-2 py-0.5 rounded-full uppercase">H2H</span>
+                            </div>
+                            <p class="text-xs text-slate-500 mt-0.5">Kelola host saldo, katalog & margin harga</p>
+                        </div>
+                    </div>
+                    <div class="w-8 h-8 rounded-xl bg-slate-50 group-hover:bg-indigo-100 text-slate-400 group-hover:text-indigo-600 flex items-center justify-center transition-colors shrink-0">
+                        <svg class="w-4 h-4 transform group-hover:translate-x-0.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"></path></svg>
+                    </div>
+                </div>
+
+                <!-- 2. Konfigurasi Sistem -->
+                <div onclick="openSettingsModal()" class="group bg-white hover:bg-sky-50/50 p-5 rounded-2xl border border-slate-200 hover:border-sky-300 transition-all duration-200 shadow-xs hover:shadow-md cursor-pointer flex items-center justify-between relative overflow-hidden">
+                    <div class="flex items-center gap-4">
+                        <div class="w-12 h-12 rounded-2xl bg-sky-600 text-white flex items-center justify-center shadow-md shadow-sky-600/25 shrink-0 group-hover:scale-105 transition-transform">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                        </div>
+                        <div>
+                            <div class="flex items-center gap-2">
+                                <h3 class="font-extrabold text-slate-900 text-sm md:text-base group-hover:text-sky-600 transition-colors">Konfigurasi Sistem</h3>
+                                <span class="text-[10px] font-extrabold bg-sky-100 text-sky-700 px-2 py-0.5 rounded-full uppercase">Setup</span>
+                            </div>
+                            <p class="text-xs text-slate-500 mt-0.5">API Key, gateway QRIS & Telegram Bot</p>
+                        </div>
+                    </div>
+                    <div class="w-8 h-8 rounded-xl bg-slate-50 group-hover:bg-sky-100 text-slate-400 group-hover:text-sky-600 flex items-center justify-center transition-colors shrink-0">
+                        <svg class="w-4 h-4 transform group-hover:translate-x-0.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"></path></svg>
+                    </div>
+                </div>
+
+                <!-- 3. Dashboard Statistik -->
+                <div onclick="openStatsDashboardModal()" class="group bg-white hover:bg-violet-50/50 p-5 rounded-2xl border border-slate-200 hover:border-violet-300 transition-all duration-200 shadow-xs hover:shadow-md cursor-pointer flex items-center justify-between relative overflow-hidden">
+                    <div class="flex items-center gap-4">
+                        <div class="w-12 h-12 rounded-2xl bg-violet-600 text-white flex items-center justify-center shadow-md shadow-violet-600/25 shrink-0 group-hover:scale-105 transition-transform">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
+                        </div>
+                        <div>
+                            <div class="flex items-center gap-2">
+                                <h3 class="font-extrabold text-slate-900 text-sm md:text-base group-hover:text-violet-600 transition-colors">Dashboard Statistik</h3>
+                                <span class="text-[10px] font-extrabold bg-violet-100 text-violet-700 px-2 py-0.5 rounded-full uppercase">Analitik</span>
+                            </div>
+                            <p class="text-xs text-slate-500 mt-0.5">Grafik omset, profit & performa bulanan</p>
+                        </div>
+                    </div>
+                    <div class="w-8 h-8 rounded-xl bg-slate-50 group-hover:bg-violet-100 text-slate-400 group-hover:text-violet-600 flex items-center justify-center transition-colors shrink-0">
+                        <svg class="w-4 h-4 transform group-hover:translate-x-0.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"></path></svg>
+                    </div>
+                </div>
+
+                <!-- 4. Manajemen Tiket -->
+                <div onclick="openTicketManagerModal()" class="group bg-white hover:bg-teal-50/50 p-5 rounded-2xl border border-slate-200 hover:border-teal-300 transition-all duration-200 shadow-xs hover:shadow-md cursor-pointer flex items-center justify-between relative overflow-hidden">
+                    <div class="flex items-center gap-4">
+                        <div class="w-12 h-12 rounded-2xl bg-teal-600 text-white flex items-center justify-center shadow-md shadow-teal-600/25 shrink-0 group-hover:scale-105 transition-transform relative">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192l-3.536 3.536M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-5 0a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
+                            <span id="ticketBadge" class="absolute -top-1 -right-1 bg-rose-500 text-white text-[10px] font-black px-1.5 py-0.2 rounded-full hidden animate-pulse border-2 border-white">0</span>
+                        </div>
+                        <div>
+                            <div class="flex items-center gap-2">
+                                <h3 class="font-extrabold text-slate-900 text-sm md:text-base group-hover:text-teal-600 transition-colors">Manajemen Tiket</h3>
+                                <span class="text-[10px] font-extrabold bg-teal-100 text-teal-700 px-2 py-0.5 rounded-full uppercase">Bantuan</span>
+                            </div>
+                            <p class="text-xs text-slate-500 mt-0.5">Keluhan pelanggan & respon bantuan</p>
+                        </div>
+                    </div>
+                    <div class="w-8 h-8 rounded-xl bg-slate-50 group-hover:bg-teal-100 text-slate-400 group-hover:text-teal-600 flex items-center justify-center transition-colors shrink-0">
+                        <svg class="w-4 h-4 transform group-hover:translate-x-0.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"></path></svg>
+                    </div>
+                </div>
+
+                <!-- 5. Global Transaksi -->
+                <div onclick="openGlobalTransactionsModal()" class="group bg-white hover:bg-orange-50/50 p-5 rounded-2xl border border-slate-200 hover:border-orange-300 transition-all duration-200 shadow-xs hover:shadow-md cursor-pointer flex items-center justify-between relative overflow-hidden">
+                    <div class="flex items-center gap-4">
+                        <div class="w-12 h-12 rounded-2xl bg-orange-600 text-white flex items-center justify-center shadow-md shadow-orange-600/25 shrink-0 group-hover:scale-105 transition-transform">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"></path></svg>
+                        </div>
+                        <div>
+                            <div class="flex items-center gap-2">
+                                <h3 class="font-extrabold text-slate-900 text-sm md:text-base group-hover:text-orange-600 transition-colors">Global Transaksi</h3>
+                                <span class="text-[10px] font-extrabold bg-orange-100 text-orange-700 px-2 py-0.5 rounded-full uppercase">Audit</span>
+                            </div>
+                            <p class="text-xs text-slate-500 mt-0.5">Riwayat mutasi saldo seluruh pengguna</p>
+                        </div>
+                    </div>
+                    <div class="w-8 h-8 rounded-xl bg-slate-50 group-hover:bg-orange-100 text-slate-400 group-hover:text-orange-600 flex items-center justify-center transition-colors shrink-0">
+                        <svg class="w-4 h-4 transform group-hover:translate-x-0.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"></path></svg>
+                    </div>
+                </div>
+
+                <!-- 6. Broadcast Pesan -->
+                <div onclick="openBroadcastModal()" class="group bg-white hover:bg-amber-50/50 p-5 rounded-2xl border border-slate-200 hover:border-amber-300 transition-all duration-200 shadow-xs hover:shadow-md cursor-pointer flex items-center justify-between relative overflow-hidden">
+                    <div class="flex items-center gap-4">
+                        <div class="w-12 h-12 rounded-2xl bg-amber-500 text-white flex items-center justify-center shadow-md shadow-amber-500/25 shrink-0 group-hover:scale-105 transition-transform">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z"></path></svg>
+                        </div>
+                        <div>
+                            <div class="flex items-center gap-2">
+                                <h3 class="font-extrabold text-slate-900 text-sm md:text-base group-hover:text-amber-600 transition-colors">Broadcast Inbox</h3>
+                                <span class="text-[10px] font-extrabold bg-amber-100 text-amber-700 px-2 py-0.5 rounded-full uppercase">Pesan</span>
+                            </div>
+                            <p class="text-xs text-slate-500 mt-0.5">Kirim pengumuman ke seluruh user</p>
+                        </div>
+                    </div>
+                    <div class="w-8 h-8 rounded-xl bg-slate-50 group-hover:bg-amber-100 text-slate-400 group-hover:text-amber-600 flex items-center justify-center transition-colors shrink-0">
+                        <svg class="w-4 h-4 transform group-hover:translate-x-0.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"></path></svg>
+                    </div>
+                </div>
+            </div>
         </div>
 
-<!-- Manajemen Pengguna (Dengan Pagination) -->
-        <div class="bg-gray-800 rounded-3xl border border-gray-700 shadow-2xl mt-10 overflow-hidden">
-            <button onclick="toggleSection('sectionUser', 'iconUser')" class="w-full flex justify-between items-center p-6 md:p-8 bg-gray-800 hover:bg-gray-700 transition">
-                <h2 class="text-base font-bold text-white" id="userTotalHeader">\u{1F465} Manajemen Pengguna (Menghitung...)</h2>
-                <svg id="iconUser" class="w-6 h-6 text-gray-400 transform transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
-            </button>
-            <div id="sectionUser" class="hidden p-6 md:p-8 pt-0">
-                <div class="flex flex-col md:flex-row justify-end items-start md:items-center mb-6 mt-4 gap-4">
-                    <input type="text" id="searchUser" placeholder="Cari email atau nama..." class="bg-gray-900 border border-gray-600 rounded-xl p-3 text-white w-full md:w-72 focus:ring-2 focus:ring-sky-500 outline-none" onkeyup="filterUsers()">
+        <!-- Manajemen Pengguna (Dengan Pagination) -->
+        <div class="bg-white rounded-3xl border border-slate-200 shadow-sm mt-8 mb-8 overflow-hidden">
+            <button onclick="toggleSection('sectionUser', 'iconUser')" class="w-full flex justify-between items-center p-6 md:p-8 bg-slate-50 hover:bg-slate-100/80 transition text-left cursor-pointer border-b border-slate-100">
+                <div class="flex items-center gap-3.5">
+                    <div class="w-10 h-10 rounded-2xl bg-sky-600 text-white flex items-center justify-center shadow-md shadow-sky-600/20 font-bold text-lg">
+                        \u{1F465}
+                    </div>
+                    <div>
+                        <h2 class="text-base md:text-lg font-extrabold text-slate-900 tracking-tight" id="userTotalHeader">Manajemen Pengguna (Menghitung...)</h2>
+                        <p class="text-xs text-slate-500 font-normal mt-0.5">Lihat saldo akun pengguna, kelola status blokir/aktif, dan tambah saldo pengguna.</p>
+                    </div>
                 </div>
-                <div class="overflow-x-auto rounded-xl border border-gray-700">
-                    <table class="w-full text-left text-sm text-gray-300 whitespace-nowrap">
-                        <thead class="bg-gray-900 text-gray-400 border-b border-gray-700">
+                <div class="flex items-center gap-3">
+                    <svg id="iconUser" class="w-6 h-6 text-slate-400 transform transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                </div>
+            </button>
+            <div id="sectionUser" class="hidden p-6 md:p-8 space-y-4">
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                    <div class="text-xs text-slate-500">Klik pada <b>Saldo</b> untuk melihat mutasi akun pengguna terkait.</div>
+                    <input type="text" id="searchUser" placeholder="Cari email atau nama pengguna..." class="bg-white border border-slate-200 rounded-xl p-3 text-slate-800 w-full md:w-80 focus:ring-2 focus:ring-sky-500 outline-none text-xs shadow-2xs" onkeyup="filterUsers()">
+                </div>
+                <div class="overflow-x-auto rounded-xl border border-slate-200 bg-white shadow-2xs">
+                    <table class="w-full text-left text-sm text-slate-700 whitespace-nowrap">
+                        <thead class="bg-slate-50 text-slate-600 border-b border-slate-200">
                             <tr>
                                 <th class="p-4 font-bold uppercase tracking-wider text-xs">Email</th>
                                 <th class="p-4 font-bold uppercase tracking-wider text-xs">Nama</th>
@@ -1074,16 +1198,16 @@ async function renderAdminDashboard(env, currentUser, appSettings) {
                                 <th class="p-4 font-bold uppercase tracking-wider text-xs">Aksi</th>
                             </tr>
                         </thead>
-                        <tbody id="userTableBody" class="divide-y divide-gray-800">
-                            <tr><td colspan="5" class="p-8 text-center text-cyan-400 animate-pulse">Memuat data pengguna...</td></tr>
+                        <tbody id="userTableBody" class="divide-y divide-slate-100">
+                            <tr><td colspan="5" class="p-8 text-center text-sky-600 animate-pulse">Memuat data pengguna...</td></tr>
                         </tbody>
                     </table>
                 </div>
-                <div class="flex flex-col sm:flex-row justify-between items-center mt-6 gap-4">
-                    <span id="userPageInfo" class="text-sm text-gray-400 font-mono">Halaman 1 dari 1</span>
+                <div class="flex flex-col sm:flex-row justify-between items-center mt-4 gap-4 pt-2">
+                    <span id="userPageInfo" class="text-xs text-slate-500 font-mono font-medium">Halaman 1 dari 1</span>
                     <div class="flex gap-2">
-                        <button onclick="changeUserPage(-1)" id="btnPrevUser" class="bg-gray-700 hover:bg-gray-600 text-white font-bold px-4 py-2 rounded-xl transition shadow disabled:opacity-50 disabled:cursor-not-allowed">Sebelumnya</button>
-                        <button onclick="changeUserPage(1)" id="btnNextUser" class="bg-sky-600 hover:bg-sky-500 text-white font-bold px-4 py-2 rounded-xl transition shadow disabled:opacity-50 disabled:cursor-not-allowed">Selanjutnya</button>
+                        <button onclick="changeUserPage(-1)" id="btnPrevUser" class="bg-white hover:bg-slate-100 text-slate-700 border border-slate-200 font-bold px-4 py-2 rounded-xl transition text-xs shadow-2xs disabled:opacity-50 disabled:cursor-not-allowed">Sebelumnya</button>
+                        <button onclick="changeUserPage(1)" id="btnNextUser" class="bg-sky-600 hover:bg-sky-500 text-white font-bold px-4 py-2 rounded-xl transition text-xs shadow-md shadow-sky-600/20 disabled:opacity-50 disabled:cursor-not-allowed">Selanjutnya</button>
                     </div>
                 </div>
             </div>
@@ -1225,6 +1349,7 @@ async function renderAdminDashboard(env, currentUser, appSettings) {
                 </div>
             </div>
         </div>
+    </div> <!-- Tutup #adminPanelContainer -->
 
     <!-- Modal Dashboard Statistik -->
     <div id="statsDashboardModal" class="fixed inset-0 bg-black/80 hidden z-[100] flex items-center justify-center p-3 md:p-4 backdrop-blur-sm" onclick="if(event.target === this) closeStatsDashboardModal()">
@@ -6421,9 +6546,11 @@ Total : Rp.${totalSaldo.toLocaleString("id-ID")}
                             </div>
                             ${unreadCount > 0 ? `<a href="/inbox" class="bg-sky-600 text-white text-[10px] font-bold px-2.5 py-1 rounded-full shadow-md shadow-sky-600/30 animate-pulse">${unreadCount} Baru</a>` : ""}
                         </header>
-                        <main class="flex-1 overflow-y-auto custom-scrollbar relative">
-                            ${content}
-                            <footer class="border-t border-slate-200 mt-12 py-8 text-center text-slate-500 text-xs flex items-center justify-center gap-2">
+                        <main class="flex-1 overflow-y-auto custom-scrollbar relative flex flex-col justify-between">
+                            <div class="flex-1 w-full">
+                                ${content}
+                            </div>
+                            <footer class="border-t border-slate-200 mt-12 py-8 text-center text-slate-500 text-xs flex items-center justify-center gap-2 shrink-0">
                                 <img src="${LOGO_URL}" alt="Logo" class="w-5 h-5 opacity-80 hover:opacity-100 transition object-contain">
                                 <span>&copy; ${(/* @__PURE__ */ new Date()).getFullYear()} Warung Pulsa AqilaPulsa. Hak cipta dilindungi.</span>
                             </footer>
