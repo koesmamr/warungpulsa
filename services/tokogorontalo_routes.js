@@ -3310,27 +3310,39 @@ function renderPPOBContent(currentUser, appSettings, env) {
  */
 function renderTokoGorontaloAdminModal(isCurrentSuperAdmin = false) {
   return `
-  <!-- MODAL TOKO GORONTALO / PPOB ADMIN -->
-  <div id="tokoGorontaloModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-xs hidden z-[100] flex items-center justify-center p-4 md:p-6 overflow-y-auto" onclick="if(event.target === this) closeTokoGorontaloModal()">
-      <div class="bg-white rounded-3xl border border-slate-200 w-full max-w-5xl overflow-hidden shadow-2xl flex flex-col max-h-[92vh]">
-          <!-- Modal Header -->
-          <div class="p-6 border-b border-slate-200 flex justify-between items-center bg-slate-50/80">
-              <div class="flex items-center gap-3">
-                  <div class="w-10 h-10 rounded-2xl bg-indigo-600 text-white flex items-center justify-center shadow-md shadow-indigo-600/30">
-                      <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
-                  </div>
-                  <div>
-                      <h3 class="text-xl font-black text-slate-900 tracking-tight">Integrasi Toko Gorontalo (PPOB)</h3>
-                      <p class="text-xs text-slate-500">Kelola Saldo Host, Sinkronisasi Produk & Margin Keuntungan</p>
-                  </div>
+  <!-- FULLSCREEN ADMIN PANEL TOKO GORONTALO / PPOB -->
+  <div id="tokoGorontaloModal" class="fixed inset-0 bg-slate-100 hidden z-[100] flex flex-col w-screen h-screen overflow-hidden">
+      <!-- Fullscreen Header -->
+      <header class="bg-white border-b border-slate-200 px-6 py-4 flex justify-between items-center shrink-0 shadow-xs z-20">
+          <div class="flex items-center gap-3.5">
+              <button onclick="closeTokoGorontaloModal()" class="flex items-center gap-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold px-3.5 py-2 rounded-xl text-xs transition cursor-pointer border border-slate-200 shadow-2xs" title="Kembali ke Dashboard Admin">
+                  <svg class="w-4 h-4 text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+                  <span class="hidden sm:inline">Kembali ke Admin</span>
+              </button>
+              <div class="w-10 h-10 rounded-2xl bg-indigo-600 text-white flex items-center justify-center shadow-md shadow-indigo-600/30 shrink-0">
+                  <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
               </div>
-              <button onclick="closeTokoGorontaloModal()" class="text-slate-400 hover:text-slate-800 p-2 rounded-xl hover:bg-slate-100 transition">
+              <div>
+                  <div class="flex items-center gap-2">
+                      <h3 class="text-lg md:text-xl font-black text-slate-900 tracking-tight">Integrasi Toko Gorontalo (PPOB)</h3>
+                      <span class="text-[10px] font-extrabold bg-indigo-100 text-indigo-700 px-2 py-0.5 rounded-full uppercase tracking-wider hidden md:inline">Layar Penuh (Full Screen)</span>
+                  </div>
+                  <p class="text-xs text-slate-500">Kelola Saldo Host, Sinkronisasi Produk & Margin Keuntungan</p>
+              </div>
+          </div>
+          <div class="flex items-center gap-2">
+              <button onclick="refreshTokoGorontaloInfo()" class="bg-indigo-50 hover:bg-indigo-100 text-indigo-700 font-bold px-3.5 py-2.5 rounded-xl text-xs transition flex items-center gap-2 cursor-pointer border border-indigo-200/70 shadow-2xs" title="Cek Saldo & Muat Ulang Data">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
+                  <span class="hidden md:inline">Refresh Data</span>
+              </button>
+              <button onclick="closeTokoGorontaloModal()" class="text-slate-400 hover:text-slate-800 p-2 rounded-xl hover:bg-slate-100 transition cursor-pointer" title="Tutup Fullscreen (Esc)">
                   <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
               </button>
           </div>
+      </header>
 
-          <!-- Modal Body -->
-          <div class="p-6 overflow-y-auto custom-scrollbar space-y-6 flex-1">
+      <!-- Fullscreen Main Body -->
+      <main class="p-6 md:p-8 overflow-y-auto custom-scrollbar space-y-6 flex-1 w-full max-w-[1700px] mx-auto">
               <!-- Grid Kartu Info & Saldo Host -->
               <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                   <!-- Saldo Host -->
@@ -3453,39 +3465,38 @@ function renderTokoGorontaloAdminModal(isCurrentSuperAdmin = false) {
                   </div>
               </div>
 
-              <!-- Tabel Produk PPOB -->
-              <div class="border border-slate-200 rounded-2xl overflow-hidden bg-white">
-                  <div class="overflow-x-auto max-h-96 custom-scrollbar">
+              <!-- Tabel Produk PPOB (Tampilan Lebar & Luas) -->
+              <div class="border border-slate-200 rounded-2xl overflow-hidden bg-white shadow-2xs flex flex-col">
+                  <div class="overflow-x-auto min-h-[420px] max-h-[62vh] custom-scrollbar">
                       <table class="w-full text-left border-collapse text-xs">
-                          <thead>
-                              <tr class="bg-slate-50 border-b border-slate-200 text-slate-600 font-bold uppercase tracking-wider">
-                                  <th class="p-3">Kode</th>
-                                  <th class="p-3">Nama Produk</th>
-                                  <th class="p-3">Kategori</th>
-                                  <th class="p-3">Brand</th>
-                                  <th class="p-3">Modal Host</th>
-                                  <th class="p-3">Markup</th>
-                                  <th class="p-3">Harga Jual</th>
-                                  <th class="p-3">Status</th>
-                                  <th class="p-3 text-center">Aksi</th>
+                          <thead class="sticky top-0 z-10 bg-slate-50 border-b border-slate-200 text-slate-600 font-bold uppercase tracking-wider shadow-2xs">
+                              <tr>
+                                  <th class="p-3.5">Kode</th>
+                                  <th class="p-3.5">Nama Produk</th>
+                                  <th class="p-3.5">Kategori</th>
+                                  <th class="p-3.5">Brand</th>
+                                  <th class="p-3.5">Modal Host</th>
+                                  <th class="p-3.5">Markup</th>
+                                  <th class="p-3.5">Harga Jual</th>
+                                  <th class="p-3.5">Status</th>
+                                  <th class="p-3.5 text-center">Aksi</th>
                               </tr>
                           </thead>
                           <tbody id="tgProductsTableBody" class="divide-y divide-slate-100">
-                              <tr><td colspan="9" class="p-6 text-center text-slate-400">Memuat data produk...</td></tr>
+                              <tr><td colspan="9" class="p-8 text-center text-slate-400">Memuat data produk...</td></tr>
                           </tbody>
                       </table>
                   </div>
                   <!-- Pagination -->
-                  <div class="p-3 border-t border-slate-200 flex justify-between items-center text-xs bg-slate-50">
+                  <div class="p-3.5 border-t border-slate-200 flex justify-between items-center text-xs bg-slate-50">
                       <span id="tgPaginationInfo" class="text-slate-500 font-medium">Halaman 1 dari 1</span>
                       <div class="flex gap-2">
-                          <button onclick="changeAdminProductsPage(-1)" id="tgPrevBtn" class="bg-white px-3 py-1 rounded-lg border border-slate-200 text-slate-600 font-bold hover:bg-slate-100 disabled:opacity-50">Sebelumnya</button>
-                          <button onclick="changeAdminProductsPage(1)" id="tgNextBtn" class="bg-white px-3 py-1 rounded-lg border border-slate-200 text-slate-600 font-bold hover:bg-slate-100 disabled:opacity-50">Selanjutnya</button>
+                          <button onclick="changeAdminProductsPage(-1)" id="tgPrevBtn" class="bg-white px-3.5 py-1.5 rounded-lg border border-slate-200 text-slate-600 font-bold hover:bg-slate-100 disabled:opacity-50 transition cursor-pointer">Sebelumnya</button>
+                          <button onclick="changeAdminProductsPage(1)" id="tgNextBtn" class="bg-white px-3.5 py-1.5 rounded-lg border border-slate-200 text-slate-600 font-bold hover:bg-slate-100 disabled:opacity-50 transition cursor-pointer">Selanjutnya</button>
                       </div>
                   </div>
               </div>
-          </div>
-      </div>
+      </main>
   </div>
 
   <script>
